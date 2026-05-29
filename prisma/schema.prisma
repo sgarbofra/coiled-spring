@@ -1,0 +1,61 @@
+model Watchlist {
+  id        String            @id @default(cuid())
+  userId    String
+  name      String
+  isActive  Boolean           @default(false)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  items     SavedInstrument[]
+}
+
+model SavedInstrument {
+  id              String    @id @default(cuid())
+  watchlistId     String
+  symbol          String
+  underlyingSymbol String
+  instrumentType  String    @default("OPTION")
+  optionSide      String?
+  strike          Float?
+  expirationDate  DateTime?
+  dte             Int?
+  premiumPaid     Float?
+  currentPremium  Float?
+  ivCurrent       Float?
+  ivRank          Float?
+  ivPercentile    Float?
+  ivMovingAvg     Float?
+  delta           Float?
+  gamma           Float?
+  vega            Float?
+  theta           Float?
+  openInterest    Int?
+  volume          Int?
+  bid             Float?
+  ask             Float?
+  bidAskSpread    Float?
+  theoreticalPnl  Float?
+  notes           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  watchlist       Watchlist @relation(fields: [watchlistId], references: [id], onDelete: Cascade)
+  alerts          Alert[]
+
+  @@index([watchlistId])
+}
+
+model Alert {
+  id                String   @id @default(cuid())
+  savedInstrumentId  String
+  alertType          String
+  field              String
+  operator           String
+  value              String?
+  isEnabled          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  savedInstrument    SavedInstrument @relation(fields: [savedInstrumentId], references: [id], onDelete: Cascade)
+
+  @@index([savedInstrumentId])
+}

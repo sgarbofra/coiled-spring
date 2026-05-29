@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coiled Spring - Watchlist MVP</title>
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg:#171614;
+      --color-surface:#1c1b19;
+      --color-surface-2:#201f1d;
+      --color-surface-offset:#22211f;
+      --color-border:#393836;
+      --color-divider:#262523;
+      --color-text:#cdccca;
+      --color-text-muted:#989793;
+      --color-text-faint:#696865;
+      --color-text-inverse:#171614;
+      --color-primary:#4f98a3;
+      --color-primary-hover:#227f8b;
+      --color-success:#6daa45;
+      --color-warning:#e8af34;
+      --color-error:#d163a7;
+      --radius-sm:.375rem;
+      --radius-md:.5rem;
+      --radius-lg:.75rem;
+      --radius-xl:1rem;
+      --shadow-sm:0 1px 2px rgba(0,0,0,.2);
+      --shadow-md:0 8px 24px rgba(0,0,0,.28);
+      --space-1:.25rem;
+      --space-2:.5rem;
+      --space-3:.75rem;
+      --space-4:1rem;
+      --space-5:1.25rem;
+      --space-6:1.5rem;
+      --space-8:2rem;
+      --space-10:2.5rem;
+      --space-12:3rem;
+      --text-xs:.75rem;
+      --text-sm:.875rem;
+      --text-base:1rem;
+      --text-lg:1.125rem;
+      --text-xl:1.5rem;
+      --font-body:'Satoshi', system-ui, sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{font-family:var(--font-body);background:var(--color-bg);color:var(--color-text);font-size:var(--text-base);line-height:1.5}
+    button,input,select,textarea{font:inherit;color:inherit}
+    .app{min-height:100vh;display:grid;grid-template-rows:72px 1fr}
+    .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:0 var(--space-4);background:color-mix(in srgb, var(--color-surface) 88%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--color-divider)}
+    .brand{display:flex;align-items:center;gap:var(--space-3)}
+    .logo{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--color-primary),color-mix(in srgb, var(--color-primary) 50%, black));display:grid;place-items:center;font-weight:700;color:white}
+    .brand h1{font-size:var(--text-sm);line-height:1.05}
+    .brand p{font-size:11px;color:var(--color-text-muted)}
+    .top-meta{display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap}
+    .badge{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .45rem;border:1px solid var(--color-border);background:var(--color-surface-2);border-radius:999px;font-size:var(--text-xs);color:var(--color-text-muted)}
+    .badge.primary{border-color:color-mix(in srgb, var(--color-primary) 35%, var(--color-border));color:var(--color-primary)}
+    .badge.success{border-color:color-mix(in srgb, var(--color-success) 35%, var(--color-border));color:var(--color-success)}
+    .btn{border:none;border-radius:var(--radius-md);padding:.55rem .75rem;cursor:pointer;transition:.18s ease;font-size:12px}
+    .btn-primary{background:var(--color-primary);color:white;font-weight:700}
+    .btn-primary:hover{background:var(--color-primary-hover)}
+    .btn-secondary{background:var(--color-surface-offset);border:1px solid var(--color-border)}
+    .watchlist-btn{padding:.45rem .65rem;border-radius:var(--radius-md);border:1px solid var(--color-border);background:var(--color-surface-2);font-size:12px}
+    .shell{display:grid;grid-template-columns:260px minmax(0,1.35fr) 300px;gap:var(--space-3);padding:var(--space-3);min-height:calc(100vh - 72px)}
+    .panel{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);box-shadow:var(--shadow-sm)}
+    .sidebar,.copilot{padding:var(--space-3);position:sticky;top:88px;height:calc(100vh - 104px);overflow:auto}
+    .content{display:grid;gap:var(--space-4);min-width:0}
+    .section{margin-top:var(--space-5)}
+    .section h3{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--color-text-muted);margin-bottom:var(--space-2)}
+    .field{display:grid;gap:.3rem;margin-bottom:var(--space-2)}
+    .field label{font-size:11px;color:var(--color-text-muted)}
+    .field input,.field select,.field textarea{width:100%;padding:.55rem .7rem;border-radius:var(--radius-md);border:1px solid var(--color-border);background:var(--color-surface-2)}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-2)}
+    .sidebar-actions,.watchlist-actions,.watchlist-toolbar{display:flex;gap:var(--space-2);flex-wrap:wrap}
+    .summary-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--space-2)}
+    .card{padding:var(--space-3)}
+    .metric-label{font-size:11px;color:var(--color-text-muted);margin-bottom:.25rem;text-transform:uppercase;letter-spacing:.04em}
+    .metric-value{font-size:1.1rem;font-weight:700}
+    .metric-sub{font-size:11px;color:var(--color-text-muted);margin-top:.2rem}
+    .chips{display:flex;gap:var(--space-2);flex-wrap:wrap;padding:var(--space-3)}
+    .chip{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .55rem;border-radius:999px;background:var(--color-surface-offset);border:1px solid var(--color-border);font-size:var(--text-xs)}
+    .chip.ai{border-color:color-mix(in srgb, var(--color-primary) 45%, var(--color-border));color:var(--color-primary)}
+    .panel-head{display:flex;align-items:center;justify-content:space-between;padding:var(--space-3);border-bottom:1px solid var(--color-divider)}
+    .panel-head h2{font-size:var(--text-base)}
+    .muted{color:var(--color-text-muted)}
+    .table-wrap{overflow:auto}
+    table{width:100%;border-collapse:collapse;font-size:var(--text-sm)}
+    th,td{padding:.85rem .8rem;border-bottom:1px solid var(--color-divider);white-space:nowrap;text-align:left}
+    th{position:sticky;top:0;background:var(--color-surface);font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.05em;color:var(--color-text-muted)}
+    tbody tr:hover{background:color-mix(in srgb, var(--color-surface-offset) 70%, transparent)}
+    .positive{color:var(--color-success)}
+    .table-panel{min-width:0}
+    .watchlist-panel{margin-bottom:var(--space-4)}
+    .watchlist-layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:var(--space-3);padding:var(--space-3)}
+    .watchlist-sidebar{border-right:1px solid var(--color-divider);padding-right:var(--space-3)}
+    .watchlist-sidebar-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-3)}
+    .watchlist-list{display:grid;gap:var(--space-2)}
+    .watchlist-item{padding:.6rem .7rem;border:1px solid var(--color-border);background:var(--color-surface-2);border-radius:var(--radius-md);text-align:left;cursor:pointer;display:grid;gap:.2rem}
+    .watchlist-item.active{border-color:var(--color-primary);background:color-mix(in srgb, var(--color-primary) 12%, var(--color-surface-2))}
+    .watchlist-item span{font-size:var(--text-xs);color:var(--color-text-muted)}
+    .watchlist-main{display:grid;gap:var(--space-2);min-width:0}
+    .watchlist-state{padding:.75rem;border:1px dashed var(--color-border);border-radius:var(--radius-lg);background:var(--color-surface-2)}
+    .watchlist-state.state-empty{color:var(--color-text-muted)}
+    .toggle{padding:.5rem .75rem;border-radius:999px;border:1px solid var(--color-border);background:var(--color-surface-2);font-size:var(--text-xs)}
+    .toggle.active{background:var(--color-primary);border-color:var(--color-primary);color:white}
+    .iv-curve-controls{display:flex;gap:var(--space-2);flex-wrap:wrap}
+    .iv-curve-panel{margin-top:0}
+    .iv-chart-wrap{padding:0 var(--space-3) var(--space-2)}
+    .iv-chart{width:100%;height:auto;display:block}
+    .legend{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;padding:0 var(--space-3) var(--space-3);font-size:11px;color:var(--color-text-muted)}
+    .sw{width:18px;height:10px;border-radius:99px;display:inline-block}
+    .copilot-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-2)}
+    .welcome{padding:var(--space-3);border-radius:var(--radius-lg);background:var(--color-surface-offset);border:1px solid var(--color-border);margin-bottom:var(--space-3)}
+    .quick-grid{display:grid;gap:var(--space-2);margin-bottom:var(--space-3)}
+    .quick{padding:.55rem .7rem;border-radius:var(--radius-md);background:var(--color-surface-2);border:1px solid var(--color-border);text-align:left;font-size:12px}
+    .thread{display:grid;gap:var(--space-3);margin-bottom:var(--space-4)}
+    .msg{padding:.7rem .85rem;border-radius:var(--radius-lg);max-width:92%;font-size:12px}
+    .msg.ai{background:var(--color-surface-offset);border:1px solid var(--color-border)}
+    .msg.user{background:color-mix(in srgb, var(--color-primary) 18%, var(--color-surface));border:1px solid color-mix(in srgb, var(--color-primary) 35%, var(--color-border));margin-left:auto}
+    .composer{margin-top:auto;border-top:1px solid var(--color-divider);padding-top:var(--space-4)}
+    .composer textarea{width:100%;min-height:90px;resize:vertical;padding:1rem;border-radius:var(--radius-lg);border:1px solid var(--color-border);background:var(--color-surface-2);margin-bottom:var(--space-2)}
+    .composer-foot{display:flex;align-items:center;justify-content:space-between;gap:var(--space-2)}
+    .scope{font-size:var(--text-xs);color:var(--color-text-muted)}
+    @media (max-width:1280px){
+      .shell{grid-template-columns:280px minmax(0,1fr)}
+      .copilot{position:relative;top:auto;height:auto}
+      .content{order:2}
+      .sidebar{order:1}
+      .copilot-wrap{grid-column:1 / -1}
+    }
+    @media (max-width:900px){
+      .shell{grid-template-columns:1fr}
+      .sidebar,.copilot{position:relative;top:auto;height:auto}
+      .summary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .topbar{padding:0 var(--space-4)}
+      th,td{padding:.7rem .65rem}
+      .watchlist-layout{grid-template-columns:1fr}
+      .watchlist-sidebar{border-right:0;padding-right:0;border-bottom:1px solid var(--color-divider);padding-bottom:var(--space-4)}
+    }
+    @media (max-width:640px){
+      .summary-grid{grid-template-columns:1fr}
+      .row{grid-template-columns:1fr}
+      .top-meta{display:none}
+      .shell{padding:var(--space-3)}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">CS</div>
+        <div>
+          <h1>Coiled Spring</h1>
+          <p>LEAPS scanner with broker-linked data</p>
+        </div>
+      </div>
+      <div class="top-meta">
+        <span class="badge success">IBKR connected</span>
+        <span class="badge">Market: Demo</span>
+        <span class="badge primary">AI credits: 42</span>
+        <span class="badge">Plan: Pro</span>
+        <button class="watchlist-btn">Watchlist</button>
+        <button class="btn btn-primary">Run Scan</button>
+      </div>
+    </header>
+
+    <main class="shell">
+      <aside class="panel sidebar">
+        <div class="section">
+          <h3>Scan scope</h3>
+          <div class="field"><label>Underlying</label><input value="AAPL, NVDA, AMZN"></div>
+          <div class="field"><label>Typology</label><select><option>Stock</option><option>ETF</option><option>Index</option></select></div>
+          <div class="field"><label>Option type</label><select><option>Calls</option><option>Puts</option></select></div>
+          <div class="field"><label>Broker source</label><select><option>Interactive Brokers</option><option>tastytrade</option></select></div>
+        </div>
+        <div class="section">
+          <h3>LEAPS filters</h3>
+          <div class="row"><div class="field"><label>Min DTE</label><input value="365"></div><div class="field"><label>Max DTE</label><input value="900"></div></div>
+          <div class="row"><div class="field"><label>Delta min</label><input value="0.20"></div><div class="field"><label>Delta max</label><input value="0.40"></div></div>
+          <div class="row"><div class="field"><label>Gamma min</label><input value="0.00"></div><div class="field"><label>Gamma max</label><input value="0.03"></div></div>
+          <div class="row"><div class="field"><label>Vega min</label><input value="0.10"></div><div class="field"><label>Vega max</label><input value="1.20"></div></div>
+          <div class="row"><div class="field"><label>Theta min</label><input value="-0.05"></div><div class="field"><label>Theta max</label><input value="0.00"></div></div>
+        </div>
+        <div class="section">
+          <h3>Pricing liquidity</h3>
+          <div class="row"><div class="field"><label>Premium min</label><input value="1.00"></div><div class="field"><label>Premium max</label><input value="25.00"></div></div>
+          <div class="row"><div class="field"><label>Current IV max</label><input value="32"></div><div class="field"><label>Open interest min</label><input value="500"></div></div>
+          <div class="row"><div class="field"><label>Volume min</label><input value="50"></div><div class="field"><label>Bid/ask spread max</label><input value="8"></div></div>
+        </div>
+        <div class="sidebar-actions"><button class="btn btn-primary">Apply Filters</button><button class="btn btn-secondary">Reset</button><button class="btn btn-secondary">Save Filter Set</button></div>
+      </aside>
+
+      <section class="content">
+        <div class="summary-grid">
+          <div class="panel card"><div class="metric-label">Results</div><div class="metric-value">27</div><div class="metric-sub">After current filters</div></div>
+          <div class="panel card"><div class="metric-label">Active broker</div><div class="metric-value">IBKR</div><div class="metric-sub">Demo linked account</div></div>
+          <div class="panel card"><div class="metric-label">Scan time</div><div class="metric-value">14:52</div><div class="metric-sub">Updated 18 sec ago</div></div>
+          <div class="panel card"><div class="metric-label">Average IV</div><div class="metric-value">24.7%</div><div class="metric-sub">Current result set</div></div>
+          <div class="panel card"><div class="metric-label">Universe</div><div class="metric-value">US LEAPS</div><div class="metric-sub">Stocks only</div></div>
+        </div>
+        <div class="panel chips"><span class="chip">DTE 365</span><span class="chip">Calls</span><span class="chip">IV 32</span><span class="chip">OI 500</span><span class="chip ai">AI set Delta 0.20–0.40</span><span class="chip">Spread 8%</span></div>
+
+        <section class="panel table-panel">
+          <div class="panel-head">
+            <div><h2>Run Scanner</h2><p class="muted">Results from the current scan</p></div>
+            <button class="btn btn-secondary">Save selected</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Sel</th><th>Underlying</th><th>Type</th><th>CP</th><th>Expiry</th><th>DTE</th><th>Strike</th><th>Delta</th><th>IV</th><th>OI</th><th>Vol</th></tr></thead>
+              <tbody>
+                <tr><td><input type="checkbox"></td><td>AAPL</td><td>Stock</td><td>Call</td><td>2027-01-15</td><td>604</td><td>250</td><td>0.24</td><td>21.4%</td><td>1824</td><td>244</td></tr>
+                <tr><td><input type="checkbox"></td><td>NVDA</td><td>Stock</td><td>Call</td><td>2027-06-18</td><td>758</td><td>180</td><td>0.31</td><td>23.9%</td><td>1402</td><td>178</td></tr>
+                <tr><td><input type="checkbox"></td><td>AMZN</td><td>Stock</td><td>Call</td><td>2027-01-15</td><td>604</td><td>220</td><td>0.29</td><td>24.2%</td><td>988</td><td>96</td></tr>
+                <tr><td><input type="checkbox"></td><td>MSFT</td><td>Stock</td><td>Call</td><td>2027-12-17</td><td>940</td><td>520</td><td>0.22</td><td>25.1%</td><td>761</td><td>88</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel watchlist-panel">
+          <div class="panel-head">
+            <div><h2>Selected Watchlist</h2><p class="muted">Active watchlist overview</p></div>
+            <div class="watchlist-toolbar"><button class="btn btn-secondary">Create watchlist</button><button class="btn btn-secondary">Rename</button><button class="btn btn-secondary">Delete</button></div>
+          </div>
+          <div class="watchlist-layout">
+            <aside class="watchlist-sidebar">
+              <div class="watchlist-sidebar-head"><span class="badge primary">Active</span><span class="muted">3 watchlists</span></div>
+              <div class="watchlist-list">
+                <button class="watchlist-item active"><strong>Core LEAPS</strong><span>12 options · 3 alerts</span></button>
+                <button class="watchlist-item"><strong>Earnings setups</strong><span>7 options · 1 alert</span></button>
+                <button class="watchlist-item"><strong>IV crush plays</strong><span>4 options · 0 alerts</span></button>
+              </div>
+            </aside>
+            <div class="watchlist-main">
+              <div class="watchlist-actions"><button class="btn btn-primary">Add selected</button><button class="btn btn-secondary">Remove selected</button><button class="btn btn-secondary">Move to another watchlist</button></div>
+              <div class="watchlist-state state-empty"><strong>No saved options yet.</strong><p>Select contracts from the scanner and add them to the active watchlist.</p></div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Sel</th><th>Underlying</th><th>Expiry</th><th>DTE</th><th>Strike</th><th>Delta</th><th>IV</th><th>Hist IV MA</th><th>P&L theor.</th><th>Alert</th></tr></thead>
+                  <tbody>
+                    <tr><td><input type="checkbox"></td><td>AAPL</td><td>2027-01-15</td><td>604</td><td>250</td><td>0.24</td><td>21.4%</td><td>24.8%</td><td class="positive">+12.6%</td><td>IV &lt; 22%</td></tr>
+                    <tr><td><input type="checkbox"></td><td>NVDA</td><td>2027-06-18</td><td>758</td><td>180</td><td>0.31</td><td>23.9%</td><td>26.1%</td><td>-4.2%</td><td>Spread &gt; 6%</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel iv-curve-panel">
+          <div class="panel-head" style="padding:0 0 1rem 0;border:0;margin-bottom:.5rem;">
+            <div><h2>IV Curve</h2><p class="muted">Selected contract IV view</p></div>
+            <div class="iv-curve-controls"><button class="toggle active">DTE</button><button class="toggle">Expiration</button><button class="toggle active">Calls</button><button class="toggle">Puts</button><button class="toggle">AAPL</button></div>
+          </div>
+          <div class="iv-chart-wrap">
+            <svg viewBox="0 0 1200 420" class="iv-chart" role="img" aria-label="IV line chart">
+              <g stroke="rgba(255,255,255,0.08)" stroke-width="1"><line x1="70" y1="40" x2="70" y2="350"/><line x1="70" y1="350" x2="1140" y2="350"/><line x1="70" y1="272" x2="1140" y2="272"/><line x1="70" y1="194" x2="1140" y2="194"/><line x1="70" y1="116" x2="1140" y2="116"/></g>
+              <g fill="#bdb8b0" font-size="20"><text x="20" y="354">19%</text><text x="20" y="276">22%</text><text x="20" y="198">25%</text><text x="20" y="120">28%</text><text x="86" y="390">365</text><text x="246" y="390">540</text><text x="406" y="390">720</text><text x="566" y="390">900</text><text x="726" y="390">1080</text><text x="886" y="390">1260</text><text x="1046" y="390">1440</text></g>
+              <path d="M70 320 L230 310 L390 295 L550 282 L710 268 L870 254 L1030 248" fill="none" stroke="#4f98a3" stroke-width="5" stroke-linecap="round"/>
+              <path d="M70 338 L230 326 L390 314 L550 302 L710 292 L870 282 L1030 274" fill="none" stroke="#227f8b" stroke-width="5" stroke-linecap="round"/>
+              <path d="M70 302 L230 292 L390 280 L550 268 L710 252 L870 236 L1030 220" fill="none" stroke="#e8af34" stroke-width="5" stroke-linecap="round"/>
+              <path d="M70 290 L230 278 L390 266 L550 250 L710 236 L870 214 L1030 198" fill="none" stroke="#bb653b" stroke-width="5" stroke-linecap="round"/>
+              <circle cx="1030" cy="248" r="6" fill="#4f98a3"/><circle cx="1030" cy="274" r="6" fill="#227f8b"/><circle cx="1030" cy="220" r="6" fill="#e8af34"/><circle cx="1030" cy="198" r="6" fill="#bb653b"/>
+            </svg>
+          </div>
+          <div class="legend"><span class="sw" style="background:#4f98a3"></span><span>Strike 150</span><span class="sw" style="background:#227f8b"></span><span>Strike 180</span><span class="sw" style="background:#e8af34"></span><span>Strike 210</span><span class="sw" style="background:#bb653b"></span><span>Strike 240</span></div>
+        </section>
+      </section>
+
+      <aside class="panel copilot">
+        <div class="copilot-head"><strong>AI Copilot</strong><span class="badge primary">Ready</span></div>
+        <div class="welcome"><strong>Welcome back.</strong><p class="muted" style="margin-top:.45rem">I can help connect your broker, set LEAPS filters, explain scanner results, and analyze support/resistance.</p></div>
+        <div class="quick-grid"><button class="quick">Help connect broker</button><button class="quick">Set conservative LEAPS filters</button><button class="quick">Explain these results</button><button class="quick">Analyze support resistance</button></div>
+        <div class="thread"><div class="msg ai">Ciao, sono Coiled Spring AI. Posso aiutarti a impostare i filtri LEAPS o spiegare i risultati attuali.</div><div class="msg user">Cercami call LEAPS con delta 0.20-0.40 e IV sotto 32.</div><div class="msg ai">Ho applicato un set iniziale coerente con LEAPS calls a delta medio-basso. Vuoi restringere anche per open interest o premio massimo?</div></div>
+        <div class="composer"><textarea placeholder="Ask about options, LEAPS, IV, underlyings, technical levels, or broker setup..."></textarea><div class="composer-foot"><span class="scope">This copilot only answers questions related to options and markets.</span><button class="btn btn-primary">Send</button></div></div>
+      </aside>
+    </main>
+  </div>
+</body>
+</html>

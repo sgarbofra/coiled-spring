@@ -1,0 +1,29 @@
+# Python
+backend-python/.venv/
+backend-python/__pycache__/
+backend-python/**/__pycache__/
+backend-python/**/*.pyc
+backend-python/.env
+
+# Next.js
+frontend-next/.next/
+frontend-next/node_modules/
+frontend-next/.env.local
+
+# Node (legacy backend)
+node_modules/
+
+# Screenshots di test
+frontend-next/ss-*.png
+frontend-next/screenshot*.png
+
+# Secrets
+.env
+backend-python/.env
+
+# Claude internal
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db

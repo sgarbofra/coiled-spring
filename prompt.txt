@@ -1,0 +1,117 @@
+Sei il nuovo sviluppatore principale di questo progetto. 
+Stai prendendo in carico il lavoro da un AI precedente (Perplexity) 
+che ha lavorato su di esso. Leggi tutto prima di toccare qualsiasi file.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CONTESTO DEL PROGETTO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Nome: Coiled Spring Strategy App
+Tipo: SaaS web app per trader di opzioni
+Obiettivo: tool di supporto decisionale per selezione, 
+salvataggio, monitoraggio e gestione di opzioni LEAPS 
+su mercato USA secondo una logica antifragile, long Vega, 
+risk-defined, orientata alla compressione della volatilità.
+
+Il prodotto NON è uno scanner generico.
+È una macchina di optionality disciplinata che aiuta 
+l'utente a scartare ciò che non merita capitale.
+
+Stack target deciso:
+- Backend: Python + FastAPI
+- Frontend: React + TypeScript / Next.js
+- Database: PostgreSQL
+- Broker abstraction layer (primo broker: IBKR via ib_insync)
+- Auth: JWT
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STATO DEL LAVORO PRECEDENTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Il lavoro precedente ha prodotto:
+- Direzione strategica e priorità prodotto chiare
+- Struttura cartelle già creata nel repository
+- Alcune basi di codice parziali
+- Un frontend-mvp.html (da valutare)
+- Setup Prisma (potenzialmente in conflitto con stack target)
+- Struttura con cartelle duplicate (frontend / frontend-next)
+
+NON è chiaro ancora:
+- Cosa è funzionante vs abbozzato
+- Quale frontend tenere
+- Se Prisma va mantenuto o sostituito con SQLAlchemy/PostgreSQL
+- Cosa c'è dentro ogni cartella
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CARTELLA DEL PROGETTO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+La cartella root del progetto è:
+C:\Users\[tuousername]\Desktop\coiled-spring-backend2
+
+Struttura visibile di primo livello:
+app/, backend/, components/, database/, frontend/, 
+frontend-next/, lib/, node_modules/, prisma/,
+.env, frontend-mvp.html, package.json, 
+package-lock.json, prisma.config.ts, README.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IL TUO PRIMO COMPITO: AUDIT COMPLETO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+NON modificare nessun file. Solo lettura e analisi.
+
+Esegui questi step in ordine:
+
+1. MAPPA COMPLETA
+   Entra in ogni cartella (app, backend, components, 
+   database, frontend, frontend-next, lib, prisma) e 
+   elenca tutti i file con una riga di descrizione.
+   Includi anche sottocartelle.
+
+2. LEGGI I FILE CHIAVE
+   Leggi il contenuto di:
+   - README.md
+   - package.json
+   - prisma.config.ts
+   - .env (solo struttura delle chiavi, non i valori)
+   - frontend-mvp.html (dimmi cosa fa concretamente)
+
+3. VALUTA OGNI AREA
+   Per ciascuna cartella principale dimmi:
+   a) Cosa contiene e cosa fa
+   b) Il codice è funzionante, parziale o solo abbozzato?
+   c) È coerente con lo stack target (FastAPI/Next.js/PostgreSQL)?
+   d) Va tenuto, rifatto o eliminato?
+
+4. IDENTIFICA I CONFLITTI
+   - frontend vs frontend-next: qual è più avanzato?
+   - Prisma (Node.js ORM) vs stack target Python/SQLAlchemy: 
+     c'è conflitto? Come si risolve?
+   - node_modules: il backend è Node o Python?
+
+5. REPORT FINALE STRUTTURATO
+   Producimi un report con queste sezioni:
+
+   [STABILE E RIUTILIZZABILE]
+   - lista di cosa tenere as-is
+
+   [DA SCEGLIERE / DEDUPLICARE]
+   - lista di duplicati con raccomandazione su quale tenere
+
+   [PARZIALE / DA COMPLETARE]
+   - lista di cosa è abbozzato e cosa serve per completarlo
+
+   [MANCANTE COMPLETAMENTE]
+   - lista di quello che non esiste ancora
+
+   [PROSSIMO PASSO RACCOMANDATO]
+   - la singola azione più utile da fare subito
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DOPO L'AUDIT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Solo dopo che hai prodotto il report completo,
+aspetta istruzioni prima di procedere con qualsiasi 
+modifica o implementazione.
