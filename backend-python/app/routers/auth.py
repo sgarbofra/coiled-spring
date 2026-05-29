@@ -25,6 +25,17 @@ def _create_token(user_id: int) -> str:
     return jwt.encode({"sub": str(user_id), "exp": expire}, settings.secret_key, algorithm=settings.algorithm)
 
 
+def _user_out(user: models.User) -> schemas.UserOut:
+    return schemas.UserOut(
+        id=user.id,
+        email=user.email,
+        plan=user.plan,
+        is_active=user.is_active,
+        has_broker=user.broker_config is not None,
+        created_at=user.created_at,
+    )
+
+
 @router.post("/register", response_model=schemas.Token, status_code=status.HTTP_201_CREATED)
 def register(body: schemas.UserRegister, db: Session = Depends(get_db)):
     if db.query(models.User).filter(models.User.email == body.email).first():
@@ -39,26 +50,36 @@ def register(body: schemas.UserRegister, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(user)
 
-    return schemas.Token(
-        access_token=_create_token(user.id),
-        user=schemas.UserOut.model_validate(user),
-    )
+    return schemas.Token(access_token=_create_token(user.id), user=_user_out(user))
 
 
 @router.post("/login", response_model=schemas.Token)
 def login(body: schemas.UserLogin, db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.email == body.email).first()
+    from sqlalchemy.orm import joinedload
+    user = (
+        db.query(models.User)
+        .options(joinedload(models.User.broker_config))
+        .filter(models.User.email == body.email)
+        .first()
+    )
     if not user or not _verify_password(body.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     if not user.is_active:
         raise HTTPException(status_code=403, detail="Account inactive")
 
-    return schemas.Token(
-        access_token=_create_token(user.id),
-        user=schemas.UserOut.model_validate(user),
-    )
+    return schemas.Token(access_token=_create_token(user.id), user=_user_out(user))
 
 
 @router.get("/me", response_model=schemas.UserOut)
-def me(current_user: models.User = Depends(get_current_user)):
-    return current_user
+def me(
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    from sqlalchemy.orm import joinedload
+    user = (
+        db.query(models.User)
+        .options(joinedload(models.User.broker_config))
+        .filter(models.User.id == current_user.id)
+        .first()
+    )
+    return _user_out(user)

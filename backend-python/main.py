@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import Base, engine
-from app.routers import auth, watchlist_items, watchlists
+from app.routers import auth, broker, watchlist_items, watchlists
 
 import app.models  # noqa: F401 — registers all models with Base
 
@@ -34,6 +34,7 @@ app.add_middleware(
 )
 
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
+app.include_router(broker.router, prefix="/api/broker", tags=["broker"])
 app.include_router(watchlists.router, prefix="/api/watchlists", tags=["watchlists"])
 app.include_router(watchlist_items.router, prefix="/api/watchlists", tags=["watchlist-items"])
 

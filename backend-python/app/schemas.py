@@ -20,6 +20,7 @@ class UserOut(BaseModel):
     email: str
     plan: str
     is_active: bool
+    has_broker: bool = False
     created_at: datetime
     model_config = {"from_attributes": True}
 
@@ -27,6 +28,22 @@ class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
     user: UserOut
+
+
+# ── Broker ────────────────────────────────────────────────────────────────────
+
+class BrokerSave(BaseModel):
+    broker: str
+    config: dict
+
+class BrokerOut(BaseModel):
+    id: int
+    broker: str
+    config: dict
+    is_active: bool
+    created_at: datetime
+    updated_at: datetime
+    model_config = {"from_attributes": True}
 
 
 # ── Watchlists ────────────────────────────────────────────────────────────────

@@ -25,6 +25,21 @@ class User(Base):
 
     watchlists: Mapped[List["Watchlist"]] = relationship(back_populates="user")
     scan_runs: Mapped[List["ScanRun"]] = relationship(back_populates="user")
+    broker_config: Mapped[Optional["BrokerConfig"]] = relationship(back_populates="user", uselist=False)
+
+
+class BrokerConfig(Base):
+    __tablename__ = "broker_configs"
+
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("users.id", ondelete="CASCADE"), unique=True, nullable=False)
+    broker: Mapped[str] = mapped_column(Text, nullable=False)  # "ibkr" | "tastytrade"
+    config: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+    user: Mapped["User"] = relationship(back_populates="broker_config")
 
 
 class Watchlist(Base):
