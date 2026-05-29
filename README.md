@@ -1,103 +1,165 @@
 # Coiled Spring Strategy App
 
-Watchlist & Portfolio module for a LEAPS options scanner focused on saved scans, watchlists, alerts, and IV monitoring.
+A disciplined LEAPS options watchlist and portfolio tool for antifragile, long-Vega, risk-defined trading on US markets.
+
+> Not a generic scanner. A machine of optionality that helps you discard what doesn't deserve capital.
+
+---
+
+## Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Backend | Python 3.13 + FastAPI + SQLAlchemy |
+| Database | PostgreSQL |
+| Frontend | Next.js 16 + TypeScript + Tailwind CSS v4 |
+| Auth | JWT (PyJWT) via httpOnly cookie |
+
+---
+
+## Features
+
+- **Watchlists** — create, rename, delete, set active
+- **LEAPS tracking** — add options from scanner with full greeks (Δ, Γ, Vega, Θ)
+- **Item drawer** — contract details, P&L, volatility, greeks, market data
+- **Alerts** — per-instrument alerts (IV Rank, Delta, DTE, price) with enable/disable toggle
+- **Scanner modal** — select candidates and bulk-save to watchlist
+- **Dark theme** throughout
+
+---
 
 ## Project structure
 
-```bash
+```
 coiled-spring/
-├── frontend/
-│   └── frontend-mvp-final.html
-├── backend/
-│   ├── src/
-│   │   ├── db/
-│   │   │   └── mock-db.js
-│   │   ├── routes/
-│   │   │   ├── scan-runs.js
-│   │   │   ├── iv-curve.js
-│   │   │   └── watchlists.js
-│   │   └── services/
-│   │       ├── scan-runs-service.js
-│   │       ├── iv-curve-service.js
-│   │       └── watchlist-service.js
-│   │   └── index.js
-│   └── package.json
+├── backend-python/          # FastAPI backend
+│   ├── main.py              # App entry point
+│   ├── requirements.txt
+│   ├── setup_db.py          # One-time DB schema creation
+│   └── app/
+│       ├── models.py        # SQLAlchemy ORM models
+│       ├── schemas.py       # Pydantic request/response schemas
+│       ├── dependencies.py  # JWT auth dependency
+│       └── routers/
+│           ├── auth.py
+│           ├── watchlists.py
+│           └── watchlist_items.py  # items + alerts
+│
+├── frontend-next/           # Next.js frontend
+│   ├── proxy.ts             # Auth guard (redirect to /login)
+│   ├── app/
+│   │   ├── login/           # Login page
+│   │   ├── watchlists/      # Main watchlist page
+│   │   └── api/             # Proxy routes → FastAPI
+│   ├── components/
+│   │   └── watchlist/       # Sidebar, Table, Drawer, Scanner modal
+│   └── lib/
+│       ├── python-api.ts    # Authenticated fetch to FastAPI
+│       └── transform.ts     # snake_case → camelCase + format mapping
+│
 ├── database/
-│   └── migrations/
-│       └── 001_init_watchlist.sql
-└── README.md
+│   └── migrations/          # Raw PostgreSQL schema (source of truth)
+│       ├── 001_init_watchlist.sql
+│       └── 002_init_saas_auth.sql
+│
+└── backend/                 # Legacy Node.js/Express (reference only)
 ```
 
-## What this module does
+---
 
-- Creates multiple watchlists.
-- Renames and deletes watchlists.
-- Selects the active watchlist.
-- Adds selected options from scanner results.
-- Removes selected options from a watchlist.
-- Moves options between watchlists.
-- Shows scanner results and the selected watchlist in the main UI.
-- Displays IV curves for calls or puts depending on the selected option type.
+## Getting started
 
-## Setup
+### Prerequisites
 
-### 1. Install dependencies
+- Python 3.11+
+- Node.js 20+
+- PostgreSQL running on port 5433
+
+### 1. Backend
 
 ```bash
+cd backend-python
+
+# Create virtualenv and install dependencies
+python -m venv .venv
+.venv\Scripts\activate        # Windows
+source .venv/bin/activate     # macOS/Linux
+
+pip install -r requirements.txt
+
+# Configure environment
+cp .env.example .env
+# Edit .env with your DATABASE_URL and SECRET_KEY
+
+# Create database tables
+python setup_db.py
+
+# Start server
+uvicorn main:app --reload --port 8000
+```
+
+API docs available at `http://localhost:8000/docs`
+
+### 2. Frontend
+
+```bash
+cd frontend-next
+
 npm install
+
+# Start dev server
+npm run dev
 ```
 
-### 2. Run the backend
+Open `http://localhost:3000` — you'll be redirected to the login page.
 
-```bash
-npm start
-```
+### Default demo user
 
-The Express server starts from:
+Register a new account via `POST /api/auth/register` or the API docs, then log in at `http://localhost:3000/login`.
 
-```bash
-backend/src/index.js
-```
-
-### 3. Open the frontend
-
-Open:
-
-```bash
-frontend/frontend-mvp-final.html
-```
+---
 
 ## API overview
 
-### Watchlists
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/register` | Register new user |
+| POST | `/api/auth/login` | Login → JWT |
+| GET | `/api/auth/me` | Current user profile |
+| GET | `/api/watchlists` | List watchlists |
+| POST | `/api/watchlists` | Create watchlist |
+| PATCH | `/api/watchlists/{id}` | Rename |
+| DELETE | `/api/watchlists/{id}` | Delete (cascade) |
+| POST | `/api/watchlists/{id}/activate` | Set as active |
+| GET | `/api/watchlists/{id}/items` | List items with greeks |
+| POST | `/api/watchlists/{id}/items/bulk-add` | Add LEAPS contracts |
+| DELETE | `/api/watchlists/{id}/items/{item_id}` | Remove item |
+| POST | `/api/watchlists/{id}/items/bulk-delete` | Remove multiple |
+| POST | `/api/watchlists/{id}/items/move` | Move between watchlists |
+| GET/POST | `/api/watchlists/{id}/items/{item_id}/alerts` | Alerts CRUD |
+| PATCH/DELETE | `/api/watchlists/{id}/items/{item_id}/alerts/{alert_id}` | Update/delete alert |
 
-- `GET /api/watchlists`
-- `POST /api/watchlists`
-- `PATCH /api/watchlists/:watchlistId`
-- `DELETE /api/watchlists/:watchlistId`
-- `POST /api/watchlists/:watchlistId/activate`
-- `GET /api/watchlists/:watchlistId/items`
-- `POST /api/watchlists/:watchlistId/items/bulk-add`
-- `DELETE /api/watchlists/:watchlistId/items/:itemId`
-- `POST /api/watchlists/:watchlistId/items/move`
-- `GET /api/watchlists/:watchlistId/summary`
+---
 
-### Scan runs
+## Database schema
 
-- `GET /api/scan-runs`
-- `GET /api/scan-runs/:scanRunId`
-- `POST /api/scan-runs`
+Core tables (defined in `database/migrations/001_init_watchlist.sql`):
 
-### IV curve
+- `users` — accounts
+- `watchlists` — named lists per user
+- `option_contracts` — normalized contract definitions (underlying, type, strike, expiration)
+- `watchlist_items` — contract + entry greeks per watchlist
+- `option_snapshots` — time-series snapshots (for future IV tracking)
+- `alerts` — per-item threshold alerts
+- `scan_runs` — scanner session history
 
-- `GET /api/iv-curve?underlying=AAPL&type=call`
-- `GET /api/iv-curve?underlying=AAPL&type=put`
+---
 
-## MVP notes
+## Roadmap
 
-This version uses an in-memory mock DB for fast development.  
-It is intended to be replaced later with PostgreSQL persistence and real market data integration.
-
-## Next step
-
-After the MVP is stable, the next backend step is replacing the mock DB with a real Postgres repository layer and connecting the scanner results to live option-chain data.
+- [ ] IBKR integration via `ib_insync` (live greeks, bid/ask, IV)
+- [ ] IV Rank / IV Percentile calculation from historical data
+- [ ] P&L tracking with real-time premium updates
+- [ ] Alert notifications (email / push)
+- [ ] Scanner engine with configurable filters (DTE, delta range, IV rank)
+- [ ] SaaS billing layer (plans, subscriptions)
