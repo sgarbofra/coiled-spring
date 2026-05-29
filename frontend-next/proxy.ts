@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const PUBLIC = ['/login', '/api/auth']
+const PUBLIC = ['/login', '/register', '/api/auth']
 const ONBOARDING_ONLY = ['/onboarding', '/api/broker']
 
 export function proxy(request: NextRequest) {

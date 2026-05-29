@@ -23,12 +23,7 @@ export default function LoginPage() {
       const data = await res.json()
       if (!res.ok || !data.ok) throw new Error(data.error || 'Login failed')
 
-      // Redirect based on broker configuration
-      if (data.user?.has_broker) {
-        router.push('/watchlists')
-      } else {
-        router.push('/onboarding')
-      }
+      router.push('/watchlists')
       router.refresh()
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Login failed')
@@ -41,7 +36,10 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-slate-950 text-slate-100">
       <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-8">
         <h1 className="mb-1 text-2xl font-semibold">Coiled Spring</h1>
-        <p className="mb-6 text-sm text-slate-400">Sign in to continue</p>
+        <p className="mb-6 text-sm text-slate-400">
+          Sign in to continue ·{' '}
+          <a href="/register" className="text-indigo-400 hover:text-indigo-300">Crea account</a>
+        </p>
 
         <form onSubmit={submit} className="space-y-4">
           <label className="block">

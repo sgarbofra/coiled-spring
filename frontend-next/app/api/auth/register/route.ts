@@ -1,0 +1,33 @@
+import { NextResponse } from 'next/server'
+
+const PYTHON_BASE = process.env.PYTHON_API_URL ?? 'http://localhost:8000'
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json()
+    const res = await fetch(`${PYTHON_BASE}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: body.email, password: body.password }),
+    })
+
+    if (!res.ok) {
+      const err = await res.json()
+      return NextResponse.json({ ok: false, error: err.detail || 'Registration failed' }, { status: res.status })
+    }
+
+    const data = await res.json()
+
+    const response = NextResponse.json({ ok: true, user: data.user })
+    response.cookies.set('cs_token', data.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7,
+      path: '/',
+    })
+    return response
+  } catch {
+    return NextResponse.json({ ok: false, error: 'Server error' }, { status: 500 })
+  }
+}
