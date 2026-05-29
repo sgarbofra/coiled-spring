@@ -6,6 +6,19 @@ A disciplined LEAPS options watchlist and portfolio tool for antifragile, long-V
 
 ---
 
+## Screenshots
+
+### Watchlist — Core LEAPS
+![Watchlist](docs/screenshot-watchlist.png)
+
+### Item drawer — AAPL 2027 C200
+![Item drawer](docs/screenshot-drawer.png)
+
+### Alerts
+![Alerts](docs/screenshot-alerts.png)
+
+---
+
 ## Stack
 
 | Layer | Technology |
