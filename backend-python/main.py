@@ -65,6 +65,17 @@ allowed_origins = [
 if settings.cors_origins:
     production_origins = [origin.strip() for origin in settings.cors_origins.split(",") if origin.strip()]
     allowed_origins.extend(production_origins)
+    # Also add www. variant for each https:// origin that doesn't already have it
+    for origin in production_origins:
+        if origin.startswith("https://") and not origin.startswith("https://www."):
+            allowed_origins.append(origin.replace("https://", "https://www.", 1))
+        elif origin.startswith("https://www."):
+            # Also add non-www variant
+            allowed_origins.append(origin.replace("https://www.", "https://", 1))
+
+# Remove duplicates while preserving order
+seen = set()
+allowed_origins = [o for o in allowed_origins if not (o in seen or seen.add(o))]
 
 app.add_middleware(
     CORSMiddleware,
