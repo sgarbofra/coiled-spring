@@ -28,7 +28,7 @@ export default function MarketMovers() {
     })
 
     // Load market movers data
-    fetch('http://localhost:8001/api/public/market-movers')
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001'}/api/public/market-movers`)
       .then(res => res.json())
       .then(data => {
         console.log('[MarketMovers] Received data:', data)

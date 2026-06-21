@@ -34,7 +34,7 @@ export default function VixChart() {
     }
 
     console.log('[VixChart] Fetching VIX data from backend...')
-    fetch('http://localhost:8001/api/public/vix-data')
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001'}/api/public/vix-data`)
       .then(r => {
         console.log('[VixChart] Response status:', r.status, r.ok)
         if (!r.ok) throw new Error(`Failed to fetch VIX data: ${r.status} ${r.statusText}`)

@@ -398,7 +398,7 @@ export default function ScannerPage() {
 
       for (const ticker of scannedTickers) {
         try {
-          const res = await fetch(`http://localhost:8001/api/public/stock-price/${ticker}`)
+          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001'}/api/public/stock-price/${ticker}`)
           const data = await res.json()
           prices[ticker] = data.last_price
         } catch {
