@@ -3,6 +3,8 @@
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic'
+
 const bb = {
   bg: '#000000', surface: '#0a0a00', border: '#222200', border2: '#333300',
   orange: '#FF6600', amber: '#FFAA00', yellow: '#FFE000',
