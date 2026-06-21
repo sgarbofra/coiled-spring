@@ -1,11 +1,20 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useCallback } from 'react'
 import Link from 'next/link'
+import ProtectedRoute from '@/components/ProtectedRoute'
+import OnboardingModal from '@/components/OnboardingModal'
 import WatchlistSidebar from '@/components/watchlist/WatchlistSidebar'
 import WatchlistTable from '@/components/watchlist/WatchlistTable'
 import ItemDetailsDrawer from '@/components/watchlist/ItemDetailsDrawer'
 import AddFromScannerModal from '@/components/watchlist/AddFromScannerModal'
+
+const bb = {
+  bg: '#000000', surface: '#0a0a00', panel: '#111100',
+  border: '#222200', border2: '#333300',
+  orange: '#FF6600', amber: '#FFAA00', yellow: '#FFE000',
+  green: '#00DD00', red: '#FF3333', white: '#CCCCCC', gray: '#FFFFFF',
+}
 
 type Watchlist = { id: string; name: string; isActive: boolean }
 type SavedInstrument = {
@@ -35,29 +44,90 @@ export default function WatchlistsPage() {
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [drawerItemId, setDrawerItemId] = useState<string | null>(null)
   const [loadingItems, setLoadingItems] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [scannerOpen, setScannerOpen] = useState(false)
 
   const activeWatchlistId = activeWatchlist?.id ?? null
 
-  const loadItems = async (watchlistId: string) => {
-    setLoadingItems(true); setError(null)
-    try {
-      const res = await fetch(`/api/watchlists/${watchlistId}/items`)
-      const data = await res.json()
-      if (!res.ok || !data.ok) throw new Error(data.error || 'Failed to load items')
-      setItems(data.items || [])
-    } catch (e: unknown) {
-      setItems([]); setError(e instanceof Error ? e.message : 'Unexpected error')
-    } finally { setLoadingItems(false) }
-  }
-
   useEffect(() => {
-    if (activeWatchlistId) loadItems(activeWatchlistId)
-    else { setItems([]); setSelectedIds([]); setDrawerItemId(null) }
+    const loadData = async () => {
+      if (!activeWatchlistId) {
+        setItems([])
+        setSelectedIds([])
+        setDrawerItemId(null)
+        return
+      }
+
+      setLoadingItems(true)
+      setError(null)
+      try {
+        const res = await fetch(`/api/watchlists/${activeWatchlistId}/items`)
+        const data = await res.json()
+        if (!res.ok || !data.ok) throw new Error(data.error || 'Failed to load items')
+        setItems(data.items || [])
+
+        // Auto-refresh prezzi e greche quando apri la watchlist
+        if (data.items && data.items.length > 0) {
+          setRefreshing(true)
+          try {
+            const refreshRes = await fetch(`/api/watchlists/${activeWatchlistId}/refresh`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' }
+            })
+            const refreshData = await refreshRes.json()
+            if (refreshRes.ok && refreshData.ok) {
+              // Reload items con dati aggiornati
+              const reloadRes = await fetch(`/api/watchlists/${activeWatchlistId}/items`)
+              const reloadData = await reloadRes.json()
+              if (reloadData.ok) setItems(reloadData.items || [])
+            }
+          } catch (refreshError) {
+            // Silent fail - mostra i dati anche se il refresh fallisce
+            console.warn('Auto-refresh failed:', refreshError)
+          } finally {
+            setRefreshing(false)
+          }
+        }
+      } catch (e: unknown) {
+        setItems([])
+        setError(e instanceof Error ? e.message : 'Unexpected error')
+      } finally {
+        setLoadingItems(false)
+      }
+    }
+
+    loadData()
   }, [activeWatchlistId])
 
-  const refreshItems = async () => { if (activeWatchlistId) await loadItems(activeWatchlistId) }
+  const refreshPrices = async () => {
+    if (!activeWatchlistId) return
+
+    setRefreshing(true)
+    setError(null)
+    try {
+      const refreshRes = await fetch(`/api/watchlists/${activeWatchlistId}/refresh`, {
+        method: 'POST',
+      })
+      const refreshData = await refreshRes.json()
+      if (!refreshRes.ok || !refreshData.ok) {
+        console.warn('Refresh failed:', refreshData.error)
+      }
+
+      // Reload items
+      const res = await fetch(`/api/watchlists/${activeWatchlistId}/items`)
+      const data = await res.json()
+      if (res.ok && data.ok) {
+        setItems(data.items || [])
+      }
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Failed to refresh prices')
+    } finally {
+      setRefreshing(false)
+    }
+  }
+
+  const refreshItems = refreshPrices
 
   const removeSelected = async () => {
     if (!activeWatchlistId || selectedIds.length === 0) return
@@ -86,8 +156,11 @@ export default function WatchlistsPage() {
   const selectedCount = useMemo(() => selectedIds.length, [selectedIds])
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-slate-950 text-slate-100">
-      <div className="w-72 shrink-0">
+    <ProtectedRoute>
+    <>
+      <OnboardingModal />
+      <div style={{ display: 'flex', height: '100vh', width: '100%', overflow: 'hidden', backgroundColor: bb.bg, color: bb.white, fontFamily: 'Courier New, monospace' }}>
+      <div style={{ width: '300px', flexShrink: 0 }}>
         <WatchlistSidebar
           userId="demo-user"
           activeWatchlistId={activeWatchlistId}
@@ -99,39 +172,54 @@ export default function WatchlistsPage() {
         />
       </div>
 
-      <main className="min-w-0 flex-1 p-4">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+      <main style={{ flex: 1, minWidth: 0, padding: '16px' }}>
+        {/* Header */}
+        <div style={{ borderBottom: `2px solid ${bb.orange}`, paddingBottom: '12px', marginBottom: '16px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
           <div>
-            <h1 className="text-2xl font-semibold">{activeWatchlist?.name ?? 'Watchlists'}</h1>
-            <p className="text-sm text-slate-400">
-              {loadingItems ? 'Loading…' : activeWatchlist
-                ? `${items.length} instrument(s) · ${selectedCount} selected`
-                : 'Select a watchlist to begin'}
+            <h1 style={{ color: bb.orange, fontSize: '21.6px', fontWeight: 'bold', letterSpacing: '2px', marginBottom: '4px' }}>
+              {activeWatchlist?.name.toUpperCase() ?? 'WATCHLISTS'}
+            </h1>
+            <p style={{ fontSize: '13.2px', color: bb.gray, letterSpacing: '1px' }}>
+              {loadingItems ? 'LOADING...' : activeWatchlist
+                ? `${items.length} INSTRUMENT(S) · ${selectedCount} SELECTED`
+                : 'SELECT A WATCHLIST TO BEGIN'}
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+            <button
+              onClick={refreshPrices}
+              disabled={!activeWatchlistId || refreshing}
+              style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: activeWatchlistId ? bb.green : bb.gray, padding: '4px 10px', fontSize: '13.2px', fontFamily: 'inherit', cursor: (activeWatchlistId && !refreshing) ? 'pointer' : 'not-allowed', letterSpacing: '1px', opacity: (activeWatchlistId && !refreshing) ? 1 : 0.4 }}>
+              {refreshing ? '⟳ REFRESHING...' : '⟳ REFRESH PRICES'}
+            </button>
             <button onClick={() => setScannerOpen(true)} disabled={!activeWatchlistId}
-              className="rounded border border-slate-700 px-3 py-2 text-sm disabled:opacity-40">Add from scanner</button>
+              style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: activeWatchlistId ? bb.amber : bb.gray, padding: '4px 10px', fontSize: '13.2px', fontFamily: 'inherit', cursor: activeWatchlistId ? 'pointer' : 'not-allowed', letterSpacing: '1px', opacity: activeWatchlistId ? 1 : 0.4 }}>
+              ADD FROM SCANNER
+            </button>
             <button onClick={removeSelected} disabled={!activeWatchlistId || selectedIds.length === 0}
-              className="rounded border border-slate-700 px-3 py-2 text-sm disabled:opacity-40">Remove selected</button>
+              style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: (activeWatchlistId && selectedIds.length > 0) ? bb.red : bb.gray, padding: '4px 10px', fontSize: '13.2px', fontFamily: 'inherit', cursor: (activeWatchlistId && selectedIds.length > 0) ? 'pointer' : 'not-allowed', letterSpacing: '1px', opacity: (activeWatchlistId && selectedIds.length > 0) ? 1 : 0.4 }}>
+              REMOVE SELECTED
+            </button>
             <button onClick={moveSelected} disabled={!activeWatchlistId || selectedIds.length === 0}
-              className="rounded border border-slate-700 px-3 py-2 text-sm disabled:opacity-40">Move selected</button>
+              style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: (activeWatchlistId && selectedIds.length > 0) ? bb.amber : bb.gray, padding: '4px 10px', fontSize: '13.2px', fontFamily: 'inherit', cursor: (activeWatchlistId && selectedIds.length > 0) ? 'pointer' : 'not-allowed', letterSpacing: '1px', opacity: (activeWatchlistId && selectedIds.length > 0) ? 1 : 0.4 }}>
+              MOVE SELECTED
+            </button>
             <Link href="/settings"
-              className="rounded border border-slate-700 px-3 py-2 text-sm text-slate-400 hover:border-slate-500 hover:text-slate-200">
-              ⚙ Settings
+              style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: bb.gray, padding: '4px 10px', fontSize: '13.2px', fontFamily: 'inherit', textDecoration: 'none', letterSpacing: '1px', display: 'inline-block' }}>
+              ⚙ SETTINGS
             </Link>
           </div>
         </div>
 
-        {error && <div className="mb-4 rounded border border-red-800 bg-red-950 px-4 py-3 text-sm text-red-200">{error}</div>}
+        {error && <div style={{ marginBottom: '16px', border: `1px solid ${bb.red}`, backgroundColor: '#1a0000', padding: '12px 16px', fontSize: '13.2px', color: bb.red, letterSpacing: '0.5px' }}>▶ ERROR: {error.toUpperCase()}</div>}
 
-        <div className="h-[calc(100vh-8rem)] min-h-0 rounded-lg border border-slate-800 bg-slate-900">
+        <div style={{ height: 'calc(100vh - 150px)', minHeight: 0, border: `1px solid ${bb.border2}`, backgroundColor: bb.bg }}>
           {activeWatchlist ? (
             <WatchlistTable items={items} selectedIds={selectedIds} onSelectIds={setSelectedIds}
               onOpenItem={item => setDrawerItemId(item.id)} />
           ) : (
-            <div className="flex h-full items-center justify-center text-sm text-slate-500">
-              Create or select a watchlist from the sidebar
+            <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', fontSize: '13.2px', color: bb.gray, letterSpacing: '1px' }}>
+              CREATE OR SELECT A WATCHLIST FROM THE SIDEBAR
             </div>
           )}
         </div>
@@ -146,6 +234,8 @@ export default function WatchlistsPage() {
         <AddFromScannerModal open={scannerOpen} watchlistId={activeWatchlist.id}
           candidates={MOCK_CANDIDATES} onClose={() => setScannerOpen(false)} onSaved={refreshItems} />
       )}
-    </div>
+      </div>
+    </>
+    </ProtectedRoute>
   )
 }

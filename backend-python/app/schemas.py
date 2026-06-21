@@ -10,6 +10,8 @@ from pydantic import BaseModel, EmailStr
 class UserRegister(BaseModel):
     email: EmailStr
     password: str
+    plan: str = "pro"    # beta gratuita: tutti partono con Pro
+    ai_api_key: Optional[str] = None
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -21,8 +23,14 @@ class UserOut(BaseModel):
     plan: str
     is_active: bool
     has_broker: bool = False
+    has_ai_key: bool = False
+    ai_queries_today: int = 0
     created_at: datetime
     model_config = {"from_attributes": True}
+
+class UserPlanUpdate(BaseModel):
+    plan: str
+    ai_api_key: Optional[str] = None
 
 class Token(BaseModel):
     access_token: str
@@ -119,10 +127,20 @@ class WatchlistItemOut(BaseModel):
     entry_gamma: Optional[Decimal]
     entry_vega: Optional[Decimal]
     entry_theta: Optional[Decimal]
+    current_bid: Optional[Decimal]
+    current_ask: Optional[Decimal]
+    current_last_price: Optional[Decimal]
+    current_premium: Optional[Decimal]
+    current_iv: Optional[Decimal]
+    current_delta: Optional[Decimal]
+    current_gamma: Optional[Decimal]
+    current_vega: Optional[Decimal]
+    current_theta: Optional[Decimal]
     quantity: int
     notes: Optional[str]
     created_at: datetime
     updated_at: datetime
+    last_refreshed_at: Optional[datetime]
     model_config = {"from_attributes": True}
 
 class BulkAddItems(BaseModel):

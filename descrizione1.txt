@@ -1,0 +1,32 @@
+
+Per riavviare l'app ogni volta
+
+Terminale 1 — Backend:
+cd "C:\Users\franc\Desktop\coiled-spring-backend2\backend-python"
+.venv\Scripts\python.exe -m uvicorn main:app --reload --host ::1 --port 8001
+
+Terminale 2 — Frontend:
+cd "C:\Users\franc\Desktop\coiled-spring-backend2\frontend-next"
+npm run dev
+
+Poi apri http://localhost:3000
+
+---
+Per avere un link pubblico accessibile da ovunque
+
+Esistono 3 opzioni semplici:
+
+┌────────────────────────────┬─────────────────────┬────────────┬─────────────────────────────────────────────────┐
+│          Opzione           │        Costo        │ Difficoltà │                      Note                       │
+├────────────────────────────┼─────────────────────┼────────────┼─────────────────────────────────────────────────┤
+│ Railway                    │ ~$5/mese            │ Facile     │ Deploy backend Python + frontend con un comando │
+├────────────────────────────┼─────────────────────┼────────────┼─────────────────────────────────────────────────┤
+│ Render                     │ Gratis (con limiti) │ Facile     │ Backend si "addormenta" dopo inattività         │
+├────────────────────────────┼─────────────────────┼────────────┼─────────────────────────────────────────────────┤
+│ VPS (Hetzner/DigitalOcean) │ ~€5/mese            │ Medio      │ Server sempre acceso, controllo totale          │
+└────────────────────────────┴─────────────────────┴────────────┴─────────────────────────────────────────────────┘
+
+Railway è il più semplice per questo stack (FastAPI + Next.js). Si collega al tuo repository GitHub e fa il deploy automatico.
+
+---
+Vuoi che preparo la configurazione per il deploy su Railway o preferisci per ora continuare in locale?

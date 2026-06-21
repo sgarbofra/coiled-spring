@@ -1,0 +1,418 @@
+═══════════════════════════════════════════════════════════════════
+COILED SPRING STRATEGY — KNOWLEDGE BASE COMPLETA
+Basata sul libro "The Coiled Spring Strategy"
+═══════════════════════════════════════════════════════════════════
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FILOSOFIA FONDAMENTALE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+La Coiled Spring Strategy nasce da una premessa centrale: il Cigno Nero non si prevede, si prepara.
+Il mercato non è una macchina lineare: è un sistema complesso, adattivo, instabile, dominato da feedback loop e discontinuità.
+
+Il trader antifragile non cerca di prevedere il futuro — costruisce strutture che sopravvivono
+quando ha torto e restano presenti quando il mercato sbaglia prezzo.
+
+I TRE PROFILI DI RISCHIO (da Taleb):
+- Fragile: si rompe sotto stress (portafogli con rischio illimitato)
+- Robusto: resiste allo stress (diversificazione, stop-loss)
+- Antifragile: migliora grazie allo stress (long convexity, long optionality)
+
+La domanda corretta NON è: "Che cosa accadrà domani?"
+La domanda corretta è: "Come posso strutturare il capitale affinché, se il mercato entra in uno shock
+violento, il mio rischio sia limitato e il mio potenziale guadagno sia asimmetrico?"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. COSA SONO LE LEAPS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+LEAPS = Long-term Equity AnticiPation Securities.
+Sono opzioni con scadenza superiore a 12 mesi, ma nella pratica della Coiled Spring Strategy
+si considerano operative le opzioni con DTE ≥ 180 giorni (6 mesi).
+
+Caratteristiche chiave:
+- Scadenza preferenziale: 300–750 giorni (10 mesi – 2 anni)
+- Scadenza minima assoluta: 180 giorni (soglia di attenzione)
+- Stesso contratto di un'opzione standard (100 azioni/contratto)
+- Disponibili su azioni, ETF, indici
+- Altissima sensibilità alla volatilità implicita (alto Vega)
+- Theta (decadimento) distribuito su lungo orizzonte, non aggressivo
+
+La LEAPS non è superiore in assoluto — è superiore quando l'obiettivo è comprare tempo,
+Vega e convexity senza essere obbligati ad avere ragione subito.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2. LA MOLLA COMPRESSA — QUANDO COMPRARE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+La strategia cerca di comprare optionality quando il mercato sottovaluta l'incertezza.
+La quiete non è sicurezza: è rischio non ancora prezzato.
+
+CONDIZIONI PER UNA MOLLA COMPRESSA:
+1. IV Rank basso (volatilità implicita nella parte bassa dello storico)
+2. Volatilità realizzata compressa (prezzi che si muovono poco)
+3. Range di prezzo stretto (ATR in calo, bande di Bollinger contratte)
+4. Sottostante liquido con opzioni negoziabili
+5. Una tesi di rottura plausibile (tecnica, fondamentale o macro)
+
+La compressione è condizione NECESSARIA ma non SUFFICIENTE.
+Serve anche: liquidità, tempo, rischio massimo definito, tesi di rottura.
+
+QUANDO NON COMPRARE:
+- IV Rank > 50 (volatilità già cara)
+- IV Rank > 70 (evitare assolutamente nuove posizioni long)
+- Opzioni illiquide (spread ampi, Open Interest basso)
+- Prima degli earnings senza strategia specifica (rischio IV crush)
+- Quando lo scanner tace: il cash è posizione, la pazienza è posizione
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+3. LE GRECHE NELLE LEAPS — L'ARCHITETTURA DEL RISCHIO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+DELTA (Δ) — La velocità iniziale:
+- È l'esposizione direzionale iniziale della posizione
+- Range ideale: 0.20–0.45 per le posizioni core
+- Delta 0.30–0.50: nucleo del portafoglio (equilibrio costo/convexity)
+- Delta 0.10–0.20: posizioni satellite aggressive (alta convexity, bassa probabilità)
+- Evitare Delta > 0.50 (troppo simile al sottostante, perde carattere di leva)
+- Evitare Delta < 0.15 (troppo lontano, bassa probabilità di profitto)
+
+GAMMA (Γ) — L'acceleratore della convessità:
+- Misura quanto cambia il Delta per ogni $1 di movimento del sottostante
+- Nelle LEAPS il Gamma è meno esplosivo che nelle opzioni brevi
+- Gamma positivo = la posizione accelera nella direzione giusta (cuore della convexity)
+- L'opzione breve è una scommessa sul timing. La LEAPS è una struttura sul regime.
+
+VEGA (V) — Il cuore della strategia:
+- Sensibilità del prezzo alla variazione della volatilità implicita
+- È il fattore più importante nelle LEAPS — molto più che nelle opzioni brevi
+- LEAPS Vega alto: un +1% di IV può valere $0.30–0.55 per contratto
+- La posizione può guadagnare anche PRIMA del movimento del sottostante
+- La molla non deve ancora scattare. Basta che il mercato inizi a sentire la pressione.
+- Comprare Vega quando IV è bassa, non quando è già esplosa
+
+THETA (Θ) — Il costo dell'affitto:
+- Decadimento temporale: quanto perde l'opzione ogni giorno
+- Nelle LEAPS è distribuito su lungo orizzonte (non aggressivo all'inizio)
+- Soglia critica: quando il DTE scende sotto 180 giorni, il Theta accelera
+- Sotto 90 giorni: il profilo non è più LEAPS, è opzione breve pericolosa
+- Regola: NON rullare mai una LEAPS sotto i 90 giorni (theta devastante)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+4. IV RANK E IV PERCENTILE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+IV RANK: misura dove si trova la IV attuale rispetto al range storico annuale (0–100)
+IV PERCENTILE: misura quante volte, nello storico, la IV era inferiore al valore attuale
+
+SOGLIE OPERATIVE:
+- IV Rank < 20: zona ideale — optionality potenzialmente sottoprezzata
+- IV Rank 20–30: buona zona di entrata
+- IV Rank 30–50: accettabile con analisi aggiuntiva
+- IV Rank 50–70: ATTENZIONE — volatilità cara
+- IV Rank > 70: NON aprire nuove posizioni long
+
+IMPORTANTE: IV Rank basso ≠ segnale automatico di acquisto.
+È solo il primo filtro. Serve: liquidità, prezzo compresso, tesi, Vega sufficiente.
+
+"La strategia non compra numeri. Compra strutture."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+5. CRITERI DI SELEZIONE — FILTRI OPERATIVI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SCADENZA (DTE):
+- MINIMO ASSOLUTO: 180 giorni (soglia di attenzione)
+- RANGE PREFERENZIALE: 300–750 giorni (10 mesi – 2 anni)
+- Sotto 180 giorni il Theta diventa aggressivo — rivalutare o rullare
+- Sopra 2 anni il premio è troppo alto e la liquidità cala
+
+DELTA per call LEAPS:
+- Nucleo portafoglio: 0.30–0.50
+- Satellite aggressivo: 0.10–0.20 (con sizing molto ridotto)
+- Evitare: < 0.15 (pochissima probabilità) e > 0.50 (troppo lineare)
+
+LIQUIDITÀ:
+- Sottostante: volume giornaliero opzioni > 1.000 contratti per scadenza
+- Open Interest: almeno 10–20x la dimensione della posizione
+  (es. vuoi 5 contratti → serve OI ≥ 50–100 su quello strike)
+- Spread bid/ask: massimo 5% del mid price (preferibile < 3%)
+- Catene opzioni profonde con più scadenze disponibili
+
+UNIVERSO PREFERENZIALE:
+ETF liquidi: SPY, QQQ, IWM, XLE, GLD, TLT
+Large cap USA: AAPL, MSFT, NVDA, GOOG, META, AMZN, TSLA, AMD
+Blue chip settoriali: JPM, BAC, V, MA, JNJ, UNH, CVX, XOM
+ETF settoriali: SMH, XLK, XLF, XLE, XLV
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+6. LA TESI DI ROTTURA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Una molla compressa non è ancora un trade. Serve una tesi che spieghi perché la quiete potrebbe rompersi.
+
+FORME DI TESI:
+- Tecnica: compressione sotto resistenza storica, bande di Bollinger contratte, ATR in calo
+- Fondamentale: earnings imminenti, guidance sottovalutata, lancio prodotto, rotazione settoriale
+- Macro: inflazione, banca centrale, dati lavoro, stress credito, eventi geopolitici
+- Sentiment: mercato ha smesso di comprare protezione, consenso troppo uniforme
+
+La tesi non deve prevedere il futuro con precisione.
+Deve spiegare perché la calma attuale potrebbe essere fragile.
+
+"Comprare optionality non perché 'prima o poi succederà qualcosa' (scommessa)
+ma perché il mercato sottovaluta l'incertezza E esiste una tesi di rottura plausibile (posizionamento)."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+7. SIZING E GESTIONE DEL CAPITALE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Il premio pagato = rischio massimo della posizione.
+Rischio definito ≠ rischio piccolo automaticamente.
+
+SIZING PER SINGOLA POSIZIONE:
+- Conservativo: 0.5–1% del capitale totale
+- Standard: 1–2% del capitale totale
+- Aggressivo satellite: fino al 2% (solo per posizioni molto OTM)
+- MAI una singola posizione oltre il 3% del capitale
+
+RISCHIO AGGREGATO PORTAFOGLIO:
+- Premi totali su tutte le LEAPS: massimo 10–20% del capitale
+- Se il portafoglio è da €50.000, al massimo €5.000–10.000 in premi totali
+- Il cash residuo è "munizione strategica" — non è capitale fermo, è futuro vantaggio
+
+ESECUZIONE ORDINI:
+- MAI usare ordini al meglio (Market Order) sulle LEAPS
+- Sempre Limit Order vicino al mid-price
+- Lavorare l'ordine: inserire al mid, migliorare gradualmente di pochi centesimi
+- Un trade perso per mancata esecuzione è meno grave di un trade eseguito male
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+8. GESTIONE DELLA POSIZIONE — QUANDO USCIRE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Non si esce perché si ha paura. Si esce perché la struttura è cambiata.
+
+DIAGNOSI DEL PROFITTO:
+- Se il profitto viene da Delta/Gamma (prezzo mosso): valutare il trend
+- Se il profitto viene da Vega (IV espansa): verificare se la IV è ancora compressa o già cara
+- Se IV Rank è passato da 12 a 58+, parte dell'edge originario si è ridotto
+
+TECNICA DEL RACCOLTO (runner):
+1. Posizione guadagna 100% → vendi metà (recupera capitale iniziale), lascia il resto come runner
+2. Posizione guadagna 50% → considera presa parziale se IV è molto aumentata
+3. Il runner è "speranza finanziata" — non speranza cieca
+4. Non vendere tutto troppo presto, non trattenere tutto per vanità
+
+PROFITTARSI PRIMA DEGLI EARNINGS:
+- Il mercato spesso gonfia la IV prima degli earnings (tutti comprano incertezza)
+- POST earnings avviene il Volatility Crush: IV crolla anche se il titolo va su
+- Strategia: se profitto significativo pre-earnings, prenderne parte prima dell'evento
+
+LA DOMANDA BRUTALE PER LE PERDITE:
+"Aprirei questa posizione OGGI con capitale fresco?"
+- Sì → mantieni (ma valuta tesi, DTE, Vega residuo)
+- No → è attaccamento, non analisi. Chiudi.
+
+SOGLIA DTE CRITICA:
+- DTE < 180 giorni: rivalutare — Theta accelera, la struttura LEAPS si indebolisce
+- DTE < 90 giorni: non mantenere (profilo non è più LEAPS, Theta devastante)
+- Roll = chiudere la struttura attuale e aprire una NUOVA. Non è automatico: va giustificato.
+
+STOP LOSS:
+- Non meccanico come percentuale fissa (la LEAPS è multidimensionale)
+- Posizione in perdita con tesi ancora valida + molto DTE residuo + IV compressa: si può aspettare
+- Posizione in perdita con tesi invalidata + DTE in calo: disciplina, chiudi
+- Una perdita è informazione — non condanna. La struttura comanda, non il colore rosso.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+9. IL PORTAFOGLIO ANTIFRAGILE — LA MACCHINA DI OPTIONALITY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Una singola LEAPS può essere una buona idea.
+Una strategia nasce solo quando più posizioni vengono selezionate, dimensionate, monitorate,
+monetizzate e ruotate dentro un portafoglio coerente.
+
+DIVERSIFICAZIONE VERA = diversificazione delle FONTI DI INCERTEZZA, non dei ticker.
+5 call LEAPS su 5 titoli tech = 1 grande scommessa sul Nasdaq, non 5 posizioni indipendenti.
+
+CORRELAZIONE STRATEGICA:
+Chiedersi sempre: "Queste posizioni dipendono da rotture diverse, o sono varianti della stessa scommessa?"
+
+UN PORTAFOGLIO EQUILIBRATO PUÒ INCLUDERE:
+- Call LEAPS su sottostanti in accumulo/compressione rialzista
+- Put LEAPS su mercati complacenti con rischio di repricing ribassista
+- Scadenze diverse (non tutte con lo stesso DTE)
+- Settori diversi (tech + finanziario + commodity + difensivi)
+- Delta diversi (nucleo 0.30–0.45 + satellite 0.10–0.20)
+
+CASH = MUNIZIONE STRATEGICA:
+- Il cash non è pigrizia — è capacità di agire quando altri sono costretti a vendere
+- Un portafoglio completamente investito non può cogliere nuove opportunità
+- La quiete può durare più del previsto: le munizioni servono per questo
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+10. IL PROTOCOLLO OPERATIVO — L'IMBUTO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+La sequenza corretta PRIMA di aprire una posizione:
+1. UNIVERSO NEGOZIABILE → sottostante liquido + opzioni liquide
+2. VOLATILITÀ COMPRESSA → IV Rank < 30 ideale, < 50 accettabile
+3. PREZZO COMPRESSO → range stretto, ATR basso, bande Bollinger contratte
+4. CATENA OPZIONI → verifica spread, OI, volume, DTE disponibili
+5. STRUTTURA COERENTE → DTE, Delta, Vega, Theta coerenti con la tesi
+6. PORTAFOGLIO COMPATIBILE → non duplica narrative, rischio aggregato sostenibile
+
+"Un buon protocollo non è quello che produce molte operazioni.
+È quello che impedisce alle operazioni mediocri di arrivare al capitale."
+
+CHECKLIST PRE-INGRESSO:
+□ Sottostante liquido (OI opzioni > 1.000/scadenza)?
+□ IV Rank basso (< 30 ideale, < 50 accettabile)?
+□ Prezzo in compressione (range stretto, bande contratte)?
+□ Spread bid/ask accettabile (< 5% del mid)?
+□ OI sullo strike ≥ 10x la dimensione della posizione?
+□ DTE ≥ 300 giorni preferibilmente?
+□ Delta 0.20–0.45 (nucleo) o 0.10–0.20 (satellite)?
+□ Vega sufficiente da giustificare il premio?
+□ Theta sostenibile rispetto al tempo necessario alla tesi?
+□ Rischio massimo ≤ 1–2% del capitale?
+□ Tesi di rottura chiara (tecnica/fondamentale/macro)?
+□ Il trade NON duplica narrative già in portafoglio?
+□ Piano di uscita definito PRIMA dell'ingresso?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+11. STRATEGIE AVANZATE CON LEAPS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+LEAPS Call come sostituto azionario (Stock Replacement):
+- Comprare LEAPS call ITM (delta 0.70–0.80) invece delle azioni
+- Costo molto inferiore, stesso profilo direzionale, perdita limitata al premium
+- Libera capitale per altre posizioni
+
+POOR MAN'S COVERED CALL (PMCC):
+- Comprare LEAPS call + vendere call breve OTM sullo stesso titolo
+- La call corta finanzia parzialmente il costo della LEAPS
+- Attenzione: la call corta limita il profitto al rialzo
+
+LEAPS Put per protezione del portafoglio:
+- Comprare LEAPS put su SPY/QQQ come assicurazione
+- Delta -0.20 a -0.30, scadenza 12–18 mesi
+- Costo contenuto in periodi di VIX basso — ideale per la filosofia Coiled Spring
+
+Calendar Spread con LEAPS:
+- Vendere opzione breve + comprare LEAPS stesso strike
+- Beneficia del differenziale di theta (vendi theta alto, compri theta basso)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+12. ERRORI COMUNI DA EVITARE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Comprare LEAPS con IV Rank alto (si paga troppo la volatilità)
+2. Tenere LEAPS sotto 90 giorni senza valutare il roll (theta devastante)
+3. Sizing eccessivo (anche perdita definita può fare danni se troppo grande)
+4. Non considerare lo spread bid/ask (su LEAPS illiquidi 5–10% del mid)
+5. Comprare troppo OTM per "risparmiare" (Delta < 0.15: pochissima probabilità)
+6. Non avere un piano di uscita definito prima dell'entrata
+7. Tenere attraverso earnings senza strategia (IV crush post-earnings)
+8. Confondere compressione con stagnazione (mercato morto ≠ molla compressa)
+9. Usare Market Order invece di Limit Order
+10. Diversificare per ticker invece che per fonti di incertezza
+11. Comprare solo call o solo put (la strategia è long optionality, non direzionale)
+12. Modificare i filtri dello scanner quando non trova nulla (la pazienza è una posizione)
+13. Trasformare la strategia antifragile in caccia compulsiva di trade
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+13. I CASI STORICI — LA STORIA COME PROVA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1929 — La quiete precedente non era assenza di rischio, era compiacenza estrema.
+Il crollo non fu un evento ma un regime. La molla continuò a scaricarsi per anni.
+Lezione: il primo crollo non è sempre la fine; il tempo è sopravvivenza strutturale.
+
+1987 (Black Monday) — -22.6% in un giorno. La liquidità apparente non è liquidità reale.
+Quando tutti cercano di uscire insieme, il mercato salta, non corregge.
+Lezione: la convexity non evita lo shock, ma evita di comprare protezione quando è già cara.
+
+2000 (Dot-com) — La narrativa sostituì la contabilità. All'interno dei bear market nascono
+alcuni dei rialzi più violenti. La convexity non è ideologicamente ribassista.
+Lezione: il movimento non lineare appartiene sia al panico che al rimbalzo.
+
+2008 (Lehman) — Il VIX raggiunse livelli storici. Chi aveva Vega prima della detonazione
+guadagnò non solo dalla direzione ma dal repricing dell'incertezza stessa.
+Lezione: il vantaggio del trader convesso nasce dal possedere Vega prima che il mondo
+ricordi quanto vale davvero l'assicurazione.
+
+2020 (Covid) — VIX a 82.69 il 16 marzo. Poi il mercato si riprese violentemente.
+Chi era convesso non doveva reagire sul minimo: era già posizionato prima.
+Lezione: la sopravvivenza è la condizione preliminare di ogni convexity.
+
+NVIDIA 2023 — +24% in un giorno. La call LEAPS può monetizzare anche le sorprese positive.
+La convexity appartiene sia alla paura che alla scoperta di un futuro più grande.
+
+META 2022 — -26% in un giorno. Quando cambia la narrativa, cambia il prezzo.
+Una put LEAPS costruita quando la protezione era economica avrebbe monetizzato
+sia il Delta negativo che il Vega positivo.
+
+GameStop 2021 — Il Gamma squeeze: short interest + opzioni OTM + market maker
+costretti a coprirsi = feedback loop verticale. La volatilità non accompagnava il prezzo: lo generava.
+
+LA MOLLA CHE NON SCATTA:
+La perdita controllata è parte del business, non un fallimento.
+Il vero nemico è trasformare una piccola perdita prevista in una grande perdita emotiva.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+14. IL MANIFESTO DEL TRADER ANTIFRAGILE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CINQUE PRINCIPI OPERATIVI:
+
+1. NON PREVEDERE, PREPARARE
+   Il futuro non si prevede, si prepara. L'analisi serve a riconoscere compressioni,
+   non a dichiarare certezze. Il mercato ha sempre più immaginazione di noi.
+
+2. IL RISCHIO DEFINITO È LIBERTÀ
+   Con una long option la perdita massima è incorporata nello strumento.
+   Il trader che conosce la perdita massima può attendere, sbagliare senza essere distrutto,
+   costruire più posizioni piccole senza dipendere dal singolo colpo.
+
+3. LA STRUTTURA CONTA PIÙ DELLO STRUMENTO
+   Una LEAPS comprata male è una scommessa costosa.
+   Una LEAPS costruita dentro una molla compressa con rischio definito è una struttura.
+   È la struttura che separa il trader dal giocatore.
+
+4. LA MACCHINA SOPRAVVIVE ALLA QUIETE
+   La strategia non deve essere sempre in posizione. Deve essere sempre pronta.
+   Cash, pazienza, revisione periodica e disciplina impediscono che il trader
+   diventi fragile prima che il mercato diventi interessante.
+
+5. IL SILENZIO È INFORMAZIONE
+   Quando lo scanner non trova nulla, la strategia non ha fallito.
+   Sta dicendo che il mercato non offre optionality al prezzo giusto.
+   Non fare nulla quando non c'è nulla da fare non è passività. È controllo.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+15. GLOSSARIO CHIAVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ATM (At The Money): opzione con strike uguale al prezzo corrente del sottostante
+ITM (In The Money): call con strike < prezzo corrente; put con strike > prezzo
+OTM (Out Of The Money): call con strike > prezzo; put con strike < prezzo
+DTE: Days To Expiration — giorni alla scadenza
+IV: Implied Volatility — volatilità implicita nell'opzione
+IV Rank: dove si trova la IV attuale vs range storico a 52 settimane (0–100)
+IV Percentile: % delle sessioni in cui la IV era inferiore all'attuale
+Convexity: la natura non lineare del payoff delle opzioni (guadagni accelerano)
+Long Convexity: possedere optionality (long call o long put)
+Long Vega: posizione che beneficia dell'espansione della volatilità implicita
+Premium: prezzo dell'opzione × 100 (un'opzione a $5.00 costa $500)
+Bid/Ask: prezzo offerto / richiesto; lo spread è il costo di transazione
+Open Interest: numero di contratti aperti su quella scadenza/strike
+Roll: chiudere una posizione e aprirne una nuova a scadenza più lontana
+Vega Crush / IV Crush: calo rapido della IV (tipicamente post-earnings)
+Gamma Squeeze: il Delta aumenta forzando i market maker a comprare il sottostante
+Volatility Crush: la IV crolla dopo un evento atteso (earnings, Fed, etc.)
+Runner: la quota residua di una posizione dopo aver preso profitto parziale
+Molla Compressa: condizione di bassa volatilità + prezzo in range → optionality sottoprezzata
+Antifragilità: posizione che migliora grazie allo stress (opposto di fragilità)
+Cigno Nero: evento raro, imprevedibile, con impatto estremo (Taleb)

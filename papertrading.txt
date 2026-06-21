@@ -1,0 +1,31 @@
+Interactive Brokers (IBKR)
+
+Paper Trading Account:
+- Conto simulato con $1.000.000 virtuale
+- Prezzi live reali (stessi del conto reale)
+- API TWS funziona identicamente al conto reale
+- Nessun deposito richiesto
+
+Come aprire:
+1. Vai su ibkr.com → apri conto
+2. Durante la registrazione scegli "Paper Trading" oppure attivalo dopo dall'account
+3. Scarica TWS (Trader Workstation) — deve girare sul PC per far funzionare l'API
+4. Abilita le API socket in TWS: File → Global Configuration → API → Settings → Enable ActiveX and Socket Clients
+
+---
+Tastytrade
+
+- Puoi aprire un conto reale senza deposito minimo
+- Con conto aperto (anche $0) hai accesso a prezzi live delle opzioni
+- Hanno anche un Paper Trading in-app
+- API REST ufficiale disponibile gratuitamente
+
+---
+Per il nostro scopo
+
+Il paper trading IBKR è la scelta migliore per testare l'integrazione perché:
+- API più completa (greche reali, IV storica, tutti i dati)
+- TWS è lo standard professionale
+- Dati identici al conto reale
+
+Quando hai TWS aperto e l'account paper trading attivo, basta inserire le credenziali nelle Impostazioni dell'app e i prezzi diventano live per tutti gli utenti Pro.

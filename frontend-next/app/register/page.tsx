@@ -1,252 +1,253 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useUser } from '@/contexts/UserContext'
 
+const bb = {
+  bg: '#000000', surface: '#0a0a00', panel: '#111100',
+  border: '#222200', border2: '#333300',
+  orange: '#FF6600', amber: '#FFAA00', yellow: '#FFE000',
+  green: '#00DD00', red: '#FF3333', white: '#CCCCCC', gray: '#FFFFFF',
+}
+
+type PlanKey = 'free' | 'pro' | 'pro_byok'
 type BrokerKey = 'ibkr' | 'tastytrade'
 
+const PLANS = [
+  {
+    key: 'free' as PlanKey, name: 'FREE', price: '€0 / MONTH', badge: 'FREE', bgColor: bb.border2,
+    features: ['SCANNER LEAPS (MARKET DATA)', 'WATCHLIST (MAX 2)', 'PORTFOLIO TRACKER', 'NO AI'],
+    ai: false,
+  },
+  {
+    key: 'pro' as PlanKey, name: 'PRO', price: '€12 / MONTH', badge: 'PRO', bgColor: '#003366',
+    features: ['SCANNER LEAPS (MARKET DATA)', 'UNLIMITED WATCHLISTS', 'PORTFOLIO TRACKER', 'COILED AI (50 QUERIES/DAY)', 'BROKER CONNECTION (IBKR/TT)'],
+    ai: true,
+  },
+  {
+    key: 'pro_byok' as PlanKey, name: 'PRO BYOK', price: '€6 / MONTH', badge: 'BYOK', bgColor: '#005500',
+    features: ['ALL PRO FEATURES', 'UNLIMITED AI (YOUR ANTHROPIC KEY)', 'NO DAILY LIMIT'],
+    ai: true, byok: true,
+  },
+]
+
 const BROKERS = [
-  {
-    key: 'ibkr' as BrokerKey,
-    name: 'Interactive Brokers',
-    description: 'Connessione locale via TWS o IB Gateway.',
-    badge: 'IBKR',
-  },
-  {
-    key: 'tastytrade' as BrokerKey,
-    name: 'tastytrade',
-    description: 'Connessione via API REST ufficiale tastytrade.',
-    badge: 'TT',
-  },
+  { key: 'ibkr' as BrokerKey, name: 'INTERACTIVE BROKERS', description: 'Connection via TWS or IB Gateway', badge: 'IBKR' },
+  { key: 'tastytrade' as BrokerKey, name: 'TASTYTRADE', description: 'Connection via official REST API', badge: 'TT' },
 ]
 
 export default function RegisterPage() {
   const router = useRouter()
+  const { user, loading: userLoading } = useUser()
   const [step, setStep] = useState<1 | 2>(1)
 
-  // Step 1
+  // FIX 1: Redirect se già autenticato
+  useEffect(() => {
+    if (!userLoading && user) {
+      router.push('/scanner')
+    }
+  }, [user, userLoading, router])
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [password2, setPassword2] = useState('')
   const [step1Error, setStep1Error] = useState<string | null>(null)
   const [registering, setRegistering] = useState(false)
 
-  // Step 2
-  const [selected, setSelected] = useState<BrokerKey | null>(null)
+  const [plan, setPlan] = useState<PlanKey>('pro')
+  const [byokKey, setByokKey] = useState('')
+  const [step2Error, setStep2Error] = useState<string | null>(null)
+  const [savingPlan, setSavingPlan] = useState(false)
+
+  const [broker, setBroker] = useState<BrokerKey | null>(null)
   const [ibkrHost, setIbkrHost] = useState('127.0.0.1')
   const [ibkrPort, setIbkrPort] = useState('7497')
   const [ibkrClientId, setIbkrClientId] = useState('1')
   const [ibkrAccount, setIbkrAccount] = useState('')
   const [ttUsername, setTtUsername] = useState('')
   const [ttPassword, setTtPassword] = useState('')
-  const [step2Error, setStep2Error] = useState<string | null>(null)
-  const [saving, setSaving] = useState(false)
+  const [step3Error, setStep3Error] = useState<string | null>(null)
+  const [savingBroker, setSavingBroker] = useState(false)
 
-  // ── Step 1: register ────────────────────────────────────────────────────────
   const submitStep1 = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (password !== password2) { setStep1Error('Le password non coincidono'); return }
-    if (password.length < 6) { setStep1Error('Password minimo 6 caratteri'); return }
+    if (password !== password2) { setStep1Error('PASSWORDS DO NOT MATCH'); return }
+    if (password.length < 6) { setStep1Error('PASSWORD MINIMUM 6 CHARACTERS'); return }
     setRegistering(true); setStep1Error(null)
     try {
       const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, plan: 'free' }),
       })
       const data = await res.json()
       if (!res.ok || !data.ok) throw new Error(data.error || 'Registration failed')
-      setStep(2)
+
+      // Registration successful - redirect to check email page
+      console.log('[REGISTER DEBUG] Registration successful, redirecting to check-email')
+      router.push(`/check-email?email=${encodeURIComponent(email)}`)
     } catch (e: unknown) {
-      setStep1Error(e instanceof Error ? e.message : 'Registration failed')
+      setStep1Error(e instanceof Error ? e.message.toUpperCase() : 'REGISTRATION FAILED')
     } finally { setRegistering(false) }
   }
 
-  // ── Step 2: broker ──────────────────────────────────────────────────────────
-  const canSaveBroker = () => {
-    if (!selected) return false
-    if (selected === 'ibkr') return ibkrHost.trim() && ibkrPort.trim()
-    if (selected === 'tastytrade') return ttUsername.trim() && ttPassword.trim()
-    return false
-  }
-
   const submitStep2 = async () => {
-    if (!selected || !canSaveBroker()) return
-    setSaving(true); setStep2Error(null)
-    const config =
-      selected === 'ibkr'
-        ? { host: ibkrHost.trim(), port: Number(ibkrPort), client_id: Number(ibkrClientId), account: ibkrAccount.trim() || null }
-        : { username: ttUsername.trim(), password: ttPassword }
+    setSavingPlan(true); setStep2Error(null)
     try {
-      const res = await fetch('/api/broker', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ broker: selected, config }),
+      const res = await fetch('/api/auth/plan', {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: 'pro', ai_api_key: null }),
       })
       const data = await res.json()
-      if (!res.ok || !data.ok) throw new Error(data.error || 'Failed to save broker')
-      router.push('/watchlists')
-      router.refresh()
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Plan update error')
+      // Registrazione completata, redirect a watchlists
+      window.location.href = '/watchlists'
     } catch (e: unknown) {
-      setStep2Error(e instanceof Error ? e.message : 'Error saving broker')
-    } finally { setSaving(false) }
+      setStep2Error(e instanceof Error ? e.message.toUpperCase() : 'ERROR')
+    } finally { setSavingPlan(false) }
+  }
+
+  const canSaveBroker = () => {
+    if (!broker) return false
+    if (broker === 'ibkr') return ibkrHost.trim() && ibkrPort.trim()
+    return ttUsername.trim() && ttPassword.trim()
+  }
+
+  const submitBroker = async () => {
+    if (!broker || !canSaveBroker()) return
+    setSavingBroker(true); setStep3Error(null)
+    const config = broker === 'ibkr'
+      ? { host: ibkrHost.trim(), port: Number(ibkrPort), client_id: Number(ibkrClientId), account: ibkrAccount.trim() || null }
+      : { username: ttUsername.trim(), password: ttPassword }
+    try {
+      const res = await fetch('/api/broker', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ broker, config }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Broker save error')
+      window.location.href = '/watchlists'
+    } catch (e: unknown) {
+      setStep3Error(e instanceof Error ? e.message.toUpperCase() : 'ERROR')
+    } finally { setSavingBroker(false) }
+  }
+
+  // Mostra loading mentre controlla autenticazione
+  if (userLoading) {
+    return null
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-slate-950 px-4 text-slate-100">
-      <div className="w-full max-w-lg">
+    <div style={{ backgroundColor: bb.bg, minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 16px', color: bb.white, fontFamily: 'Courier New, monospace' }}>
+      <div style={{ width: '100%', maxWidth: '800px' }}>
 
-        {/* Progress */}
-        <div className="mb-8 flex items-center gap-3">
-          <StepDot n={1} active={step === 1} done={step > 1} />
-          <div className="h-px flex-1 bg-slate-700" />
-          <StepDot n={2} active={step === 2} done={false} />
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <h1 className="text-2xl font-bold tracking-widest uppercase"
+              style={{ color: '#F97316', fontFamily: 'monospace' }}>
+            Coiled Spring Terminal
+          </h1>
         </div>
 
-        {/* ── Step 1 ── */}
+        {/* Progress */}
+        <div style={{ marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {[1, 2, 3].map((n, i) => (
+            <div key={n} style={{ display: 'flex', flex: 1, alignItems: 'center', gap: '12px' }}>
+              <StepDot n={n} active={step === n} done={step > n} />
+              {i < 2 && <div style={{ height: '1px', flex: 1, backgroundColor: step > n ? bb.orange : bb.border2 }} />}
+            </div>
+          ))}
+        </div>
+
+        {/* Step 1: Account */}
         {step === 1 && (
           <>
-            <div className="mb-8">
-              <h1 className="mb-1 text-2xl font-semibold">Crea il tuo account</h1>
-              <p className="text-sm text-slate-400">
-                Già registrato?{' '}
-                <a href="/login" className="text-indigo-400 hover:text-indigo-300">Accedi</a>
+            <div style={{ marginBottom: '24px' }}>
+              <h1 style={{ color: bb.orange, fontSize: '24px', fontWeight: 'bold', letterSpacing: '2px', marginBottom: '8px' }}>CREATE YOUR ACCOUNT</h1>
+              <p style={{ fontSize: '13.2px', color: bb.gray, letterSpacing: '0.5px' }}>
+                ALREADY REGISTERED?{' '}
+                <a href="/login" style={{ color: bb.amber, textDecoration: 'none' }}>LOGIN</a>
               </p>
             </div>
-
-            <form onSubmit={submitStep1} className="space-y-4">
-              <label className="block">
-                <span className="mb-1 block text-sm text-slate-400">Email</span>
+            <form onSubmit={submitStep1} style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '500px', margin: '0 auto' }}>
+              <label style={{ display: 'block' }}>
+                <span style={{ display: 'block', marginBottom: '4px', fontSize: '12px', color: bb.gray, letterSpacing: '1px' }}>EMAIL</span>
                 <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
-                  className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm outline-none focus:border-indigo-500" />
+                  style={{ width: '100%', backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '8px 10px', fontSize: '14.4px', fontFamily: 'inherit', outline: 'none' }} />
               </label>
-              <label className="block">
-                <span className="mb-1 block text-sm text-slate-400">Password</span>
+              <label style={{ display: 'block' }}>
+                <span style={{ display: 'block', marginBottom: '4px', fontSize: '12px', color: bb.gray, letterSpacing: '1px' }}>PASSWORD</span>
                 <input type="password" value={password} onChange={e => setPassword(e.target.value)} required
-                  className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm outline-none focus:border-indigo-500" />
+                  style={{ width: '100%', backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '8px 10px', fontSize: '14.4px', fontFamily: 'inherit', outline: 'none' }} />
               </label>
-              <label className="block">
-                <span className="mb-1 block text-sm text-slate-400">Conferma password</span>
+              <label style={{ display: 'block' }}>
+                <span style={{ display: 'block', marginBottom: '4px', fontSize: '12px', color: bb.gray, letterSpacing: '1px' }}>CONFIRM PASSWORD</span>
                 <input type="password" value={password2} onChange={e => setPassword2(e.target.value)} required
-                  className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm outline-none focus:border-indigo-500" />
+                  style={{ width: '100%', backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '8px 10px', fontSize: '14.4px', fontFamily: 'inherit', outline: 'none' }} />
               </label>
-
-              {step1Error && <p className="text-sm text-red-400">{step1Error}</p>}
-
+              {step1Error && <p style={{ fontSize: '13.2px', color: bb.red }}>▶ ERROR: {step1Error}</p>}
               <button type="submit" disabled={registering}
-                className="w-full rounded-lg bg-indigo-600 py-2.5 font-medium hover:bg-indigo-500 disabled:opacity-50">
-                {registering ? 'Creazione account…' : 'Continua →'}
+                style={{ width: '100%', backgroundColor: registering ? bb.border2 : bb.orange, color: '#000', border: 'none', padding: '10px', fontSize: '14.4px', fontFamily: 'inherit', fontWeight: 'bold', letterSpacing: '1px', cursor: registering ? 'not-allowed' : 'pointer' }}>
+                {registering ? 'CREATING ACCOUNT...' : 'CONTINUE ▶'}
               </button>
             </form>
           </>
         )}
 
-        {/* ── Step 2 ── */}
+        {/* Step 2: Plan */}
         {step === 2 && (
           <>
-            <div className="mb-8">
-              <h1 className="mb-1 text-2xl font-semibold">Scegli il tuo broker</h1>
-              <p className="text-sm text-slate-400">
-                Potrai cambiarlo in qualsiasi momento dalle impostazioni.
+            <div style={{ marginBottom: '32px', textAlign: 'center' }}>
+              <h1 style={{ color: bb.orange, fontSize: '28px', fontWeight: 'bold', letterSpacing: '3px', marginBottom: '12px' }}>
+                BETA ACCESS — ALL FEATURES INCLUDED
+              </h1>
+              <p style={{ fontSize: '15px', color: bb.gray, letterSpacing: '0.5px' }}>
+                Free during beta. No credit card required.
               </p>
             </div>
 
-            {/* Broker cards */}
-            <div className="mb-6 grid grid-cols-2 gap-4">
-              {BROKERS.map(b => (
-                <button key={b.key} onClick={() => setSelected(b.key)}
-                  className={`rounded-2xl border p-5 text-left transition-all ${
-                    selected === b.key
-                      ? 'border-indigo-500 bg-slate-800 ring-2 ring-indigo-500/30'
-                      : 'border-slate-700 bg-slate-900 hover:border-slate-500'
-                  }`}>
-                  <div className="mb-3 flex items-center gap-3">
-                    <div className={`flex h-9 w-9 items-center justify-center rounded-xl text-xs font-bold ${
-                      selected === b.key ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-slate-300'
-                    }`}>{b.badge}</div>
-                    <span className="font-semibold text-sm">{b.name}</span>
-                    {selected === b.key && (
-                      <span className="ml-auto text-indigo-400">
-                        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-slate-400">{b.description}</p>
-                </button>
-              ))}
+            <div style={{
+              marginBottom: '32px',
+              border: `2px solid ${bb.border2}`,
+              backgroundColor: bb.panel,
+              padding: '32px',
+              maxWidth: '600px',
+              margin: '0 auto 32px auto'
+            }}>
+              <ul style={{ display: 'flex', flexDirection: 'column', gap: '16px', listStyle: 'none', padding: 0, margin: 0 }}>
+                <li style={{ fontSize: '15px', color: bb.white, display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                  <span style={{ color: '#00ff41', fontSize: '18px', flexShrink: 0, fontWeight: 'bold' }}>✓</span>
+                  <span><strong style={{ color: bb.orange }}>LEAPS SCANNER</strong> — scan 4,000+ US stocks for asymmetric setups</span>
+                </li>
+                <li style={{ fontSize: '15px', color: bb.white, display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                  <span style={{ color: '#00ff41', fontSize: '18px', flexShrink: 0, fontWeight: 'bold' }}>✓</span>
+                  <span><strong style={{ color: bb.orange }}>WATCHLIST</strong> — track your selected tickers</span>
+                </li>
+                <li style={{ fontSize: '15px', color: bb.white, display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                  <span style={{ color: '#00ff41', fontSize: '18px', flexShrink: 0, fontWeight: 'bold' }}>✓</span>
+                  <span><strong style={{ color: bb.orange }}>SURFACE</strong> — multi-factor screening dashboard</span>
+                </li>
+                <li style={{ fontSize: '15px', color: bb.white, display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                  <span style={{ color: '#00ff41', fontSize: '18px', flexShrink: 0, fontWeight: 'bold' }}>✓</span>
+                  <span><strong style={{ color: bb.orange }}>COILED AI</strong> — AI-powered market analysis (50 queries/day)</span>
+                </li>
+              </ul>
             </div>
 
-            {/* IBKR config */}
-            {selected === 'ibkr' && (
-              <div className="mb-6 rounded-2xl border border-slate-700 bg-slate-900 p-5">
-                <h2 className="mb-1 text-sm font-semibold">Connessione TWS / IB Gateway</h2>
-                <p className="mb-4 text-xs text-slate-400">
-                  Assicurati che TWS o IB Gateway sia aperto con le API socket abilitate.
-                </p>
-                <div className="grid grid-cols-2 gap-3">
-                  <label className="flex flex-col gap-1 text-sm">
-                    <span className="text-slate-400">Host</span>
-                    <input value={ibkrHost} onChange={e => setIbkrHost(e.target.value)}
-                      className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none" />
-                  </label>
-                  <label className="flex flex-col gap-1 text-sm">
-                    <span className="text-slate-400">Porta</span>
-                    <input value={ibkrPort} onChange={e => setIbkrPort(e.target.value)}
-                      className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none" />
-                    <span className="text-xs text-slate-500">paper: 7497 · live: 7496</span>
-                  </label>
-                  <label className="flex flex-col gap-1 text-sm">
-                    <span className="text-slate-400">Client ID</span>
-                    <input value={ibkrClientId} onChange={e => setIbkrClientId(e.target.value)}
-                      className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none" />
-                  </label>
-                  <label className="flex flex-col gap-1 text-sm">
-                    <span className="text-slate-400">Account (opzionale)</span>
-                    <input value={ibkrAccount} onChange={e => setIbkrAccount(e.target.value)}
-                      placeholder="DU123456"
-                      className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm placeholder-slate-600 focus:border-indigo-500 focus:outline-none" />
-                  </label>
-                </div>
-              </div>
-            )}
+            {step2Error && <p style={{ marginBottom: '12px', fontSize: '13.2px', color: bb.red }}>▶ ERROR: {step2Error}</p>}
 
-            {/* TastyTrade config */}
-            {selected === 'tastytrade' && (
-              <div className="mb-6 rounded-2xl border border-slate-700 bg-slate-900 p-5">
-                <h2 className="mb-1 text-sm font-semibold">Credenziali tastytrade</h2>
-                <p className="mb-4 text-xs text-slate-400">La password viene usata solo per ottenere il session token e non viene salvata.</p>
-                <div className="grid grid-cols-2 gap-3">
-                  <label className="flex flex-col gap-1 text-sm">
-                    <span className="text-slate-400">Username</span>
-                    <input value={ttUsername} onChange={e => setTtUsername(e.target.value)}
-                      className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none" />
-                  </label>
-                  <label className="flex flex-col gap-1 text-sm">
-                    <span className="text-slate-400">Password</span>
-                    <input type="password" value={ttPassword} onChange={e => setTtPassword(e.target.value)}
-                      className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none" />
-                  </label>
-                </div>
-              </div>
-            )}
-
-            {step2Error && <p className="mb-4 text-sm text-red-400">{step2Error}</p>}
-
-            <div className="flex items-center justify-between">
-              <button onClick={() => { router.push('/watchlists'); router.refresh() }}
-                className="text-sm text-slate-500 hover:text-slate-300">
-                Salta per ora →
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button onClick={() => setStep(1)}
+                style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: bb.gray, padding: '8px 16px', fontSize: '13.2px', fontFamily: 'inherit', cursor: 'pointer', letterSpacing: '1px' }}>
+                ← BACK
               </button>
-              <button onClick={submitStep2} disabled={!canSaveBroker() || saving}
-                className="rounded-xl bg-indigo-600 px-8 py-2.5 font-medium hover:bg-indigo-500 disabled:opacity-40">
-                {saving ? 'Salvataggio…' : 'Completa registrazione'}
+              <button onClick={submitStep2} disabled={savingPlan}
+                style={{ flex: 1, backgroundColor: savingPlan ? bb.border2 : bb.orange, color: '#000', border: 'none', padding: '8px', fontSize: '13.2px', fontFamily: 'inherit', fontWeight: 'bold', letterSpacing: '1px', cursor: savingPlan ? 'not-allowed' : 'pointer' }}>
+                {savingPlan ? 'SAVING...' : 'COMPLETE REGISTRATION'}
               </button>
             </div>
           </>
         )}
-
       </div>
     </div>
   )
@@ -254,11 +255,13 @@ export default function RegisterPage() {
 
 function StepDot({ n, active, done }: { n: number; active: boolean; done: boolean }) {
   return (
-    <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold transition-colors ${
-      done ? 'bg-emerald-600 text-white' :
-      active ? 'bg-indigo-600 text-white' :
-      'bg-slate-800 text-slate-500'
-    }`}>
+    <div style={{
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      height: '32px', width: '32px', flexShrink: 0,
+      backgroundColor: done ? bb.green : active ? bb.orange : bb.border2,
+      color: done || active ? '#000' : bb.gray,
+      fontSize: '13.2px', fontWeight: 'bold'
+    }}>
       {done ? '✓' : n}
     </div>
   )

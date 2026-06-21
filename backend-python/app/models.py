@@ -3,10 +3,9 @@ from decimal import Decimal
 from typing import Optional, List
 
 from sqlalchemy import (
-    BigInteger, Boolean, CheckConstraint, DateTime, ForeignKey,
-    Integer, Numeric, Text, Index, UniqueConstraint, func,
+    Boolean, CheckConstraint, DateTime, ForeignKey,
+    Integer, JSON, Numeric, Text, Index, UniqueConstraint, func,
 )
-from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -15,11 +14,20 @@ from app.database import Base
 class User(Base):
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
     email: Mapped[str] = mapped_column(Text, unique=True, nullable=False)
     password_hash: Mapped[str] = mapped_column(Text, nullable=False)
-    plan: Mapped[str] = mapped_column(Text, nullable=False, default="free")
+    plan: Mapped[str] = mapped_column(Text, nullable=False, default="free")  # free | pro | pro_byok
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    ai_api_key: Mapped[Optional[str]] = mapped_column(Text, nullable=True)   # BYOK
+    ai_queries_today: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    ai_queries_date: Mapped[Optional[date]] = mapped_column(nullable=True)
+    ai_tokens_today: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    ai_tokens_date: Mapped[Optional[date]] = mapped_column(nullable=True)
+    reset_token: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    reset_token_expires: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    email_verified: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    verification_token: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
@@ -31,10 +39,10 @@ class User(Base):
 class BrokerConfig(Base):
     __tablename__ = "broker_configs"
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
-    user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("users.id", ondelete="CASCADE"), unique=True, nullable=False)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id", ondelete="CASCADE"), unique=True, nullable=False)
     broker: Mapped[str] = mapped_column(Text, nullable=False)  # "ibkr" | "tastytrade"
-    config: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    config: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
@@ -48,8 +56,8 @@ class Watchlist(Base):
         UniqueConstraint("user_id", "name", name="watchlists_user_name_unique"),
     )
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
-    user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     name: Mapped[str] = mapped_column(Text, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
@@ -66,7 +74,7 @@ class OptionContract(Base):
         Index("option_contracts_lookup_idx", "underlying", "option_type", "expiration", "strike"),
     )
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
     underlying: Mapped[str] = mapped_column(Text, nullable=False)
     option_type: Mapped[str] = mapped_column(Text, nullable=False)
     expiration: Mapped[date] = mapped_column(nullable=False)
@@ -83,10 +91,10 @@ class OptionContract(Base):
 class ScanRun(Base):
     __tablename__ = "scan_runs"
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
-    user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     source: Mapped[str] = mapped_column(Text, nullable=False, default="scanner")
-    filters: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    filters: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
     user: Mapped["User"] = relationship(back_populates="scan_runs")
@@ -101,17 +109,32 @@ class WatchlistItem(Base):
         Index("watchlist_items_watchlist_idx", "watchlist_id", "created_at"),
     )
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
-    watchlist_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("watchlists.id", ondelete="CASCADE"), nullable=False)
-    option_contract_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("option_contracts.id", ondelete="CASCADE"), nullable=False)
-    source_scan_id: Mapped[Optional[int]] = mapped_column(BigInteger, ForeignKey("scan_runs.id", ondelete="SET NULL"))
+    id: Mapped[int] = mapped_column(primary_key=True)
+    watchlist_id: Mapped[int] = mapped_column(Integer, ForeignKey("watchlists.id", ondelete="CASCADE"), nullable=False)
+    option_contract_id: Mapped[int] = mapped_column(Integer, ForeignKey("option_contracts.id", ondelete="CASCADE"), nullable=False)
+    source_scan_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("scan_runs.id", ondelete="SET NULL"))
     status: Mapped[str] = mapped_column(Text, nullable=False, default="active")
+
+    # Entry values (quando aggiunto alla watchlist)
     entry_premium: Mapped[Optional[Decimal]] = mapped_column(Numeric(12, 4))
     entry_iv: Mapped[Optional[Decimal]] = mapped_column(Numeric(8, 4))
     entry_delta: Mapped[Optional[Decimal]] = mapped_column(Numeric(8, 4))
     entry_gamma: Mapped[Optional[Decimal]] = mapped_column(Numeric(8, 4))
     entry_vega: Mapped[Optional[Decimal]] = mapped_column(Numeric(8, 4))
     entry_theta: Mapped[Optional[Decimal]] = mapped_column(Numeric(8, 4))
+
+    # Current values (aggiornati via refresh)
+    current_bid: Mapped[Optional[Decimal]] = mapped_column(Numeric(12, 4))
+    current_ask: Mapped[Optional[Decimal]] = mapped_column(Numeric(12, 4))
+    current_last_price: Mapped[Optional[Decimal]] = mapped_column(Numeric(12, 4))
+    current_premium: Mapped[Optional[Decimal]] = mapped_column(Numeric(12, 4))
+    current_iv: Mapped[Optional[Decimal]] = mapped_column(Numeric(8, 4))
+    current_delta: Mapped[Optional[Decimal]] = mapped_column(Numeric(8, 4))
+    current_gamma: Mapped[Optional[Decimal]] = mapped_column(Numeric(8, 4))
+    current_vega: Mapped[Optional[Decimal]] = mapped_column(Numeric(8, 4))
+    current_theta: Mapped[Optional[Decimal]] = mapped_column(Numeric(8, 4))
+    last_refreshed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
+
     quantity: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     notes: Mapped[Optional[str]] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
@@ -129,8 +152,8 @@ class OptionSnapshot(Base):
         Index("option_snapshots_contract_time_idx", "option_contract_id", "as_of"),
     )
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
-    option_contract_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("option_contracts.id", ondelete="CASCADE"), nullable=False)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    option_contract_id: Mapped[int] = mapped_column(Integer, ForeignKey("option_contracts.id", ondelete="CASCADE"), nullable=False)
     as_of: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     bid: Mapped[Optional[Decimal]] = mapped_column(Numeric(12, 4))
     ask: Mapped[Optional[Decimal]] = mapped_column(Numeric(12, 4))
@@ -157,8 +180,8 @@ class Alert(Base):
         Index("alerts_item_enabled_idx", "watchlist_item_id", "is_enabled"),
     )
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
-    watchlist_item_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("watchlist_items.id", ondelete="CASCADE"), nullable=False)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    watchlist_item_id: Mapped[int] = mapped_column(Integer, ForeignKey("watchlist_items.id", ondelete="CASCADE"), nullable=False)
     alert_type: Mapped[str] = mapped_column(Text, nullable=False)
     threshold_value: Mapped[Optional[Decimal]] = mapped_column(Numeric(12, 4))
     is_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
@@ -167,3 +190,25 @@ class Alert(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     watchlist_item: Mapped["WatchlistItem"] = relationship(back_populates="alerts")
+
+
+class EmailList(Base):
+    __tablename__ = "email_list"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email: Mapped[str] = mapped_column(Text, unique=True, nullable=False)
+    plan: Mapped[str] = mapped_column(Text, nullable=False)
+    registered_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    source: Mapped[str] = mapped_column(Text, nullable=False, default="web")
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    unsubscribed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class CancellationFeedback(Base):
+    __tablename__ = "cancellation_feedback"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email: Mapped[str] = mapped_column(Text, nullable=False)
+    reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    suggestions: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

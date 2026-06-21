@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-const PYTHON_BASE = process.env.PYTHON_API_URL ?? 'http://localhost:8000'
+const PYTHON_BASE = process.env.PYTHON_API_URL ?? 'http://localhost:8001'
 
 export async function POST(req: Request) {
   try {
@@ -27,7 +27,9 @@ export async function POST(req: Request) {
       path: '/',
     })
     return response
-  } catch {
-    return NextResponse.json({ ok: false, error: 'Server error' }, { status: 500 })
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? `${err.name}: ${err.message}` : String(err)
+    console.error('[register proxy error]', msg)
+    return NextResponse.json({ ok: false, error: msg }, { status: 500 })
   }
 }

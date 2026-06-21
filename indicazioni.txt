@@ -1,0 +1,32 @@
+Nel file backend-python/app/routers/ crea un nuovo file market.py
+
+Aggiungi un endpoint GET /api/market/quote?tickers=AAPL,SPY,NVDA
+
+L'endpoint deve:
+1. Ricevere una lista di ticker separati da virgola
+2. Per ogni ticker chiamare yfinance: yf.Ticker(ticker).fast_info
+3. Restituire JSON con: ticker, currentPrice, previousClose, 
+   marketCap, currency
+4. Gestire errori per ticker non trovati
+5. Richiedere autenticazione con get_current_user
+
+Registra il router in main.py con prefix /api/market
+
+Nel file backend-python/app/routers/ai_chat.py
+Nel system prompt della Coiled AI aggiungi queste istruzioni:
+
+"PORTFOLIO ANALYSIS:
+Quando l'utente fornisce un portafoglio azionario (es. '100 AAPL, 
+50 SPY') devi:
+1. Identificare i ticker e le quantità
+2. Chiamare internamente /api/market/quote per recuperare i prezzi 
+   correnti da yfinance
+3. Calcolare: valore totale portafoglio, delta totale (qty × 1 per 
+   azioni), esposizione per ticker in % 
+4. Suggerire 2-3 strategie di copertura con LEAPS put:
+   - Numero contratti necessari per copertura parziale (50%) e 
+     totale (100%)
+   - Costo stimato della copertura in $ e in % del portafoglio
+   - Strike e scadenza consigliati (DTE 300-500, delta put -0.20/-0.30)
+5. Spiegare il trade-off costo/protezione per ogni alternativa
+6. Aggiungere sempre il disclaimer educativo"

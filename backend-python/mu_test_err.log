@@ -1,0 +1,14 @@
+INFO:     Will watch for changes in these directories: ['C:\\Users\\franc\\Desktop\\coiled-spring-backend2\\backend-python']
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+INFO:     Started reloader process [12100] using WatchFiles
+INFO:     Started server process [16504]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'test_scanner_quick.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [16504]
+INFO:     Started server process [7260]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.

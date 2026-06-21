@@ -1,0 +1,29 @@
+Agisci in qualità di Senior Financial Software Engineer ed esperto di Quantitative Finance. 
+
+Attualmente, hai implementato con successo uno scanner di opzioni che, inserendo un ticker e dei filtri, mostra una tabella con i prezzi delle opzioni e le relative metriche. 
+
+Il prossimo passo nello sviluppo del software consiste nell'implementazione di una funzionalità di visualizzazione avanzata: la Superficie di Volatilità Tridimensionale (3D Volatility Surface).
+
+Voglio che tu scriva il codice (o la logica di implementazione) per integrare questa nuova feature. Ecco i requisiti dettagliati:
+
+### 1. Input e Trigger
+* Una volta che l'utente seleziona un ticker specifico, il sistema deve generare automaticamente il grafico 3D della superficie di volatilità accanto o sotto la tabella dei prezzi attuale.
+
+### 2. Struttura del Grafico 3D (Assi)
+Il grafico deve essere renderizzato in 3D interattivo (utilizzando librerie come Plotly, Chart.js o surrogati adatti a seconda dello stack che stiamo usando) con i seguenti tre assi ben definiti:
+* Asse X: Strike Price (o il "Moneyness" / Delta dell'opzione per standardizzare).
+* Asse Y: Tempo alla scadenza (Days to Expiration - DTE, espresso in giorni o mesi).
+* Asse Z (Altezza): Volatilità Implicita (IV) espressa in percentuale.
+
+### 3. Gestione dei Dati Mancanti (Interpolazione/Estrapolazione)
+Questo è un punto critico. Spesso, per scadenze lontane o strike molto Out-of-the-Money, i prezzi delle opzioni non sono scambiati (mancanza di liquidità, bid-ask spread enormi o dati assenti), il che creerebbe dei "buchi" o delle "gole" vuote nella superficie.
+* REQUISITO: Se mancano i prezzi o la IV per determinati nodi (Strike/Scadenza), implementa un algoritmo di estrapolazione/interpolazione (ad esempio, uno smoothing tramite Spline Cubiche, modelli SABR, o interpolazione lineare/bilineare della varianza totale) per riempire i vuoti. 
+* L'obiettivo è mostrare una superficie continua, liscia e senza buchi grafici ("smooth surface"), che rifletta accuratamente la dinamica del mercato.
+
+### 4. Leggibilità e UX (User Experience)
+* Il grafico deve essere ruotabile, zoomabile e interattivo: l'utente deve poter passare il mouse sopra un punto della superficie (hover) e leggere i valori esatti di Strike, Scadenza e Volatilità Implicita.
+* Utilizza una mappa di colori (heatmap) applicata alla superficie Z per rendere immediata la lettura (ad esempio, colori più caldi come il rosso/arancione per IV alta e colori freddi come il blu per IV bassa).
+
+Mostrami l'approccio matematico/logico per l'estrapolazione e il codice pulito e commentato per implementare questa visualizzazione 3D.
+
+UNA VOLTA SELEZIONATO IL TICKER L'UTNTE PUO SCEGLIERE SE FARE LO SCANNER O VEDERE IL GRAFICO, METTI IL BOTTONE A FIANCO AL BOTTONE DELLO SCANNER

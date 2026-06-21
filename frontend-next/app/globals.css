@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@theme {
+  --font-mono: 'Courier New', 'Consolas', 'Lucida Console', monospace;
+
+  /* Bloomberg palette */
+  --color-bb-black:   #000000;
+  --color-bb-dark:    #0a0a00;
+  --color-bb-surface: #111100;
+  --color-bb-panel:   #1a1900;
+  --color-bb-border:  #222200;
+  --color-bb-border2: #333300;
+  --color-bb-orange:  #FF6600;
+  --color-bb-amber:   #FFAA00;
+  --color-bb-yellow:  #FFE000;
+  --color-bb-green:   #00DD00;
+  --color-bb-red:     #FF3333;
+  --color-bb-cyan:    #00CCCC;
+  --color-bb-white:   #CCCCCC;
+  --color-bb-gray:    #FFFFFF;
+  --color-bb-muted:   #333322;
+}
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html, body {
+    background-color: #000000;
+    color: #CCCCCC;
+    font-family: 'Courier New', 'Consolas', 'Lucida Console', monospace;
+    font-size: 15.6px;
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Scrollbar Bloomberg style */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #000000; }
+  ::-webkit-scrollbar-thumb { background: #333300; }
+  ::-webkit-scrollbar-thumb:hover { background: #FF6600; }
+
+  /* Input overrides */
+  input, select, textarea {
+    font-family: inherit;
+    background: #0a0a00;
+    color: #CCCCCC;
+    border: 1px solid #222200;
+    border-radius: 0;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #FF6600;
+  }
+
+  /* Selection */
+  ::selection { background: #FF6600; color: #000000; }
+}
