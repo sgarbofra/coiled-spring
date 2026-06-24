@@ -15,7 +15,7 @@ export default function NavBar() {
   const links = [
     { href: '/watchlists', label: 'WATCHLIST' },
     { href: '/scanner',    label: 'SCANNER' },
-    { href: '/portfolio',  label: 'PORTFOLIO', show: isPro && hasBroker },
+    { href: '/portfolio',  label: 'PORTFOLIO' },
     { href: '/settings',   label: 'SETTINGS' },
   ]
 

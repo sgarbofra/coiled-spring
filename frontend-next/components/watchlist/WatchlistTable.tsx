@@ -91,6 +91,8 @@ export default function WatchlistTable({ items, selectedIds = [], onSelectIds, o
               <Th label="EXP" onClick={() => toggleSort('expirationDate')} />
               <Th label="DTE" onClick={() => toggleSort('dte')} />
               <Th label="PREMIUM" onClick={() => toggleSort('premiumPaid')} />
+              <Th label="BID" />
+              <Th label="ASK" />
               <Th label="IV %" onClick={() => toggleSort('ivCurrent')} />
               <Th label="DELTA" onClick={() => toggleSort('delta')} />
               <Th label="THETA" onClick={() => toggleSort('theta')} />
@@ -99,7 +101,7 @@ export default function WatchlistTable({ items, selectedIds = [], onSelectIds, o
           </thead>
           <tbody style={{ backgroundColor: bb.bg }}>
             {filtered.length === 0 ? (
-              <tr><td colSpan={12} style={{ padding: '24px', textAlign: 'center', color: bb.gray, fontSize: '13.2px', letterSpacing: '1px' }}>NO ITEMS FOUND</td></tr>
+              <tr><td colSpan={14} style={{ padding: '24px', textAlign: 'center', color: bb.gray, fontSize: '13.2px', letterSpacing: '1px' }}>NO ITEMS FOUND</td></tr>
             ) : filtered.map(item => {
               const isSelected = selectedIds.includes(item.id)
               const dte = item.dte ?? 999
@@ -130,6 +132,8 @@ export default function WatchlistTable({ items, selectedIds = [], onSelectIds, o
                   <td style={{ padding: '6px 8px', color: textColor }}>{item.expirationDate ? new Date(item.expirationDate).toLocaleDateString() : '-'}</td>
                   <td style={{ padding: '6px 8px', color: textColor }}>{item.dte ?? '-'}</td>
                   <td style={{ padding: '6px 8px', color: textColor }}>{fmt(item.premiumPaid)}</td>
+                  <td style={{ padding: '6px 8px', color: textColor }}>{fmt(item.bid)}</td>
+                  <td style={{ padding: '6px 8px', color: textColor }}>{fmt(item.ask)}</td>
                   <td style={{ padding: '6px 8px', color: (isExpired || isExpiringSoon) ? '#666666' : bb.amber }}>{item.ivCurrent ? `${Number(item.ivCurrent).toFixed(1)}%` : '-'}</td>
                   <td style={{ padding: '6px 8px', color: textColor }}>{fmt(item.delta)}</td>
                   <td style={{ padding: '6px 8px', color: textColor }}>{fmt(item.theta)}</td>
@@ -159,7 +163,3 @@ function Th({ label, onClick }: { label: string; onClick?: () => void }) {
 }
 
 function fmt(v: number | null) { return v == null ? '-' : Number(v).toFixed(2) }
-function pnlColor(v: number | null) {
-  if (v == null) return bb.gray
-  return v >= 0 ? bb.green : bb.red
-}

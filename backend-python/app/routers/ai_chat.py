@@ -140,9 +140,19 @@ Example responses:
 
 ════════════════════════════════════════
 
-Hai accesso a tre strumenti:
+Hai accesso a quattro strumenti:
 
-1. `run_scanner`: esegue scansioni reali delle opzioni.
+1. `get_user_portfolio`: legge il portafoglio salvato dell'utente nel terminale Coiled Spring.
+   USALO ogni volta che l'utente:
+   - chiede informazioni sul suo portafoglio ("il mio portafoglio", "cosa ho in portafoglio")
+   - fa riferimento a un portafoglio per nome ("il portafoglio Apple", "il mio portafoglio Primo")
+   - chiede rischi, punti deboli, analisi delle sue posizioni aperte
+   - chiede la sua esposizione a greche o volatilità
+   - chiede di hedgiare il suo portafoglio (prima leggi il portafoglio, poi analizza)
+   ⚠️ IMPORTANTE: Non chiedere all'utente di inserire manualmente le posizioni se puoi leggerle dal portafoglio.
+   ⚠️ Se l'utente non specifica il nome del portafoglio, chiama il tool senza portfolio_name per ottenere la lista.
+
+2. `run_scanner`: esegue scansioni reali delle opzioni.
    USALO ogni volta che l'utente chiede di:
    - trovare / mostrare / cercare opzioni su un titolo o ETF
    - scansionare il mercato con certi criteri (DTE, delta, IV Rank, ecc.)
@@ -529,6 +539,31 @@ WEB_SEARCH_TOOL = {
     "name": "web_search"
 }
 
+PORTFOLIO_TOOL = {
+    "name": "get_user_portfolio",
+    "description": (
+        "Legge il portafoglio salvato dell'utente nel terminale Coiled Spring. "
+        "Usa questo tool quando l'utente fa riferimento al suo portafoglio per nome "
+        "(es. 'il mio portafoglio APPLE', 'analizza il mio portafoglio Primo', "
+        "'qual è il rischio del mio portafoglio?', 'cosa ho in portafoglio?'). "
+        "Restituisce le posizioni aperte con prezzi live, PNL non realizzato e greche nette per sottostante. "
+        "Se portfolio_name non è specificato, restituisce tutti i portafogli dell'utente."
+    ),
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "portfolio_name": {
+                "type": "string",
+                "description": (
+                    "Nome del portafoglio da leggere (es. 'APPLE', 'Primo', 'Portfolio Test'). "
+                    "Se omesso, restituisce la lista di tutti i portafogli con le posizioni aperte."
+                ),
+            },
+        },
+        "required": [],
+    },
+}
+
 SCANNER_TOOL = {
     "name": "run_scanner",
     "description": (
@@ -706,6 +741,124 @@ def _get_market_quotes_tool(tool_input: dict) -> list:
 
     return results
 
+def _get_user_portfolio_tool(tool_input: dict, db: Session, user: models.User) -> dict:
+    """Legge i portafogli dell'utente dal DB con posizioni aperte e greche."""
+    from app.services.market_data import get_options_prices_bulk
+    from datetime import date
+
+    MULTIPLIER = 100
+    portfolio_name = (tool_input.get("portfolio_name") or "").strip().lower()
+
+    # Carica tutti i portafogli dell'utente
+    portfolios = (
+        db.query(models.Portfolio)
+        .filter(models.Portfolio.user_id == user.id)
+        .all()
+    )
+
+    if not portfolios:
+        return {"portfolios": [], "message": "L'utente non ha portafogli salvati."}
+
+    # Lista portafogli disponibili
+    portfolio_list = [{"id": p.id, "name": p.name} for p in portfolios]
+
+    # Filtra per nome se specificato
+    if portfolio_name:
+        target = next(
+            (p for p in portfolios if portfolio_name in p.name.lower()),
+            None
+        )
+        if not target:
+            return {
+                "portfolios_disponibili": portfolio_list,
+                "message": f"Portafoglio '{portfolio_name}' non trovato. Disponibili: {[p['name'] for p in portfolio_list]}"
+            }
+        portfolios_to_load = [target]
+    else:
+        portfolios_to_load = portfolios
+
+    result = []
+    today = date.today()
+
+    for portfolio in portfolios_to_load:
+        # Posizioni aperte
+        trades = (
+            db.query(models.PortfolioTrade)
+            .filter(
+                models.PortfolioTrade.portfolio_id == portfolio.id,
+                models.PortfolioTrade.status == "open",
+            )
+            .all()
+        )
+
+        if not trades:
+            result.append({
+                "portfolio": portfolio.name,
+                "posizioni_aperte": 0,
+                "posizioni": [],
+                "greche_nette": {},
+                "pnl_totale_non_realizzato": 0,
+            })
+            continue
+
+        # Fetch prezzi live in bulk
+        symbol_keys = [t.option_contract.symbol_key for t in trades]
+        prices = get_options_prices_bulk(symbol_keys)
+
+        posizioni = []
+        total_pnl = 0.0
+        greche = {"delta": 0.0, "gamma": 0.0, "vega": 0.0, "theta": 0.0}
+
+        for trade in trades:
+            c = trade.option_contract
+            dte = (c.expiration - today).days
+            entry = float(trade.entry_price)
+            sign = 1 if trade.direction == "long" else -1
+            price_data = prices.get(c.symbol_key)
+
+            current_mid = unrealized_pnl = None
+            if price_data and price_data.mid > 0:
+                current_mid = price_data.mid
+                unrealized_pnl = round((current_mid - entry) * MULTIPLIER * trade.quantity * sign, 2)
+                total_pnl += unrealized_pnl
+                # Greche nette (considerate direction e quantità)
+                if price_data.delta is not None:
+                    greche["delta"] += round(price_data.delta * trade.quantity * sign, 3)
+                if price_data.gamma is not None:
+                    greche["gamma"] += round(price_data.gamma * trade.quantity * sign, 4)
+                if price_data.vega is not None:
+                    greche["vega"] += round(price_data.vega * trade.quantity * sign, 3)
+                if price_data.theta is not None:
+                    greche["theta"] += round(price_data.theta * trade.quantity * sign, 4)
+
+            posizioni.append({
+                "underlying": c.underlying,
+                "option_type": c.option_type,
+                "strike": float(c.strike),
+                "expiration": c.expiration.isoformat(),
+                "dte": dte,
+                "direction": trade.direction,
+                "quantity": trade.quantity,
+                "entry_price": entry,
+                "current_mid": current_mid,
+                "unrealized_pnl": unrealized_pnl,
+                "iv_pct": price_data.iv if price_data else None,
+                "delta": price_data.delta if price_data else None,
+                "theta": price_data.theta if price_data else None,
+                "vega": price_data.vega if price_data else None,
+            })
+
+        result.append({
+            "portfolio": portfolio.name,
+            "posizioni_aperte": len(posizioni),
+            "posizioni": posizioni,
+            "greche_nette": {k: round(v, 3) for k, v in greche.items()},
+            "pnl_totale_non_realizzato": round(total_pnl, 2),
+        })
+
+    return {"portfolios": result}
+
+
 def _run_scanner_tool(tool_input: dict) -> list:
     # Clean symbols: remove $, €, whitespace, convert to uppercase
     symbols = [
@@ -868,7 +1021,7 @@ async def chat(
                 max_tokens=max_tokens_response,
                 system=cached_system,
                 messages=messages,
-                tools=[MARKET_QUOTES_TOOL, WEB_SEARCH_TOOL, SCANNER_TOOL],
+                tools=[MARKET_QUOTES_TOOL, WEB_SEARCH_TOOL, SCANNER_TOOL, PORTFOLIO_TOOL],
             )
         except anthropic.APITimeoutError:
             yield f'data: {json.dumps({"type": "text", "text": "Response timeout - please try a simpler question."})}\n\n'
@@ -938,6 +1091,15 @@ async def chat(
                 tool_result_content = json.dumps({"error": str(e)})
                 yield f"data: {json.dumps({'type': 'text', 'text': f'Errore durante la scansione: {e}'})}\n\n"
 
+        elif tool_name == "get_user_portfolio":
+            name = tool_input.get("portfolio_name", "") or "tutti i portafogli"
+            yield f"data: {json.dumps({'type': 'tool_call', 'name': 'get_user_portfolio', 'input': tool_input, 'message': f'Leggo il portafoglio: {name}...'})}\n\n"
+            try:
+                portfolio_data = _get_user_portfolio_tool(tool_input, db, current_user)
+                tool_result_content = json.dumps(portfolio_data)
+            except Exception as e:
+                tool_result_content = json.dumps({"error": str(e)})
+
         else:
             tool_result_content = json.dumps({"error": f"Tool sconosciuto: {tool_name}"})
             yield f"data: {json.dumps({'type': 'text', 'text': f'Tool sconosciuto: {tool_name}'})}\n\n"
@@ -973,7 +1135,7 @@ async def chat(
                     max_tokens=max_tokens_response,
                     system=cached_system,
                     messages=updated_messages,
-                    tools=[MARKET_QUOTES_TOOL, WEB_SEARCH_TOOL, SCANNER_TOOL],
+                    tools=[MARKET_QUOTES_TOOL, WEB_SEARCH_TOOL, SCANNER_TOOL, PORTFOLIO_TOOL],
                 ) as stream:
                     async for text in stream.text_stream:
                         yield f"data: {json.dumps({'type': 'text', 'text': text})}\n\n"

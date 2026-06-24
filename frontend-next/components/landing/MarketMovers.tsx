@@ -93,135 +93,53 @@ export default function MarketMovers() {
         </div>
       </div>
 
-      {/* Two Column Grid */}
+      {/* Single Column */}
       <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '1.5rem',
-        padding: '1.5rem',
+        padding: '1rem 1.5rem',
         flex: 1,
+        overflowY: 'auto',
       }}>
-        {/* Gainers Column */}
-        <div>
-          <div style={{
-            color: '#00DD00',
-            fontSize: '0.75rem',
-            marginBottom: '1rem',
-            fontWeight: 'bold',
-            letterSpacing: '0.5px',
-          }}>
-            ▲ TOP GAINERS
-          </div>
-          {data?.gainers.slice(0, 5).map((mover, idx) => {
-            const companyName = getCompanyName(mover.ticker)
-            return (
-              <div
-                key={mover.ticker}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '0.5rem 0',
-                  borderBottom: idx < 4 ? '1px solid #1a1a1a' : 'none',
-                  gap: '0.5rem',
-                }}
-              >
-                <div style={{
-                  flex: 1,
-                  fontSize: '0.85rem',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}>
-                  <span style={{
-                    color: '#FF6600',
-                    fontWeight: 'bold',
-                  }}>
-                    {mover.ticker}
-                  </span>
-                  {companyName && (
-                    <span style={{
-                      color: '#999',
-                      marginLeft: '0.5rem',
-                      fontSize: '0.75rem',
-                    }}>
-                      {companyName}
-                    </span>
-                  )}
-                </div>
-                <div style={{
-                  color: '#00DD00',
-                  fontSize: '0.85rem',
-                  fontWeight: 'bold',
-                  flexShrink: 0,
-                }}>
-                  +{(mover.change_percent ?? 0).toFixed(2)}%
-                </div>
-              </div>
-            )
-          })}
+        {/* Gainers */}
+        <div style={{ color: '#00DD00', fontSize: '0.7rem', marginBottom: '0.4rem', fontWeight: 'bold', letterSpacing: '0.5px' }}>
+          ▲ TOP GAINERS
         </div>
+        {data?.gainers.slice(0, 5).map((mover) => {
+          const companyName = getCompanyName(mover.ticker)
+          return (
+            <div key={mover.ticker} style={{ display: 'flex', alignItems: 'center', padding: '0.3rem 0', borderBottom: '1px solid #1a1a1a', gap: '0.5rem', minWidth: 0 }}>
+              <span style={{ color: '#FF6600', fontWeight: 'bold', fontSize: '0.85rem', flexShrink: 0 }}>
+                {mover.ticker}
+              </span>
+              <span style={{ color: '#555', fontSize: '0.72rem', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {companyName}
+              </span>
+              <span style={{ color: '#00DD00', fontSize: '0.85rem', fontWeight: 'bold', flexShrink: 0, minWidth: '62px', textAlign: 'right' }}>
+                +{(mover.change_percent ?? 0).toFixed(2)}%
+              </span>
+            </div>
+          )
+        })}
 
-        {/* Losers Column */}
-        <div>
-          <div style={{
-            color: '#FF4444',
-            fontSize: '0.75rem',
-            marginBottom: '1rem',
-            fontWeight: 'bold',
-            letterSpacing: '0.5px',
-          }}>
-            ▼ TOP LOSERS
-          </div>
-          {data?.losers.slice(0, 5).map((mover, idx) => {
-            const companyName = getCompanyName(mover.ticker)
-            return (
-              <div
-                key={mover.ticker}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '0.5rem 0',
-                  borderBottom: idx < 4 ? '1px solid #1a1a1a' : 'none',
-                  gap: '0.5rem',
-                }}
-              >
-                <div style={{
-                  flex: 1,
-                  fontSize: '0.85rem',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}>
-                  <span style={{
-                    color: '#FF6600',
-                    fontWeight: 'bold',
-                  }}>
-                    {mover.ticker}
-                  </span>
-                  {companyName && (
-                    <span style={{
-                      color: '#999',
-                      marginLeft: '0.5rem',
-                      fontSize: '0.75rem',
-                    }}>
-                      {companyName}
-                    </span>
-                  )}
-                </div>
-                <div style={{
-                  color: '#FF4444',
-                  fontSize: '0.85rem',
-                  fontWeight: 'bold',
-                  flexShrink: 0,
-                }}>
-                  {(mover.change_percent ?? 0).toFixed(2)}%
-                </div>
-              </div>
-            )
-          })}
+        {/* Losers */}
+        <div style={{ color: '#FF4444', fontSize: '0.7rem', marginTop: '0.9rem', marginBottom: '0.4rem', fontWeight: 'bold', letterSpacing: '0.5px' }}>
+          ▼ TOP LOSERS
         </div>
+        {data?.losers.slice(0, 5).map((mover, idx) => {
+          const companyName = getCompanyName(mover.ticker)
+          return (
+            <div key={mover.ticker} style={{ display: 'flex', alignItems: 'center', padding: '0.3rem 0', borderBottom: idx < 4 ? '1px solid #1a1a1a' : 'none', gap: '0.5rem', minWidth: 0 }}>
+              <span style={{ color: '#FF6600', fontWeight: 'bold', fontSize: '0.85rem', flexShrink: 0 }}>
+                {mover.ticker}
+              </span>
+              <span style={{ color: '#555', fontSize: '0.72rem', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {companyName}
+              </span>
+              <span style={{ color: '#FF4444', fontSize: '0.85rem', fontWeight: 'bold', flexShrink: 0, minWidth: '62px', textAlign: 'right' }}>
+                {(mover.change_percent ?? 0).toFixed(2)}%
+              </span>
+            </div>
+          )
+        })}
       </div>
     </div>
   )

@@ -156,9 +156,10 @@ class _Cache:
 
 _cache = _Cache()
 
-PRICE_TTL    = 60 * 5     # 5 min
-HISTORY_TTL  = 60 * 60    # 1 hour
-OPTIONS_TTL  = 60 * 15    # 15 min
+PRICE_TTL      = 60 * 5     # 5 min  — prezzo sottostante
+HISTORY_TTL    = 60 * 60    # 1 hour — info ticker
+OPTIONS_TTL    = 60 * 15    # 15 min — chain scanner (costoso, non cambia spesso)
+OPTPRICE_TTL   = 60 * 2     # 2 min  — singola opzione per portfolio (deve essere fresco)
 
 
 # ── YFinance provider ─────────────────────────────────────────────────────────
@@ -384,7 +385,7 @@ def _yf_options_for_symbol(
                         mid=round(mid, 2),
                         last_price=round(last_price, 2),
                         spread_pct=spread_pct,
-                        iv=round(iv_raw * 100, 1),
+                        iv=round(sigma * 100, 1),   # usa sigma effettivo (calcolato via BS se yahoo IV mancante)
                         iv_rank=iv_rank,
                         delta=round(abs_delta, 3),
                         gamma=round(gamma, 4),
@@ -522,11 +523,13 @@ class OptionPrice:
     iv_rank: float
     volume: int
     open_interest: int
+    last_price: float = 0.0              # last traded price (può essere stale)
+    price_source: str = "mid"            # "mid"|"bid"|"ask"|"last"|"bs_theoretical"
     delta: Optional[float] = None
     gamma: Optional[float] = None
     vega: Optional[float] = None
     theta: Optional[float] = None
-    fetched_at: str = None    # ISO timestamp
+    fetched_at: str = None               # ISO timestamp
 
 
 def _parse_symbol_key(symbol_key: str):
@@ -551,9 +554,9 @@ def _parse_symbol_key(symbol_key: str):
 
 def get_option_current_price(symbol_key: str) -> Optional[OptionPrice]:
     """Fetch current bid/ask/mid for a single option contract via yfinance.
-    Results cached for OPTIONS_TTL (15 min).
+    Results cached for OPTPRICE_TTL (2 min) — TTL basso per PNL portfolio fresco.
     """
-    cached = _cache.get(f"optprice:{symbol_key}", OPTIONS_TTL)
+    cached = _cache.get(f"optprice:{symbol_key}", OPTPRICE_TTL)
     if cached is not None:
         return cached
 
@@ -577,17 +580,56 @@ def get_option_current_price(symbol_key: str) -> Optional[OptionPrice]:
         row = matches.iloc[0]
         bid = float(row.get('bid', 0) or 0)
         ask = float(row.get('ask', 0) or 0)
+        last_price = float(row.get('lastPrice', 0) or 0)
         iv_raw = float(row.get('impliedVolatility', 0) or 0)
         volume = int(row.get('volume', 0) or 0)
         oi = int(row.get('openInterest', 0) or 0)
 
-        if bid <= 0 and ask <= 0:
-            return None
+        # ── Calcolo mid: 3 livelli di fallback ───────────────────────────────────
+        # Livello 1: bid/ask — quotazione corrente dai market maker (più fresca)
+        # Livello 2: lastPrice — ultimo trade eseguito (può essere stale per LEAPS illiquide)
+        # Livello 3: prezzo teorico B-S — ultimo resort quando mercato non ha prezzi
+        mid = 0.0
+        price_source = "none"
 
-        mid = round((bid + ask) / 2, 2)
+        if bid > 0 and ask > 0:
+            mid = round((bid + ask) / 2, 2)
+            price_source = "mid"
+        elif bid > 0:
+            mid = round(bid, 2)
+            price_source = "bid"
+        elif ask > 0:
+            mid = round(ask, 2)
+            price_source = "ask"
+        elif last_price > 0:
+            mid = round(last_price, 2)
+            price_source = "last"
+
+        # Livello 3: B-S teorico — quando non ci sono prezzi di mercato
+        if mid == 0 and SCIPY_AVAILABLE:
+            try:
+                underlying_price_bs = _yf_current_price(underlying)
+                from datetime import date as _date_bs
+                exp_date_bs = _date_bs.fromisoformat(expiry)
+                dte_bs = (exp_date_bs - _date_bs.today()).days
+                if underlying_price_bs and dte_bs > 0:
+                    T_bs = dte_bs / 365.0
+                    # Usa iv_raw di Yahoo se disponibile (anche se bassa), altrimenti sigma di default 25%
+                    sigma_bs = iv_raw if iv_raw > 0.01 else 0.25
+                    bs_price, _, _, _, _ = bs_greeks(underlying_price_bs, strike, T_bs, 0.045, sigma_bs, is_call)
+                    if bs_price > 0:
+                        mid = round(bs_price, 2)
+                        price_source = "bs_theoretical"
+            except Exception:
+                pass
+
+        if mid == 0:
+            return None  # nessun prezzo disponibile in nessuna forma
+
         iv_rank = _yf_iv_rank(underlying)
 
-        # Filter out corrupted IV data (< 5% is unrealistic for LEAPS) - set to None instead
+        # IV: accetta valori >= 5% (0.05 in decimale). Sotto è quasi certamente dato corrotto
+        # (Yahoo restituisce spesso ~3% per LEAPS illiquide con bid/ask=0).
         iv_value = round(iv_raw * 100, 1) if iv_raw >= 0.05 else None
 
         # Calculate Greeks using Black-Scholes if we have valid IV
@@ -596,7 +638,24 @@ def get_option_current_price(symbol_key: str) -> Optional[OptionPrice]:
         vega_val = None
         theta_val = None
 
-        if iv_raw >= 0.05:  # Valid IV
+        # Fallback IV: se Yahoo non fornisce IV (o è < 5%), stimala da mid price con B-S inverso
+        sigma_for_greeks = iv_raw if iv_raw >= 0.05 else None
+        if sigma_for_greeks is None and mid > 0:
+            try:
+                underlying_price_tmp = _yf_current_price(underlying)
+                from datetime import date as _date
+                exp_date_tmp = _date.fromisoformat(expiry)
+                dte_tmp = (exp_date_tmp - _date.today()).days
+                if underlying_price_tmp and dte_tmp > 0:
+                    T_tmp = dte_tmp / 365.0
+                    calc_iv = implied_volatility_bs(mid, underlying_price_tmp, strike, T_tmp, 0.045, is_call)
+                    if calc_iv and calc_iv >= 0.01:
+                        sigma_for_greeks = calc_iv
+                        iv_value = round(calc_iv * 100, 1)
+            except Exception:
+                pass
+
+        if sigma_for_greeks is not None:  # IV disponibile
             try:
                 # Get current underlying price
                 underlying_price = _yf_current_price(underlying)
@@ -610,7 +669,7 @@ def get_option_current_price(symbol_key: str) -> Optional[OptionPrice]:
                     if T > 0:
                         r = 0.045  # risk-free rate
                         _, delta, gamma, vega, theta = bs_greeks(
-                            underlying_price, strike, T, r, iv_raw, is_call
+                            underlying_price, strike, T, r, sigma_for_greeks, is_call
                         )
                         # For puts, use absolute delta
                         delta_val = round(delta if is_call else abs(delta), 3)
@@ -625,6 +684,8 @@ def get_option_current_price(symbol_key: str) -> Optional[OptionPrice]:
             bid=round(bid, 2),
             ask=round(ask, 2),
             mid=mid,
+            last_price=round(last_price, 2),
+            price_source=price_source,
             iv=iv_value,
             iv_rank=iv_rank,
             volume=volume,

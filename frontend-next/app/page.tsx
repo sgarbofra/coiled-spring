@@ -863,22 +863,6 @@ export default function LandingPage() {
               e.currentTarget.style.boxShadow = 'none'
             }}
             >
-              {/* COMING SOON Badge */}
-              <div style={{
-                position: 'absolute',
-                top: '12px',
-                right: '12px',
-                background: '#FF6600',
-                color: '#000',
-                fontSize: '10px',
-                fontWeight: 'bold',
-                fontFamily: 'Space Mono, monospace',
-                padding: '3px 8px',
-                borderRadius: '4px',
-                letterSpacing: '1px',
-              }}>
-                COMING SOON
-              </div>
               <div style={{
                 marginBottom: '1rem',
               }}>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import TradeModal from './TradeModal'
 
 const bb = {
   bg: '#000000', surface: '#0a0a00', panel: '#111100',
@@ -47,6 +48,8 @@ export default function ItemDetailsDrawer({ watchlistId, itemId, open, onClose }
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const [tradeModalOpen, setTradeModalOpen] = useState(false)
+
   const [alertType, setAlertType] = useState(ALERT_TYPES[0].value)
   const [threshold, setThreshold] = useState('')
   const [addingAlert, setAddingAlert] = useState(false)
@@ -75,7 +78,7 @@ export default function ItemDetailsDrawer({ watchlistId, itemId, open, onClose }
 
   const pnlPct = useMemo(() => {
     if (item?.premiumPaid == null || item?.currentPremium == null || item.premiumPaid === 0) return null
-    return ((item.currentPremium - item.premiumPaid) / item.premiumPaid) * 100
+    return null // P&L tracked in portfolio only
   }, [item])
 
   const addAlert = async () => {
@@ -133,12 +136,20 @@ export default function ItemDetailsDrawer({ watchlistId, itemId, open, onClose }
             <h2 style={{ fontSize: '19.2px', fontWeight: 'bold', color: bb.orange, letterSpacing: '2px' }}>{item?.symbol ?? 'ITEM DETAILS'}</h2>
             <p style={{ fontSize: '13.2px', color: bb.gray, letterSpacing: '1px' }}>{item?.underlyingSymbol ?? ''}</p>
           </div>
-          <button onClick={onClose}
-            style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: bb.gray, padding: '4px 12px', fontSize: '13.2px', fontFamily: 'inherit', cursor: 'pointer', letterSpacing: '1px' }}
-            onMouseEnter={e => (e.currentTarget.style.borderColor = bb.orange, e.currentTarget.style.color = bb.white)}
-            onMouseLeave={e => (e.currentTarget.style.borderColor = bb.border2, e.currentTarget.style.color = bb.gray)}>
-            CLOSE
-          </button>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <button onClick={() => setTradeModalOpen(true)}
+              style={{ border: `2px solid ${bb.orange}`, backgroundColor: 'rgba(255,102,0,0.12)', color: bb.orange, padding: '5px 14px', fontSize: '13.2px', fontFamily: 'inherit', cursor: 'pointer', letterSpacing: '1px', fontWeight: 'bold' }}
+              onMouseEnter={e => { e.currentTarget.style.backgroundColor = bb.orange; e.currentTarget.style.color = '#000' }}
+              onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'rgba(255,102,0,0.12)'; e.currentTarget.style.color = bb.orange }}>
+              TRADE
+            </button>
+            <button onClick={onClose}
+              style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: bb.gray, padding: '4px 12px', fontSize: '13.2px', fontFamily: 'inherit', cursor: 'pointer', letterSpacing: '1px' }}
+              onMouseEnter={e => (e.currentTarget.style.borderColor = bb.orange, e.currentTarget.style.color = bb.white)}
+              onMouseLeave={e => (e.currentTarget.style.borderColor = bb.border2, e.currentTarget.style.color = bb.gray)}>
+              CLOSE
+            </button>
+          </div>
         </div>
 
         <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -162,12 +173,9 @@ export default function ItemDetailsDrawer({ watchlistId, itemId, open, onClose }
               {/* P&L */}
               <section>
                 <Label>P&L</Label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', fontSize: '13.2px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', fontSize: '13.2px' }}>
                   <MC label="PREMIUM PAID"    value={item.premiumPaid != null ? `$${Number(item.premiumPaid).toFixed(2)}` : '-'} />
                   <MC label="CURRENT PREMIUM" value={item.currentPremium != null ? `$${Number(item.currentPremium).toFixed(2)}` : '-'} />
-                  <MC label="P&L %"
-                    value={pnlPct === null ? '-' : `${pnlPct >= 0 ? '+' : ''}${pnlPct.toFixed(2)}%`}
-                    accent={pnlPct == null ? undefined : pnlPct >= 0 ? 'green' : 'red'} />
                 </div>
               </section>
 
@@ -202,7 +210,6 @@ export default function ItemDetailsDrawer({ watchlistId, itemId, open, onClose }
                   <MC label="SPREAD"   value={item.bidAskSpread ?? '-'} />
                   <MC label="OI"       value={item.openInterest ?? '-'} />
                   <MC label="VOLUME"   value={item.volume ?? '-'} />
-                  <MC label="THEO P&L" value={item.theoreticalPnl ?? '-'} />
                 </div>
               </section>
 
@@ -296,6 +303,14 @@ export default function ItemDetailsDrawer({ watchlistId, itemId, open, onClose }
           )}
         </div>
       </div>
+
+
+      {/* Trade Modal — zIndex 100 sopra il drawer (50) */}
+      <TradeModal
+        item={item}
+        open={tradeModalOpen}
+        onClose={() => setTradeModalOpen(false)}
+      />
     </div>
   )
 }

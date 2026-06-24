@@ -34,6 +34,7 @@ class User(Base):
     watchlists: Mapped[List["Watchlist"]] = relationship(back_populates="user")
     scan_runs: Mapped[List["ScanRun"]] = relationship(back_populates="user")
     broker_config: Mapped[Optional["BrokerConfig"]] = relationship(back_populates="user", uselist=False)
+    portfolios: Mapped[List["Portfolio"]] = relationship(back_populates="user")
 
 
 class BrokerConfig(Base):
@@ -86,6 +87,7 @@ class OptionContract(Base):
 
     watchlist_items: Mapped[List["WatchlistItem"]] = relationship(back_populates="option_contract")
     snapshots: Mapped[List["OptionSnapshot"]] = relationship(back_populates="option_contract")
+    portfolio_trades: Mapped[List["PortfolioTrade"]] = relationship(back_populates="option_contract")
 
 
 class ScanRun(Base):
@@ -115,7 +117,6 @@ class WatchlistItem(Base):
     source_scan_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("scan_runs.id", ondelete="SET NULL"))
     status: Mapped[str] = mapped_column(Text, nullable=False, default="active")
 
-    # Entry values (quando aggiunto alla watchlist)
     entry_premium: Mapped[Optional[Decimal]] = mapped_column(Numeric(12, 4))
     entry_iv: Mapped[Optional[Decimal]] = mapped_column(Numeric(8, 4))
     entry_delta: Mapped[Optional[Decimal]] = mapped_column(Numeric(8, 4))
@@ -123,7 +124,6 @@ class WatchlistItem(Base):
     entry_vega: Mapped[Optional[Decimal]] = mapped_column(Numeric(8, 4))
     entry_theta: Mapped[Optional[Decimal]] = mapped_column(Numeric(8, 4))
 
-    # Current values (aggiornati via refresh)
     current_bid: Mapped[Optional[Decimal]] = mapped_column(Numeric(12, 4))
     current_ask: Mapped[Optional[Decimal]] = mapped_column(Numeric(12, 4))
     current_last_price: Mapped[Optional[Decimal]] = mapped_column(Numeric(12, 4))
@@ -190,6 +190,54 @@ class Alert(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
     watchlist_item: Mapped["WatchlistItem"] = relationship(back_populates="alerts")
+
+
+class Portfolio(Base):
+    __tablename__ = "portfolios"
+    __table_args__ = (
+        UniqueConstraint("user_id", "name", name="portfolios_user_name_unique"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    name: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+    user: Mapped["User"] = relationship(back_populates="portfolios")
+    trades: Mapped[List["PortfolioTrade"]] = relationship(back_populates="portfolio", cascade="all, delete-orphan")
+
+
+class PortfolioTrade(Base):
+    # direction: 'long' = acquisto / 'short' = vendita allo scoperto
+    # status:    'open' = posizione attiva / 'closed' = chiusa con PNL realizzato
+    # PNL open   = (current_price - entry_price) * 100 * qty * sign  (sign: long=+1, short=-1)
+    # PNL closed = (close_price   - entry_price) * 100 * qty * sign
+    __tablename__ = "portfolio_trades"
+    __table_args__ = (
+        CheckConstraint("direction IN ('long', 'short')", name="portfolio_trades_direction_check"),
+        CheckConstraint("status IN ('open', 'closed')", name="portfolio_trades_status_check"),
+        CheckConstraint("quantity > 0", name="portfolio_trades_qty_check"),
+        Index("portfolio_trades_portfolio_idx", "portfolio_id", "status", "created_at"),
+        Index("portfolio_trades_contract_idx", "option_contract_id", "portfolio_id", "status"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    portfolio_id: Mapped[int] = mapped_column(Integer, ForeignKey("portfolios.id", ondelete="CASCADE"), nullable=False)
+    option_contract_id: Mapped[int] = mapped_column(Integer, ForeignKey("option_contracts.id", ondelete="CASCADE"), nullable=False)
+    direction: Mapped[str] = mapped_column(Text, nullable=False)           # 'long' | 'short'
+    quantity: Mapped[int] = mapped_column(Integer, nullable=False)
+    entry_price: Mapped[Decimal] = mapped_column(Numeric(12, 4), nullable=False)
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="open")
+    close_price: Mapped[Optional[Decimal]] = mapped_column(Numeric(12, 4))
+    realized_pnl: Mapped[Optional[Decimal]] = mapped_column(Numeric(14, 4))
+    closed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
+    notes: Mapped[Optional[str]] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+    portfolio: Mapped["Portfolio"] = relationship(back_populates="trades")
+    option_contract: Mapped["OptionContract"] = relationship(back_populates="portfolio_trades")
 
 
 class EmailList(Base):
