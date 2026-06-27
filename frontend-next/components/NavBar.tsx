@@ -22,10 +22,10 @@ export default function NavBar() {
   const hasBroker = user?.has_broker ?? false
 
   const links = [
-    { href: '/watchlists', label: isMobile ? 'LIST' : 'WATCHLIST' },
+    { href: '/watchlists', label: 'WATCHLIST' },
     { href: '/scanner',    label: 'SCANNER' },
-    { href: '/portfolio',  label: isMobile ? 'PORT.' : 'PORTFOLIO' },
-    { href: '/settings',   label: isMobile ? 'SET.' : 'SETTINGS' },
+    { href: '/portfolio',  label: 'PORTFOLIO' },
+    { href: '/settings',   label: 'SETTINGS' },
   ]
 
   const now = new Date()
@@ -59,10 +59,9 @@ export default function NavBar() {
       fontFamily: 'Courier New, monospace',
       fontSize: '14.4px',
     }} className="flex items-center gap-0 px-2 py-1">
-      {/* Logo Bloomberg-style */}
-      <div style={{ borderRight: '1px solid #333300', paddingRight: '12px', marginRight: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <img src="/logo.png" alt="Coiled Spring" style={{ height: '56px', width: 'auto', display: 'block' }} />
-        <span style={{ color: '#FFAA00', fontSize: '12px' }}>TERMINAL</span>
+      {/* Logo */}
+      <div style={{ paddingRight: '8px', marginRight: '4px', display: 'flex', alignItems: 'center' }}>
+        <img src="/logo.png" alt="Coiled Spring" style={{ height: isMobile ? '36px' : '56px', width: 'auto', display: 'block' }} />
       </div>
 
       {/* Nav links */}
@@ -73,11 +72,11 @@ export default function NavBar() {
             <Link key={l.href} href={l.href} style={{
               color: active ? '#000000' : '#FFAA00',
               backgroundColor: active ? '#FF6600' : 'transparent',
-              padding: '2px 10px',
+              padding: isMobile ? '2px 6px' : '2px 10px',
               borderRight: '1px solid #222200',
               fontWeight: active ? 'bold' : 'normal',
-              letterSpacing: '1px',
-              fontSize: '13.2px',
+              letterSpacing: isMobile ? '0px' : '1px',
+              fontSize: isMobile ? '11px' : '13.2px',
               textDecoration: 'none',
             }}
             onMouseEnter={e => { if (!active) (e.target as HTMLElement).style.color = '#FF6600' }}
