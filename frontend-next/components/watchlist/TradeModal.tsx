@@ -140,9 +140,9 @@ export default function TradeModal({ item, open, onClose }: Props) {
     setResult(null)
 
     const priceNum = parseFloat(price)
-    if (isNaN(priceNum) || priceNum <= 0) { setError('Prezzo non valido'); return }
-    if (quantity < 1) { setError('Quantità non valida'); return }
-    if (isNewPortfolio && !newPortfolioName.trim()) { setError('Inserisci il nome del portafoglio'); return }
+    if (isNaN(priceNum) || priceNum <= 0) { setError('Invalid price'); return }
+    if (quantity < 1) { setError('Invalid quantity'); return }
+    if (isNewPortfolio && !newPortfolioName.trim()) { setError('Please enter a portfolio name'); return }
 
     setSubmitting(true)
     try {
@@ -151,7 +151,7 @@ export default function TradeModal({ item, open, onClose }: Props) {
       // Se richiesto, crea prima il portafoglio
       if (isNewPortfolio) {
         if (portfolios.length >= 3) {
-          setError('Hai già 3 portafogli. Elimina uno prima di crearne un altro.')
+          setError('Maximum 3 portfolios reached. Delete one before creating another.')
           setSubmitting(false)
           return
         }
@@ -162,7 +162,7 @@ export default function TradeModal({ item, open, onClose }: Props) {
         })
         const createJson = await createRes.json()
         if (!createJson.ok) {
-          setError(createJson.error ?? 'Errore nella creazione del portafoglio')
+          setError(createJson.error ?? 'Error creating portfolio')
           setSubmitting(false)
           return
         }
@@ -199,12 +199,12 @@ export default function TradeModal({ item, open, onClose }: Props) {
       })
       const tradeJson = await tradeRes.json()
       if (!tradeJson.ok) {
-        setError(tradeJson.error ?? 'Errore nell\'inserimento del trade')
+        setError(tradeJson.error ?? 'Error saving the trade')
       } else {
         setResult(tradeJson.result)
       }
     } catch {
-      setError('Errore di rete')
+      setError('Network error')
     } finally {
       setSubmitting(false)
     }
@@ -231,7 +231,7 @@ export default function TradeModal({ item, open, onClose }: Props) {
         }}>
           <div>
             <div style={{ fontSize: '17px', fontWeight: 'bold', color: bb.orange, letterSpacing: '2px' }}>
-              INSERISCI TRADE
+              NEW TRADE
             </div>
             <div style={{ fontSize: '12px', color: bb.gray, letterSpacing: '1px', marginTop: '2px' }}>
               {item.symbol} · {item.underlyingSymbol} · {item.optionSide} · K{item.strike} · EXP {item.expirationDate ? new Date(item.expirationDate).toLocaleDateString() : '-'}
@@ -259,16 +259,16 @@ export default function TradeModal({ item, open, onClose }: Props) {
                   backgroundColor: '#1a0a00', border: `1px solid ${bb.amber}`,
                   padding: '10px 14px', fontSize: '12px', color: bb.amber, letterSpacing: '0.5px', lineHeight: '1.6',
                 }}>
-                  ⚠ MERCATI USA CHIUSI ({etTime})<br />
+                  ⚠ US MARKETS CLOSED ({etTime})<br />
                   <span style={{ color: bb.gray }}>
-                    Il trading è possibile solo lun–ven 09:30–16:00 ET. Puoi registrare il trade ma il prezzo potrebbe non essere aggiornato.
+                    Trading hours: Mon–Fri 09:30–16:00 ET. You can still record the trade but the price may not be current.
                   </span>
                 </div>
               )}
 
               {/* Direzione BUY / SELL */}
               <div>
-                <Label>DIREZIONE</Label>
+                <Label>DIRECTION</Label>
                 <div style={{ display: 'flex', gap: '8px' }}>
                   {(['long', 'short'] as const).map(d => (
                     <button key={d} onClick={() => handleDirectionChange(d)}
@@ -288,7 +288,7 @@ export default function TradeModal({ item, open, onClose }: Props) {
               {/* Quantità e Prezzo */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div>
-                  <Label>QUANTITÀ (contratti)</Label>
+                  <Label>QUANTITY (contracts)</Label>
                   <input type="number" min={1} value={quantity}
                     onChange={e => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
                     style={inputStyle} />
@@ -296,8 +296,8 @@ export default function TradeModal({ item, open, onClose }: Props) {
                 <div>
                   <Label>
                     {direction === 'long'
-                      ? `PREZZO ASK${item.ask ? ` ($${item.ask.toFixed(2)})` : ''}`
-                      : `PREZZO BID${item.bid ? ` ($${item.bid.toFixed(2)})` : ''}`}
+                      ? `ASK PRICE${item.ask ? ` ($${item.ask.toFixed(2)})` : ''}`
+                      : `BID PRICE${item.bid ? ` ($${item.bid.toFixed(2)})` : ''}`}
                   </Label>
                   <input type="number" step="0.01" min="0.01" value={price}
                     onChange={e => setPrice(e.target.value)}
@@ -307,9 +307,9 @@ export default function TradeModal({ item, open, onClose }: Props) {
 
               {/* Portafoglio */}
               <div>
-                <Label>PORTAFOGLIO</Label>
+                <Label>PORTFOLIO</Label>
                 {loadingPortfolios ? (
-                  <div style={{ color: bb.gray, fontSize: '13px' }}>CARICAMENTO...</div>
+                  <div style={{ color: bb.gray, fontSize: '13px' }}>LOADING...</div>
                 ) : (
                   <select value={portfolioId} onChange={e => setPortfolioId(e.target.value)}
                     style={{ ...inputStyle, width: '100%' }}>

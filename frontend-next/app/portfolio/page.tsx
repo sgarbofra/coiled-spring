@@ -150,8 +150,8 @@ function CloseModal({ target, onDone, onCancel }: {
   const handleClose = async () => {
     const priceNum = parseFloat(price)
     const qtyNum = parseInt(qty)
-    if (isNaN(priceNum) || priceNum <= 0) { setErr('Prezzo non valido'); return }
-    if (isNaN(qtyNum) || qtyNum <= 0 || qtyNum > p.quantity) { setErr(`Quantità deve essere 1–${p.quantity}`); return }
+    if (isNaN(priceNum) || priceNum <= 0) { setErr('Invalid price'); return }
+    if (isNaN(qtyNum) || qtyNum <= 0 || qtyNum > p.quantity) { setErr(`Quantity must be 1–${p.quantity}`); return }
 
     setSubmitting(true)
     setErr('')
@@ -167,7 +167,7 @@ function CloseModal({ target, onDone, onCancel }: {
         direction: closeDirection,
         quantity: qtyNum,
         price: priceNum,
-        notes: 'Chiusura posizione',
+        notes: 'Position close',
       }
       const r = await fetch(`/api/portfolio/${target.portfolioId}/trades`, {
         method: 'POST', credentials: 'include',
@@ -175,7 +175,7 @@ function CloseModal({ target, onDone, onCancel }: {
         body: JSON.stringify(body),
       })
       const d = await r.json()
-      if (!r.ok || !d.ok) throw new Error(d.error ?? 'Errore chiusura')
+      if (!r.ok || !d.ok) throw new Error(d.error ?? 'Close error')
       onDone()
     } catch (e: unknown) {
       setErr(e instanceof Error ? e.message : 'Errore')
@@ -203,19 +203,19 @@ function CloseModal({ target, onDone, onCancel }: {
         padding: '24px', width: '420px', fontFamily: 'Courier New, monospace', color: bb.white,
       }}>
         <div style={{ fontSize: '16px', fontWeight: 'bold', color: bb.orange, letterSpacing: '1px', marginBottom: '16px' }}>
-          CHIUDI POSIZIONE
+          CLOSE POSITION
         </div>
 
-        {/* Info contratto */}
+        {/* Contract info */}
         <div style={{ backgroundColor: bb.surface, border: `1px solid ${bb.border2}`, padding: '10px', marginBottom: '16px', fontSize: '13px' }}>
-          <div style={{ color: bb.amber }}>{p.underlying} {p.option_type.toUpperCase()} {p.strike} — {new Date(p.expiration).toLocaleDateString('it-IT')}</div>
+          <div style={{ color: bb.amber }}>{p.underlying} {p.option_type.toUpperCase()} {p.strike} — {new Date(p.expiration).toLocaleDateString('en-US')}</div>
           <div style={{ color: bb.gray, marginTop: '4px' }}>
-            Posizione: <span style={{ color: p.direction === 'long' ? bb.green : bb.red }}>{p.direction.toUpperCase()}</span>
+            Position: <span style={{ color: p.direction === 'long' ? bb.green : bb.red }}>{p.direction.toUpperCase()}</span>
             {' · '}Qty: {p.quantity}
             {' · '}Entry: ${fmt(p.entry_price)}
           </div>
           <div style={{ color: bb.gray, marginTop: '2px', fontSize: '11px' }}>
-            Prezzi correnti — BID: {p.current_bid != null ? `$${fmt(p.current_bid)}` : '-'} · ASK: {p.current_ask != null ? `$${fmt(p.current_ask)}` : '-'} · LAST: {p.current_last != null ? `$${fmt(p.current_last)}` : '-'}
+            Current prices — BID: {p.current_bid != null ? `$${fmt(p.current_bid)}` : '-'} · ASK: {p.current_ask != null ? `$${fmt(p.current_ask)}` : '-'} · LAST: {p.current_last != null ? `$${fmt(p.current_last)}` : '-'}
           </div>
         </div>
 
@@ -223,7 +223,7 @@ function CloseModal({ target, onDone, onCancel }: {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '12px' }}>
           <div>
             <div style={{ fontSize: '11px', color: bb.amber, letterSpacing: '1px', marginBottom: '4px' }}>
-              PREZZO DI CHIUSURA ({p.direction === 'long' ? 'BID' : 'ASK'})
+              CLOSE PRICE ({p.direction === 'long' ? 'BID' : 'ASK'})
             </div>
             <input value={price} onChange={e => setPrice(e.target.value)}
               style={{ width: '100%', backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '6px 8px', fontSize: '14px', fontFamily: 'inherit', boxSizing: 'border-box' }}
@@ -231,7 +231,7 @@ function CloseModal({ target, onDone, onCancel }: {
           </div>
           <div>
             <div style={{ fontSize: '11px', color: bb.amber, letterSpacing: '1px', marginBottom: '4px' }}>
-              QUANTITÀ (max {p.quantity})
+              QUANTITY (max {p.quantity})
             </div>
             <input value={qty} onChange={e => setQty(e.target.value)} type="number" min={1} max={p.quantity}
               style={{ width: '100%', backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '6px 8px', fontSize: '14px', fontFamily: 'inherit', boxSizing: 'border-box' }}
@@ -242,7 +242,7 @@ function CloseModal({ target, onDone, onCancel }: {
         {/* PNL preview */}
         {pnlPreview != null && (
           <div style={{ padding: '8px 12px', backgroundColor: bb.surface, border: `1px solid ${bb.border2}`, marginBottom: '12px', fontSize: '13px' }}>
-            <span style={{ color: bb.gray, letterSpacing: '1px' }}>PNL REALIZZATO STIMATO: </span>
+            <span style={{ color: bb.gray, letterSpacing: '1px' }}>ESTIMATED REALIZED PNL: </span>
             <span style={{ color: pnlColor(pnlPreview), fontWeight: 'bold' }}>{fmtPnl(pnlPreview)}</span>
           </div>
         )}
@@ -254,13 +254,13 @@ function CloseModal({ target, onDone, onCancel }: {
             border: `1px solid ${bb.border2}`, backgroundColor: 'transparent',
             color: bb.gray, padding: '6px 16px', fontSize: '13px',
             fontFamily: 'inherit', cursor: 'pointer', letterSpacing: '1px',
-          }}>ANNULLA</button>
+          }}>CANCEL</button>
           <button onClick={handleClose} disabled={submitting} style={{
             border: `1px solid ${bb.red}`, backgroundColor: 'rgba(255,51,51,0.15)',
             color: bb.red, padding: '6px 16px', fontSize: '13px', fontWeight: 'bold',
             fontFamily: 'inherit', cursor: 'pointer', letterSpacing: '1px',
             opacity: submitting ? 0.5 : 1,
-          }}>{submitting ? '...' : 'CHIUDI POSIZIONE'}</button>
+          }}>{submitting ? '...' : 'CLOSE POSITION'}</button>
         </div>
       </div>
     </div>
@@ -327,11 +327,11 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
       {/* Summary bar */}
       <div style={{ display: 'flex', gap: '24px', padding: '12px 0', borderBottom: `1px solid ${bb.border2}`, marginBottom: '12px' }}>
         <div>
-          <div style={{ fontSize: '11px', color: bb.gray, letterSpacing: '1px' }}>POSIZIONI APERTE</div>
+          <div style={{ fontSize: '11px', color: bb.gray, letterSpacing: '1px' }}>OPEN POSITIONS</div>
           <div style={{ fontSize: '20px', color: bb.amber, fontWeight: 'bold' }}>{positions.length}</div>
         </div>
         <div>
-          <div style={{ fontSize: '11px', color: bb.gray, letterSpacing: '1px' }}>PNL NON REALIZZATO</div>
+          <div style={{ fontSize: '11px', color: bb.gray, letterSpacing: '1px' }}>UNREALIZED PNL</div>
           <div style={{ fontSize: '20px', color: pnlColor(totalPnl), fontWeight: 'bold' }}>{fmtPnl(totalPnl)}</div>
         </div>
         <div style={{ marginLeft: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
@@ -342,9 +342,9 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
             opacity: loading ? 0.5 : 1,
           }}>↻ {loading ? 'LOADING...' : 'REFRESH'}</button>
           <div style={{ fontSize: '11px', color: bb.gray, letterSpacing: '0.5px' }}>
-            {lastRefresh && `agg. ${lastRefresh.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', second: '2-digit' })} · `}
+            {lastRefresh && `upd. ${lastRefresh.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })} · `}
             <span style={{ color: countdown <= 15 ? bb.amber : bb.gray }}>
-              prossimo in {countdown}s
+              next in {countdown}s
             </span>
           </div>
         </div>
@@ -352,7 +352,7 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
 
       {positions.length === 0 ? (
         <div style={{ color: bb.gray, padding: '32px', textAlign: 'center', fontSize: '13px', letterSpacing: '1px' }}>
-          NESSUNA POSIZIONE APERTA
+          NO OPEN POSITIONS
         </div>
       ) : (
         <div style={{ overflowX: 'auto' }}>
@@ -360,9 +360,9 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
             <thead>
               <tr>
                 <Th>UNDERLYING</Th>
-                <Th>TIPO</Th>
+                <Th>TYPE</Th>
                 <Th right>STRIKE</Th>
-                <Th>SCADENZA</Th>
+                <Th>EXPIRATION</Th>
                 <Th right>DTE</Th>
                 <Th>DIR.</Th>
                 <Th right>QTY</Th>
@@ -389,7 +389,7 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
                   <Td color={bb.orange}>{p.underlying}</Td>
                   <Td color={bb.amber}>{p.option_type.toUpperCase()}</Td>
                   <Td right>{fmt(p.strike, 0)}</Td>
-                  <Td>{new Date(p.expiration).toLocaleDateString('it-IT')}</Td>
+                  <Td>{new Date(p.expiration).toLocaleDateString('en-US')}</Td>
                   <Td right color={p.dte < 90 ? bb.red : bb.white}>{p.dte}</Td>
                   <Td color={p.direction === 'long' ? bb.green : bb.red}>{p.direction.toUpperCase()}</Td>
                   <Td right>{p.quantity}</Td>
@@ -401,8 +401,8 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
                   <Td right>{p.current_iv != null ? `${fmt(p.current_iv, 1)}%` : '-'}</Td>
                   <Td right color={pnlColor(p.unrealized_pnl)}>
                     {fmtPnl(p.unrealized_pnl)}
-                    {usingLast && <span title="PNL calcolato su Last price (bid/ask non disponibili)" style={{ fontSize: '9px', color: bb.amber, marginLeft: '3px', verticalAlign: 'super' }}>L</span>}
-                    {usingBS   && <span title="PNL calcolato su prezzo teorico Black-Scholes (nessun prezzo di mercato)" style={{ fontSize: '9px', color: bb.gray, marginLeft: '3px', verticalAlign: 'super' }}>BS</span>}
+                    {usingLast && <span title="PNL calculated on Last price (bid/ask unavailable)" style={{ fontSize: '9px', color: bb.amber, marginLeft: '3px', verticalAlign: 'super' }}>L</span>}
+                    {usingBS   && <span title="PNL calculated on Black-Scholes theoretical price (no market data)" style={{ fontSize: '9px', color: bb.gray, marginLeft: '3px', verticalAlign: 'super' }}>BS</span>}
                   </Td>
                   <Td right color={pnlColor(p.unrealized_pnl_pct)}>{fmtPct(p.unrealized_pnl_pct)}</Td>
                   <td style={{ padding: '4px 8px', borderBottom: `1px solid ${bb.border}` }}>
@@ -448,7 +448,7 @@ function GreeksTab({ portfolioId }: { portfolioId: number }) {
 
   if (rows.length === 0) return (
     <div style={{ color: bb.gray, padding: '32px', textAlign: 'center', fontSize: '13px', letterSpacing: '1px', fontFamily: 'Courier New, monospace' }}>
-      NESSUNA POSIZIONE APERTA — GRECHE NON DISPONIBILI
+      NO OPEN POSITIONS — GREEKS UNAVAILABLE
     </div>
   )
 
@@ -478,12 +478,12 @@ function GreeksTab({ portfolioId }: { portfolioId: number }) {
       </div>
 
       {/* Per-underlying breakdown */}
-      <Label>ESPOSIZIONE PER SOTTOSTANTE</Label>
+      <Label>EXPOSURE BY UNDERLYING</Label>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', fontFamily: 'Courier New, monospace' }}>
         <thead>
           <tr>
             <Th>UNDERLYING</Th>
-            <Th right>POSIZIONI</Th>
+            <Th right>POSITIONS</Th>
             <Th right>NET DELTA</Th>
             <Th right>NET GAMMA</Th>
             <Th right>NET VEGA</Th>
@@ -552,12 +552,12 @@ function HistoryTab({ portfolioId }: { portfolioId: number }) {
     <div>
       {/* Filter + realized summary */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-        {filterBtn('all', 'TUTTI')}
-        {filterBtn('open', 'APERTI')}
-        {filterBtn('closed', 'CHIUSI')}
+        {filterBtn('all', 'ALL')}
+        {filterBtn('open', 'OPEN')}
+        {filterBtn('closed', 'CLOSED')}
         {filter !== 'open' && (
           <div style={{ marginLeft: 'auto', fontSize: '13px', fontFamily: 'Courier New, monospace' }}>
-            <span style={{ color: bb.gray, letterSpacing: '1px', marginRight: '8px' }}>PNL REALIZZATO:</span>
+            <span style={{ color: bb.gray, letterSpacing: '1px', marginRight: '8px' }}>REALIZED PNL:</span>
             <span style={{ color: pnlColor(totalRealized), fontWeight: 'bold' }}>{fmtPnl(totalRealized)}</span>
           </div>
         )}
@@ -565,7 +565,7 @@ function HistoryTab({ portfolioId }: { portfolioId: number }) {
 
       {trades.length === 0 ? (
         <div style={{ color: bb.gray, padding: '32px', textAlign: 'center', fontSize: '13px', letterSpacing: '1px', fontFamily: 'Courier New, monospace' }}>
-          NESSUNA TRADE
+          NO TRADES
         </div>
       ) : (
         <div style={{ overflowX: 'auto' }}>
@@ -573,17 +573,17 @@ function HistoryTab({ portfolioId }: { portfolioId: number }) {
             <thead>
               <tr>
                 <Th>UNDERLYING</Th>
-                <Th>TIPO</Th>
+                <Th>TYPE</Th>
                 <Th right>STRIKE</Th>
-                <Th>SCADENZA</Th>
+                <Th>EXPIRATION</Th>
                 <Th>DIR.</Th>
                 <Th right>QTY</Th>
                 <Th right>ENTRY</Th>
                 <Th right>CLOSE</Th>
                 <Th>STATUS</Th>
                 <Th right>PNL REALIZ.</Th>
-                <Th>DATA</Th>
-                <Th>NOTE</Th>
+                <Th>DATE</Th>
+                <Th>NOTES</Th>
               </tr>
             </thead>
             <tbody>
@@ -595,14 +595,14 @@ function HistoryTab({ portfolioId }: { portfolioId: number }) {
                   <Td color={bb.orange}>{t.underlying}</Td>
                   <Td color={bb.amber}>{t.option_type.toUpperCase()}</Td>
                   <Td right>{fmt(t.strike, 0)}</Td>
-                  <Td>{new Date(t.expiration).toLocaleDateString('it-IT')}</Td>
+                  <Td>{new Date(t.expiration).toLocaleDateString('en-US')}</Td>
                   <Td color={t.direction === 'long' ? bb.green : bb.red}>{t.direction.toUpperCase()}</Td>
                   <Td right>{t.quantity}</Td>
                   <Td right>${fmt(t.entry_price)}</Td>
                   <Td right>{t.close_price != null ? `$${fmt(t.close_price)}` : '-'}</Td>
                   <Td color={t.status === 'open' ? bb.green : bb.gray}>{t.status.toUpperCase()}</Td>
                   <Td right color={pnlColor(t.realized_pnl)}>{t.realized_pnl != null ? fmtPnl(t.realized_pnl) : '-'}</Td>
-                  <Td>{new Date(t.created_at).toLocaleDateString('it-IT')}</Td>
+                  <Td>{new Date(t.created_at).toLocaleDateString('en-US')}</Td>
                   <Td color={bb.gray}>{t.notes ?? '-'}</Td>
                 </tr>
               ))}
@@ -646,7 +646,7 @@ export default function PortfolioPage() {
   const createPortfolio = async () => {
     const name = newName.trim()
     if (!name) return
-    if (portfolios.length >= 3) { alert('Massimo 3 portafogli per account'); return }
+    if (portfolios.length >= 3) { alert('Maximum 3 portfolios per account'); return }
     setCreating(true)
     try {
       const r = await fetch('/api/portfolio', {
@@ -686,7 +686,7 @@ export default function PortfolioPage() {
         {/* ── Sidebar ── */}
         <div style={{ width: '220px', minWidth: '220px', borderRight: `1px solid ${bb.border2}`, display: 'flex', flexDirection: 'column', padding: '12px', gap: '4px', overflowY: 'auto' }}>
           <div style={{ fontSize: '11px', letterSpacing: '1.5px', color: bb.amber, fontWeight: 'bold', marginBottom: '8px' }}>
-            PORTAFOGLI
+            PORTFOLIOS
           </div>
 
           {loading ? (
@@ -694,7 +694,7 @@ export default function PortfolioPage() {
           ) : error ? (
             <div style={{ color: bb.red, fontSize: '12px' }}>{error}</div>
           ) : portfolios.length === 0 ? (
-            <div style={{ color: bb.gray, fontSize: '12px', letterSpacing: '0.5px' }}>Nessun portafoglio.<br />Creane uno qui sotto.</div>
+            <div style={{ color: bb.gray, fontSize: '12px', letterSpacing: '0.5px' }}>No portfolios.<br />Create one below.</div>
           ) : (
             portfolios.map(p => (
               <button key={p.id} onClick={() => { setSelectedId(p.id); setTab('positions') }}
@@ -708,7 +708,7 @@ export default function PortfolioPage() {
                 }}>
                 <div style={{ fontWeight: 'bold' }}>{p.name}</div>
                 <div style={{ fontSize: '11px', color: selectedId === p.id ? bb.amber : bb.gray, marginTop: '2px' }}>
-                  {p.open_positions} posizioni aperte
+                  {p.open_positions} open positions
                 </div>
               </button>
             ))
@@ -717,7 +717,7 @@ export default function PortfolioPage() {
           {/* Crea nuovo */}
           {portfolios.length < 3 && (
             <div style={{ marginTop: '12px', borderTop: `1px solid ${bb.border2}`, paddingTop: '12px' }}>
-              <div style={{ fontSize: '11px', color: bb.gray, letterSpacing: '1px', marginBottom: '6px' }}>NUOVO PORTAFOGLIO</div>
+              <div style={{ fontSize: '11px', color: bb.gray, letterSpacing: '1px', marginBottom: '6px' }}>NEW PORTFOLIO</div>
               <input
                 value={newName} onChange={e => setNewName(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter') createPortfolio() }}
@@ -742,7 +742,7 @@ export default function PortfolioPage() {
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           {!selected ? (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: bb.gray, fontSize: '13px', letterSpacing: '1px' }}>
-              SELEZIONA O CREA UN PORTAFOGLIO
+              SELECT OR CREATE A PORTFOLIO
             </div>
           ) : (
             <>
@@ -758,9 +758,9 @@ export default function PortfolioPage() {
 
               {/* Tabs */}
               <div style={{ borderBottom: `1px solid ${bb.border2}`, padding: '0 20px', display: 'flex', gap: '0' }}>
-                {tabBtn('positions', 'POSIZIONI')}
-                {tabBtn('greeks', 'GRECHE')}
-                {tabBtn('history', 'STORICO')}
+                {tabBtn('positions', 'POSITIONS')}
+                {tabBtn('greeks', 'GREEKS')}
+                {tabBtn('history', 'HISTORY')}
               </div>
 
               {/* Tab content */}
