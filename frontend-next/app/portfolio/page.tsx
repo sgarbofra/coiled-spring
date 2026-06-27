@@ -624,6 +624,7 @@ export default function PortfolioPage() {
   const [error, setError] = useState('')
   const [newName, setNewName] = useState('')
   const [creating, setCreating] = useState(false)
+  const [deleting, setDeleting] = useState<number | null>(null)
 
   const loadPortfolios = useCallback(async () => {
     setLoading(true)
@@ -666,6 +667,25 @@ export default function PortfolioPage() {
     }
   }
 
+  const deletePortfolio = async (id: number) => {
+    if (!confirm('Delete this portfolio and all its trades? This cannot be undone.')) return
+    setDeleting(id)
+    try {
+      const r = await fetch(`/api/portfolio/${id}`, { method: 'DELETE', credentials: 'include' })
+      if (!r.ok) {
+        const d = await r.json().catch(() => ({}))
+        alert(d.error ?? 'Failed to delete portfolio')
+        return
+      }
+      if (selectedId === id) setSelectedId(null)
+      await loadPortfolios()
+    } catch {
+      alert('Failed to delete portfolio')
+    } finally {
+      setDeleting(null)
+    }
+  }
+
   const selected = portfolios.find(p => p.id === selectedId)
 
   const tabBtn = (t: typeof tab, label: string) => (
@@ -697,20 +717,38 @@ export default function PortfolioPage() {
             <div style={{ color: bb.gray, fontSize: '12px', letterSpacing: '0.5px' }}>No portfolios.<br />Create one below.</div>
           ) : (
             portfolios.map(p => (
-              <button key={p.id} onClick={() => { setSelectedId(p.id); setTab('positions') }}
-                style={{
-                  border: `1px solid ${selectedId === p.id ? bb.orange : bb.border}`,
-                  backgroundColor: selectedId === p.id ? 'rgba(255,102,0,0.12)' : 'transparent',
-                  color: selectedId === p.id ? bb.orange : bb.white,
-                  padding: '8px 10px', textAlign: 'left',
-                  fontFamily: 'inherit', fontSize: '13px', cursor: 'pointer',
-                  letterSpacing: '0.5px',
-                }}>
-                <div style={{ fontWeight: 'bold' }}>{p.name}</div>
-                <div style={{ fontSize: '11px', color: selectedId === p.id ? bb.amber : bb.gray, marginTop: '2px' }}>
-                  {p.open_positions} open positions
-                </div>
-              </button>
+              <div key={p.id} style={{ display: 'flex', alignItems: 'stretch', gap: '2px' }}>
+                <button onClick={() => { setSelectedId(p.id); setTab('positions') }}
+                  style={{
+                    flex: 1, border: `1px solid ${selectedId === p.id ? bb.orange : bb.border}`,
+                    backgroundColor: selectedId === p.id ? 'rgba(255,102,0,0.12)' : 'transparent',
+                    color: selectedId === p.id ? bb.orange : bb.white,
+                    padding: '8px 10px', textAlign: 'left',
+                    fontFamily: 'inherit', fontSize: '13px', cursor: 'pointer',
+                    letterSpacing: '0.5px',
+                  }}>
+                  <div style={{ fontWeight: 'bold' }}>{p.name}</div>
+                  <div style={{ fontSize: '11px', color: selectedId === p.id ? bb.amber : bb.gray, marginTop: '2px' }}>
+                    {p.open_positions} open position{p.open_positions !== 1 ? 's' : ''}
+                  </div>
+                </button>
+                <button
+                  onClick={() => deletePortfolio(p.id)}
+                  disabled={deleting === p.id}
+                  title="Delete portfolio"
+                  style={{
+                    border: `1px solid ${bb.border}`, backgroundColor: 'transparent',
+                    color: bb.red, padding: '0 8px', fontSize: '11px', fontFamily: 'inherit',
+                    cursor: deleting === p.id ? 'not-allowed' : 'pointer',
+                    letterSpacing: '0.5px', opacity: deleting === p.id ? 0.4 : 1,
+                    flexShrink: 0,
+                  }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = '#1a0000' }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
+                >
+                  {deleting === p.id ? '...' : 'DEL'}
+                </button>
+              </div>
             ))
           )}
 
