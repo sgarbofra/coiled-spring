@@ -20,12 +20,22 @@ export const metadata: Metadata = {
     title: 'Coiled Spring | Antifragile Options Terminal',
     description: 'LEAPS scanner, IV Rank analysis and AI-powered insights for options traders. Built for traders who think in convexity.',
     type: 'website',
-    images: ['/logo.png'],
+    url: 'https://coiledspring.app',
+    siteName: 'Coiled Spring',
+    images: [
+      {
+        url: 'https://coiledspring.app/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Coiled Spring — Antifragile Options Terminal',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Coiled Spring | Antifragile Options Terminal',
     description: 'LEAPS scanner, IV Rank analysis and AI-powered insights for options traders. Built for traders who think in convexity.',
+    images: ['https://coiledspring.app/og-image.png'],
   },
   robots: 'index, follow',
 }

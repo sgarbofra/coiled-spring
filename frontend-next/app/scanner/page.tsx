@@ -632,16 +632,24 @@ export default function ScannerPage() {
 
   const displayResults = getFilteredAndSortedResults()
 
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
   return (
     <ProtectedRoute>
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '16px', backgroundColor: bb.bg, color: bb.white, fontFamily: 'Courier New, monospace', fontSize: '14.4px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: isMobile ? '8px' : '16px', backgroundColor: bb.bg, color: bb.white, fontFamily: 'Courier New, monospace', fontSize: isMobile ? '12px' : '14.4px' }}>
       {/* Filter Panel */}
       <div style={{ marginBottom: '16px', border: `1px solid ${bb.border2}`, backgroundColor: bb.surface, padding: '16px' }}>
         <div style={{ color: bb.yellow, fontSize: '13.2px', letterSpacing: '2px', fontWeight: 'bold', marginBottom: '12px', borderBottom: `1px solid ${bb.border}`, paddingBottom: '6px' }}>
           SCANNER FILTERS
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto auto auto auto auto', gap: '12px', alignItems: 'end' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'end' }}>
           {/* Asset Class */}
           <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', color: bb.gray, fontSize: '12px', letterSpacing: '1px' }}>
             ASSET CLASS
@@ -655,7 +663,7 @@ export default function ScannerPage() {
           </label>
 
           {/* Ticker Multi-Select */}
-          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', color: bb.gray, fontSize: '12px', letterSpacing: '1px' }}>
+          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', color: bb.gray, fontSize: '12px', letterSpacing: '1px', flex: isMobile ? '1 1 100%' : '1 1 auto' }}>
             TICKER
             <div style={{ position: 'relative' }}>
               <div style={{
@@ -863,8 +871,8 @@ export default function ScannerPage() {
       )}
 
       {view === 'surface' ? null :
-      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', border: `1px solid ${bb.border2}` }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13.2px' }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'auto', border: `1px solid ${bb.border2}` }}>
+        <table style={{ width: '100%', minWidth: isMobile ? '900px' : undefined, borderCollapse: 'collapse', fontSize: isMobile ? '11px' : '13.2px' }}>
           <thead style={{ position: 'sticky', top: 0, backgroundColor: bb.surface, color: bb.yellow, borderBottom: `1px solid ${bb.orange}` }}>
             <tr>
               <th style={{ padding: '6px 8px', textAlign: 'left' }}></th>
