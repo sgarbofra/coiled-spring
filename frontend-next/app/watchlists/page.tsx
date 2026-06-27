@@ -47,6 +47,15 @@ export default function WatchlistsPage() {
   const [refreshing, setRefreshing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [scannerOpen, setScannerOpen] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   const activeWatchlistId = activeWatchlist?.id ?? null
 
@@ -159,55 +168,79 @@ export default function WatchlistsPage() {
     <ProtectedRoute>
     <>
       <OnboardingModal />
-      <div style={{ display: 'flex', height: '100vh', width: '100%', overflow: 'hidden', backgroundColor: bb.bg, color: bb.white, fontFamily: 'Courier New, monospace' }}>
-      <div style={{ width: '300px', flexShrink: 0 }}>
-        <WatchlistSidebar
-          userId="demo-user"
-          activeWatchlistId={activeWatchlistId}
-          onSelectWatchlist={wl => { setActiveWatchlist(wl); setSelectedIds([]); setDrawerItemId(null) }}
-          onCreateWatchlist={wl => { setActiveWatchlist(wl); setSelectedIds([]); setDrawerItemId(null) }}
-          onRenameWatchlist={wl => { if (activeWatchlistId === wl.id) setActiveWatchlist(wl) }}
-          onDeleteWatchlist={id => { if (activeWatchlistId === id) { setActiveWatchlist(null); setItems([]) } }}
-          onActivateWatchlist={wl => { setActiveWatchlist(wl); setSelectedIds([]); setDrawerItemId(null) }}
-        />
-      </div>
+      <div style={{ display: 'flex', height: '100vh', width: '100%', overflow: 'hidden', backgroundColor: bb.bg, color: bb.white, fontFamily: 'Courier New, monospace', position: 'relative' }}>
 
-      <main style={{ flex: 1, minWidth: 0, padding: '16px' }}>
+        {/* Sidebar — fissa su desktop, overlay su mobile */}
+        {isMobile && sidebarOpen && (
+          <div onClick={() => setSidebarOpen(false)} style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)', zIndex: 40 }} />
+        )}
+        <div style={{
+          width: '300px', flexShrink: 0,
+          ...(isMobile ? {
+            position: 'fixed', top: 0, left: 0, height: '100%', zIndex: 50,
+            transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
+            transition: 'transform 0.25s ease',
+          } : {}),
+        }}>
+          <WatchlistSidebar
+            userId="demo-user"
+            activeWatchlistId={activeWatchlistId}
+            onSelectWatchlist={wl => { setActiveWatchlist(wl); setSelectedIds([]); setDrawerItemId(null); if (isMobile) setSidebarOpen(false) }}
+            onCreateWatchlist={wl => { setActiveWatchlist(wl); setSelectedIds([]); setDrawerItemId(null); if (isMobile) setSidebarOpen(false) }}
+            onRenameWatchlist={wl => { if (activeWatchlistId === wl.id) setActiveWatchlist(wl) }}
+            onDeleteWatchlist={id => { if (activeWatchlistId === id) { setActiveWatchlist(null); setItems([]) } }}
+            onActivateWatchlist={wl => { setActiveWatchlist(wl); setSelectedIds([]); setDrawerItemId(null); if (isMobile) setSidebarOpen(false) }}
+          />
+        </div>
+
+      <main style={{ flex: 1, minWidth: 0, padding: isMobile ? '8px' : '16px', overflowY: 'auto' }}>
         {/* Header */}
-        <div style={{ borderBottom: `2px solid ${bb.orange}`, paddingBottom: '12px', marginBottom: '16px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
-          <div>
-            <h1 style={{ color: bb.orange, fontSize: '21.6px', fontWeight: 'bold', letterSpacing: '2px', marginBottom: '4px' }}>
-              {activeWatchlist?.name.toUpperCase() ?? 'WATCHLISTS'}
-            </h1>
-            <p style={{ fontSize: '13.2px', color: bb.gray, letterSpacing: '1px' }}>
-              {loadingItems ? 'LOADING...' : activeWatchlist
-                ? `${items.length} INSTRUMENT(S) · ${selectedCount} SELECTED`
-                : 'SELECT A WATCHLIST TO BEGIN'}
-            </p>
+        <div style={{ borderBottom: `2px solid ${bb.orange}`, paddingBottom: '12px', marginBottom: '16px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {/* Hamburger su mobile */}
+            {isMobile && (
+              <button onClick={() => setSidebarOpen(true)} style={{ background: 'none', border: `1px solid ${bb.border2}`, color: bb.orange, fontSize: '18px', cursor: 'pointer', padding: '2px 8px', fontFamily: 'inherit', lineHeight: 1 }}>
+                ☰
+              </button>
+            )}
+            <div>
+              <h1 style={{ color: bb.orange, fontSize: isMobile ? '16px' : '21.6px', fontWeight: 'bold', letterSpacing: '2px', marginBottom: '2px' }}>
+                {activeWatchlist?.name.toUpperCase() ?? 'WATCHLISTS'}
+              </h1>
+              <p style={{ fontSize: '12px', color: bb.gray, letterSpacing: '1px' }}>
+                {loadingItems ? 'LOADING...' : activeWatchlist
+                  ? `${items.length} INSTRUMENT(S) · ${selectedCount} SELECTED`
+                  : 'SELECT A WATCHLIST TO BEGIN'}
+              </p>
+            </div>
           </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
             <button
               onClick={refreshPrices}
               disabled={!activeWatchlistId || refreshing}
-              style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: activeWatchlistId ? bb.green : bb.gray, padding: '4px 10px', fontSize: '13.2px', fontFamily: 'inherit', cursor: (activeWatchlistId && !refreshing) ? 'pointer' : 'not-allowed', letterSpacing: '1px', opacity: (activeWatchlistId && !refreshing) ? 1 : 0.4 }}>
-              {refreshing ? '⟳ REFRESHING...' : '⟳ REFRESH PRICES'}
+              style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: activeWatchlistId ? bb.green : bb.gray, padding: '4px 8px', fontSize: isMobile ? '11px' : '13.2px', fontFamily: 'inherit', cursor: (activeWatchlistId && !refreshing) ? 'pointer' : 'not-allowed', letterSpacing: '1px', opacity: (activeWatchlistId && !refreshing) ? 1 : 0.4 }}>
+              {refreshing ? '⟳' : '⟳ REFRESH'}
             </button>
             <button onClick={() => setScannerOpen(true)} disabled={!activeWatchlistId}
-              style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: activeWatchlistId ? bb.amber : bb.gray, padding: '4px 10px', fontSize: '13.2px', fontFamily: 'inherit', cursor: activeWatchlistId ? 'pointer' : 'not-allowed', letterSpacing: '1px', opacity: activeWatchlistId ? 1 : 0.4 }}>
-              ADD FROM SCANNER
+              style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: activeWatchlistId ? bb.amber : bb.gray, padding: '4px 8px', fontSize: isMobile ? '11px' : '13.2px', fontFamily: 'inherit', cursor: activeWatchlistId ? 'pointer' : 'not-allowed', letterSpacing: '1px', opacity: activeWatchlistId ? 1 : 0.4 }}>
+              {isMobile ? '+ SCAN' : 'ADD FROM SCANNER'}
             </button>
-            <button onClick={removeSelected} disabled={!activeWatchlistId || selectedIds.length === 0}
-              style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: (activeWatchlistId && selectedIds.length > 0) ? bb.red : bb.gray, padding: '4px 10px', fontSize: '13.2px', fontFamily: 'inherit', cursor: (activeWatchlistId && selectedIds.length > 0) ? 'pointer' : 'not-allowed', letterSpacing: '1px', opacity: (activeWatchlistId && selectedIds.length > 0) ? 1 : 0.4 }}>
-              REMOVE SELECTED
-            </button>
-            <button onClick={moveSelected} disabled={!activeWatchlistId || selectedIds.length === 0}
-              style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: (activeWatchlistId && selectedIds.length > 0) ? bb.amber : bb.gray, padding: '4px 10px', fontSize: '13.2px', fontFamily: 'inherit', cursor: (activeWatchlistId && selectedIds.length > 0) ? 'pointer' : 'not-allowed', letterSpacing: '1px', opacity: (activeWatchlistId && selectedIds.length > 0) ? 1 : 0.4 }}>
-              MOVE SELECTED
-            </button>
-            <Link href="/settings"
-              style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: bb.gray, padding: '4px 10px', fontSize: '13.2px', fontFamily: 'inherit', textDecoration: 'none', letterSpacing: '1px', display: 'inline-block' }}>
-              ⚙ SETTINGS
-            </Link>
+            {!isMobile && (
+              <>
+                <button onClick={removeSelected} disabled={!activeWatchlistId || selectedIds.length === 0}
+                  style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: (activeWatchlistId && selectedIds.length > 0) ? bb.red : bb.gray, padding: '4px 10px', fontSize: '13.2px', fontFamily: 'inherit', cursor: (activeWatchlistId && selectedIds.length > 0) ? 'pointer' : 'not-allowed', letterSpacing: '1px', opacity: (activeWatchlistId && selectedIds.length > 0) ? 1 : 0.4 }}>
+                  REMOVE SELECTED
+                </button>
+                <button onClick={moveSelected} disabled={!activeWatchlistId || selectedIds.length === 0}
+                  style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: (activeWatchlistId && selectedIds.length > 0) ? bb.amber : bb.gray, padding: '4px 10px', fontSize: '13.2px', fontFamily: 'inherit', cursor: (activeWatchlistId && selectedIds.length > 0) ? 'pointer' : 'not-allowed', letterSpacing: '1px', opacity: (activeWatchlistId && selectedIds.length > 0) ? 1 : 0.4 }}>
+                  MOVE SELECTED
+                </button>
+                <Link href="/settings"
+                  style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: bb.gray, padding: '4px 10px', fontSize: '13.2px', fontFamily: 'inherit', textDecoration: 'none', letterSpacing: '1px', display: 'inline-block' }}>
+                  ⚙ SETTINGS
+                </Link>
+              </>
+            )}
           </div>
         </div>
 

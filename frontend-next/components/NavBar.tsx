@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useUser } from '@/contexts/UserContext'
 
@@ -8,15 +9,23 @@ export default function NavBar() {
   const path = usePathname()
   const router = useRouter()
   const { user } = useUser()
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   const isPro = user?.plan === 'pro' || user?.plan === 'pro_byok'
   const hasBroker = user?.has_broker ?? false
 
   const links = [
-    { href: '/watchlists', label: 'WATCHLIST' },
+    { href: '/watchlists', label: isMobile ? 'LIST' : 'WATCHLIST' },
     { href: '/scanner',    label: 'SCANNER' },
-    { href: '/portfolio',  label: 'PORTFOLIO' },
-    { href: '/settings',   label: 'SETTINGS' },
+    { href: '/portfolio',  label: isMobile ? 'PORT.' : 'PORTFOLIO' },
+    { href: '/settings',   label: isMobile ? 'SET.' : 'SETTINGS' },
   ]
 
   const now = new Date()
@@ -85,85 +94,59 @@ export default function NavBar() {
 
       {/* Right side — user info */}
       {user && (
-        <div className="flex items-center gap-3" style={{ fontSize: '13.2px' }}>
-          {/* User info column */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px' }}>
-            {/* Email and plan badge */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ color: '#FFFFFF' }}>{user.email}</span>
-              <span style={{
-                backgroundColor: user.plan === 'pro_byok' ? '#005500' :
-                                 user.plan === 'pro' ? '#003366' : '#222200',
-                color: user.plan === 'pro_byok' ? '#00DD00' :
-                       user.plan === 'pro' ? '#00CCCC' : '#FFFFFF',
-                padding: '1px 6px',
-                border: `1px solid ${user.plan === 'pro_byok' ? '#00DD00' : user.plan === 'pro' ? '#00CCCC' : '#333300'}`,
-                fontWeight: 'bold',
-                fontSize: '12px',
-                letterSpacing: '1px',
-              }}>
-                {user.plan === 'pro_byok' ? 'BYOK' : user.plan.toUpperCase()}
-              </span>
-            </div>
-
-            {/* Action buttons */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              {/* Upgrade button (only for FREE plan) */}
-              {user.plan === 'free' && (
-                <button
-                  onClick={() => router.push('/pricing')}
-                  style={{
-                    backgroundColor: '#FF6B00',
-                    color: '#000000',
-                    border: 'none',
-                    padding: '2px 6px',
-                    fontSize: '10px',
-                    fontWeight: 'bold',
-                    letterSpacing: '0.5px',
-                    cursor: 'pointer',
-                    fontFamily: 'inherit',
-                    borderRadius: '2px',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#FF8833')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#FF6B00')}
-                >
-                  UPGRADE
-                </button>
-              )}
-
-              {/* Logout button (always visible) */}
-              <button
-                onClick={handleLogout}
-                style={{
-                  backgroundColor: 'transparent',
-                  color: '#FF6600',
-                  border: '1px solid #FF6600',
-                  padding: '2px 6px',
-                  fontSize: '10px',
-                  fontWeight: 'bold',
-                  letterSpacing: '0.5px',
-                  cursor: 'pointer',
-                  fontFamily: 'inherit',
-                  borderRadius: '2px',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#FF6600'
-                  e.currentTarget.style.color = '#000000'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent'
-                  e.currentTarget.style.color = '#FF6600'
-                }}
-              >
-                LOGOUT
-              </button>
-            </div>
-          </div>
-
-          {/* Time display */}
-          <span style={{ color: '#FF6600', borderLeft: '1px solid #222200', paddingLeft: '8px' }}>
-            {timeStr}
+        <div className="flex items-center gap-2" style={{ fontSize: '13.2px' }}>
+          {/* Piano badge — sempre visibile */}
+          <span style={{
+            backgroundColor: user.plan === 'pro_byok' ? '#005500' :
+                             user.plan === 'pro' ? '#003366' : '#222200',
+            color: user.plan === 'pro_byok' ? '#00DD00' :
+                   user.plan === 'pro' ? '#00CCCC' : '#FFFFFF',
+            padding: '1px 6px',
+            border: `1px solid ${user.plan === 'pro_byok' ? '#00DD00' : user.plan === 'pro' ? '#00CCCC' : '#333300'}`,
+            fontWeight: 'bold',
+            fontSize: '11px',
+            letterSpacing: '1px',
+            flexShrink: 0,
+          }}>
+            {user.plan === 'pro_byok' ? 'BYOK' : user.plan.toUpperCase()}
           </span>
+
+          {/* Email — nascosta su mobile */}
+          {!isMobile && (
+            <span style={{ color: '#FFFFFF', fontSize: '12px' }}>{user.email}</span>
+          )}
+
+          {/* Upgrade — solo FREE */}
+          {user.plan === 'free' && (
+            <button onClick={() => router.push('/pricing')} style={{
+              backgroundColor: '#FF6B00', color: '#000000', border: 'none',
+              padding: '2px 6px', fontSize: '10px', fontWeight: 'bold',
+              letterSpacing: '0.5px', cursor: 'pointer', fontFamily: 'inherit', borderRadius: '2px', flexShrink: 0,
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#FF8833')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#FF6B00')}>
+              {isMobile ? '▲' : 'UPGRADE'}
+            </button>
+          )}
+
+          {/* Logout */}
+          <button onClick={handleLogout} style={{
+            backgroundColor: 'transparent', color: '#FF6600',
+            border: '1px solid #FF6600', padding: '2px 6px',
+            fontSize: '10px', fontWeight: 'bold', letterSpacing: '0.5px',
+            cursor: 'pointer', fontFamily: 'inherit', borderRadius: '2px', flexShrink: 0,
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#FF6600'; e.currentTarget.style.color = '#000000' }}
+          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#FF6600' }}>
+            {isMobile ? '✕' : 'LOGOUT'}
+          </button>
+
+          {/* Orario — nascosto su mobile */}
+          {!isMobile && (
+            <span style={{ color: '#FF6600', borderLeft: '1px solid #222200', paddingLeft: '8px', flexShrink: 0 }}>
+              {timeStr}
+            </span>
+          )}
         </div>
       )}
     </nav>

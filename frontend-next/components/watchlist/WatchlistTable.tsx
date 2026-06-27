@@ -79,8 +79,8 @@ export default function WatchlistTable({ items, selectedIds = [], onSelectIds, o
       </div>
 
       {/* Table */}
-      <div style={{ flex: 1, overflowY: 'auto', border: `1px solid ${bb.border2}` }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13.2px' }}>
+      <div style={{ flex: 1, overflowY: 'auto', overflowX: 'auto', border: `1px solid ${bb.border2}` }}>
+        <table style={{ width: '100%', minWidth: '900px', borderCollapse: 'collapse', fontSize: '13.2px' }}>
           <thead style={{ position: 'sticky', top: 0, backgroundColor: bb.surface, color: bb.yellow, borderBottom: `1px solid ${bb.orange}` }}>
             <tr style={{ textAlign: 'left' }}>
               <Th label="" />
