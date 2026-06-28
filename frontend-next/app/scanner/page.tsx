@@ -137,6 +137,44 @@ function smartFilter(query: string, pool: string[], exclude: string[]): string[]
   return [...startsWith, ...contains]
 }
 
+// ── CS Candidate Score ────────────────────────────────────────────────────────
+
+export function computeCandidateScore(r: ScanResult): number {
+  // Delta: linear 0→100 from delta=0.20 to delta=0.50 (CS targets 0.40-0.60)
+  const deltaScore    = Math.max(0, Math.min((r.delta - 0.20) / 0.30, 1)) * 100
+  const dteScore      = Math.min(r.dte / 730, 1) * 100
+  const rawLiquidity  = Math.max(0, 1 - r.spread_pct / 100) * 60 + Math.min(r.open_interest / 500, 1) * 40
+  // OI < 100 = illiquid regardless of spread
+  const liquidityScore = r.open_interest < 100 ? Math.min(rawLiquidity, 39) : rawLiquidity
+  // Vega: 0→100 linear, good ≥0.5, excellent ≥1.0
+  const vegaScore     = Math.min(r.vega / 1.0, 1) * 100
+  const raw = Math.round(vegaScore * 0.35 + dteScore * 0.30 + liquidityScore * 0.20 + deltaScore * 0.15)
+  // CS strategy requires LEAPS: hard cap at 69 for DTE < 300 (theta too costly)
+  return r.dte < 300 ? Math.min(raw, 69) : raw
+}
+
+export function computeWhyPanel(r: ScanResult): string[] {
+  // Same formulas as computeCandidateScore
+  const deltaScore    = Math.max(0, Math.min((r.delta - 0.20) / 0.30, 1)) * 100
+  const dteScore      = Math.min(r.dte / 730, 1) * 100
+  const rawLiquidity  = Math.max(0, 1 - r.spread_pct / 100) * 60 + Math.min(r.open_interest / 500, 1) * 40
+  const liquidityScore = r.open_interest < 100 ? Math.min(rawLiquidity, 39) : rawLiquidity
+  // Vega: good ≥0.5, excellent ≥1.0 (absolute vega value)
+  const vegaScore     = Math.min(r.vega / 1.0, 1) * 100
+  return [
+    deltaScore > 75 ? 'Excellent Delta (≥0.45)'      : deltaScore > 60 ? 'Good Delta (≥0.40)'       : 'Poor Delta (<0.40)',
+    liquidityScore > 75 ? 'Excellent Liquidity'      : liquidityScore > 40 ? 'Good Liquidity (OI≥100)' : 'Poor Liquidity (OI<100)',
+    dteScore      > 75 ? 'Excellent DTE (LEAPS)'     : dteScore      > 40 ? 'Good DTE'              : 'Short DTE — capped',
+    r.vega >= 1.0 ? 'Excellent Vega (≥1.0)'          : r.vega >= 0.5 ? 'Good Vega (≥0.5)'           : 'Poor Vega (<0.5)',
+  ]
+}
+
+function scoreColor(score: number): string {
+  if (score > 75) return '#00DD00'
+  if (score >= 70) return '#FFAA00'
+  return '#FF3333'
+}
+
 export default function ScannerPage() {
   const [results, setResults] = useState<ScanResult[]>([])
   const [loading, setLoading] = useState(false)
@@ -157,6 +195,8 @@ export default function ScannerPage() {
   const [deltaMin, setDeltaMin] = useState('0.20')
   const [deltaMax, setDeltaMax] = useState('0.45')
   const [showIvrHeaderTooltip, setShowIvrHeaderTooltip] = useState(false)
+  const [showScoreHeaderTooltip, setShowScoreHeaderTooltip] = useState(false)
+  const [hoveredScoreKey, setHoveredScoreKey] = useState<string | null>(null)
 
   // Nuovi filtri frontend
   const [strikeMin, setStrikeMin] = useState('')
@@ -1003,6 +1043,45 @@ export default function ScannerPage() {
                   </th>
                 )
               })}
+              {/* CS Candidate Score header */}
+              <th
+                style={{
+                  padding: '6px 8px', textAlign: 'center', fontWeight: 'bold',
+                  fontSize: '10.5px', letterSpacing: '0.8px', cursor: 'help',
+                  color: bb.orange, position: 'relative', whiteSpace: 'nowrap',
+                  borderLeft: `1px solid ${bb.border2}`,
+                }}
+                onMouseEnter={() => setShowScoreHeaderTooltip(true)}
+                onMouseLeave={() => setShowScoreHeaderTooltip(false)}>
+                COILED STRATEGY CANDIDATE SCORE
+                {showScoreHeaderTooltip && (
+                  <div style={{
+                    position: 'absolute', bottom: 'calc(100% + 8px)', right: 0,
+                    backgroundColor: '#000', border: `1px solid ${bb.orange}`,
+                    padding: '10px 14px', width: '260px', zIndex: 100,
+                    fontFamily: 'Courier New, monospace', fontSize: '11px',
+                    color: '#ccc', boxShadow: '0 4px 12px rgba(0,0,0,0.6)',
+                    whiteSpace: 'normal', textAlign: 'left', fontWeight: 'normal',
+                    letterSpacing: '0.5px', lineHeight: '1.5',
+                  }}>
+                    <div style={{ color: bb.orange, fontWeight: 'bold', marginBottom: '6px', fontSize: '12px' }}>
+                      COILED STRATEGY CANDIDATE SCORE
+                    </div>
+                    <div>Measures structural quality of the contract: Vega Efficiency (35%) · DTE (30%) · Liquidity (20%) · Delta (15%).</div>
+                    <div style={{ marginTop: '6px', color: bb.amber }}>
+                      Not yet Opportunity Score — that requires historical IV data.
+                    </div>
+                    <div style={{ marginTop: '8px', display: 'flex', gap: '8px', fontSize: '10px' }}>
+                      <span style={{ color: '#00DD00' }}>■ &gt;75 Excellent</span>
+                      <span style={{ color: '#FFAA00' }}>■ 70-75 Good</span>
+                      <span style={{ color: '#FF3333' }}>■ &lt;70 Weak</span>
+                    </div>
+                    <div style={{ position: 'absolute', bottom: '-6px', right: '20px', width: 0, height: 0,
+                      borderLeft: '6px solid transparent', borderRight: '6px solid transparent',
+                      borderTop: `6px solid ${bb.orange}` }} />
+                  </div>
+                )}
+              </th>
             </tr>
           </thead>
           <tbody style={{ backgroundColor: bb.bg }}>
@@ -1099,6 +1178,61 @@ export default function ScannerPage() {
                   <td style={{ padding: '6px 8px', color: bb.white }}>{r.vega}</td>
                   <td style={{ padding: '6px 8px', color: bb.gray }}>{r.theta}</td>
                   <td style={{ padding: '6px 8px', color: bb.gray }}>{r.open_interest.toLocaleString()}</td>
+                  {/* CS Candidate Score cell */}
+                  <td style={{ padding: '6px 8px', textAlign: 'center', borderLeft: `1px solid ${bb.border2}`, position: 'relative' }}
+                    onMouseEnter={() => setHoveredScoreKey(r.symbol_key)}
+                    onMouseLeave={() => setHoveredScoreKey(null)}>
+                    {(() => {
+                      const score = computeCandidateScore(r)
+                      const why = computeWhyPanel(r)
+                      const color = scoreColor(score)
+                      return (
+                        <>
+                          <span style={{
+                            display: 'inline-block', minWidth: '36px',
+                            fontWeight: 'bold', fontSize: '13px',
+                            color, letterSpacing: '0.5px',
+                          }}>{score}</span>
+                          {hoveredScoreKey === r.symbol_key && (() => {
+                            const showBelow = idx < 4
+                            return (
+                              <div style={{
+                                position: 'absolute',
+                                ...(showBelow
+                                  ? { top: 'calc(100% + 6px)' }
+                                  : { bottom: 'calc(100% + 6px)' }),
+                                right: 0,
+                                backgroundColor: '#000', border: `1px solid ${color}`,
+                                padding: '8px 12px', zIndex: 200, minWidth: '200px',
+                                fontFamily: 'Courier New, monospace', fontSize: '11px',
+                                textAlign: 'left', whiteSpace: 'nowrap',
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.7)',
+                              }}>
+                                <div style={{ color, fontWeight: 'bold', marginBottom: '6px', fontSize: '12px' }}>
+                                  WHY PANEL — {score}/100
+                                </div>
+                                {why.map((line, i) => (
+                                  <div key={i} style={{ color: '#ccc', lineHeight: '1.6' }}>
+                                    {line.startsWith('Excellent') || line.startsWith('High') ? '✓' : line.startsWith('Good') || line.startsWith('Medium') ? '·' : '✗'} {line}
+                                  </div>
+                                ))}
+                                {/* Arrow indicator */}
+                                {showBelow ? (
+                                  <div style={{ position: 'absolute', top: '-6px', right: '20px', width: 0, height: 0,
+                                    borderLeft: '6px solid transparent', borderRight: '6px solid transparent',
+                                    borderBottom: `6px solid ${color}` }} />
+                                ) : (
+                                  <div style={{ position: 'absolute', bottom: '-6px', right: '20px', width: 0, height: 0,
+                                    borderLeft: '6px solid transparent', borderRight: '6px solid transparent',
+                                    borderTop: `6px solid ${color}` }} />
+                                )}
+                              </div>
+                            )
+                          })()}
+                        </>
+                      )
+                    })()}
+                  </td>
                 </tr>
               )
             })}
