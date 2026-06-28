@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { computeCandidateScore, computeWhyPanel, scoreColor } from '@/lib/cs-score'
 
 const bb = {
   bg: '#000000', surface: '#0a0a00', panel: '#111100',
@@ -32,6 +33,7 @@ export default function WatchlistTable({ items, selectedIds = [], onSelectIds, o
   const [query, setQuery] = useState('')
   const [sortKey, setSortKey] = useState<SortKey>('symbol')
   const [sortAsc, setSortAsc] = useState(true)
+  const [hoveredScoreId, setHoveredScoreId] = useState<string | null>(null)
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -97,6 +99,9 @@ export default function WatchlistTable({ items, selectedIds = [], onSelectIds, o
               <Th label="DELTA" onClick={() => toggleSort('delta')} />
               <Th label="THETA" onClick={() => toggleSort('theta')} />
               <Th label="VEGA" onClick={() => toggleSort('vega')} />
+              <th style={{ borderBottom: `1px solid ${bb.border2}`, padding: '6px 8px', fontWeight: 'bold', fontSize: '10.5px', letterSpacing: '0.8px', color: bb.orange, whiteSpace: 'nowrap' }}>
+                CS SCORE
+              </th>
             </tr>
           </thead>
           <tbody style={{ backgroundColor: bb.bg }}>
@@ -138,6 +143,49 @@ export default function WatchlistTable({ items, selectedIds = [], onSelectIds, o
                   <td style={{ padding: '6px 8px', color: textColor }}>{fmt(item.delta)}</td>
                   <td style={{ padding: '6px 8px', color: textColor }}>{fmt(item.theta)}</td>
                   <td style={{ padding: '6px 8px', color: (isExpired || isExpiringSoon) ? '#666666' : bb.orange }}>{item.vega != null ? Number(item.vega).toFixed(3) : '—'}</td>
+                  <td style={{ padding: '6px 8px', textAlign: 'center', position: 'relative', cursor: 'default' }}
+                    onMouseEnter={() => setHoveredScoreId(item.id)}
+                    onMouseLeave={() => setHoveredScoreId(null)}>
+                    {(() => {
+                      const spreadPct = item.bid != null && item.ask != null && (item.bid + item.ask) > 0
+                        ? (item.ask - item.bid) / ((item.bid + item.ask) / 2) * 100
+                        : item.bidAskSpread ?? null
+                      const score = computeCandidateScore({
+                        delta: item.delta, vega: item.vega, dte: item.dte,
+                        spread_pct: spreadPct, open_interest: item.openInterest
+                      })
+                      if (score == null) return <span style={{ color: '#444' }}>—</span>
+                      const color = (isExpired || isExpiringSoon) ? '#666666' : scoreColor(score)
+                      const why = computeWhyPanel({
+                        delta: item.delta, vega: item.vega, dte: item.dte,
+                        spread_pct: spreadPct, open_interest: item.openInterest
+                      })
+                      return (
+                        <>
+                          <span style={{ fontWeight: 'bold', fontSize: '13px', color, letterSpacing: '0.5px' }}>{score}</span>
+                          {hoveredScoreId === item.id && why.length > 0 && (
+                            <div style={{
+                              position: 'absolute', bottom: 'calc(100% + 6px)', right: 0,
+                              backgroundColor: '#000', border: `1px solid ${color}`,
+                              padding: '8px 12px', zIndex: 200, minWidth: '200px',
+                              fontFamily: 'Courier New, monospace', fontSize: '11px',
+                              textAlign: 'left', whiteSpace: 'nowrap',
+                              boxShadow: '0 4px 12px rgba(0,0,0,0.7)',
+                            }}>
+                              <div style={{ color, fontWeight: 'bold', marginBottom: '6px', fontSize: '12px' }}>
+                                CS SCORE — {score}/100
+                              </div>
+                              {why.map((line, i) => (
+                                <div key={i} style={{ color: '#ccc', lineHeight: '1.6' }}>
+                                  {line.startsWith('Excellent') || line.startsWith('High') ? '✓' : line.startsWith('Good') || line.startsWith('Medium') ? '·' : '✗'} {line}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </>
+                      )
+                    })()}
+                  </td>
                 </tr>
               )
             })}

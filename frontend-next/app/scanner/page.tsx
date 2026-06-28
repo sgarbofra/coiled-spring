@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { scannerStore } from '@/lib/scanner-store'
+import { computeCandidateScore as _computeScore, computeWhyPanel as _computeWhy, scoreColor } from '@/lib/cs-score'
 
 const VolSurface = dynamic(() => import('@/components/VolSurface'), { ssr: false })
 
@@ -137,42 +138,14 @@ function smartFilter(query: string, pool: string[], exclude: string[]): string[]
   return [...startsWith, ...contains]
 }
 
-// ── CS Candidate Score ────────────────────────────────────────────────────────
+// ── CS Candidate Score — delegato a lib/cs-score.ts ─────────────────────────
 
 export function computeCandidateScore(r: ScanResult): number {
-  // Delta: linear 0→100 from delta=0.20 to delta=0.50 (CS targets 0.40-0.60)
-  const deltaScore    = Math.max(0, Math.min((r.delta - 0.20) / 0.30, 1)) * 100
-  const dteScore      = Math.min(r.dte / 730, 1) * 100
-  const rawLiquidity  = Math.max(0, 1 - r.spread_pct / 100) * 60 + Math.min(r.open_interest / 500, 1) * 40
-  // OI < 100 = illiquid regardless of spread
-  const liquidityScore = r.open_interest < 100 ? Math.min(rawLiquidity, 39) : rawLiquidity
-  // Vega: 0→100 linear, good ≥0.5, excellent ≥1.0
-  const vegaScore     = Math.min(r.vega / 1.0, 1) * 100
-  const raw = Math.round(vegaScore * 0.35 + dteScore * 0.30 + liquidityScore * 0.20 + deltaScore * 0.15)
-  // CS strategy requires LEAPS: hard cap at 69 for DTE < 300 (theta too costly)
-  return r.dte < 300 ? Math.min(raw, 69) : raw
+  return _computeScore({ delta: r.delta, vega: r.vega, dte: r.dte, spread_pct: r.spread_pct, open_interest: r.open_interest }) ?? 0
 }
 
 export function computeWhyPanel(r: ScanResult): string[] {
-  // Same formulas as computeCandidateScore
-  const deltaScore    = Math.max(0, Math.min((r.delta - 0.20) / 0.30, 1)) * 100
-  const dteScore      = Math.min(r.dte / 730, 1) * 100
-  const rawLiquidity  = Math.max(0, 1 - r.spread_pct / 100) * 60 + Math.min(r.open_interest / 500, 1) * 40
-  const liquidityScore = r.open_interest < 100 ? Math.min(rawLiquidity, 39) : rawLiquidity
-  // Vega: good ≥0.5, excellent ≥1.0 (absolute vega value)
-  const vegaScore     = Math.min(r.vega / 1.0, 1) * 100
-  return [
-    deltaScore > 75 ? 'Excellent Delta (≥0.45)'      : deltaScore > 60 ? 'Good Delta (≥0.40)'       : 'Poor Delta (<0.40)',
-    liquidityScore > 75 ? 'Excellent Liquidity'      : liquidityScore > 40 ? 'Good Liquidity (OI≥100)' : 'Poor Liquidity (OI<100)',
-    dteScore      > 75 ? 'Excellent DTE (LEAPS)'     : dteScore      > 40 ? 'Good DTE'              : 'Short DTE — capped',
-    r.vega >= 1.0 ? 'Excellent Vega (≥1.0)'          : r.vega >= 0.5 ? 'Good Vega (≥0.5)'           : 'Poor Vega (<0.5)',
-  ]
-}
-
-function scoreColor(score: number): string {
-  if (score > 75) return '#00DD00'
-  if (score >= 70) return '#FFAA00'
-  return '#FF3333'
+  return _computeWhy({ delta: r.delta, vega: r.vega, dte: r.dte, spread_pct: r.spread_pct, open_interest: r.open_interest })
 }
 
 export default function ScannerPage() {
