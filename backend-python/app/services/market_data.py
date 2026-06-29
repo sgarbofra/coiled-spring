@@ -345,7 +345,8 @@ def _yf_options_for_symbol(
                     # Calculate Greeks using Black-Scholes
                     try:
                         _, delta, gamma, vega, theta = bs_greeks(price, K, T, r, sigma, is_call)
-                        abs_delta = delta if is_call else abs(delta)
+                        abs_delta = delta if is_call else abs(delta)   # usato solo per filtro range
+                        signed_delta = delta  # negativo per put (N(d1)-1), positivo per call
                     except Exception as e:
                         bs_calculation_failures += 1
                         if symbol == "MU" or bs_calculation_failures <= 3:
@@ -387,7 +388,7 @@ def _yf_options_for_symbol(
                         spread_pct=spread_pct,
                         iv=round(sigma * 100, 1),   # usa sigma effettivo (calcolato via BS se yahoo IV mancante)
                         iv_rank=iv_rank,
-                        delta=round(abs_delta, 3),
+                        delta=round(signed_delta, 3),
                         gamma=round(gamma, 4),
                         vega=round(vega, 3),
                         theta=round(theta, 4),
@@ -671,8 +672,8 @@ def get_option_current_price(symbol_key: str) -> Optional[OptionPrice]:
                         _, delta, gamma, vega, theta = bs_greeks(
                             underlying_price, strike, T, r, sigma_for_greeks, is_call
                         )
-                        # For puts, use absolute delta
-                        delta_val = round(delta if is_call else abs(delta), 3)
+                        # Delta con segno: negativo per put (N(d1)-1), positivo per call
+                        delta_val = round(delta, 3)
                         gamma_val = round(gamma, 4)
                         vega_val = round(vega, 3)
                         theta_val = round(theta, 4)
