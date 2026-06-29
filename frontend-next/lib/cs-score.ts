@@ -36,7 +36,8 @@ export function computeCandidateScore(r: CsScoreInput): number | null {
   const dte      = r.dte
   const spreadPct = r.spread_pct ?? 100
 
-  const deltaScore = Math.max(0, Math.min((delta - 0.20) / 0.30, 1)) * 100
+  const absDelta   = Math.abs(delta)  // put delta è negativo — usiamo abs per lo score
+  const deltaScore = Math.max(0, Math.min((absDelta - 0.20) / 0.30, 1)) * 100
   const dteScore   = Math.min(dte / 730, 1) * 100
   const liqScore   = liquidityScore(spreadPct, r.open_interest)
   const vegaScore  = Math.min(vega / 1.0, 1) * 100
@@ -53,7 +54,8 @@ export function computeWhyPanel(r: CsScoreInput): string[] {
   const dte      = r.dte
   const spreadPct = r.spread_pct ?? 100
 
-  const deltaScore = Math.max(0, Math.min((delta - 0.20) / 0.30, 1)) * 100
+  const absDelta   = Math.abs(delta)
+  const deltaScore = Math.max(0, Math.min((absDelta - 0.20) / 0.30, 1)) * 100
   const dteScore   = Math.min(dte / 730, 1) * 100
   const liqScore   = liquidityScore(spreadPct, r.open_interest)
 
@@ -62,7 +64,7 @@ export function computeWhyPanel(r: CsScoreInput): string[] {
     : (liqScore > 75 ? 'Excellent Liquidity' : liqScore > 40 ? 'Good Liquidity (OI>=100)' : 'Poor Liquidity (OI<100)')
 
   return [
-    deltaScore > 75 ? 'Excellent Delta (>=0.45)' : deltaScore > 60 ? 'Good Delta (>=0.40)' : 'Poor Delta (<0.40)',
+    deltaScore > 75 ? `Excellent Delta (|Δ|=${absDelta.toFixed(2)})` : deltaScore > 60 ? `Good Delta (|Δ|=${absDelta.toFixed(2)})` : `Poor Delta (|Δ|=${absDelta.toFixed(2)})`,
     oiLabel,
     dteScore > 75 ? 'Excellent DTE (LEAPS)' : dteScore > 40 ? 'Good DTE' : 'Short DTE — capped',
     vega >= 1.0 ? 'Excellent Vega (>=1.0)' : vega >= 0.5 ? 'Good Vega (>=0.5)' : 'Poor Vega (<0.5)',
