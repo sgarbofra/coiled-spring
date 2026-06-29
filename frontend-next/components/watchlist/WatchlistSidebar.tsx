@@ -38,9 +38,16 @@ export default function WatchlistSidebar({
         const res = await fetch('/api/watchlists')
         const json = await res.json()
         if (!res.ok || !json.ok) throw new Error(json.error || 'Failed')
-        setWatchlists(json.watchlists || [])
-        const active = (json.watchlists || []).find((w: Watchlist) => w.isActive)
-        if (active) onSelectWatchlist(active)
+        const wls: Watchlist[] = json.watchlists || []
+        setWatchlists(wls)
+        // Ripristina l'ultima watchlist visualizzata (localStorage ha priorità su isActive)
+        let toSelect: Watchlist | undefined
+        try {
+          const lastId = localStorage.getItem('last_watchlist_id')
+          toSelect = lastId ? wls.find(w => w.id === lastId) : undefined
+        } catch {}
+        if (!toSelect) toSelect = wls.find(w => w.isActive)
+        if (toSelect) onSelectWatchlist(toSelect)
       } catch (e: unknown) {
         setError(e instanceof Error ? e.message : 'Error')
       } finally { setLoading(false) }
@@ -93,6 +100,7 @@ export default function WatchlistSidebar({
       const json = await res.json()
       if (!res.ok || !json.ok) throw new Error(json.error)
       setWatchlists(prev => prev.map(x => ({ ...x, isActive: x.id === w.id })))
+      try { localStorage.setItem('last_watchlist_id', w.id) } catch {}
       onActivateWatchlist?.({ ...w, isActive: true }); onSelectWatchlist({ ...w, isActive: true })
     } catch (e: unknown) { setError(e instanceof Error ? e.message : 'Error') }
   }
@@ -138,7 +146,7 @@ export default function WatchlistSidebar({
               borderBottom: `1px solid ${bb.border}`,
               padding: '8px 12px',
             }}>
-              <button onClick={() => onSelectWatchlist(w)} style={{ display: 'block', width: '100%', textAlign: 'left', background: 'none', border: 'none', color: isActive ? bb.orange : bb.white, fontSize: '14.4px', fontFamily: 'inherit', cursor: 'pointer', fontWeight: isActive ? 'bold' : 'normal', letterSpacing: '1px', padding: 0, marginBottom: '6px' }}>
+              <button onClick={() => { try { localStorage.setItem('last_watchlist_id', w.id) } catch {} onSelectWatchlist(w) }} style={{ display: 'block', width: '100%', textAlign: 'left', background: 'none', border: 'none', color: isActive ? bb.orange : bb.white, fontSize: '14.4px', fontFamily: 'inherit', cursor: 'pointer', fontWeight: isActive ? 'bold' : 'normal', letterSpacing: '1px', padding: 0, marginBottom: '6px' }}>
                 {isActive ? '▶ ' : '  '}{w.name.toUpperCase()}{w.isActive ? ' [ACTIVE]' : ''}
               </button>
               <div style={{ display: 'flex', gap: '4px' }}>

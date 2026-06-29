@@ -582,7 +582,8 @@ export default function ScannerPage() {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
     } else {
       setSortColumn(column)
-      setSortDirection('asc')
+      // CS Score: default desc (più alto = migliore candidato)
+      setSortDirection(column === 'cs_score' ? 'desc' : 'asc')
     }
   }
 
@@ -625,6 +626,9 @@ export default function ScannerPage() {
           // Force numeric comparison for OI
           aVal = parseInt(String(a.open_interest || 0))
           bVal = parseInt(String(b.open_interest || 0))
+        } else if (sortColumn === 'cs_score') {
+          aVal = computeCandidateScore(a)
+          bVal = computeCandidateScore(b)
         }
 
         if (aVal == null) return 1
@@ -1018,15 +1022,22 @@ export default function ScannerPage() {
               })}
               {/* CS Candidate Score header */}
               <th
+                onClick={() => toggleSort('cs_score')}
                 style={{
                   padding: '6px 8px', textAlign: 'center', fontWeight: 'bold',
-                  fontSize: '10.5px', letterSpacing: '0.8px', cursor: 'help',
+                  fontSize: '10.5px', letterSpacing: '0.8px', cursor: 'pointer',
                   color: bb.orange, position: 'relative', whiteSpace: 'nowrap',
-                  borderLeft: `1px solid ${bb.border2}`,
-                }}
-                onMouseEnter={() => setShowScoreHeaderTooltip(true)}
-                onMouseLeave={() => setShowScoreHeaderTooltip(false)}>
-                COILED STRATEGY CANDIDATE SCORE
+                  borderLeft: `1px solid ${bb.border2}`, userSelect: 'none',
+                }}>
+                COILED STRATEGY CANDIDATE SCORE{' '}
+                <span style={{ color: sortColumn === 'cs_score' ? bb.orange : '#444', fontSize: '10px' }}>
+                  {sortColumn === 'cs_score' ? (sortDirection === 'asc' ? '▲' : '▼') : '↕'}
+                </span>{' '}
+                <span
+                  onClick={e => e.stopPropagation()}
+                  onMouseEnter={e => { e.stopPropagation(); setShowScoreHeaderTooltip(true) }}
+                  onMouseLeave={() => setShowScoreHeaderTooltip(false)}
+                  style={{ cursor: 'help', opacity: 0.5, fontSize: '11px' }}>ⓘ</span>
                 {showScoreHeaderTooltip && (
                   <div style={{
                     position: 'absolute', bottom: 'calc(100% + 8px)', right: 0,
