@@ -1026,10 +1026,11 @@ export default function ScannerPage() {
                 style={{
                   padding: '6px 8px', textAlign: 'center', fontWeight: 'bold',
                   fontSize: '10.5px', letterSpacing: '0.8px', cursor: 'pointer',
-                  color: bb.orange, position: 'relative', whiteSpace: 'nowrap',
+                  color: bb.orange, position: 'relative', whiteSpace: 'normal',
                   borderLeft: `1px solid ${bb.border2}`, userSelect: 'none',
+                  width: '90px', minWidth: '90px',
                 }}>
-                COILED STRATEGY CANDIDATE SCORE{' '}
+                {'COILED STRATEGY'}<br />{'CANDIDATE SCORE'}{' '}
                 <span style={{ color: sortColumn === 'cs_score' ? bb.orange : '#444', fontSize: '10px' }}>
                   {sortColumn === 'cs_score' ? (sortDirection === 'asc' ? '▲' : '▼') : '↕'}
                 </span>{' '}
