@@ -283,6 +283,7 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
   const [countdown, setCountdown] = useState(AUTO_REFRESH_SEC)
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null)
   const [hoveredTradeId, setHoveredTradeId] = useState<number | null>(null)
+  const [tooltipAbove, setTooltipAbove] = useState(false)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -406,7 +407,12 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
                 return (
                 <tr key={p.trade_id}
                   style={{ backgroundColor: isHovered ? bb.surface : 'transparent' }}
-                  onMouseEnter={() => setHoveredTradeId(p.trade_id)}
+                  onMouseEnter={e => {
+                    const rect = e.currentTarget.getBoundingClientRect()
+                    // Tooltip è ~160px alto: mostra sopra se non c'è spazio sotto
+                    setTooltipAbove(rect.bottom + 170 > window.innerHeight)
+                    setHoveredTradeId(p.trade_id)
+                  }}
                   onMouseLeave={() => setHoveredTradeId(null)}>
                   <Td color={bb.orange}>{p.underlying}</Td>
                   <Td color={bb.amber}>{p.option_type.toUpperCase()}</Td>
@@ -437,7 +443,8 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
                     {/* WHY panel — appare on hover riga */}
                     {isHovered && csScore != null && (
                       <div style={{
-                        position: 'absolute', right: 0, bottom: 'calc(100% + 4px)',
+                        position: 'absolute', right: 0,
+                        ...(tooltipAbove ? { bottom: 'calc(100% + 4px)' } : { top: 'calc(100% + 4px)' }),
                         backgroundColor: '#000', border: `1px solid ${bb.orange}`,
                         padding: '10px 14px', width: '230px', zIndex: 100,
                         fontFamily: 'Courier New, monospace', fontSize: '11px',
