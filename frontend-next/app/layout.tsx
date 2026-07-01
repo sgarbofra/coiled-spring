@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   description: 'Scanner opzioni LEAPS con IV Rank, superficie di volatilità 3D e AI su 3.500+ titoli USA. Trova opzioni americane con volatilità compressa. LEAPS options scanner with IV Rank analysis for antifragile traders.',
   keywords: 'opzioni LEAPS, scanner opzioni, scanner opzioni americane, opzioni americane, IV Rank, volatilità implicita, opzioni lunga scadenza, LEAPS options, options scanner, IV Rank analysis, volatility surface, options trading, antifragile trading, strategie opzioni, greche opzioni',
   alternates: {
-    canonical: 'https://coiledspring.app',
+    canonical: 'https://www.coiledspring.app',
   },
   icons: {
     icon: [
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     title: 'Coiled Spring | Scanner Opzioni LEAPS — Terminale Antifragile',
     description: 'Scanner opzioni LEAPS con IV Rank, superficie di volatilità 3D e AI su 3.500+ titoli USA. Trova opzioni con volatilità compressa.',
     type: 'website',
-    url: 'https://coiledspring.app',
+    url: 'https://www.coiledspring.app',
     siteName: 'Coiled Spring',
     locale: 'it_IT',
     alternateLocale: 'en_US',
