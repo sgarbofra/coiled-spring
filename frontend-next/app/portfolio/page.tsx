@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { computeCandidateScore, computeWhyPanel, scoreColor } from '@/lib/cs-score'
 
@@ -271,6 +271,168 @@ function CloseModal({ target, onDone, onCancel }: {
   )
 }
 
+// ── Position Detail Drawer ─────────────────────────────────────────────────────
+
+function PositionDetailDrawer({
+  position: p,
+  onClose,
+  onClosePosition,
+}: {
+  position: OpenPosition
+  onClose: () => void
+  onClosePosition: (p: OpenPosition) => void
+}) {
+  const fmt = (v: number | null | undefined, d = 2) =>
+    v != null ? v.toFixed(d) : '—'
+
+  const spreadPct = (p.current_bid != null && p.current_ask != null && p.current_mid != null && p.current_mid > 0)
+    ? (p.current_ask - p.current_bid) / p.current_mid * 100
+    : null
+
+  const csInput = {
+    delta: p.current_delta,
+    vega: p.current_vega,
+    dte: p.dte,
+    spread_pct: spreadPct,
+    open_interest: p.current_open_interest,
+  }
+  const score = computeCandidateScore(csInput)
+  const why   = computeWhyPanel(csInput)
+
+  const label = `${p.underlying} · ${p.option_type.toUpperCase()} · K${p.strike} · ${new Date(p.expiration).toLocaleDateString('en-US')}`
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 50,
+      display: 'flex', justifyContent: 'flex-end',
+      backgroundColor: 'rgba(0,0,0,0.6)',
+      fontFamily: 'Courier New, monospace',
+    }}
+      onClick={onClose}>
+      <div style={{
+        height: '100%', width: '100%', maxWidth: '520px',
+        overflowY: 'auto', backgroundColor: bb.bg, color: bb.white,
+        borderLeft: `1px solid ${bb.border2}`,
+      }}
+        onClick={e => e.stopPropagation()}>
+
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', borderBottom: `2px solid ${bb.orange}`, padding: '16px 20px' }}>
+          <div>
+            <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: bb.orange, letterSpacing: '2px' }}>{p.underlying}</h2>
+            <p style={{ fontSize: '12px', color: bb.gray, letterSpacing: '1px', marginTop: '2px' }}>{label}</p>
+          </div>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <button
+              onClick={() => onClosePosition(p)}
+              style={{ border: `2px solid ${bb.red}`, backgroundColor: 'rgba(255,51,51,0.12)', color: bb.red, padding: '5px 14px', fontSize: '13px', fontFamily: 'inherit', cursor: 'pointer', letterSpacing: '1px', fontWeight: 'bold' }}
+              onMouseEnter={e => { e.currentTarget.style.backgroundColor = bb.red; e.currentTarget.style.color = '#000' }}
+              onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'rgba(255,51,51,0.12)'; e.currentTarget.style.color = bb.red }}>
+              CLOSE POSITION
+            </button>
+            <button onClick={onClose}
+              style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: bb.gray, padding: '4px 10px', fontSize: '16px', fontFamily: 'inherit', cursor: 'pointer', lineHeight: 1 }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = bb.orange; e.currentTarget.style.color = bb.white }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = bb.border2; e.currentTarget.style.color = bb.gray }}
+              title="Chiudi pannello">
+              ✕
+            </button>
+          </div>
+        </div>
+
+        <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px', fontSize: '13px' }}>
+
+          {/* Contract */}
+          <section>
+            <DrawerLabel>CONTRACT</DrawerLabel>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+              <DC label="TYPE"       value={p.option_type.toUpperCase()} accent={p.option_type === 'call' ? 'green' : 'red'} />
+              <DC label="STRIKE"     value={`$${p.strike}`} />
+              <DC label="DTE"        value={p.dte} accent={p.dte < 90 ? 'red' : undefined} />
+              <DC label="EXPIRATION" value={new Date(p.expiration).toLocaleDateString('en-US')} span />
+              <DC label="DIRECTION"  value={p.direction.toUpperCase()} accent={p.direction === 'long' ? 'green' : 'red'} />
+              <DC label="QTY"        value={p.quantity} />
+            </div>
+          </section>
+
+          {/* Market */}
+          <section>
+            <DrawerLabel>MARKET PRICES</DrawerLabel>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+              <DC label="ENTRY"  value={`$${fmt(p.entry_price)}`} />
+              <DC label="BID"    value={p.current_bid != null ? `$${fmt(p.current_bid)}` : '—'} />
+              <DC label="ASK"    value={p.current_ask != null ? `$${fmt(p.current_ask)}` : '—'} />
+              <DC label="MID"    value={p.current_mid != null ? `$${fmt(p.current_mid)}` : '—'} />
+              <DC label="LAST"   value={p.current_last != null ? `$${fmt(p.current_last)}` : '—'} />
+              <DC label="IV %"   value={p.current_iv != null ? `${fmt(p.current_iv, 1)}%` : '—'} />
+            </div>
+          </section>
+
+          {/* Greeks */}
+          <section>
+            <DrawerLabel>GREEKS (CURRENT)</DrawerLabel>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+              <DC label="DELTA" value={p.current_delta != null ? fmt(p.current_delta, 3) : '—'} />
+              <DC label="VEGA"  value={p.current_vega  != null ? fmt(p.current_vega,  3) : '—'} />
+              <DC label="OI"    value={p.current_open_interest ?? '—'} />
+            </div>
+          </section>
+
+          {/* PNL */}
+          <section>
+            <DrawerLabel>P&amp;L NON REALIZZATO</DrawerLabel>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+              <DC label="PNL $"
+                value={p.unrealized_pnl != null ? `${p.unrealized_pnl >= 0 ? '+' : ''}$${fmt(p.unrealized_pnl)}` : '—'}
+                accent={p.unrealized_pnl != null ? (p.unrealized_pnl >= 0 ? 'green' : 'red') : undefined} />
+              <DC label="PNL %"
+                value={p.unrealized_pnl_pct != null ? `${p.unrealized_pnl_pct >= 0 ? '+' : ''}${fmt(p.unrealized_pnl_pct)}%` : '—'}
+                accent={p.unrealized_pnl_pct != null ? (p.unrealized_pnl_pct >= 0 ? 'green' : 'red') : undefined} />
+            </div>
+          </section>
+
+          {/* CS Score */}
+          <section style={{ border: `1px solid ${bb.border2}`, backgroundColor: bb.surface, padding: '16px' }}>
+            <DrawerLabel>COILED STRATEGY CANDIDATE SCORE</DrawerLabel>
+            {score != null ? (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                  <span style={{ fontSize: '36px', fontWeight: 'bold', color: scoreColor(score) }}>{score}</span>
+                  <span style={{ fontSize: '11px', color: '#555' }}>/100</span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  {why.map((line, i) => (
+                    <div key={i} style={{ fontSize: '12px', color: bb.white, paddingLeft: '10px', borderLeft: `2px solid ${bb.border2}`, letterSpacing: '0.3px' }}>
+                      {line}
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div style={{ color: '#555', fontSize: '13px' }}>— Greeks non disponibili (IV mancante)</div>
+            )}
+          </section>
+
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function DrawerLabel({ children }: { children: React.ReactNode }) {
+  return <p style={{ marginBottom: '8px', fontSize: '11px', fontWeight: 'bold', letterSpacing: '2px', color: bb.yellow }}>{children}</p>
+}
+
+type DCAccent = 'green' | 'red'
+function DC({ label, value, accent, span }: { label: string; value: string | number; accent?: DCAccent; span?: boolean }) {
+  return (
+    <div style={{ border: `1px solid ${bb.border}`, backgroundColor: bb.panel, padding: '8px 10px', gridColumn: span ? 'span 2' : undefined }}>
+      <p style={{ marginBottom: '3px', fontSize: '11px', color: bb.gray, letterSpacing: '1px' }}>{label}</p>
+      <p style={{ fontWeight: 'bold', fontSize: '13px', color: accent === 'green' ? bb.green : accent === 'red' ? bb.red : bb.white }}>{value}</p>
+    </div>
+  )
+}
+
 // ── Positions tab ──────────────────────────────────────────────────────────────
 
 const AUTO_REFRESH_SEC = 120 // 2 min — allineato con OPTPRICE_TTL backend
@@ -280,10 +442,9 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [closeTarget, setCloseTarget] = useState<OpenPosition | null>(null)
+  const [selectedPosition, setSelectedPosition] = useState<OpenPosition | null>(null)
   const [countdown, setCountdown] = useState(AUTO_REFRESH_SEC)
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null)
-  const [hoveredTradeId, setHoveredTradeId] = useState<number | null>(null)
-  const [tooltipAbove, setTooltipAbove] = useState(false)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -327,6 +488,15 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
           target={{ position: closeTarget, portfolioId }}
           onDone={() => { setCloseTarget(null); load() }}
           onCancel={() => setCloseTarget(null)}
+        />
+      )}
+
+      {/* Position detail drawer */}
+      {selectedPosition && (
+        <PositionDetailDrawer
+          position={selectedPosition}
+          onClose={() => setSelectedPosition(null)}
+          onClosePosition={p => { setSelectedPosition(null); setCloseTarget(p) }}
         />
       )}
 
@@ -388,32 +558,20 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
               {positions.map(p => {
                 const usingLast = p.price_source === 'last'
                 const usingBS   = p.price_source === 'bs_theoretical'
-                const isHovered = hoveredTradeId === p.trade_id
 
-                // CS Score per questa posizione
+                // CS Score per colonna rapida
                 const spreadPct = (p.current_bid != null && p.current_ask != null && p.current_mid != null && p.current_mid > 0)
                   ? (p.current_ask - p.current_bid) / p.current_mid * 100
                   : null
-                const csInput = {
-                  delta: p.current_delta,
-                  vega: p.current_vega,
-                  dte: p.dte,
-                  spread_pct: spreadPct,
-                  open_interest: p.current_open_interest,
-                }
+                const csInput = { delta: p.current_delta, vega: p.current_vega, dte: p.dte, spread_pct: spreadPct, open_interest: p.current_open_interest }
                 const csScore = computeCandidateScore(csInput)
-                const csWhy   = computeWhyPanel(csInput)
 
                 return (
                 <tr key={p.trade_id}
-                  style={{ backgroundColor: isHovered ? bb.surface : 'transparent' }}
-                  onMouseEnter={e => {
-                    const rect = e.currentTarget.getBoundingClientRect()
-                    // Tooltip è ~160px alto: mostra sopra se non c'è spazio sotto
-                    setTooltipAbove(rect.bottom + 170 > window.innerHeight)
-                    setHoveredTradeId(p.trade_id)
-                  }}
-                  onMouseLeave={() => setHoveredTradeId(null)}>
+                  style={{ backgroundColor: 'transparent', cursor: 'pointer' }}
+                  onClick={() => setSelectedPosition(p)}
+                  onMouseEnter={e => (e.currentTarget.style.backgroundColor = bb.surface)}
+                  onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}>
                   <Td color={bb.orange}>{p.underlying}</Td>
                   <Td color={bb.amber}>{p.option_type.toUpperCase()}</Td>
                   <Td right>{fmt(p.strike, 0)}</Td>
@@ -433,42 +591,12 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
                     {usingBS   && <span title="PNL calculated on Black-Scholes theoretical price (no market data)" style={{ fontSize: '9px', color: bb.gray, marginLeft: '3px', verticalAlign: 'super' }}>BS</span>}
                   </Td>
                   <Td right color={pnlColor(p.unrealized_pnl_pct)}>{fmtPct(p.unrealized_pnl_pct)}</Td>
-                  {/* CS Score badge */}
-                  <td style={{ padding: '4px 8px', borderBottom: `1px solid ${bb.border}`, textAlign: 'right', position: 'relative', fontFamily: 'Courier New, monospace' }}>
+                  {/* CS Score badge — click riga per dettaglio */}
+                  <td style={{ padding: '4px 8px', borderBottom: `1px solid ${bb.border}`, textAlign: 'right', fontFamily: 'Courier New, monospace' }}>
                     {csScore != null ? (
                       <span style={{ fontWeight: 'bold', fontSize: '13px', color: scoreColor(csScore) }}>{csScore}</span>
                     ) : (
                       <span style={{ color: bb.gray, fontSize: '11px' }}>—</span>
-                    )}
-                    {/* WHY panel — appare on hover riga */}
-                    {isHovered && csScore != null && (
-                      <div style={{
-                        position: 'absolute', right: 0,
-                        ...(tooltipAbove ? { bottom: 'calc(100% + 4px)' } : { top: 'calc(100% + 4px)' }),
-                        backgroundColor: '#000', border: `1px solid ${bb.orange}`,
-                        padding: '10px 14px', width: '230px', zIndex: 100,
-                        fontFamily: 'Courier New, monospace', fontSize: '11px',
-                        color: '#ccc', boxShadow: '0 4px 16px rgba(0,0,0,0.8)',
-                        whiteSpace: 'normal', textAlign: 'left',
-                        letterSpacing: '0.5px', lineHeight: '1.6',
-                      }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                          <span style={{ color: bb.orange, fontWeight: 'bold', fontSize: '12px', letterSpacing: '1px' }}>
-                            CS SCORE
-                          </span>
-                          <span style={{ fontWeight: 'bold', fontSize: '18px', color: scoreColor(csScore) }}>{csScore}</span>
-                        </div>
-                        {csWhy.map((line, i) => (
-                          <div key={i} style={{ marginBottom: '3px', paddingLeft: '8px', borderLeft: `2px solid ${bb.border2}` }}>
-                            {line}
-                          </div>
-                        ))}
-                        {p.current_delta == null && (
-                          <div style={{ marginTop: '6px', color: bb.amber, fontSize: '10px' }}>
-                            ⚠ Greeks non disponibili (IV mancante)
-                          </div>
-                        )}
-                      </div>
                     )}
                   </td>
                   <td style={{ padding: '4px 8px', borderBottom: `1px solid ${bb.border}` }}>

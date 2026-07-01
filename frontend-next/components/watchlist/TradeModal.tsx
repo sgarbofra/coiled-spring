@@ -295,13 +295,15 @@ export default function TradeModal({ item, open, onClose }: Props) {
                 </div>
                 <div>
                   <Label>
-                    {direction === 'long'
-                      ? `ASK PRICE${item.ask ? ` ($${item.ask.toFixed(2)})` : ''}`
-                      : `BID PRICE${item.bid ? ` ($${item.bid.toFixed(2)})` : ''}`}
+                    {direction === 'long' ? 'EXECUTION PRICE (ASK)' : 'EXECUTION PRICE (BID)'}
                   </Label>
-                  <input type="number" step="0.01" min="0.01" value={price}
-                    onChange={e => setPrice(e.target.value)}
-                    style={inputStyle} />
+                  <input type="number" step="0.01" value={price}
+                    readOnly
+                    title="Market order — prezzo fisso ASK (buy) o BID (sell)"
+                    style={{ ...inputStyle, color: '#888', cursor: 'not-allowed', opacity: 0.7 }} />
+                  <div style={{ fontSize: '10px', color: '#555', marginTop: '3px', letterSpacing: '0.5px' }}>
+                    MARKET ORDER · PRICE NOT EDITABLE
+                  </div>
                 </div>
               </div>
 

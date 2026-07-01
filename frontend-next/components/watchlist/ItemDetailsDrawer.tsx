@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import TradeModal from './TradeModal'
+import { computeCandidateScore, computeWhyPanel, scoreColor } from '@/lib/cs-score'
 
 const bb = {
   bg: '#000000', surface: '#0a0a00', panel: '#111100',
@@ -49,6 +50,7 @@ export default function ItemDetailsDrawer({ watchlistId, itemId, open, onClose }
   const [error, setError] = useState<string | null>(null)
 
   const [tradeModalOpen, setTradeModalOpen] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
 
   const [alertType, setAlertType] = useState(ALERT_TYPES[0].value)
   const [threshold, setThreshold] = useState('')
@@ -58,8 +60,12 @@ export default function ItemDetailsDrawer({ watchlistId, itemId, open, onClose }
   useEffect(() => {
     if (!open) return
     const load = async () => {
-      setLoading(true); setError(null)
+      setLoading(true); setRefreshing(true); setError(null)
       try {
+        // 1. Refresh live prices in DB (cache 2 min lato backend)
+        await fetch(`/api/watchlists/${watchlistId}/refresh`, { method: 'POST' })
+        setRefreshing(false)
+        // 2. Carica item aggiornato + alerts in parallelo
         const [itemRes, alertsRes] = await Promise.all([
           fetch(`/api/watchlists/${watchlistId}/items/${itemId}`),
           fetch(`/api/watchlists/${watchlistId}/items/${itemId}/alerts`),
@@ -70,6 +76,7 @@ export default function ItemDetailsDrawer({ watchlistId, itemId, open, onClose }
         setItem(itemJson.item)
         setAlerts(alertsJson.ok ? alertsJson.alerts : [])
       } catch (e: unknown) {
+        setRefreshing(false)
         setError(e instanceof Error ? e.message : 'Failed to load')
       } finally { setLoading(false) }
     }
@@ -144,16 +151,18 @@ export default function ItemDetailsDrawer({ watchlistId, itemId, open, onClose }
               TRADE
             </button>
             <button onClick={onClose}
-              style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: bb.gray, padding: '4px 12px', fontSize: '13.2px', fontFamily: 'inherit', cursor: 'pointer', letterSpacing: '1px' }}
+              style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: bb.gray, padding: '4px 10px', fontSize: '16px', fontFamily: 'inherit', cursor: 'pointer', lineHeight: 1 }}
               onMouseEnter={e => (e.currentTarget.style.borderColor = bb.orange, e.currentTarget.style.color = bb.white)}
-              onMouseLeave={e => (e.currentTarget.style.borderColor = bb.border2, e.currentTarget.style.color = bb.gray)}>
-              CLOSE
+              onMouseLeave={e => (e.currentTarget.style.borderColor = bb.border2, e.currentTarget.style.color = bb.gray)}
+              title="Chiudi pannello">
+              ✕
             </button>
           </div>
         </div>
 
         <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          {loading && <p style={{ fontSize: '13.2px', color: bb.gray, letterSpacing: '1px' }}>LOADING...</p>}
+          {refreshing && <p style={{ fontSize: '13.2px', color: bb.amber, letterSpacing: '1px' }}>↻ REFRESHING LIVE PRICES...</p>}
+          {loading && !refreshing && <p style={{ fontSize: '13.2px', color: bb.gray, letterSpacing: '1px' }}>LOADING...</p>}
           {error && <p style={{ fontSize: '13.2px', color: bb.red }}>▶ ERROR: {error.toUpperCase()}</p>}
 
           {item && (
@@ -167,15 +176,6 @@ export default function ItemDetailsDrawer({ watchlistId, itemId, open, onClose }
                   <MC label="DTE"        value={item.dte ?? '-'} />
                   <MC label="EXPIRATION" value={item.expirationDate ? new Date(item.expirationDate).toLocaleDateString() : '-'} span />
                   <MC label="INSTRUMENT" value={item.instrumentType} />
-                </div>
-              </section>
-
-              {/* P&L */}
-              <section>
-                <Label>P&L</Label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', fontSize: '13.2px' }}>
-                  <MC label="PREMIUM PAID"    value={item.premiumPaid != null ? `$${Number(item.premiumPaid).toFixed(2)}` : '-'} />
-                  <MC label="CURRENT PREMIUM" value={item.currentPremium != null ? `$${Number(item.currentPremium).toFixed(2)}` : '-'} />
                 </div>
               </section>
 
@@ -200,6 +200,44 @@ export default function ItemDetailsDrawer({ watchlistId, itemId, open, onClose }
                   <MC label="THETA" value={item.theta ?? '-'} />
                 </div>
               </section>
+
+              {/* CS Candidate Score */}
+              {(() => {
+                const spreadPct = (item.bid != null && item.ask != null && item.bid + item.ask > 0)
+                  ? (item.ask - item.bid) / ((item.bid + item.ask) / 2) * 100
+                  : null
+                const csInput = {
+                  delta: item.delta,
+                  vega: item.vega,
+                  dte: item.dte,
+                  spread_pct: spreadPct,
+                  open_interest: item.openInterest,
+                }
+                const score = computeCandidateScore(csInput)
+                const why   = computeWhyPanel(csInput)
+                return (
+                  <section style={{ border: `1px solid ${bb.border2}`, backgroundColor: bb.surface, padding: '16px' }}>
+                    <Label>COILED STRATEGY CANDIDATE SCORE</Label>
+                    {score != null ? (
+                      <>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                          <span style={{ fontSize: '36px', fontWeight: 'bold', color: scoreColor(score) }}>{score}</span>
+                          <span style={{ fontSize: '11px', color: '#666', letterSpacing: '0.5px' }}>/100</span>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                          {why.map((line, i) => (
+                            <div key={i} style={{ fontSize: '12px', color: bb.white, paddingLeft: '10px', borderLeft: `2px solid ${bb.border2}`, letterSpacing: '0.3px' }}>
+                              {line}
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      <div style={{ color: '#555', fontSize: '13px' }}>— Greeks non disponibili (IV mancante)</div>
+                    )}
+                  </section>
+                )
+              })()}
 
               {/* Market */}
               <section>
