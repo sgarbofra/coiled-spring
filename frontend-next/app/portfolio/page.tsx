@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import ProtectedRoute from '@/components/ProtectedRoute'
+import { computeCandidateScore, computeWhyPanel, scoreColor } from '@/lib/cs-score'
 
 const bb = {
   bg: '#000000', surface: '#0a0a00', panel: '#111100',
@@ -36,6 +37,9 @@ type OpenPosition = {
   pnl_price: number | null
   price_source: string   // "mid"|"bid"|"ask"|"last"|"bs_theoretical"
   current_iv: number | null
+  current_delta: number | null
+  current_vega: number | null
+  current_open_interest: number | null
   unrealized_pnl: number | null
   unrealized_pnl_pct: number | null
   notes: string | null
@@ -278,6 +282,7 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
   const [closeTarget, setCloseTarget] = useState<OpenPosition | null>(null)
   const [countdown, setCountdown] = useState(AUTO_REFRESH_SEC)
   const [lastRefresh, setLastRefresh] = useState<Date | null>(null)
+  const [hoveredTradeId, setHoveredTradeId] = useState<number | null>(null)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -374,6 +379,7 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
                 <Th right>IV%</Th>
                 <Th right>PNL $</Th>
                 <Th right>PNL %</Th>
+                <Th right>CS</Th>
                 <Th></Th>
               </tr>
             </thead>
@@ -381,11 +387,27 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
               {positions.map(p => {
                 const usingLast = p.price_source === 'last'
                 const usingBS   = p.price_source === 'bs_theoretical'
+                const isHovered = hoveredTradeId === p.trade_id
+
+                // CS Score per questa posizione
+                const spreadPct = (p.current_bid != null && p.current_ask != null && p.current_mid != null && p.current_mid > 0)
+                  ? (p.current_ask - p.current_bid) / p.current_mid * 100
+                  : null
+                const csInput = {
+                  delta: p.current_delta,
+                  vega: p.current_vega,
+                  dte: p.dte,
+                  spread_pct: spreadPct,
+                  open_interest: p.current_open_interest,
+                }
+                const csScore = computeCandidateScore(csInput)
+                const csWhy   = computeWhyPanel(csInput)
+
                 return (
                 <tr key={p.trade_id}
-                  style={{ backgroundColor: 'transparent' }}
-                  onMouseEnter={e => (e.currentTarget.style.backgroundColor = bb.surface)}
-                  onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}>
+                  style={{ backgroundColor: isHovered ? bb.surface : 'transparent' }}
+                  onMouseEnter={() => setHoveredTradeId(p.trade_id)}
+                  onMouseLeave={() => setHoveredTradeId(null)}>
                   <Td color={bb.orange}>{p.underlying}</Td>
                   <Td color={bb.amber}>{p.option_type.toUpperCase()}</Td>
                   <Td right>{fmt(p.strike, 0)}</Td>
@@ -405,6 +427,43 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
                     {usingBS   && <span title="PNL calculated on Black-Scholes theoretical price (no market data)" style={{ fontSize: '9px', color: bb.gray, marginLeft: '3px', verticalAlign: 'super' }}>BS</span>}
                   </Td>
                   <Td right color={pnlColor(p.unrealized_pnl_pct)}>{fmtPct(p.unrealized_pnl_pct)}</Td>
+                  {/* CS Score badge */}
+                  <td style={{ padding: '4px 8px', borderBottom: `1px solid ${bb.border}`, textAlign: 'right', position: 'relative', fontFamily: 'Courier New, monospace' }}>
+                    {csScore != null ? (
+                      <span style={{ fontWeight: 'bold', fontSize: '13px', color: scoreColor(csScore) }}>{csScore}</span>
+                    ) : (
+                      <span style={{ color: bb.gray, fontSize: '11px' }}>—</span>
+                    )}
+                    {/* WHY panel — appare on hover riga */}
+                    {isHovered && csScore != null && (
+                      <div style={{
+                        position: 'absolute', right: 0, top: 'calc(100% + 4px)',
+                        backgroundColor: '#000', border: `1px solid ${bb.orange}`,
+                        padding: '10px 14px', width: '230px', zIndex: 100,
+                        fontFamily: 'Courier New, monospace', fontSize: '11px',
+                        color: '#ccc', boxShadow: '0 4px 16px rgba(0,0,0,0.8)',
+                        whiteSpace: 'normal', textAlign: 'left',
+                        letterSpacing: '0.5px', lineHeight: '1.6',
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                          <span style={{ color: bb.orange, fontWeight: 'bold', fontSize: '12px', letterSpacing: '1px' }}>
+                            CS SCORE
+                          </span>
+                          <span style={{ fontWeight: 'bold', fontSize: '18px', color: scoreColor(csScore) }}>{csScore}</span>
+                        </div>
+                        {csWhy.map((line, i) => (
+                          <div key={i} style={{ marginBottom: '3px', paddingLeft: '8px', borderLeft: `2px solid ${bb.border2}` }}>
+                            {line}
+                          </div>
+                        ))}
+                        {p.current_delta == null && (
+                          <div style={{ marginTop: '6px', color: bb.amber, fontSize: '10px' }}>
+                            ⚠ Greeks non disponibili (IV mancante)
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </td>
                   <td style={{ padding: '4px 8px', borderBottom: `1px solid ${bb.border}` }}>
                     <button onClick={() => setCloseTarget(p)} style={{
                       border: `1px solid ${bb.red}`, backgroundColor: 'rgba(255,51,51,0.1)',

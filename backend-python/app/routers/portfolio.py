@@ -90,6 +90,9 @@ class OpenPositionOut(BaseModel):
     current_ask: Optional[float]
     current_last: Optional[float]
     current_iv: Optional[float]
+    current_delta: Optional[float]       # signed: neg per put, pos per call
+    current_vega: Optional[float]
+    current_open_interest: Optional[int]
     pnl_price: Optional[float]
     price_source: str                # "mid"|"bid"|"ask"|"last"|"bs_theoretical"
     unrealized_pnl: Optional[float]
@@ -462,16 +465,20 @@ def list_open_positions(
         sign = _pnl_sign(trade.direction)
 
         current_mid = current_bid = current_ask = current_last = current_iv = None
+        current_delta = current_vega = current_open_interest = None
         unrealized_pnl = unrealized_pnl_pct = pnl_price = None
         last_refreshed = None
 
         if price_data:
-            current_mid  = price_data.mid if price_data.mid > 0 else None
-            current_bid  = price_data.bid if price_data.bid > 0 else None
-            current_ask  = price_data.ask if price_data.ask > 0 else None
-            current_last = price_data.last_price if price_data.last_price > 0 else None
-            current_iv   = price_data.iv
-            last_refreshed = price_data.fetched_at
+            current_mid          = price_data.mid if price_data.mid > 0 else None
+            current_bid          = price_data.bid if price_data.bid > 0 else None
+            current_ask          = price_data.ask if price_data.ask > 0 else None
+            current_last         = price_data.last_price if price_data.last_price > 0 else None
+            current_iv           = price_data.iv
+            current_delta        = price_data.delta           # già con segno (neg per put)
+            current_vega         = price_data.vega
+            current_open_interest = price_data.open_interest if price_data.open_interest else None
+            last_refreshed       = price_data.fetched_at
 
             # Priorità prezzo per PNL:
             # 1. mid = (bid+ask)/2 se bid > 0 E ask > 0  → quotazione corrente, aggiornata dai MM
@@ -503,6 +510,9 @@ def list_open_positions(
             pnl_price=pnl_price,
             price_source=price_data.price_source if price_data else "none",
             current_iv=current_iv,
+            current_delta=current_delta,
+            current_vega=current_vega,
+            current_open_interest=current_open_interest,
             unrealized_pnl=unrealized_pnl,
             unrealized_pnl_pct=unrealized_pnl_pct,
             notes=trade.notes,
