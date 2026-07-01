@@ -437,7 +437,7 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
                     {/* WHY panel — appare on hover riga */}
                     {isHovered && csScore != null && (
                       <div style={{
-                        position: 'absolute', right: 0, top: 'calc(100% + 4px)',
+                        position: 'absolute', right: 0, bottom: 'calc(100% + 4px)',
                         backgroundColor: '#000', border: `1px solid ${bb.orange}`,
                         padding: '10px 14px', width: '230px', zIndex: 100,
                         fontFamily: 'Courier New, monospace', fontSize: '11px',
