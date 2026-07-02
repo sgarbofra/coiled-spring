@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { scannerStore } from '@/lib/scanner-store'
@@ -150,6 +151,7 @@ export function computeWhyPanel(r: ScanResult): string[] {
 }
 
 export default function ScannerPage() {
+  const router = useRouter()
   const [results, setResults] = useState<ScanResult[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -1252,7 +1254,7 @@ export default function ScannerPage() {
                         vega: String(r.vega),
                         theta: String(r.theta),
                       })
-                      window.open(`/scanner/opportunity/${r.underlying}?${p.toString()}`, '_blank')
+                      router.push(`/scanner/opportunity/${r.underlying}?${p.toString()}`)
                     }}
                   >
                     <span style={{ cursor: 'pointer', fontSize: '15px' }} title="Opportunity Analysis">📊</span>
