@@ -147,6 +147,131 @@ function PriceChart({ prices }: { prices: PricePoint[] }) {
   )
 }
 
+function HVChart({ prices }: { prices: PricePoint[] }) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [width, setWidth] = useState(600)
+  const [hoverIdx, setHoverIdx] = useState<number | null>(null)
+
+  useEffect(() => {
+    const update = () => {
+      if (containerRef.current) setWidth(containerRef.current.clientWidth)
+    }
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
+
+  // Calcola HV 20 giorni rolling (annualizzata)
+  const WINDOW = 20
+  const hvData: Array<{ date: string; hv: number; idx: number }> = []
+  for (let i = WINDOW; i < prices.length; i++) {
+    const slice = prices.slice(i - WINDOW, i + 1)
+    const logReturns = slice.slice(1).map((p, j) => Math.log(p.close / slice[j].close))
+    const mean = logReturns.reduce((a, b) => a + b, 0) / logReturns.length
+    const variance = logReturns.reduce((a, b) => a + (b - mean) ** 2, 0) / (logReturns.length - 1)
+    hvData.push({ date: prices[i].date, hv: Math.sqrt(variance * 252) * 100, idx: i })
+  }
+
+  if (!hvData.length) return null
+
+  const H = 90
+  const padL = 58, padR = 16, padT = 8, padB = 20
+  const W = width
+  const chartW = W - padL - padR
+  const chartH = H - padT - padB
+
+  const hvValues = hvData.map((d) => d.hv)
+  const minHV = Math.min(...hvValues)
+  const maxHV = Math.max(...hvValues)
+  const range = maxHV - minHV || 1
+
+  const xScale = (i: number) => padL + (i / (prices.length - 1)) * chartW
+  const yScale = (v: number) => padT + chartH - ((v - minHV) / range) * chartH
+
+  const path = hvData
+    .map((d, i) => `${i === 0 ? 'M' : 'L'}${xScale(d.idx).toFixed(1)},${yScale(d.hv).toFixed(1)}`)
+    .join(' ')
+  const fillPath = `${path} L${xScale(hvData[hvData.length - 1].idx).toFixed(1)},${(padT + chartH).toFixed(1)} L${xScale(hvData[0].idx).toFixed(1)},${(padT + chartH).toFixed(1)} Z`
+
+  const yTicks = [minHV, (minHV + maxHV) / 2, maxHV].map((v) => ({
+    y: yScale(v),
+    label: `${v.toFixed(0)}%`,
+  }))
+
+  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const mx = e.clientX - rect.left - padL
+    const priceIdx = Math.round((mx / chartW) * (prices.length - 1))
+    const closest = hvData.reduce((best, d) =>
+      Math.abs(d.idx - priceIdx) < Math.abs(best.idx - priceIdx) ? d : best, hvData[0])
+    setHoverIdx(closest.idx)
+  }
+
+  const hoveredPoint = hoverIdx !== null
+    ? (hvData.find((d) => d.idx === hoverIdx) ?? hvData[hvData.length - 1])
+    : null
+
+  const hvColor = '#00DD00'
+
+  return (
+    <div ref={containerRef} style={{ width: '100%', marginTop: 6 }}>
+      <div style={{ padding: '0 0 2px 58px', fontSize: 10, fontFamily: 'monospace', color: bb.gray, letterSpacing: 0.5 }}>
+        HV 20D (VOL. STORICA ANNUALIZZATA)
+      </div>
+      <svg
+        width={W}
+        height={H}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={() => setHoverIdx(null)}
+        style={{ display: 'block', cursor: 'crosshair' }}
+      >
+        <defs>
+          <linearGradient id="hvGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={hvColor} stopOpacity="0.18" />
+            <stop offset="100%" stopColor={hvColor} stopOpacity="0.02" />
+          </linearGradient>
+          <clipPath id="hvClip">
+            <rect x={padL} y={padT} width={chartW} height={chartH} />
+          </clipPath>
+        </defs>
+
+        {yTicks.map((t, i) => (
+          <g key={i}>
+            <line x1={padL} y1={t.y} x2={padL + chartW} y2={t.y} stroke={bb.gridLine} strokeWidth={1} />
+            <text x={padL - 6} y={t.y + 4} textAnchor="end" fill={bb.gray} fontSize={10} fontFamily="monospace">
+              {t.label}
+            </text>
+          </g>
+        ))}
+
+        <path d={fillPath} fill="url(#hvGrad)" clipPath="url(#hvClip)" />
+        <path d={path} fill="none" stroke={hvColor} strokeWidth={1.5} clipPath="url(#hvClip)" />
+        <line x1={padL} y1={padT + chartH} x2={padL + chartW} y2={padT + chartH} stroke={bb.border2} strokeWidth={1} />
+
+        {hoveredPoint && (() => {
+          const tx = xScale(hoveredPoint.idx)
+          const ty = yScale(hoveredPoint.hv)
+          const boxW = 86
+          const boxH = 36
+          const bx = tx + 8 + boxW > W ? tx - boxW - 8 : tx + 8
+          const by = ty - boxH / 2 < padT ? padT : ty + boxH / 2 > padT + chartH ? padT + chartH - boxH : ty - boxH / 2
+          return (
+            <>
+              <line x1={tx} y1={padT} x2={tx} y2={padT + chartH} stroke={hvColor} strokeWidth={1} strokeDasharray="4 3" strokeOpacity={0.5} />
+              <circle cx={tx} cy={ty} r={3} fill={hvColor} />
+              <rect x={bx} y={by} width={boxW} height={boxH} fill={bb.panel} stroke={bb.border2} rx={2} />
+              <text x={bx + 6} y={by + 13} fill={bb.gray} fontSize={10} fontFamily="monospace">{hoveredPoint.date}</text>
+              <text x={bx + 6} y={by + 27} fill={hvColor} fontSize={12} fontFamily="monospace" fontWeight="bold">
+                {hoveredPoint.hv.toFixed(1)}%
+              </text>
+            </>
+          )
+        })()}
+      </svg>
+    </div>
+  )
+}
+
 function FieldRow({ label, value, color }: { label: string; value: string; color?: string }) {
   return (
     <div
@@ -304,6 +429,7 @@ function OpportunityContent() {
             </div>
           )}
           {history && !loadingChart && <PriceChart prices={history.prices} />}
+          {history && !loadingChart && <HVChart prices={history.prices} />}
 
           {currentPrice !== null && (
             <div
