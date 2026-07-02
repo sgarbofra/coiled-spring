@@ -1,5 +1,7 @@
 'use client'
 
+import RiskPanel from '@/components/RiskPanel'
+
 import { useEffect, useState } from 'react'
 
 export type InstrumentItem = {
@@ -21,6 +23,11 @@ export type InstrumentItem = {
   bidAskSpread?: number | null
   theoreticalPnl?: number | null
   notes?: string | null
+  // Risk fields (opzionali — popolati dallo scanner)
+  spread_pct?: number | null
+  open_interest?: number | null
+  dte?: number | null
+  earnings_date?: string | null
 }
 
 export default function InstrumentDrawer({
@@ -60,6 +67,34 @@ export default function InstrumentDrawer({
             Close
           </button>
         </div>
+
+        {/* ── Risk Panel ── */}
+        {(item.spread_pct != null || item.open_interest != null || item.dte != null) && (
+          <div style={{
+            marginBottom: '16px',
+            padding: '10px 14px',
+            background: '#0a0a00',
+            border: '1px solid #222200',
+            borderRadius: '4px',
+          }}>
+            <div style={{
+              fontFamily: 'Courier New, monospace',
+              fontSize: '10px',
+              color: '#888',
+              letterSpacing: '0.5px',
+              marginBottom: '8px',
+              textTransform: 'uppercase',
+            }}>
+              RISK FLAGS
+            </div>
+            <RiskPanel
+              spread_pct={item.spread_pct ?? 0}
+              open_interest={item.open_interest ?? 9999}
+              dte={item.dte ?? 999}
+              earnings_date={item.earnings_date}
+            />
+          </div>
+        )}
 
         <div className="grid gap-4 md:grid-cols-2">
           {(['ivCurrent','ivRank','ivPercentile','ivMovingAvg','delta','gamma','vega','theta','bid','ask','bidAskSpread','theoreticalPnl'] as const).map(key => (

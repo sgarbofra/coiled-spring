@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { scannerStore } from '@/lib/scanner-store'
 import { computeCandidateScore as _computeScore, computeWhyPanel as _computeWhy, scoreColor } from '@/lib/cs-score'
+import { RiskTooltip } from '@/components/RiskPanel'
 
 const VolSurface = dynamic(() => import('@/components/VolSurface'), { ssr: false })
 
@@ -170,6 +171,7 @@ export default function ScannerPage() {
   const [showIvrHeaderTooltip, setShowIvrHeaderTooltip] = useState(false)
   const [showScoreHeaderTooltip, setShowScoreHeaderTooltip] = useState(false)
   const [hoveredScoreKey, setHoveredScoreKey] = useState<string | null>(null)
+  const [hoveredRiskKey, setHoveredRiskKey] = useState<string | null>(null)
 
   // Nuovi filtri frontend
   const [strikeMin, setStrikeMin] = useState('')
@@ -1143,7 +1145,16 @@ export default function ScannerPage() {
                   <td style={{ padding: '6px 8px' }}>
                     <input type="checkbox" readOnly checked={isSelected} style={{ cursor: 'pointer' }} />
                   </td>
-                  <td style={{ padding: '6px 8px', fontWeight: 'bold', color: bb.orange }}>{r.underlying}</td>
+                  <td style={{ padding: '6px 8px', fontWeight: 'bold', color: bb.orange, position: 'relative' }}
+                    onMouseEnter={() => setHoveredRiskKey(r.symbol_key)}
+                    onMouseLeave={() => setHoveredRiskKey(null)}>
+                    {r.underlying}
+                    <RiskTooltip
+                      props={{ spread_pct: r.spread_pct, open_interest: r.open_interest, dte: r.dte, earnings_date: null }}
+                      idx={idx}
+                      visible={hoveredRiskKey === r.symbol_key}
+                    />
+                  </td>
                   <td style={{ padding: '6px 8px', color: bb.amber, textTransform: 'uppercase' }}>{r.option_type}</td>
                   <td style={{ padding: '6px 8px', color: bb.white }}>{r.strike}</td>
                   <td style={{ padding: '6px 8px', color: bb.white }}>{r.expiration}</td>
