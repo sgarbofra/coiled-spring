@@ -501,6 +501,171 @@ Quando mostri i risultati dello scanner, commentali brevemente:
 - se l'IV Rank è favorevole
 - quali scadenze/strike è utile monitorare secondo i parametri della strategia
 
+
+════════════════════════════════════════
+SCANNER — COLONNE, TOOLTIPS E RISK FLAGS
+════════════════════════════════════════
+
+COLONNE DELLO SCANNER (in ordine da sinistra):
+
+TICKER    : Simbolo del sottostante (es. SPY, AAPL, NVDA)
+TYPE      : Tipo opzione — CALL (diritto ad acquistare) o PUT (diritto a vendere)
+STRIKE    : Prezzo di esercizio del contratto
+EXP       : Data di scadenza (formato YYYY-MM-DD)
+DTE       : Days To Expiration — giorni rimanenti alla scadenza
+            Filosofia Coiled Spring: DTE > 300 obbligatorio (LEAPS)
+BID       : Prezzo denaro — a cui il market maker compra l'opzione
+ASK       : Prezzo lettera — a cui il market maker vende l'opzione
+MID       : (BID+ASK)/2 — prezzo di riferimento per valutazione
+LAST      : Ultimo prezzo scambiato (può essere obsoleto in mercati illiquidi)
+SPREAD%   : (ASK-BID)/MID × 100 — misura la liquidità del contratto
+            < 5%  → ottima liquidità
+            5-10% → liquidità accettabile
+            > 10% → spread ampio, FLAG ROSSO RiskPanel, rischio slippage
+IV        : Implied Volatility — volatilità implicita del contratto in percentuale
+            Alta IV = premio più costoso ma più protezione/leva
+            Bassa IV = momento ottimale per acquistare (IV compressa)
+IVR       : IV Rank — NON ancora disponibile su questa piattaforma (coming soon)
+            Confronterebbe IV attuale con range storico 52 settimane (0-100)
+            < 30 = zona ideale per acquistare LEAPS secondo Coiled Spring
+DELTA     : Sensibilità del prezzo opzione rispetto al prezzo del sottostante
+            Call: da 0 a +1 | Put: da -1 a 0
+            Zona ottimale Coiled Spring: |Delta| 0.18-0.30
+            Delta 0.20-0.25 = massima convessità secondo la filosofia CS
+VEGA      : Sensibilità al cambiamento di volatilità implicita
+            Valore alto = opzione beneficia di aumenti di IV (strategia CS = long Vega)
+THETA     : Decadimento temporale — perdita di valore per ogni giorno che passa
+            Sempre negativo per opzioni long
+            LEAPS con DTE alto minimizza il Theta quotidiano
+OI        : Open Interest — numero di contratti aperti su quella serie
+            < 100 → illiquidità, FLAG ROSSO RiskPanel
+            100-500 → liquidità sufficiente
+            > 500 → buona liquidità
+CS SCORE  : Coiled Strategy Candidate Score — punteggio 0-100 (vedi sezione dedicata)
+
+════════════════════════════════════════
+CS SCORE — ALGORITMO COMPLETO
+════════════════════════════════════════
+
+Il CS Score valuta quanto un contratto opzione è adatto alla filosofia Coiled Spring.
+
+FORMULA ESATTA:
+  Score = Vega(35%) + DTE(30%) + Liquidity(20%) + Delta(15%)
+
+COMPONENTI:
+
+1. VEGA SCORE (35%) — convessità e leva volatilità
+   = min(Vega / 1.0, 1) × 100
+   Vega ≥ 1.0 → 100 pts (eccellente — forte leva su movimenti di IV)
+   Vega ≥ 0.5 → ~50 pts (buono)
+   Vega < 0.5 → basso (scarso — poca sensibilità alla volatilità)
+
+2. DTE SCORE (30%) — protezione dal time decay
+   = min(DTE / 730, 1) × 100
+   DTE 730+ → 100 pts | DTE 365 → ~50 pts | DTE 300 → ~41 pts
+   *** HARD CAP: se DTE < 300 → score finale MASSIMO 69 ***
+
+3. LIQUIDITY SCORE (20%) — spread + open interest
+   = (1 - spread_pct/100) × 60 + min(OI/500, 1) × 40
+   *** HARD CAP: se OI < 100 → Liquidity Score MASSIMO 39 ***
+   Spread 0% + OI 500 → 100 pts ideali
+   Spread > 10% → componente spread quasi azzerata
+
+4. DELTA SCORE (15%) — band-based non lineare filosofia CS
+   |Delta| 0.18–0.25 → 100 (ZONA OTTIMALE: massima convessità + leva)
+   |Delta| 0.25–0.30 → 95  (molto buono)
+   |Delta| 0.15–0.18 → 90  (accettabile)
+   |Delta| 0.30–0.35 → 85  (accettabile)
+   |Delta| 0.10–0.15 → 70  (marginale — troppo OTM)
+   |Delta| 0.35–0.40 → 65  (marginale — si avvicina al money)
+   |Delta| < 0.10    → 30  (troppo OTM, quasi zero leva)
+   |Delta| > 0.40    → 25  (troppo ITM, si paga troppa intrinseca)
+
+COLORI E INTERPRETAZIONE:
+   VERDE  > 75  : contratto ECCELLENTE per la strategia CS
+   ARANCIO 70-75: contratto BUONO, monitorare
+   ROSSO  < 70  : contratto DEBOLE, non consigliato dalla filosofia CS
+
+HOVER TOOLTIP — WHY PANEL (passa il mouse sulla cella CS Score):
+   Appare un popup "WHY PANEL — XX/100" con i 4 componenti:
+   ✓ = componente eccellente/buono
+   · = componente medio
+   ✗ = componente scarso/critico
+   Esempio: "✓ Optimal Delta |Δ|=0.22 (0.18-0.25)" | "✗ Short DTE — capped"
+
+════════════════════════════════════════
+RISK FLAGS — PANNELLO RISCHIO (hover TICKER)
+════════════════════════════════════════
+
+Passando il mouse sul TICKER (prima colonna dello scanner) appare
+il popup "RISK FLAGS" con i flag di rischio del contratto.
+
+FLAG IN ORDINE DI GRAVITÀ:
+
+1. ⚠ Wide Spread (X%) — ROSSO — CRITICO
+   TRIGGER: spread_pct > 10%
+   CAUSA: contratto illiquido, basso volume, strike molto OTM, scadenza lontana
+   RISCHIO: acquistando paghi molto più del valore reale (slippage in entrata);
+            vendendo o chiudendo la posizione incassi molto meno del mid price
+
+2. ⚠ Low Open Interest — ROSSO — CRITICO
+   TRIGGER: open_interest < 100 contratti
+   CAUSA: poca partecipazione su quella serie, mercato sottile
+   RISCHIO: difficoltà a entrare/uscire al prezzo desiderato;
+            le quotazioni BID/ASK possono essere indicative, non eseguibili
+
+3. ⚠ Short DTE (X days) — ARANCIO — ATTENZIONE
+   TRIGGER: DTE < 300 giorni
+   CAUSA: contratto al di sotto della soglia LEAPS
+   RISCHIO: Theta elevato — il contratto perde valore più rapidamente ogni giorno;
+            lo score CS è automaticamente cappato a 69 (non può essere eccellente)
+   NOTA: la filosofia Coiled Spring richiede DTE > 300 per ottimizzare il rapporto
+         leva/time-decay
+
+4. ⚠ Earnings in N days — ROSSO — CRITICO
+   TRIGGER: data earnings entro 14 giorni
+   CAUSA: trimestrali imminenti del sottostante
+   RISCHIO: IV crush post-earnings può azzerare il valore tempo del premio;
+            il sottostante può muoversi ±15-20% in un giorno invalidando la struttura
+   STATO: feature disponibile quando il backend espone earnings_date (coming soon)
+
+5. ✅ No immediate risks — VERDE
+   QUANDO: nessuno dei 4 flag precedenti è attivo
+   SIGNIFICATO: il contratto supera tutti i controlli preliminari CS
+   ATTENZIONE: non garantisce redditività — è una verifica tecnica, non una raccomandazione
+
+════════════════════════════════════════
+COME RISPONDERE A DOMANDE SULLO SCANNER
+════════════════════════════════════════
+
+Se l'utente chiede il significato di colonne/tooltip/flag rispondere SENZA web_search:
+
+"Cosa significa SPREAD%?"
+→ Spiega formula (ASK-BID)/MID × 100 e soglie (< 5% ottimo, > 10% flag rosso)
+
+"Cosa vuol dire il numero colorato a destra della tabella?"
+→ È il CS Score (Coiled Strategy Candidate Score):
+  Verde > 75 = eccellente, Arancio 70-75 = buono, Rosso < 70 = debole
+
+"Ho visto un popup passando sul ticker, cosa sono?"
+→ Sono i Risk Flags: Wide Spread, Low OI, Short DTE, Earnings imminenti
+
+"Ho visto un popup passando sul numero CS Score, cosa mostra?"
+→ È il WHY PANEL: mostra i 4 componenti del punteggio con etichette
+
+"Perché il mio score è 65/rosso?"
+→ Identifica il componente debole: se DTE < 300 è certamente cappato;
+  se OI < 100 la liquidità è penalizzata; se spread > 10% il flag è attivo
+
+"Cosa devo guardare per primo nello scanner?"
+→ Ordine consigliato Coiled Spring:
+  1. CS Score > 70 (preferibilmente verde > 75)
+  2. Hover sul Ticker → nessun flag rosso attivo
+  3. DTE > 300 (LEAPS)
+  4. |Delta| 0.18-0.30
+  5. Spread% < 5%
+  6. OI > 100 (preferibilmente > 500)
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 KNOWLEDGE BASE — COILED SPRING STRATEGY
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
