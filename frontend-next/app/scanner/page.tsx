@@ -1069,16 +1069,23 @@ export default function ScannerPage() {
                   </div>
                 )}
               </th>
+              <th style={{
+                padding: '6px 8px', textAlign: 'center', fontWeight: 'bold',
+                fontSize: '10.5px', letterSpacing: '0.8px', color: bb.amber,
+                borderLeft: `1px solid ${bb.border}`, width: '44px', minWidth: '44px',
+              }}>
+                ANALY<br />SIS
+              </th>
             </tr>
           </thead>
           <tbody style={{ backgroundColor: bb.bg }}>
             {results.length === 0 && !loading && !error && !hasScanned && (
-              <tr><td colSpan={16} style={{ padding: '48px 16px', textAlign: 'center', color: bb.gray, fontSize: '13.2px', letterSpacing: '1px' }}>
+              <tr><td colSpan={17} style={{ padding: '48px 16px', textAlign: 'center', color: bb.gray, fontSize: '13.2px', letterSpacing: '1px' }}>
                 SELECT ASSET CLASS AND TICKER, THEN RUN SCAN
               </td></tr>
             )}
             {results.length === 0 && !loading && !error && hasScanned && (
-              <tr><td colSpan={16} style={{ padding: '48px 16px', textAlign: 'center', fontSize: '13.2px', letterSpacing: '1px' }}>
+              <tr><td colSpan={17} style={{ padding: '48px 16px', textAlign: 'center', fontSize: '13.2px', letterSpacing: '1px' }}>
                 <div style={{ color: bb.amber, marginBottom: '8px', fontSize: '14.4px', fontWeight: 'bold' }}>
                   NO CONTRACTS FOUND FOR CURRENT FILTERS
                 </div>
@@ -1088,7 +1095,7 @@ export default function ScannerPage() {
               </td></tr>
             )}
             {results.length === 0 && !loading && error && error.includes('No options data') && (
-              <tr><td colSpan={16} style={{ padding: '32px 16px' }}>
+              <tr><td colSpan={17} style={{ padding: '32px 16px' }}>
                 <div style={{
                   backgroundColor: bb.surface,
                   border: `1px solid ${bb.orange}`,
@@ -1228,6 +1235,27 @@ export default function ScannerPage() {
                         </>
                       )
                     })()}
+                  </td>
+                  <td
+                    style={{ padding: '4px 6px', textAlign: 'center', borderLeft: `1px solid ${bb.border}` }}
+                    onClick={e => {
+                      e.stopPropagation()
+                      const p = new URLSearchParams({
+                        strike: String(r.strike),
+                        expiration: r.expiration,
+                        type: r.option_type,
+                        delta: String(r.delta),
+                        mid: String(r.mid),
+                        spread_pct: String(r.spread_pct / 100),
+                        oi: String(r.open_interest),
+                        dte: String(r.dte),
+                        vega: String(r.vega),
+                        theta: String(r.theta),
+                      })
+                      window.open(`/scanner/opportunity/${r.underlying}?${p.toString()}`, '_blank')
+                    }}
+                  >
+                    <span style={{ cursor: 'pointer', fontSize: '15px' }} title="Opportunity Analysis">📊</span>
                   </td>
                 </tr>
               )
