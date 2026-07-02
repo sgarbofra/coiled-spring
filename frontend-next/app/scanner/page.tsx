@@ -894,7 +894,7 @@ export default function ScannerPage() {
       {view === 'surface' ? null :
       <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'auto', border: `1px solid ${bb.border2}` }}>
         <table style={{ width: '100%', minWidth: isMobile ? '900px' : undefined, borderCollapse: 'collapse', fontSize: isMobile ? '11px' : '13.2px' }}>
-          <thead style={{ position: 'sticky', top: 0, backgroundColor: bb.surface, color: bb.yellow, borderBottom: `1px solid ${bb.orange}` }}>
+          <thead style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: bb.surface, color: bb.yellow, borderBottom: `1px solid ${bb.orange}` }}>
             <tr>
               <th style={{ padding: '6px 8px', textAlign: 'left' }}></th>
               {[
