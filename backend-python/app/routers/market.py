@@ -211,6 +211,62 @@ def get_market_movers():
         raise HTTPException(status_code=500, detail=f"Failed to fetch market movers: {str(e)}")
 
 
+
+class PricePoint(BaseModel):
+    date: str
+    close: float
+
+class PriceHistoryResponse(BaseModel):
+    ticker: str
+    prices: list[PricePoint]
+    change_1y_pct: float | None
+
+@router.get("/price-history/{ticker}", response_model=PriceHistoryResponse)
+def get_price_history(
+    ticker: str,
+    period: str = "1y",
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    """
+    Get closing price history for a ticker.
+    period: '1y' | '6mo' | '2y' (yfinance period string)
+    Returns: list of {date, close} + 1-year % change.
+    """
+    try:
+        ticker_upper = ticker.upper().strip()
+        hist = yf.Ticker(ticker_upper).history(period=period)[["Close"]].reset_index()
+
+        if hist.empty:
+            raise HTTPException(status_code=404, detail=f"No price data for {ticker_upper}")
+
+        prices = [
+            PricePoint(
+                date=str(row["Date"])[:10],   # YYYY-MM-DD
+                close=round(float(row["Close"]), 2),
+            )
+            for _, row in hist.iterrows()
+        ]
+
+        # 1-year % change
+        change_1y_pct: float | None = None
+        if len(prices) >= 2:
+            first_close = prices[0].close
+            last_close  = prices[-1].close
+            if first_close and first_close != 0:
+                change_1y_pct = round((last_close - first_close) / first_close * 100, 2)
+
+        return PriceHistoryResponse(
+            ticker=ticker_upper,
+            prices=prices,
+            change_1y_pct=change_1y_pct,
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch price history: {str(e)}")
+
 @router.get("/quote", response_model=MultiQuoteResponse)
 def get_quotes(
     tickers: str = Query(..., description="Comma-separated list of tickers or ISINs (e.g., AAPL,SPY,US0378331005)"),
