@@ -715,6 +715,10 @@ def portfolio_what_if(
             except Exception:
                 betas[sym] = 1.0
 
+    # ── Fetch live option prices (for IV fallback when entry_iv is NULL) ─────
+    symbol_keys = [t.option_contract.symbol_key for t in trades]
+    live_prices = get_options_prices_bulk(symbol_keys)
+
     # ── Per-position scenario ─────────────────────────────────────────────────
     positions_out = []
     total_cur = 0.0
@@ -742,12 +746,17 @@ def portfolio_what_if(
             dte = (expiry - today).days
             T = max(dte / 365.0, 1e-4)
 
-            # entry_iv stored as decimal (e.g. 0.30 = 30%)
-            if not trade.entry_iv:
-                continue
-            iv = float(trade.entry_iv)
-            if iv <= 0:
-                continue
+            # IV resolution: entry_iv (decimal) → live market IV → skip
+            if trade.entry_iv and float(trade.entry_iv) > 0:
+                iv = float(trade.entry_iv)   # e.g. 0.30 = 30%
+            else:
+                # Fallback: live IV from option chain (stored as %, convert to decimal)
+                pd = live_prices.get(c.symbol_key)
+                live_iv = pd.iv if pd and pd.iv and pd.iv > 0 else None
+                if live_iv:
+                    iv = live_iv / 100.0
+                else:
+                    continue  # no IV data at all — skip position
 
             is_call = (c.option_type == "call")
             sign = 1 if trade.direction == "long" else -1
