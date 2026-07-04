@@ -15,12 +15,12 @@ export type RiskPanelProps = {
   earnings_date?: string | null
 }
 
-type RiskFlag = {
+export type RiskFlag = {
   label: string
   color: string
 }
 
-function computeFlags(props: RiskPanelProps): RiskFlag[] {
+export function computeFlags(props: RiskPanelProps): RiskFlag[] {
   const { spread_pct, open_interest, dte, earnings_date } = props
   const flags: RiskFlag[] = []
 

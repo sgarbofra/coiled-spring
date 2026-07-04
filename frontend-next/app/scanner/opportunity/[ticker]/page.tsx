@@ -3,7 +3,8 @@
 import { useEffect, useState, Suspense, useRef } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import { computeCandidateScore, computeWhyPanel, scoreColor } from '@/lib/cs-score'
-import RiskPanel from '@/components/RiskPanel'
+import RiskPanel, { computeFlags } from '@/components/RiskPanel'
+import VolSurface from '@/components/VolSurface'
 
 const bb = {
   bg: '#000000', surface: '#0a0a00', panel: '#111100',
@@ -336,6 +337,11 @@ function OpportunityContent() {
   const why = computeWhyPanel(scoreInput)
   const sColor = scoreColor(score)
 
+  const riskFlagList = computeFlags({ spread_pct, open_interest: oi, dte, earnings_date: earningsDate })
+  const flagCount = riskFlagList.length
+  const riskLevel = flagCount === 0 ? 'LOW' : flagCount <= 2 ? 'MEDIUM' : 'HIGH'
+  const riskColor = flagCount === 0 ? '#00CC00' : flagCount <= 2 ? '#FFAA00' : '#FF3333'
+
   const currentPrice = history?.prices.at(-1)?.close ?? null
   const low1y = history ? Math.min(...history.prices.map((p) => p.close)) : null
   const high1y = history ? Math.max(...history.prices.map((p) => p.close)) : null
@@ -595,14 +601,50 @@ function OpportunityContent() {
             <div style={{ fontSize: 11, color: bb.amber, letterSpacing: 1, marginBottom: 10 }}>
               RISK FLAGS
             </div>
-            <RiskPanel
-              spread_pct={spread_pct}
-              open_interest={oi}
-              dte={dte}
-              earnings_date={earningsDate}
-            />
+            {riskFlagList.length === 0 ? (
+              <div style={{ color: bb.green, fontSize: 12, fontFamily: 'monospace', padding: '3px 0' }}>
+                ✅ No immediate risks
+              </div>
+            ) : (
+              riskFlagList.map((f, i) => (
+                <div
+                  key={i}
+                  style={{
+                    fontSize: 12,
+                    color: f.color,
+                    fontFamily: 'monospace',
+                    padding: '5px 0',
+                    borderBottom: i < riskFlagList.length - 1 ? `1px solid ${bb.border}` : 'none',
+                  }}
+                >
+                  {f.label}
+                </div>
+              ))
+            )}
+            <div
+              style={{
+                marginTop: 10,
+                paddingTop: 8,
+                borderTop: `1px solid ${bb.border2}`,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <span style={{ fontSize: 11, color: bb.gray, fontFamily: 'monospace', letterSpacing: 1 }}>
+                OVERALL RISK
+              </span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: riskColor, fontFamily: 'monospace', letterSpacing: 2 }}>
+                {riskLevel}
+              </span>
+            </div>
           </div>
         </div>
+      </div>
+
+      {/* ── VOLATILITY SURFACE ─────────────────────────────────── */}
+      <div style={{ borderTop: `1px solid ${bb.border}`, padding: '20px 24px' }}>
+        <VolSurface symbol={ticker} optionType={optType} />
       </div>
     </div>
   )
