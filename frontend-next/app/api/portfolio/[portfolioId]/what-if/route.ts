@@ -5,18 +5,29 @@ export async function GET(
   req: Request,
   { params }: { params: Promise<{ portfolioId: string }> }
 ) {
+  let portfolioId: string | undefined
   try {
-    const { portfolioId } = await params
+    portfolioId = (await params).portfolioId
     const { searchParams } = new URL(req.url)
     const qs = searchParams.toString()
-    const res = await pythonFetch(`/api/portfolio/${portfolioId}/what-if?${qs}`)
+
+    // yfinance calls can be slow — allow up to 60s
+    const res = await pythonFetch(`/api/portfolio/${portfolioId}/what-if?${qs}`, { timeoutMs: 60000 })
+
     if (!res.ok) {
-      const err = await res.json()
-      return NextResponse.json({ ok: false, error: err.detail }, { status: res.status })
+      let errMsg = `Backend ${res.status}`
+      try {
+        const err = await res.json()
+        errMsg = typeof err.detail === 'string' ? err.detail : JSON.stringify(err.detail)
+      } catch { /* non-JSON body */ }
+      return NextResponse.json({ ok: false, error: errMsg }, { status: res.status })
     }
+
     const data = await res.json()
     return NextResponse.json({ ok: true, ...data })
-  } catch {
-    return NextResponse.json({ ok: false, error: 'Server error' }, { status: 500 })
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Server error'
+    console.error(`[what-if] portfolio ${portfolioId}:`, msg)
+    return NextResponse.json({ ok: false, error: msg }, { status: 500 })
   }
 }

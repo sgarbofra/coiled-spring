@@ -672,7 +672,10 @@ def portfolio_what_if(
     Single underlying  : market_change_pct applies directly.
     Multiple underlyings: market_change_pct = SPX move; each stock scaled by its CAPM beta.
     """
-    import yfinance as yf
+    try:
+        import yfinance as yf
+    except ImportError as exc:
+        raise HTTPException(status_code=500, detail=f"yfinance not available: {exc}")
 
     _get_portfolio_or_404(db, portfolio_id, current_user.id)
 
@@ -695,7 +698,7 @@ def portfolio_what_if(
     R = 0.05  # risk-free rate
 
     # ── Fetch current spot prices ─────────────────────────────────────────────
-    spot: dict[str, float] = {}
+    spot: dict = {}
     for sym in underlyings:
         try:
             spot[sym] = float(yf.Ticker(sym).fast_info.last_price)
@@ -703,7 +706,7 @@ def portfolio_what_if(
             spot[sym] = 0.0
 
     # ── Fetch betas (only if multi-underlying) ────────────────────────────────
-    betas: dict[str, float] = {}
+    betas: dict = {}
     if is_multi:
         for sym in underlyings:
             try:
@@ -718,75 +721,92 @@ def portfolio_what_if(
     total_scen = 0.0
 
     for trade in trades:
-        c = trade.option_contract
-        sym = c.underlying
-        S = spot.get(sym, 0.0)
-        if S <= 0:
+        try:
+            c = trade.option_contract
+            sym = c.underlying
+            S = spot.get(sym, 0.0)
+            if S <= 0:
+                continue
+
+            K = float(c.strike)
+
+            # ── Robust expiry parsing (handles date AND datetime columns) ──
+            exp = c.expiration
+            if isinstance(exp, datetime):
+                expiry = exp.date()
+            elif isinstance(exp, date):
+                expiry = exp
+            else:
+                expiry = date.fromisoformat(str(exp))
+
+            dte = (expiry - today).days
+            T = max(dte / 365.0, 1e-4)
+
+            # entry_iv stored as decimal (e.g. 0.30 = 30%)
+            if not trade.entry_iv:
+                continue
+            iv = float(trade.entry_iv)
+            if iv <= 0:
+                continue
+
+            is_call = (c.option_type == "call")
+            sign = 1 if trade.direction == "long" else -1
+
+            # Current BS value
+            bs_cur, _, _, _, _ = bs_greeks(S, K, T, R, iv, is_call)
+            cur_val = bs_cur * 100 * trade.quantity * sign
+
+            # Scenario: new spot
+            if is_multi:
+                beta = betas.get(sym, 1.0)
+                chg_pct = beta * market_change_pct
+            else:
+                beta = None
+                chg_pct = float(market_change_pct)
+
+            S_new = S * (1.0 + chg_pct / 100.0)
+            IV_new = max(iv * (1.0 + iv_change_pct / 100.0), 0.01)
+            T_new = max((dte - days_forward) / 365.0, 0.0)
+
+            if T_new <= 0:
+                bs_scen = max(S_new - K, 0.0) if is_call else max(K - S_new, 0.0)
+            else:
+                bs_scen, _, _, _, _ = bs_greeks(S_new, K, T_new, R, IV_new, is_call)
+
+            scen_val = bs_scen * 100 * trade.quantity * sign
+            pnl_d = scen_val - cur_val
+            pnl_pct = round((pnl_d / abs(cur_val) * 100), 1) if cur_val != 0.0 else 0.0
+
+            total_cur += cur_val
+            total_scen += scen_val
+
+            positions_out.append({
+                "trade_id": trade.id,
+                "underlying": sym,
+                "option_type": c.option_type,
+                "strike": K,
+                "expiration": expiry.isoformat(),
+                "direction": trade.direction,
+                "quantity": trade.quantity,
+                "current_spot": round(S, 2),
+                "new_spot": round(S_new, 2),
+                "actual_change_pct": round(chg_pct, 2),
+                "beta": round(float(beta), 2) if beta is not None else None,
+                "iv_used_pct": round(iv * 100, 1),
+                "new_iv_pct": round(IV_new * 100, 1),
+                "current_value": round(cur_val, 2),
+                "scenario_value": round(scen_val, 2),
+                "pnl_delta": round(pnl_d, 2),
+                "pnl_delta_pct": pnl_pct,
+            })
+
+        except Exception as pos_exc:
+            # Skip individual position on error; log for debugging
+            print(f"[what-if] Skipping trade {trade.id}: {type(pos_exc).__name__}: {pos_exc}")
             continue
-
-        K = float(c.strike)
-        expiry = c.expiration if isinstance(c.expiration, date) else date.fromisoformat(str(c.expiration))
-        dte = (expiry - today).days
-        T = max(dte / 365.0, 1e-4)
-
-        # IV: prefer entry_iv (always available), floor at 1%
-        iv = float(trade.entry_iv) if trade.entry_iv else None
-        if not iv or iv <= 0:
-            continue
-
-        is_call = (c.option_type == "call")
-        sign = 1 if trade.direction == "long" else -1
-
-        # Current BS value
-        bs_cur, _, _, _, _ = bs_greeks(S, K, T, R, iv, is_call)
-        cur_val = bs_cur * 100 * trade.quantity * sign
-
-        # Scenario: new spot
-        if is_multi:
-            beta = betas.get(sym, 1.0)
-            chg_pct = beta * market_change_pct
-        else:
-            beta = None
-            chg_pct = market_change_pct
-
-        S_new = S * (1 + chg_pct / 100)
-        IV_new = max(iv * (1 + iv_change_pct / 100), 0.01)
-        T_new = max((dte - days_forward) / 365.0, 0.0)
-
-        if T_new <= 0:
-            bs_scen = max(S_new - K, 0) if is_call else max(K - S_new, 0)
-        else:
-            bs_scen, _, _, _, _ = bs_greeks(S_new, K, T_new, R, IV_new, is_call)
-
-        scen_val = bs_scen * 100 * trade.quantity * sign
-        pnl_d = scen_val - cur_val
-        pnl_pct = (pnl_d / abs(cur_val) * 100) if cur_val != 0 else 0.0
-
-        total_cur += cur_val
-        total_scen += scen_val
-
-        positions_out.append({
-            "trade_id": trade.id,
-            "underlying": sym,
-            "option_type": c.option_type,
-            "strike": K,
-            "expiration": expiry.isoformat(),
-            "direction": trade.direction,
-            "quantity": trade.quantity,
-            "current_spot": round(S, 2),
-            "new_spot": round(S_new, 2),
-            "actual_change_pct": round(chg_pct, 2),
-            "beta": round(beta, 2) if beta is not None else None,
-            "iv_used_pct": round(iv * 100, 1),
-            "new_iv_pct": round(IV_new * 100, 1),
-            "current_value": round(cur_val, 2),
-            "scenario_value": round(scen_val, 2),
-            "pnl_delta": round(pnl_d, 2),
-            "pnl_delta_pct": round(pnl_pct, 1),
-        })
 
     total_pnl = total_scen - total_cur
-    agg_pct = (total_pnl / abs(total_cur) * 100) if total_cur != 0 else 0.0
+    agg_pct = round((total_pnl / abs(total_cur) * 100), 1) if total_cur != 0.0 else 0.0
 
     return {
         "is_multi_underlying": is_multi,
@@ -795,6 +815,6 @@ def portfolio_what_if(
             "total_current_value": round(total_cur, 2),
             "total_scenario_value": round(total_scen, 2),
             "total_pnl_delta": round(total_pnl, 2),
-            "total_pnl_delta_pct": round(agg_pct, 1),
+            "total_pnl_delta_pct": agg_pct,
         },
     }
