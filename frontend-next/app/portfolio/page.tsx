@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { computeCandidateScore, computeWhyPanel, scoreColor } from '@/lib/cs-score'
+import WhatIfSimulator from '@/components/WhatIfSimulator'
 
 const bb = {
   bg: '#000000', surface: '#0a0a00', panel: '#111100',
@@ -813,7 +814,7 @@ function HistoryTab({ portfolioId }: { portfolioId: number }) {
 export default function PortfolioPage() {
   const [portfolios, setPortfolios] = useState<Portfolio[]>([])
   const [selectedId, setSelectedId] = useState<number | null>(null)
-  const [tab, setTab] = useState<'positions' | 'greeks' | 'history'>('positions')
+  const [tab, setTab] = useState<'positions' | 'greeks' | 'history' | 'whatif'>('positions')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [newName, setNewName] = useState('')
@@ -993,13 +994,15 @@ export default function PortfolioPage() {
                 {tabBtn('positions', 'POSITIONS')}
                 {tabBtn('greeks', 'GREEKS')}
                 {tabBtn('history', 'HISTORY')}
+                {tabBtn('whatif', 'WHAT-IF')}
               </div>
 
               {/* Tab content */}
               <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px' }}>
-                {tab === 'positions' && <PositionsTab key={selected.id} portfolioId={selected.id} />}
-                {tab === 'greeks'    && <GreeksTab    key={selected.id} portfolioId={selected.id} />}
-                {tab === 'history'   && <HistoryTab   key={selected.id} portfolioId={selected.id} />}
+                {tab === 'positions' && <PositionsTab     key={selected.id} portfolioId={selected.id} />}
+                {tab === 'greeks'    && <GreeksTab         key={selected.id} portfolioId={selected.id} />}
+                {tab === 'history'   && <HistoryTab        key={selected.id} portfolioId={selected.id} />}
+                {tab === 'whatif'    && <WhatIfSimulator   key={selected.id} portfolioId={selected.id} />}
               </div>
             </>
           )}

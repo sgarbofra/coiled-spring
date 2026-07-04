@@ -15,13 +15,13 @@ from datetime import datetime, date, timezone
 from decimal import Decimal
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session, joinedload
 
 from app.dependencies import get_current_user, get_db
 from app import models
-from app.services.market_data import get_options_prices_bulk
+from app.services.market_data import get_options_prices_bulk, bs_greeks
 from app import schemas
 
 MAX_PORTFOLIOS = 3
@@ -652,4 +652,149 @@ def portfolio_summary(
         "winners": winners,
         "losers": losers,
         "data_source": "Yahoo Finance (ritardo 15 min)",
+    }
+
+
+# ── What-If Simulator ─────────────────────────────────────────────────────────
+
+@router.get("/{portfolio_id}/what-if")
+def portfolio_what_if(
+    portfolio_id: int,
+    market_change_pct: float = Query(0.0, ge=-90.0, le=200.0),
+    iv_change_pct: float = Query(0.0, ge=-90.0, le=200.0),
+    days_forward: int = Query(0, ge=0, le=730),
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    """
+    Portfolio What-If Simulator.
+
+    Single underlying  : market_change_pct applies directly.
+    Multiple underlyings: market_change_pct = SPX move; each stock scaled by its CAPM beta.
+    """
+    import yfinance as yf
+
+    _get_portfolio_or_404(db, portfolio_id, current_user.id)
+
+    trades = (
+        db.query(models.PortfolioTrade)
+        .options(joinedload(models.PortfolioTrade.option_contract))
+        .filter(
+            models.PortfolioTrade.portfolio_id == portfolio_id,
+            models.PortfolioTrade.status == "open",
+        )
+        .all()
+    )
+
+    if not trades:
+        return {"is_multi_underlying": False, "positions": [], "aggregate": None}
+
+    underlyings = list({t.option_contract.underlying for t in trades})
+    is_multi = len(underlyings) > 1
+    today = date.today()
+    R = 0.05  # risk-free rate
+
+    # ── Fetch current spot prices ─────────────────────────────────────────────
+    spot: dict[str, float] = {}
+    for sym in underlyings:
+        try:
+            spot[sym] = float(yf.Ticker(sym).fast_info.last_price)
+        except Exception:
+            spot[sym] = 0.0
+
+    # ── Fetch betas (only if multi-underlying) ────────────────────────────────
+    betas: dict[str, float] = {}
+    if is_multi:
+        for sym in underlyings:
+            try:
+                raw_beta = yf.Ticker(sym).info.get("beta") or 1.0
+                betas[sym] = float(raw_beta)
+            except Exception:
+                betas[sym] = 1.0
+
+    # ── Per-position scenario ─────────────────────────────────────────────────
+    positions_out = []
+    total_cur = 0.0
+    total_scen = 0.0
+
+    for trade in trades:
+        c = trade.option_contract
+        sym = c.underlying
+        S = spot.get(sym, 0.0)
+        if S <= 0:
+            continue
+
+        K = float(c.strike)
+        expiry = c.expiration if isinstance(c.expiration, date) else date.fromisoformat(str(c.expiration))
+        dte = (expiry - today).days
+        T = max(dte / 365.0, 1e-4)
+
+        # IV: prefer entry_iv (always available), floor at 1%
+        iv = float(trade.entry_iv) if trade.entry_iv else None
+        if not iv or iv <= 0:
+            continue
+
+        is_call = (c.option_type == "call")
+        sign = 1 if trade.direction == "long" else -1
+
+        # Current BS value
+        bs_cur, _, _, _, _ = bs_greeks(S, K, T, R, iv, is_call)
+        cur_val = bs_cur * 100 * trade.quantity * sign
+
+        # Scenario: new spot
+        if is_multi:
+            beta = betas.get(sym, 1.0)
+            chg_pct = beta * market_change_pct
+        else:
+            beta = None
+            chg_pct = market_change_pct
+
+        S_new = S * (1 + chg_pct / 100)
+        IV_new = max(iv * (1 + iv_change_pct / 100), 0.01)
+        T_new = max((dte - days_forward) / 365.0, 0.0)
+
+        if T_new <= 0:
+            bs_scen = max(S_new - K, 0) if is_call else max(K - S_new, 0)
+        else:
+            bs_scen, _, _, _, _ = bs_greeks(S_new, K, T_new, R, IV_new, is_call)
+
+        scen_val = bs_scen * 100 * trade.quantity * sign
+        pnl_d = scen_val - cur_val
+        pnl_pct = (pnl_d / abs(cur_val) * 100) if cur_val != 0 else 0.0
+
+        total_cur += cur_val
+        total_scen += scen_val
+
+        positions_out.append({
+            "trade_id": trade.id,
+            "underlying": sym,
+            "option_type": c.option_type,
+            "strike": K,
+            "expiration": expiry.isoformat(),
+            "direction": trade.direction,
+            "quantity": trade.quantity,
+            "current_spot": round(S, 2),
+            "new_spot": round(S_new, 2),
+            "actual_change_pct": round(chg_pct, 2),
+            "beta": round(beta, 2) if beta is not None else None,
+            "iv_used_pct": round(iv * 100, 1),
+            "new_iv_pct": round(IV_new * 100, 1),
+            "current_value": round(cur_val, 2),
+            "scenario_value": round(scen_val, 2),
+            "pnl_delta": round(pnl_d, 2),
+            "pnl_delta_pct": round(pnl_pct, 1),
+        })
+
+    total_pnl = total_scen - total_cur
+    agg_pct = (total_pnl / abs(total_cur) * 100) if total_cur != 0 else 0.0
+
+    return {
+        "is_multi_underlying": is_multi,
+        "positions": positions_out,
+        "aggregate": {
+            "total_current_value": round(total_cur, 2),
+            "total_scenario_value": round(total_scen, 2),
+            "total_pnl_delta": round(total_pnl, 2),
+            "total_pnl_delta_pct": round(agg_pct, 1),
+        },
     }
