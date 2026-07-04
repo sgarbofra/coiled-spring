@@ -43,14 +43,15 @@ type Watchlist = { id: string; name: string }
 type Props = {
   symbol: string
   optionType?: string
+  defaultColorMode?: 'iv' | 'cs'
 }
 
-export default function VolSurface({ symbol, optionType = 'call' }: Props) {
+export default function VolSurface({ symbol, optionType = 'call', defaultColorMode = 'iv' }: Props) {
   const [data, setData] = useState<VolData | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [selectedOption, setSelectedOption] = useState<OptionDetails | null>(null)
-  const [colorMode, setColorMode] = useState<'iv' | 'cs'>('iv')
+  const [colorMode, setColorMode] = useState<'iv' | 'cs'>(defaultColorMode)
   const [watchlists, setWatchlists] = useState<Watchlist[]>([])
   const [selectedWatchlist, setSelectedWatchlist] = useState<string>('')
   const [addingToWatchlist, setAddingToWatchlist] = useState(false)

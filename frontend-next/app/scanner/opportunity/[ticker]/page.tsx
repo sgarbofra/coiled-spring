@@ -644,7 +644,7 @@ function OpportunityContent() {
 
       {/* ── VOLATILITY SURFACE ─────────────────────────────────── */}
       <div style={{ borderTop: `1px solid ${bb.border}`, padding: '20px 24px' }}>
-        <VolSurface symbol={ticker} optionType={optType} />
+        <VolSurface symbol={ticker} optionType={optType} defaultColorMode="cs" />
       </div>
     </div>
   )
