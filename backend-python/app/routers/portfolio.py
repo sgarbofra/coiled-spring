@@ -21,7 +21,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from app.dependencies import get_current_user, get_db
 from app import models
-from app.services.market_data import get_options_prices_bulk, bs_greeks
+from app.services.market_data import get_options_prices_bulk, bs_greeks, implied_volatility_bs
 from app import schemas
 
 MAX_PORTFOLIOS = 3
@@ -746,19 +746,30 @@ def portfolio_what_if(
             dte = (expiry - today).days
             T = max(dte / 365.0, 1e-4)
 
-            # IV resolution: entry_iv (decimal) → live market IV → skip
-            if trade.entry_iv and float(trade.entry_iv) > 0:
-                iv = float(trade.entry_iv)   # e.g. 0.30 = 30%
-            else:
-                # Fallback: live IV from option chain (stored as %, convert to decimal)
-                pd = live_prices.get(c.symbol_key)
-                live_iv = pd.iv if pd and pd.iv and pd.iv > 0 else None
-                if live_iv:
-                    iv = live_iv / 100.0
-                else:
-                    continue  # no IV data at all — skip position
-
             is_call = (c.option_type == "call")
+
+            # ── IV resolution (3-tier): mid→BS_inverse → yf.iv → entry_iv ──
+            iv = None
+            pd_live = live_prices.get(c.symbol_key)
+
+            # Tier 1: compute IV from live mid price via BS inverse (most accurate)
+            if pd_live and pd_live.mid and pd_live.mid > 0:
+                iv = implied_volatility_bs(pd_live.mid, S, K, T, R, is_call)
+
+            # Tier 2: yfinance impliedVolatility field (stored as %, convert)
+            if not iv and pd_live and pd_live.iv and pd_live.iv > 0:
+                iv = pd_live.iv / 100.0
+
+            # Tier 3: stored entry_iv (stored as decimal, e.g. 0.30 = 30%)
+            if not iv and trade.entry_iv:
+                stored = float(trade.entry_iv)
+                if 0.005 <= stored <= 5.0:  # sanity: 0.5%–500%
+                    iv = stored
+
+            if not iv or iv <= 0:
+                print(f"[what-if] No IV for trade {trade.id} ({sym} K={K} {expiry}), skipping")
+                continue
+
             sign = 1 if trade.direction == "long" else -1
 
             # Current BS value
