@@ -21,7 +21,11 @@ type VolData = {
   x_strikes: number[]
   y_dtes: number[]
   z_iv: number[][]
-  raw_points: { strike: number; dte: number; iv: number; option_type: string }[]
+  z_cs: number[][]
+  raw_points: {
+    strike: number; dte: number; iv: number; option_type: string
+    delta: number; vega: number; spread_pct: number; open_interest: number; cs_score: number
+  }[]
   n_raw: number
 }
 
@@ -46,6 +50,7 @@ export default function VolSurface({ symbol, optionType = 'call' }: Props) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [selectedOption, setSelectedOption] = useState<OptionDetails | null>(null)
+  const [colorMode, setColorMode] = useState<'iv' | 'cs'>('iv')
   const [watchlists, setWatchlists] = useState<Watchlist[]>([])
   const [selectedWatchlist, setSelectedWatchlist] = useState<string>('')
   const [addingToWatchlist, setAddingToWatchlist] = useState(false)
@@ -213,20 +218,31 @@ export default function VolSurface({ symbol, optionType = 'call' }: Props) {
 
   if (!data) return null
 
-  const ivMin = Math.min(...data.z_iv.flat())
-  const ivMax = Math.max(...data.z_iv.flat())
-  const ivAvg = data.z_iv.flat().reduce((a, b) => a + b, 0) / data.z_iv.flat().length
+  const ivFlat = data.z_iv.flat()
+  const ivMin = Math.min(...ivFlat)
+  const ivMax = Math.max(...ivFlat)
+  const ivAvg = ivFlat.reduce((a, b) => a + b, 0) / ivFlat.length
+
+  const CS_COLORSCALE: [number, string][] = [
+    [0,    '#FF3333'],
+    [0.50, '#FF6600'],
+    [0.69, '#FFAA00'],
+    [0.75, '#FFE000'],
+    [1.0,  '#00DD00'],
+  ]
 
   return (
     <>
       <div style={{ border: `1px solid ${bb.border2}`, backgroundColor: bb.surface, fontFamily: 'Courier New, monospace' }}>
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid ${bb.orange}`, padding: '12px 16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid ${bb.orange}`, padding: '12px 16px', flexWrap: 'wrap', gap: 8 }}>
           <div>
             <h3 style={{ fontSize: '14.4px', fontWeight: 'bold', color: bb.yellow, letterSpacing: '2px' }}>
-              VOLATILITY SURFACE — {data.symbol}
+              {colorMode === 'iv' ? 'VOLATILITY SURFACE' : 'CS SCORE SURFACE'} — {data.symbol}
               <span style={{ marginLeft: '8px', fontSize: '12px', fontWeight: 'normal', color: bb.gray, letterSpacing: '1px' }}>
-                {data.option_type === 'mixed' ? 'PUT IV (ITM) + CALL IV (OTM)' : data.option_type.toUpperCase()}
+                {colorMode === 'iv'
+                  ? (data.option_type === 'mixed' ? 'PUT IV (ITM) + CALL IV (OTM)' : data.option_type.toUpperCase())
+                  : 'COLORE = CS SCORE (0–100)'}
               </span>
             </h3>
             <p style={{ fontSize: '12px', color: bb.gray, marginTop: '2px', letterSpacing: '0.5px' }}>
@@ -237,10 +253,43 @@ export default function VolSurface({ symbol, optionType = 'call' }: Props) {
               <span style={{ color: bb.orange }}>CLICK ON SURFACE TO SEE OPTION DETAILS</span>
             </p>
           </div>
-          <div style={{ display: 'flex', gap: '16px', fontSize: '12px' }}>
-            <Stat label="IV MIN" value={`${ivMin.toFixed(1)}%`} color={bb.green} />
-            <Stat label="IV AVG" value={`${ivAvg.toFixed(1)}%`} color={bb.white} />
-            <Stat label="IV MAX" value={`${ivMax.toFixed(1)}%`} color={bb.red} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            {/* Toggle IV / CS Score */}
+            <div style={{ display: 'flex', border: `1px solid ${bb.border2}`, overflow: 'hidden', fontSize: '11px', fontFamily: 'Courier New, monospace' }}>
+              {(['iv', 'cs'] as const).map(mode => (
+                <button
+                  key={mode}
+                  onClick={() => setColorMode(mode)}
+                  style={{
+                    padding: '5px 12px',
+                    cursor: 'pointer',
+                    border: 'none',
+                    fontFamily: 'inherit',
+                    fontSize: 'inherit',
+                    letterSpacing: 1,
+                    background: colorMode === mode ? bb.orange : 'transparent',
+                    color: colorMode === mode ? '#000' : bb.gray,
+                    fontWeight: colorMode === mode ? 'bold' : 'normal',
+                    transition: 'all 0.15s',
+                  }}
+                >
+                  {mode === 'iv' ? 'IV %' : 'CS SCORE'}
+                </button>
+              ))}
+            </div>
+            {colorMode === 'iv' ? (
+              <div style={{ display: 'flex', gap: '16px', fontSize: '12px' }}>
+                <Stat label="IV MIN" value={`${ivMin.toFixed(1)}%`} color={bb.green} />
+                <Stat label="IV AVG" value={`${ivAvg.toFixed(1)}%`} color={bb.white} />
+                <Stat label="IV MAX" value={`${ivMax.toFixed(1)}%`} color={bb.red} />
+              </div>
+            ) : (
+              <div style={{ display: 'flex', gap: '16px', fontSize: '12px' }}>
+                <Stat label="VERDE" value="75–100" color={bb.green} />
+                <Stat label="ARANCIO" value="50–75" color={bb.amber} />
+                <Stat label="ROSSO" value="0–50" color={bb.red} />
+              </div>
+            )}
           </div>
         </div>
 
@@ -253,7 +302,12 @@ export default function VolSurface({ symbol, optionType = 'call' }: Props) {
                 x: data.x_strikes,
                 y: data.y_dtes,
                 z: data.z_iv,
-                colorscale: [
+                ...(colorMode === 'cs' && data.z_cs ? {
+                  surfacecolor: data.z_cs,
+                  cmin: 0,
+                  cmax: 100,
+                } : {}),
+                colorscale: colorMode === 'cs' ? CS_COLORSCALE : [
                   [0,    '#001a33'],
                   [0.2,  '#0066cc'],
                   [0.4,  '#00cccc'],
@@ -263,7 +317,7 @@ export default function VolSurface({ symbol, optionType = 'call' }: Props) {
                   [1,    '#FF3333'],
                 ],
                 colorbar: {
-                  title: { text: 'IV (%)', side: 'right' as const },
+                  title: { text: colorMode === 'cs' ? 'CS Score' : 'IV (%)', side: 'right' as const },
                   tickfont: { color: bb.white, size: 12 },
                   titlefont: { color: bb.white, size: 13 },
                   thickness: 15,
@@ -363,12 +417,21 @@ export default function VolSurface({ symbol, optionType = 'call' }: Props) {
 
         {/* Legend */}
         <div style={{ borderTop: `1px solid ${bb.border}`, padding: '12px 16px' }}>
-          <p style={{ fontSize: '12px', color: bb.gray, letterSpacing: '0.5px' }}>
-            <span style={{ color: bb.green, fontWeight: 'bold' }}>BLUE</span> = COMPRESSED IV (IDEAL COILED SPRING ZONE) ·{' '}
-            <span style={{ color: bb.red, fontWeight: 'bold' }}>RED</span> = HIGH IV (EXPENSIVE OPTIONS) ·{' '}
-            INTERACT: ROTATE, ZOOM, HOVER FOR VALUES, <span style={{ color: bb.orange, fontWeight: 'bold' }}>CLICK TO ADD TO WATCHLIST</span>.
-            TOTAL VARIANCE INTERPOLATION W = σ²×T (CUBIC SPLINE).
-          </p>
+          {colorMode === 'iv' ? (
+            <p style={{ fontSize: '12px', color: bb.gray, letterSpacing: '0.5px' }}>
+              <span style={{ color: bb.green, fontWeight: 'bold' }}>BLUE</span> = COMPRESSED IV (IDEAL COILED SPRING ZONE) ·{' '}
+              <span style={{ color: bb.red, fontWeight: 'bold' }}>RED</span> = HIGH IV (EXPENSIVE OPTIONS) ·{' '}
+              INTERACT: ROTATE, ZOOM, HOVER FOR VALUES, <span style={{ color: bb.orange, fontWeight: 'bold' }}>CLICK TO ADD TO WATCHLIST</span>.
+              TOTAL VARIANCE INTERPOLATION W = σ²×T (CUBIC SPLINE).
+            </p>
+          ) : (
+            <p style={{ fontSize: '12px', color: bb.gray, letterSpacing: '0.5px' }}>
+              <span style={{ color: '#00DD00', fontWeight: 'bold' }}>VERDE</span> = CS SCORE 75–100 (CANDIDATO FORTE) ·{' '}
+              <span style={{ color: '#FFAA00', fontWeight: 'bold' }}>ARANCIO</span> = CS SCORE 50–75 (ACCETTABILE) ·{' '}
+              <span style={{ color: '#FF3333', fontWeight: 'bold' }}>ROSSO</span> = CS SCORE &lt;50 (EVITA) ·{' '}
+              ALTEZZA = IV IMPLICITA. <span style={{ color: bb.orange, fontWeight: 'bold' }}>CLICK TO ADD TO WATCHLIST</span>.
+            </p>
+          )}
         </div>
       </div>
 

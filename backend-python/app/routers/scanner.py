@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 
 from app.dependencies import get_current_user, get_db
 from app import models, schemas
-from app.services.market_data import scan_yfinance, OptionResult, get_ticker_info
+from app.services.market_data import scan_yfinance, OptionResult, get_ticker_info, bs_greeks
 from app.services.data_provider import data_provider
 from app.data.us_optionable_tickers import UNIVERSE_BY_CATEGORY, US_OPTIONABLE_TICKERS
 
@@ -294,6 +294,32 @@ def get_universe(current_user: models.User = Depends(get_current_user)):
     return {"symbols": all_symbols, "by_category": UNIVERSE_BY_CATEGORY}
 
 
+def _cs_score(abs_delta: float, vega: float, dte: int, spread_pct: float, oi: int) -> int:
+    """Replica Python di computeCandidateScore (TypeScript cs-score.ts)."""
+    # Delta band
+    if   0.18 <= abs_delta <= 0.25: ds = 100
+    elif 0.25 < abs_delta  <= 0.30: ds = 95
+    elif 0.15 <= abs_delta <  0.18: ds = 90
+    elif 0.30 < abs_delta  <= 0.35: ds = 85
+    elif 0.10 <= abs_delta <  0.15: ds = 70
+    elif 0.35 < abs_delta  <= 0.40: ds = 65
+    elif abs_delta < 0.10:          ds = 30
+    else:                            ds = 25
+    # DTE
+    dte_s = min(dte / 730, 1) * 100
+    # Liquidity
+    sp_comp = max(0.0, 1 - spread_pct / 100)
+    if oi == 0:
+        liq_s = sp_comp * 100
+    else:
+        raw_liq = sp_comp * 60 + min(oi / 500, 1) * 40
+        liq_s = min(raw_liq, 39) if oi < 100 else raw_liq
+    # Vega
+    vega_s = min(vega / 1.0, 1) * 100
+    raw_score = round(vega_s * 0.35 + dte_s * 0.30 + liq_s * 0.20 + ds * 0.15)
+    return min(raw_score, 69) if dte < 300 else raw_score
+
+
 @router.get("/vol-surface/{symbol}")
 @limiter.limit("5/minute")
 def vol_surface(
@@ -342,7 +368,7 @@ def vol_surface(
         traceback.print_exc()
         raise HTTPException(status_code=404, detail=f"Ticker {sym} non trovato")
 
-    raw: list[tuple[float, int, float, str]] = []  # (strike, dte, iv%, option_type)
+    raw: list[dict] = []  # {strike, dte, iv, option_type, delta, vega, spread_pct, open_interest, cs_score}
 
     print(f"[VOL-SURFACE] Step 3: Processing option chains...")
     print(f"[VOL-SURFACE] Available expirations: {len(ticker.options or [])}")
@@ -376,12 +402,26 @@ def vol_surface(
                         continue
 
                     # Logica richiesta: PUT IV per ITM (K < price), CALL IV per OTM (K >= price)
-                    if opt_type == "put" and K < price:
-                        # ITM zone: usa PUT IV
-                        raw.append((K, dte, iv_raw * 100, opt_type))
-                    elif opt_type == "call" and K >= price:
-                        # OTM zone: usa CALL IV
-                        raw.append((K, dte, iv_raw * 100, opt_type))
+                    is_call = (opt_type == "call")
+                    if (opt_type == "put" and K < price) or (opt_type == "call" and K >= price):
+                        oi_val = int(row.get("openInterest", 0) or 0)
+                        if bid > 0 and ask > 0:
+                            mid_p = (bid + ask) / 2
+                            sp = (ask - bid) / mid_p * 100
+                        else:
+                            sp = 100.0
+                        T_yr = dte / 365.0
+                        _, bs_delta, _, bs_vega, _ = bs_greeks(price, K, T_yr, 0.05, iv_raw, is_call)
+                        cs = _cs_score(abs(bs_delta), bs_vega, dte, sp, oi_val)
+                        raw.append({
+                            "strike": K, "dte": dte, "iv": round(iv_raw * 100, 2),
+                            "option_type": opt_type,
+                            "delta": round(bs_delta, 4),
+                            "vega": round(bs_vega, 4),
+                            "spread_pct": round(sp, 1),
+                            "open_interest": oi_val,
+                            "cs_score": cs,
+                        })
 
         except Exception as e:
             print(f"Error processing expiration {exp_str}: {e}")
@@ -396,9 +436,10 @@ def vol_surface(
     print(f"[VOL-SURFACE] Step 5: Building interpolation grid...")
 
     try:
-        strikes_arr = np.array([p[0] for p in raw])
-        dtes_arr    = np.array([p[1] for p in raw])
-        ivs_arr     = np.array([p[2] for p in raw])
+        strikes_arr = np.array([p["strike"] for p in raw])
+        dtes_arr    = np.array([p["dte"]    for p in raw])
+        ivs_arr     = np.array([p["iv"]     for p in raw])
+        cs_arr      = np.array([p["cs_score"] for p in raw], dtype=float)
 
         print(f"[VOL-SURFACE DEBUG] {sym}: {len(raw)} raw points")
         print(f"  Strike range: {strikes_arr.min():.2f} - {strikes_arr.max():.2f}")
@@ -454,6 +495,23 @@ def vol_surface(
         # Clip valori irragionevoli
         Z = np.clip(Z, 1.0, 300.0)
 
+        # ── Interpolazione CS Score ───────────────────────────────────────────
+        try:
+            Z_cs = griddata(
+                (strikes_arr, dtes_arr), cs_arr,
+                (KK, TT), method="linear",
+            )
+            nan_mask_cs = np.isnan(Z_cs)
+            if nan_mask_cs.any():
+                Z_cs_nn = griddata(
+                    (strikes_arr, dtes_arr), cs_arr,
+                    (KK, TT), method="nearest",
+                )
+                Z_cs[nan_mask_cs] = Z_cs_nn[nan_mask_cs]
+            Z_cs = np.clip(Z_cs, 0.0, 100.0)
+        except Exception:
+            Z_cs = np.full_like(Z, fill_value=50.0)
+
         print(f"[VOL-SURFACE] Step 6: Preparing response data...")
         print(f"[VOL-SURFACE SUCCESS] {sym}: Surface built successfully")
 
@@ -464,8 +522,14 @@ def vol_surface(
             "x_strikes": [round(v, 2) for v in k_grid.tolist()],
             "y_dtes":    [int(v) for v in t_grid.tolist()],
             "z_iv":      [[round(v, 2) for v in row] for row in Z.tolist()],
+            "z_cs":      [[round(v, 1) for v in row] for row in Z_cs.tolist()],
             "raw_points": [
-                {"strike": round(p[0], 2), "dte": p[1], "iv": round(p[2], 1), "option_type": p[3]}
+                {
+                    "strike": p["strike"], "dte": p["dte"], "iv": p["iv"],
+                    "option_type": p["option_type"], "delta": p["delta"],
+                    "vega": p["vega"], "spread_pct": p["spread_pct"],
+                    "open_interest": p["open_interest"], "cs_score": p["cs_score"],
+                }
                 for p in raw
             ],
             "n_raw": len(raw),
