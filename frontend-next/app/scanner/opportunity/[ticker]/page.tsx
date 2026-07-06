@@ -315,6 +315,16 @@ function OpportunityContent() {
   const [loadingChart, setLoadingChart] = useState(true)
   const [chartError, setChartError] = useState<string | null>(null)
 
+  // ── AI Summary state ──────────────────────────────────────────────────────
+  const [aiSummary, setAiSummary] = useState<string | null>(null)
+  const [aiLoading, setAiLoading] = useState(false)
+  const [aiError, setAiError] = useState<string | null>(null)
+
+  // ── Personal Notes state ──────────────────────────────────────────────────
+  const [noteText, setNoteText] = useState('')
+  const [noteSaving, setNoteSaving] = useState(false)
+  const [noteLastSaved, setNoteLastSaved] = useState<Date | null>(null)
+
   useEffect(() => {
     if (!ticker) return
     setLoadingChart(true)
@@ -332,6 +342,23 @@ function OpportunityContent() {
       .finally(() => setLoadingChart(false))
   }, [ticker])
 
+  // ── Fetch nota al mount ───────────────────────────────────────────────────
+  useEffect(() => {
+    if (!ticker || !expiration || !strike) return
+    fetch(
+      `/api/notes?ticker=${encodeURIComponent(ticker)}&strike=${strike}&expiration=${encodeURIComponent(expiration)}`,
+      { credentials: 'include' }
+    )
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.ok && data.note) {
+          setNoteText(data.note.note_text ?? '')
+          if (data.note.updated_at) setNoteLastSaved(new Date(data.note.updated_at))
+        }
+      })
+      .catch(() => { /* silent — note non critica */ })
+  }, [ticker, strike, expiration])
+
   const scoreInput = { delta, vega, dte, spread_pct, open_interest: oi }
   const score = computeCandidateScore(scoreInput) ?? 0
   const why = computeWhyPanel(scoreInput)
@@ -345,6 +372,61 @@ function OpportunityContent() {
   const currentPrice = history?.prices.at(-1)?.close ?? null
   const low1y = history ? Math.min(...history.prices.map((p) => p.close)) : null
   const high1y = history ? Math.max(...history.prices.map((p) => p.close)) : null
+
+  // ── AI Summary fetch ──────────────────────────────────────────────────────
+  const fetchAiSummary = async () => {
+    setAiLoading(true)
+    setAiError(null)
+    try {
+      const res = await fetch('/api/ai/opportunity-summary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          ticker,
+          strike,
+          expiration,
+          delta,
+          dte,
+          spread_pct,
+          open_interest: oi,
+          mid,
+          vega,
+          theta,
+          candidate_score: score,
+          why_panel: why,
+          risk_flags: riskFlagList.map((f) => f.label),
+        }),
+      })
+      const data = await res.json()
+      if (!data.ok) throw new Error(data.error ?? 'AI error')
+      setAiSummary(data.summary)
+    } catch (e: unknown) {
+      setAiError(e instanceof Error ? e.message : 'Error')
+    } finally {
+      setAiLoading(false)
+    }
+  }
+
+  // ── Note save on blur ─────────────────────────────────────────────────────
+  const saveNote = async () => {
+    if (!ticker || !expiration || !strike) return
+    setNoteSaving(true)
+    try {
+      const res = await fetch('/api/notes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ ticker, strike, expiration, note_text: noteText }),
+      })
+      const data = await res.json()
+      if (data.ok && data.note?.updated_at) {
+        setNoteLastSaved(new Date(data.note.updated_at))
+      }
+    } catch (err) { console.error('[notes] save failed', err) } finally {
+      setNoteSaving(false)
+    }
+  }
 
   return (
     <div style={{ minHeight: '100vh', background: bb.bg, color: bb.white, fontFamily: 'monospace' }}>
@@ -638,6 +720,86 @@ function OpportunityContent() {
                 {riskLevel}
               </span>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── COILED AI ANALYSIS + PERSONAL NOTES ─────────────────── */}
+      <div style={{ borderTop: `1px solid ${bb.border}`, padding: '20px 24px', display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+
+        {/* AI Summary */}
+        <div style={{ flex: '1 1 340px', border: `1px solid ${bb.orange}`, background: bb.panel, boxSizing: 'border-box' }}>
+          <div style={{ borderBottom: `1px solid ${bb.orange}`, padding: '8px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: 11, color: bb.orange, letterSpacing: 2, fontWeight: 700 }}>COILED AI ANALYSIS</span>
+            <button
+              onClick={fetchAiSummary}
+              disabled={aiLoading}
+              style={{
+                background: aiLoading ? bb.border : 'transparent',
+                border: `1px solid ${bb.orange}`,
+                color: bb.orange,
+                fontFamily: 'monospace',
+                fontSize: 10,
+                padding: '3px 10px',
+                cursor: aiLoading ? 'default' : 'pointer',
+                letterSpacing: 1,
+                opacity: aiLoading ? 0.6 : 1,
+              }}
+            >
+              {aiLoading ? 'LOADING...' : aiSummary ? 'REFRESH ANALYSIS' : 'GENERATE ANALYSIS'}
+            </button>
+          </div>
+          <div style={{ padding: '12px 14px', minHeight: 80 }}>
+            {!aiSummary && !aiLoading && !aiError && (
+              <div style={{ color: bb.gray, fontSize: 11, fontStyle: 'italic' }}>
+                Click &quot;Generate Analysis&quot; for an educational AI summary.
+              </div>
+            )}
+            {aiLoading && <div style={{ color: bb.amber, fontSize: 11 }}>Analyzing with Coiled AI...</div>}
+            {aiError && <div style={{ color: bb.red, fontSize: 11 }}>Warning {aiError}</div>}
+            {aiSummary && !aiLoading && (
+              <div style={{ color: bb.white, fontSize: 11, lineHeight: 1.65 }}>{aiSummary}</div>
+            )}
+          </div>
+          <div style={{ borderTop: `1px solid ${bb.border}`, padding: '6px 14px', fontSize: 9, color: bb.gray, fontStyle: 'italic' }}>
+            Educational content only — not investment advice.
+          </div>
+        </div>
+
+        {/* Personal Notes */}
+        <div style={{ flex: '1 1 300px', border: `1px solid ${bb.border2}`, background: bb.panel, boxSizing: 'border-box' }}>
+          <div style={{ borderBottom: `1px solid ${bb.border2}`, padding: '8px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: 11, color: bb.amber, letterSpacing: 2, fontWeight: 700 }}>PERSONAL NOTES</span>
+            {noteSaving && <span style={{ fontSize: 9, color: bb.gray }}>Saving...</span>}
+            {noteLastSaved && !noteSaving && (
+              <span style={{ fontSize: 9, color: bb.gray }}>
+                Saved {noteLastSaved.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              </span>
+            )}
+          </div>
+          <div style={{ padding: '10px 14px' }}>
+            <textarea
+              value={noteText}
+              onChange={(e) => setNoteText(e.target.value)}
+              onBlur={saveNote}
+              placeholder={`Add your notes on ${ticker} ${optType.toUpperCase()} $${strike} ${expiration}...`}
+              rows={5}
+              style={{
+                width: '100%',
+                background: bb.bg,
+                border: `1px solid ${bb.border2}`,
+                color: bb.white,
+                fontFamily: 'monospace',
+                fontSize: 11,
+                lineHeight: 1.6,
+                padding: '8px 10px',
+                resize: 'vertical',
+                outline: 'none',
+                boxSizing: 'border-box',
+              }}
+              onFocus={(e) => (e.currentTarget.style.borderColor = bb.amber)}
+            />
+            <div style={{ fontSize: 9, color: bb.gray, marginTop: 4 }}>Saved automatically on focus loss.</div>
           </div>
         </div>
       </div>

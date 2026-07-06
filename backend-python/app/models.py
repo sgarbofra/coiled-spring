@@ -35,6 +35,7 @@ class User(Base):
     scan_runs: Mapped[List["ScanRun"]] = relationship(back_populates="user")
     broker_config: Mapped[Optional["BrokerConfig"]] = relationship(back_populates="user", uselist=False)
     portfolios: Mapped[List["Portfolio"]] = relationship(back_populates="user")
+    notes: Mapped[List["UserNote"]] = relationship(back_populates="user", cascade="all, delete-orphan")
 
 
 class BrokerConfig(Base):
@@ -238,6 +239,21 @@ class PortfolioTrade(Base):
 
     portfolio: Mapped["Portfolio"] = relationship(back_populates="trades")
     option_contract: Mapped["OptionContract"] = relationship(back_populates="portfolio_trades")
+
+
+class UserNote(Base):
+    """Note personali dell'utente su un contratto opzione specifico."""
+    __tablename__ = "user_notes"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
+    ticker: Mapped[str] = mapped_column(Text, nullable=False)
+    strike: Mapped[float] = mapped_column(Numeric(12, 4), nullable=False)
+    expiration: Mapped[str] = mapped_column(Text, nullable=False)  # ISO date string
+    note_text: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+    user: Mapped["User"] = relationship(back_populates="notes")
 
 
 class EmailList(Base):

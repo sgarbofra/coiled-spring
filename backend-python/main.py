@@ -22,7 +22,7 @@ import yfinance as yf
 from app.config import settings
 from app.database import Base, engine
 from app.dependencies import get_db
-from app.routers import admin, ai_chat, auth, broker, market, portfolio, scanner, stripe, watchlist_items, watchlists
+from app.routers import admin, ai_chat, auth, broker, market, notes, portfolio, scanner, stripe, watchlist_items, watchlists
 from sqlalchemy.orm import Session
 
 import app.models  # noqa: F401 — registers all models with Base
@@ -94,6 +94,7 @@ app.include_router(ai_chat.router, prefix="/api/ai", tags=["ai-chat"])
 app.include_router(portfolio.router, prefix="/api/portfolio", tags=["portfolio"])
 app.include_router(market.router, prefix="/api/market", tags=["market"])
 app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
+app.include_router(notes.router, prefix="/api/notes", tags=["notes"])
 
 
 # Market movers - uses yahooquery in app.routers.market (cached 15min)

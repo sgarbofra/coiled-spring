@@ -786,6 +786,95 @@ class ChatRequest(BaseModel):
     messages: List[ChatMessage]
 
 
+class OpportunitySummaryRequest(BaseModel):
+    ticker: str
+    strike: float
+    expiration: str        # "YYYY-MM-DD"
+    delta: float
+    dte: int
+    spread_pct: float
+    open_interest: int
+    mid: float
+    vega: float
+    theta: float
+    candidate_score: int
+    why_panel: List[str]
+    risk_flags: List[str]
+
+
+@router.post("/opportunity-summary")
+async def opportunity_summary(
+    body: OpportunitySummaryRequest,
+    current_user: models.User = Depends(get_current_user),
+):
+    """
+    Genera un riassunto educativo del contratto opzione tramite Coiled AI.
+    Disponibile per piani pro e pro_byok.
+    """
+    plan = current_user.plan
+    if plan == "free":
+        raise HTTPException(status_code=403, detail="AI analysis available on Pro plan.")
+
+    # Scegli API key
+    if plan == "pro_byok":
+        encrypted_key = current_user.ai_api_key or ""
+        if not encrypted_key:
+            raise HTTPException(status_code=400, detail="No API key configured. Add it in Settings.")
+        api_key = decrypt_value(encrypted_key) or ""
+        if not api_key:
+            raise HTTPException(status_code=500, detail="Error decrypting API key.")
+    else:
+        api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+        if not api_key:
+            raise HTTPException(status_code=500, detail="ANTHROPIC_API_KEY not configured.")
+
+    # Costruisci il prompt con i dati del contratto
+    why_text = "\n".join(f"  - {w}" for w in body.why_panel) if body.why_panel else "  - No breakdown available"
+    flags_text = "\n".join(f"  - {f}" for f in body.risk_flags) if body.risk_flags else "  - No flags"
+
+    user_prompt = f"""Sei un analista di opzioni LEAPS. Analizza questo contratto in 4-5 frasi brevi in inglese. Non fare raccomandazioni di investimento. Evidenzia i punti di forza, la debolezza principale e un'osservazione sul timing. Non usare elenchi puntati: scrivi in forma di paragrafo continuo.
+
+Dati del contratto:
+- Ticker: {body.ticker}
+- Type: {("CALL" if body.delta > 0 else "PUT")}
+- Strike: ${body.strike:.2f}
+- Expiration: {body.expiration}
+- DTE: {body.dte} days
+- Mid Price: ${body.mid:.2f}
+- Delta: {body.delta:.3f}
+- Vega: {body.vega:.4f}
+- Theta: {body.theta:.4f}
+- Spread: {body.spread_pct:.1f}%
+- Open Interest: {body.open_interest:,}
+- CS Score: {body.candidate_score}/100
+- Score breakdown:
+{why_text}
+- Risk flags:
+{flags_text}"""
+
+    client = anthropic.AsyncAnthropic(api_key=api_key, timeout=30.0)
+
+    try:
+        response = await client.messages.create(
+            model="claude-haiku-4-5-20251001",   # Haiku: rapido e economico per summary
+            max_tokens=300,
+            system=(
+                "You are Coiled AI, an educational options analysis assistant. "
+                "You NEVER give investment advice or recommendations. "
+                "You write concise, factual, educational analysis in plain English. "
+                "No bullet points — write in flowing prose. Maximum 5 sentences."
+            ),
+            messages=[{"role": "user", "content": user_prompt}],
+        )
+        summary_text = response.content[0].text if response.content else ""
+        return {"ok": True, "summary": summary_text}
+
+    except anthropic.APITimeoutError:
+        raise HTTPException(status_code=504, detail="AI request timed out. Try again.")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"AI error: {str(e)[:120]}")
+
+
 # ── Tool execution ────────────────────────────────────────────────────────────
 
 def _is_isin(symbol: str) -> bool:
