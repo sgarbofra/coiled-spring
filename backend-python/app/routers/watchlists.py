@@ -141,7 +141,7 @@ def refresh_watchlist_prices(
                 item.current_ask = Decimal(str(price_info.ask)) if price_info.ask else None
                 item.current_last_price = Decimal(str(price_info.mid)) if price_info.mid else None
                 item.current_premium = Decimal(str(price_info.mid)) if price_info.mid else None
-                item.current_iv = Decimal(str(price_info.iv)) if price_info.iv else None  # Store as percentage (29.3 = 29.3%)
+                item.current_iv = Decimal(str(price_info.iv)) if price_info.iv else None
 
                 # Update Greeks (calculated via Black-Scholes in market_data.py)
                 item.current_delta = Decimal(str(price_info.delta)) if price_info.delta is not None else None
@@ -172,4 +172,8 @@ def _get_or_404(db: Session, watchlist_id: int, user_id: int) -> models.Watchlis
     wl = (
         db.query(models.Watchlist)
         .filter(models.Watchlist.id == watchlist_id, models.Watchlist.user_id == user_id)
-  
+        .first()
+    )
+    if not wl:
+        raise HTTPException(status_code=404, detail="Watchlist not found")
+    return wl
