@@ -261,4 +261,19 @@ class EmailList(Base):
     __tablename__ = "email_list"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    em
+    email: Mapped[str] = mapped_column(Text, unique=True, nullable=False)
+    plan: Mapped[str] = mapped_column(Text, nullable=False)
+    registered_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    source: Mapped[str] = mapped_column(Text, nullable=False, default="web")
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    unsubscribed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class CancellationFeedback(Base):
+    __tablename__ = "cancellation_feedback"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email: Mapped[str] = mapped_column(Text, nullable=False)
+    reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    suggestions: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
