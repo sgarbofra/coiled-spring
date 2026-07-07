@@ -63,4 +63,7 @@ export function transformCandidateToPython(c: Record<string, unknown>) {
     entry_delta: c.delta != null ? Number(c.delta) : null,
     entry_gamma: c.gamma != null ? Number(c.gamma) : null,
     entry_vega: c.vega != null ? Number(c.vega) : null,
-    entry_theta: c.theta != nul
+    entry_theta: c.theta != null ? Number(c.theta) : null,
+    notes: (c.notes as string) || null,
+  }
+}
