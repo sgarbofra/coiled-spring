@@ -148,6 +148,7 @@ def refresh_watchlist_prices(
                 item.current_gamma = Decimal(str(price_info.gamma)) if price_info.gamma is not None else None
                 item.current_vega = Decimal(str(price_info.vega)) if price_info.vega is not None else None
                 item.current_theta = Decimal(str(price_info.theta)) if price_info.theta is not None else None
+                item.current_open_interest = int(price_info.open_interest) if price_info.open_interest is not None else None
 
                 item.last_refreshed_at = now
                 updated_count += 1
@@ -171,8 +172,4 @@ def _get_or_404(db: Session, watchlist_id: int, user_id: int) -> models.Watchlis
     wl = (
         db.query(models.Watchlist)
         .filter(models.Watchlist.id == watchlist_id, models.Watchlist.user_id == user_id)
-        .first()
-    )
-    if not wl:
-        raise HTTPException(status_code=404, detail="Watchlist not found")
-    return wl
+  

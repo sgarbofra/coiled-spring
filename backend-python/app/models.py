@@ -134,6 +134,7 @@ class WatchlistItem(Base):
     current_gamma: Mapped[Optional[Decimal]] = mapped_column(Numeric(8, 4))
     current_vega: Mapped[Optional[Decimal]] = mapped_column(Numeric(8, 4))
     current_theta: Mapped[Optional[Decimal]] = mapped_column(Numeric(8, 4))
+    current_open_interest: Mapped[Optional[int]] = mapped_column(Integer)
     last_refreshed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True))
 
     quantity: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
@@ -260,19 +261,4 @@ class EmailList(Base):
     __tablename__ = "email_list"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    email: Mapped[str] = mapped_column(Text, unique=True, nullable=False)
-    plan: Mapped[str] = mapped_column(Text, nullable=False)
-    registered_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
-    source: Mapped[str] = mapped_column(Text, nullable=False, default="web")
-    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
-    unsubscribed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-
-
-class CancellationFeedback(Base):
-    __tablename__ = "cancellation_feedback"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    email: Mapped[str] = mapped_column(Text, nullable=False)
-    reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    suggestions: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    em

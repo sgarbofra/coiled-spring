@@ -136,6 +136,7 @@ class WatchlistItemOut(BaseModel):
     current_gamma: Optional[Decimal]
     current_vega: Optional[Decimal]
     current_theta: Optional[Decimal]
+    current_open_interest: Optional[int]
     quantity: int
     notes: Optional[str]
     created_at: datetime
@@ -175,4 +176,4 @@ class AlertOut(BaseModel):
     last_triggered_at: Optional[datetime]
     created_at: datetime
     updated_at: datetime
-    model_config = {"from_attributes": True}
+    

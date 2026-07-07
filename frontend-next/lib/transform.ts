@@ -36,7 +36,7 @@ export function transformItem(item: Record<string, unknown>) {
     gamma: item.current_gamma != null ? Number(item.current_gamma) : null,
     vega: item.current_vega != null ? Number(item.current_vega) : null,
     theta: item.current_theta != null ? Number(item.current_theta) : null,
-    openInterest: null,
+    openInterest: item.current_open_interest != null ? Number(item.current_open_interest) : null,
     volume: null,
     bid: item.current_bid != null ? Number(item.current_bid) : null,
     ask: item.current_ask != null ? Number(item.current_ask) : null,
@@ -63,7 +63,4 @@ export function transformCandidateToPython(c: Record<string, unknown>) {
     entry_delta: c.delta != null ? Number(c.delta) : null,
     entry_gamma: c.gamma != null ? Number(c.gamma) : null,
     entry_vega: c.vega != null ? Number(c.vega) : null,
-    entry_theta: c.theta != null ? Number(c.theta) : null,
-    notes: (c.notes as string) || null,
-  }
-}
+    entry_theta: c.theta != nul
