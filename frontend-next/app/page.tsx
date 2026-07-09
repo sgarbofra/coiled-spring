@@ -173,7 +173,7 @@ export default function LandingPage() {
             >
               <img
                 src="/logo.png"
-                alt="Coiled Spring — Scanner Opzioni LEAPS"
+                alt="Coiled Spring — LEAPS Options Scanner"
                 style={{
                   height: '48px',
                   width: 'auto',
@@ -415,7 +415,7 @@ export default function LandingPage() {
             fontWeight: '400',
             letterSpacing: '0.5px',
           }}>
-            Scanner opzioni LEAPS · Opzioni americane con volatilità compressa · IV Rank · Greche in tempo reale
+            LEAPS Options Scanner · US Options with Compressed Volatility · IV Rank · Real-Time Greeks
           </p>
 
           {/* CTA Buttons */}
@@ -521,16 +521,16 @@ export default function LandingPage() {
                 fontFamily: 'Space Mono, monospace',
                 lineHeight: '1.3',
               }}>
-                La compressione della volatilità è invisibile ai più
+                Volatility Compression Is Invisible to Most
               </h2>
               <p style={{
                 color: colors.gray,
                 lineHeight: '1.8',
                 fontSize: '1.05rem',
               }}>
-                Le piattaforme tradizionali mostrano la IV, ma non l&apos;<strong style={{ color: colors.white }}>IV Rank</strong>.
-                Non vedi quando la volatilità è storicamente compressa — esattamente il momento in cui le
-                opzioni LEAPS offrono la massima convessità.
+                Traditional platforms show IV, but not <strong style={{ color: colors.white }}>IV Rank</strong>.
+                You can&apos;t see when volatility is historically compressed — exactly when
+                LEAPS options offer maximum convexity.
               </p>
             </div>
 
@@ -554,16 +554,16 @@ export default function LandingPage() {
                 fontFamily: 'Space Mono, monospace',
                 lineHeight: '1.3',
               }}>
-                Scanner opzioni, visualizza, agisci
+                Scan. Visualize. Act.
               </h2>
               <p style={{
                 color: colors.gray,
                 lineHeight: '1.8',
                 fontSize: '1.05rem',
               }}>
-                Coiled Spring esegue lo scan di oltre 3.500 sottostanti USA alla ricerca di <strong style={{ color: colors.white }}>opzioni LEAPS
-                con IV Rank {'<'} 20</strong>. Visualizza la superficie di volatilità in 3D. Dimensionamento AI delle posizioni.
-                Esegui con convinzione.
+                Coiled Spring scans 3,500+ US underlyings for <strong style={{ color: colors.white }}>LEAPS options
+                with IV Rank {'<'} 20</strong>. Visualize the 3D volatility surface. AI-powered position sizing.
+                Trade with conviction.
               </p>
             </div>
           </div>
@@ -1565,7 +1565,7 @@ export default function LandingPage() {
             }}>
               <img
                 src="/book.png"
-                alt="Coiled Spring Strategy — Libro sulla Strategia con Opzioni LEAPS e Volatilità Compressa"
+                alt="Coiled Spring Strategy — Book on LEAPS Options Strategy and Compressed Volatility"
                 style={{
                   width: '100%',
                   maxWidth: '350px',
