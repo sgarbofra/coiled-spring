@@ -232,6 +232,37 @@ export default function LandingPage() {
                 Tutorial
               </button>
               <button
+                onClick={() => scrollToSection('academy')}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: colors.gray,
+                  fontSize: '0.95rem',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                  transition: 'color 0.2s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.color = colors.orange}
+                onMouseLeave={(e) => e.currentTarget.style.color = colors.gray}
+              >
+                Academy
+                <span style={{
+                  background: colors.orange,
+                  color: colors.bg,
+                  fontSize: '0.6rem',
+                  fontWeight: 'bold',
+                  letterSpacing: '0.5px',
+                  padding: '0.1rem 0.35rem',
+                  borderRadius: '2px',
+                  fontFamily: 'Space Mono, monospace',
+                  lineHeight: '1',
+                }}>NEW</span>
+              </button>
+              <button
                 onClick={() => scrollToSection('youtube-section')}
                 style={{
                   background: 'transparent',
@@ -1681,6 +1712,181 @@ export default function LandingPage() {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ACADEMY SECTION */}
+      <section id="academy" style={{
+        borderBottom: `2px solid ${colors.border}`,
+        padding: '6rem 2rem',
+        background: colors.bg,
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+
+          {/* Header */}
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '0.75rem',
+              marginBottom: '1rem',
+            }}>
+              <div style={{
+                fontSize: '0.85rem',
+                color: colors.orange,
+                fontWeight: 'bold',
+                letterSpacing: '2px',
+                fontFamily: 'Space Mono, monospace',
+              }}>
+                COILED SPRING ACADEMY
+              </div>
+              <span style={{
+                background: colors.orange,
+                color: colors.bg,
+                fontSize: '0.65rem',
+                fontWeight: 'bold',
+                letterSpacing: '1px',
+                padding: '0.2rem 0.55rem',
+                borderRadius: '2px',
+                fontFamily: 'Space Mono, monospace',
+              }}>COMING SOON</span>
+            </div>
+            <h2 style={{
+              fontSize: '2.75rem',
+              fontWeight: 'bold',
+              color: colors.white,
+              marginBottom: '1rem',
+              fontFamily: 'Space Mono, monospace',
+            }}>
+              Master Options Trading
+            </h2>
+            <p style={{
+              fontSize: '1.15rem',
+              color: colors.gray,
+              maxWidth: '700px',
+              margin: '0 auto',
+              lineHeight: '1.7',
+            }}>
+              A structured video course to go from zero to proficient in LEAPS options with the Coiled Spring methodology.
+              Complete each module, pass the quiz, unlock the next.
+            </p>
+          </div>
+
+          {/* Module Cards */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '1.25rem',
+            marginBottom: '4rem',
+          }}>
+            {[
+              { title: 'Introduction to LEAPS Options', desc: 'What LEAPS are, why they differ from short-dated options, and when to use them.', free: true },
+              { title: 'Implied Volatility & IV Rank', desc: 'How to read IV, calculate IV Rank, and identify historically compressed volatility windows.' },
+              { title: 'The CS Score Explained', desc: 'The formula behind the Coiled Spring Score and how each component drives the final rating.' },
+              { title: 'Scanning for Opportunities', desc: 'Using the terminal scanner with filters: DTE, Delta, IV Rank, and the CS Score threshold.' },
+              { title: 'Position Sizing with Coiled AI', desc: 'Risk-based position sizing, portfolio allocation rules, and how to use the AI assistant.' },
+              { title: 'Watchlist & Portfolio Management', desc: 'Building, tracking, and managing open positions through expiration.' },
+            ].map((mod, idx) => (
+              <div
+                key={idx}
+                style={{
+                  background: colors.surface,
+                  border: `1px solid ${idx === 0 ? colors.orange : colors.border}`,
+                  borderRadius: '8px',
+                  padding: '1.75rem',
+                  position: 'relative',
+                  opacity: idx === 0 ? 1 : 0.65,
+                  transition: 'opacity 0.2s ease, border-color 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLDivElement).style.opacity = '1'
+                  if (idx > 0) (e.currentTarget as HTMLDivElement).style.borderColor = colors.border
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLDivElement).style.opacity = idx === 0 ? '1' : '0.65'
+                }}
+              >
+                {/* Lock / Free badge */}
+                <div style={{
+                  position: 'absolute',
+                  top: '1rem',
+                  right: '1rem',
+                  fontSize: idx === 0 ? '0.65rem' : '1rem',
+                  fontWeight: 'bold',
+                  color: idx === 0 ? colors.bg : colors.darkGray,
+                  background: idx === 0 ? colors.orange : 'transparent',
+                  padding: idx === 0 ? '0.2rem 0.5rem' : '0',
+                  borderRadius: '2px',
+                  fontFamily: 'Space Mono, monospace',
+                  letterSpacing: '0.5px',
+                }}>
+                  {idx === 0 ? 'FREE PREVIEW' : '🔒'}
+                </div>
+
+                {/* Module number */}
+                <div style={{
+                  fontSize: '0.75rem',
+                  color: idx === 0 ? colors.orange : colors.darkGray,
+                  fontWeight: 'bold',
+                  letterSpacing: '2px',
+                  marginBottom: '0.75rem',
+                  fontFamily: 'Space Mono, monospace',
+                }}>
+                  MODULE {String(idx + 1).padStart(2, '0')}
+                </div>
+
+                <h3 style={{
+                  fontSize: '1.05rem',
+                  fontWeight: 'bold',
+                  color: idx === 0 ? colors.white : colors.gray,
+                  marginBottom: '0.6rem',
+                  lineHeight: '1.4',
+                }}>
+                  {mod.title}
+                </h3>
+                <p style={{
+                  color: colors.darkGray,
+                  fontSize: '0.875rem',
+                  lineHeight: '1.6',
+                }}>
+                  {mod.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA */}
+          <div style={{ textAlign: 'center' }}>
+            <p style={{
+              color: colors.gray,
+              marginBottom: '1.5rem',
+              fontSize: '1.05rem',
+            }}>
+              Be the first to know when the Academy launches.
+            </p>
+            <button
+              onClick={() => router.push('/register')}
+              style={{
+                background: colors.orange,
+                color: colors.bg,
+                border: 'none',
+                padding: '1rem 2.5rem',
+                fontSize: '1rem',
+                fontWeight: 'bold',
+                letterSpacing: '1px',
+                cursor: 'pointer',
+                fontFamily: 'inherit',
+                borderRadius: '4px',
+                boxShadow: `0 4px 16px rgba(255, 102, 0, 0.3)`,
+                transition: 'background 0.2s ease',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.background = colors.orangeHover}
+              onMouseLeave={(e) => e.currentTarget.style.background = colors.orange}
+            >
+              Register for Early Access →
+            </button>
           </div>
         </div>
       </section>
