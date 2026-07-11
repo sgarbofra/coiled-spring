@@ -315,6 +315,23 @@ function OpportunityContent() {
   const [loadingChart, setLoadingChart] = useState(true)
   const [chartError, setChartError] = useState<string | null>(null)
 
+  // ── IV History state ──────────────────────────────────────────────────────
+  type IVRecord = { date: string; dte_bucket: number; iv_pct: number }
+  const [ivHistory, setIvHistory] = useState<IVRecord[] | null>(null)
+  const [ivHistoryLoading, setIvHistoryLoading] = useState(false)
+  const [ivHistoryOpen, setIvHistoryOpen] = useState(false)
+
+  const fetchIvHistory = async () => {
+    if (ivHistory !== null) { setIvHistoryOpen((o) => !o); return }
+    setIvHistoryLoading(true)
+    setIvHistoryOpen(true)
+    try {
+      const res = await fetch(`/api/scanner/iv-history/${ticker}`, { credentials: 'include' })
+      const data = await res.json()
+      setIvHistory(data.records ?? [])
+    } catch { setIvHistory([]) } finally { setIvHistoryLoading(false) }
+  }
+
   // ── AI Summary state ──────────────────────────────────────────────────────
   const [aiSummary, setAiSummary] = useState<string | null>(null)
   const [aiLoading, setAiLoading] = useState(false)
@@ -553,6 +570,84 @@ function OpportunityContent() {
                   </span>
                 </span>
               )}
+              <button
+                onClick={fetchIvHistory}
+                style={{
+                  marginLeft: 'auto',
+                  background: 'transparent',
+                  border: `1px solid ${bb.yellow}`,
+                  color: bb.yellow,
+                  fontFamily: 'monospace',
+                  fontSize: 10,
+                  padding: '3px 10px',
+                  cursor: 'pointer',
+                  letterSpacing: 1,
+                  opacity: ivHistoryLoading ? 0.6 : 1,
+                }}
+              >
+                {ivHistoryLoading ? '⟳ LOADING...' : ivHistoryOpen ? '▲ HIDE IV HISTORY' : '▼ IV HISTORY'}
+              </button>
+            </div>
+          )}
+          {/* ── IV HISTORY TABLE ─────────────────────────────── */}
+          {ivHistoryOpen && (
+            <div style={{ marginTop: 20, borderTop: `1px solid ${bb.border2}`, paddingTop: 14 }}>
+              <div style={{ fontSize: 11, color: bb.yellow, letterSpacing: 1, marginBottom: 10, fontWeight: 700 }}>
+                IV HISTORY — ATM IMPLIED VOLATILITY ({ticker})
+              </div>
+              {ivHistoryLoading && (
+                <div style={{ color: bb.amber, fontSize: 12, padding: '20px 0' }}>Loading IV history…</div>
+              )}
+              {!ivHistoryLoading && ivHistory !== null && ivHistory.length === 0 && (
+                <div style={{ color: bb.gray, fontSize: 12, fontStyle: 'italic' }}>
+                  No IV history yet — data accumulates daily after 16:30 UTC.
+                </div>
+              )}
+              {!ivHistoryLoading && ivHistory !== null && ivHistory.length > 0 && (() => {
+                // Raggruppa per data → { date: { 30: iv, 60: iv, 90: iv, 180: iv } }
+                const byDate: Record<string, Record<number, number>> = {}
+                for (const r of ivHistory) {
+                  if (!byDate[r.date]) byDate[r.date] = {}
+                  byDate[r.date][r.dte_bucket] = r.iv_pct
+                }
+                const dates = Object.keys(byDate).sort((a, b) => b.localeCompare(a))
+                const buckets = [30, 60, 90, 180]
+                return (
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11, fontFamily: 'monospace' }}>
+                      <thead>
+                        <tr style={{ borderBottom: `1px solid ${bb.border2}` }}>
+                          <th style={{ textAlign: 'left', padding: '4px 10px', color: bb.gray, fontWeight: 600 }}>DATE</th>
+                          {buckets.map((b) => (
+                            <th key={b} style={{ textAlign: 'right', padding: '4px 10px', color: bb.yellow, fontWeight: 600 }}>
+                              {b}d IV
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {dates.map((d, i) => (
+                          <tr key={d} style={{ borderBottom: `1px solid ${i % 2 === 0 ? bb.border : 'transparent'}`, background: i % 2 === 0 ? bb.panel : 'transparent' }}>
+                            <td style={{ padding: '4px 10px', color: bb.gray }}>{d}</td>
+                            {buckets.map((b) => {
+                              const v = byDate[d][b]
+                              const color = v == null ? bb.border2 : v >= 40 ? bb.green : v >= 25 ? bb.amber : bb.white
+                              return (
+                                <td key={b} style={{ textAlign: 'right', padding: '4px 10px', color }}>
+                                  {v != null ? `${v.toFixed(1)}%` : '—'}
+                                </td>
+                              )
+                            })}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    <div style={{ fontSize: 9, color: bb.gray, marginTop: 8, fontStyle: 'italic' }}>
+                      {ivHistory.length} records — color: green ≥40% | amber ≥25% | white below
+                    </div>
+                  </div>
+                )
+              })()}
             </div>
           )}
         </div>

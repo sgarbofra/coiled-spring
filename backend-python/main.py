@@ -82,6 +82,14 @@ async def lifespan(app: FastAPI):
     scheduler.start()
     print("[SCHEDULER] Daily IV snapshot scheduled at 16:30 UTC")
 
+    # Pre-carica la lista S&P500 in cache al startup (evita lazy load al primo cron)
+    try:
+        from app.data.us_optionable_tickers import get_iv_snapshot_universe
+        universe = get_iv_snapshot_universe()
+        print(f"[STARTUP] IV snapshot universe pre-loaded: {len(universe)} tickers")
+    except Exception as e:
+        print(f"[STARTUP] Universe pre-load failed (non bloccante): {e}")
+
     yield
 
     scheduler.shutdown(wait=False)

@@ -453,6 +453,39 @@ def get_iv_ranks(
     return result
 
 
+@router.get("/iv-history/{ticker}")
+def get_iv_history(
+    ticker: str,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    """Ritorna tutto lo storico IV ATM salvato per un ticker, tutti i DTE bucket.
+
+    Risposta: { ticker, count, records: [{date, dte_bucket, iv_pct}] }
+    Ordinato per data DESC. Limite 500 record (>1 anno di storia per 4 bucket).
+    """
+    records = (
+        db.query(models.IVHistory)
+        .filter(models.IVHistory.ticker == ticker.upper())
+        .order_by(models.IVHistory.recorded_at.desc())
+        .limit(500)
+        .all()
+    )
+
+    return {
+        "ticker": ticker.upper(),
+        "count": len(records),
+        "records": [
+            {
+                "date": r.recorded_at.strftime("%Y-%m-%d"),
+                "dte_bucket": r.dte_bucket,
+                "iv_pct": round(r.iv * 100, 2),  # decimal → percentuale
+            }
+            for r in records
+        ],
+    }
+
+
 @router.post("/iv-snapshot", include_in_schema=False)
 def iv_snapshot(
     background_tasks: BackgroundTasks,
