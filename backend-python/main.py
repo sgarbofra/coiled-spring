@@ -41,7 +41,7 @@ def _run_daily_iv_snapshot():
     try:
         key = settings.cron_internal_key
         resp = _requests.post(
-            "http://localhost:8001/api/scanner/iv-snapshot",
+            "http://localhost:8080/api/scanner/iv-snapshot",
             headers={"x-internal-key": key},
             timeout=10,  # Solo avvia il background task, non aspetta il completamento
         )
