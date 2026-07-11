@@ -1,17 +1,19 @@
-from datetime import date, datetime
-from typing import List, Optional
+from collections import defaultdict
+from datetime import date, datetime, timezone, timedelta
+from typing import Dict, List, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, BackgroundTasks, Depends, Header, HTTPException, Query, Request, status
 from pydantic import BaseModel, field_validator
 from slowapi import Limiter
 from slowapi.util import get_remote_address
+from sqlalchemy import func as sql_func
 from sqlalchemy.orm import Session
 
 from app.dependencies import get_current_user, get_db
 from app import models, schemas
-from app.services.market_data import scan_yfinance, OptionResult, get_ticker_info, bs_greeks
+from app.services.market_data import scan_yfinance, OptionResult, get_ticker_info, bs_greeks, get_atm_iv_snapshot
 from app.services.data_provider import data_provider
-from app.data.us_optionable_tickers import UNIVERSE_BY_CATEGORY, US_OPTIONABLE_TICKERS
+from app.data.us_optionable_tickers import UNIVERSE_BY_CATEGORY, US_OPTIONABLE_TICKERS, get_iv_snapshot_universe
 
 router = APIRouter()
 limiter = Limiter(key_func=get_remote_address)
@@ -100,6 +102,56 @@ def _to_scan_result(r: OptionResult) -> ScanResult:
     )
 
 
+def _save_iv_history(db: Session, results: List[ScanResult]) -> None:
+    """Salva IV media per ticker unico dopo ogni scan.
+
+    Strategia: un record per ticker per giorno (upsert-like — se oggi c'è già
+    un record per quel ticker, lo aggiorna invece di duplicare).
+    IV salvata come decimale: r.iv è percentuale (25.0) → salviamo 0.25.
+    """
+    if not results:
+        return
+
+    today_start = datetime.now(timezone.utc).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    )
+
+    # Raggruppa IV per ticker e calcola media
+    ticker_ivs: Dict[str, List[float]] = defaultdict(list)
+    for r in results:
+        if r.iv > 0:
+            ticker_ivs[r.underlying].append(r.iv / 100.0)  # converti % → decimale
+
+    now = datetime.now(timezone.utc)
+    updated = 0
+    inserted = 0
+
+    for ticker, ivs in ticker_ivs.items():
+        avg_iv = sum(ivs) / len(ivs)
+
+        # Cerca record di oggi per questo ticker (evita duplicati giornalieri)
+        existing = (
+            db.query(models.IVHistory)
+            .filter(
+                models.IVHistory.ticker == ticker,
+                models.IVHistory.recorded_at >= today_start,
+            )
+            .first()
+        )
+
+        if existing:
+            # Aggiorna la media di oggi (media mobile tra vecchio e nuovo)
+            existing.iv = (existing.iv + avg_iv) / 2.0
+            updated += 1
+        else:
+            # dte_bucket=30 per scan-triggered (bootstrap — IV da LEAPS approssimata)
+            db.add(models.IVHistory(ticker=ticker, iv=avg_iv, dte_bucket=30, recorded_at=now))
+            inserted += 1
+
+    db.commit()
+    print(f"[IV_HISTORY] Saved: {inserted} new, {updated} updated for {len(ticker_ivs)} tickers")
+
+
 # ── Endpoints ─────────────────────────────────────────────────────────────────
 
 @router.post("/run", response_model=ScanResponse)
@@ -176,6 +228,14 @@ def run_scan(
     db.add(scan_run)
     db.commit()
 
+    converted_results = [_to_scan_result(r) for r in raw_results]
+
+    # Salva IV history in background (non blocca la risposta)
+    try:
+        _save_iv_history(db, converted_results)
+    except Exception as e:
+        print(f"[IV_HISTORY] Non-critical save error: {e}")
+
     # Fetch ticker names
     ticker_names = {}
     for symbol in symbols:
@@ -183,7 +243,6 @@ def run_scan(
         if info and info.get("name"):
             ticker_names[symbol] = info["name"]
 
-    converted_results = [_to_scan_result(r) for r in raw_results]
     print(f"\n[SCANNER ENDPOINT] Returning {len(converted_results)} results to client")
     print(f"[SCANNER ENDPOINT] Ticker names: {ticker_names}")
     print(f"{'='*80}\n")
@@ -318,6 +377,154 @@ def _cs_score(abs_delta: float, vega: float, dte: int, spread_pct: float, oi: in
     vega_s = min(vega / 1.0, 1) * 100
     raw_score = round(vega_s * 0.35 + dte_s * 0.30 + liq_s * 0.20 + ds * 0.15)
     return min(raw_score, 69) if dte < 300 else raw_score
+
+
+@router.get("/iv-ranks")
+def get_iv_ranks(
+    tickers: str = Query(..., description="Comma-separated tickers, e.g. AAPL,NVDA"),
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    """Restituisce IV percentile per una lista di ticker.
+
+    Calcola percentile 30d/90d/252d rispetto allo storico accumulato.
+    Ritorna null per ticker con < 10 data points (insufficienti).
+
+    Response: { "AAPL": { percentile_30d, percentile_90d, percentile_252d,
+                           data_points, days_tracked, current_iv } | null, ... }
+    """
+    ticker_list = [t.strip().upper() for t in tickers.split(",") if t.strip()]
+    if not ticker_list or len(ticker_list) > 50:
+        raise HTTPException(status_code=400, detail="Provide 1-50 tickers")
+
+    now = datetime.now(timezone.utc)
+    cutoffs = {
+        "30d":  now - timedelta(days=30),
+        "90d":  now - timedelta(days=90),
+        "252d": now - timedelta(days=252),
+    }
+
+    result: Dict[str, Optional[dict]] = {}
+
+    for ticker in ticker_list:
+        # Solo bucket 30d (ATM ~30 DTE) per calcolare IV Rank standard
+        all_rows = (
+            db.query(models.IVHistory.iv, models.IVHistory.recorded_at)
+            .filter(
+                models.IVHistory.ticker == ticker,
+                models.IVHistory.dte_bucket == 30,
+                models.IVHistory.recorded_at >= cutoffs["252d"],
+            )
+            .order_by(models.IVHistory.recorded_at.asc())
+            .all()
+        )
+
+        if not all_rows:
+            result[ticker] = None
+            continue
+
+        all_ivs = [row.iv for row in all_rows]
+        current_iv = all_ivs[-1]  # IV più recente
+        data_points = len(all_ivs)
+
+        # Calcola percentile: % di valori storici <= current_iv
+        def _pct(ivs: List[float]) -> Optional[float]:
+            if len(ivs) < 10:
+                return None
+            below = sum(1 for v in ivs if v <= current_iv)
+            return round(below / len(ivs) * 100, 1)
+
+        # Filtra per finestra temporale
+        rows_30d  = [row.iv for row in all_rows if row.recorded_at >= cutoffs["30d"]]
+        rows_90d  = [row.iv for row in all_rows if row.recorded_at >= cutoffs["90d"]]
+
+        oldest = all_rows[0].recorded_at
+        days_tracked = max(1, (now - oldest).days)
+
+        result[ticker] = {
+            "current_iv":     round(current_iv * 100, 2),   # restituisce come %
+            "percentile_30d": _pct(rows_30d),
+            "percentile_90d": _pct(rows_90d),
+            "percentile_252d": _pct(all_ivs),
+            "data_points":    data_points,
+            "days_tracked":   days_tracked,
+        }
+
+    return result
+
+
+@router.post("/iv-snapshot", include_in_schema=False)
+def iv_snapshot(
+    background_tasks: BackgroundTasks,
+    x_internal_key: str = Header(...),
+    db: Session = Depends(get_db),
+):
+    """Endpoint interno — chiamato dal cron giornaliero (APScheduler o Railway Cron).
+
+    Esegue snapshot ATM IV per tutti i ticker della universe su 4 DTE bucket.
+    Protetto da header X-Internal-Key (settings.cron_internal_key).
+    Non esposto nella documentazione OpenAPI (include_in_schema=False).
+    """
+    from app.config import settings
+
+    if x_internal_key != settings.cron_internal_key:
+        raise HTTPException(status_code=403, detail="Forbidden")
+
+    DTE_BUCKETS = [30, 60, 90, 180]
+    tickers = get_iv_snapshot_universe()  # 277 curati + S&P 500 ≈ 500-550 ticker unici
+
+    def _run_snapshot():
+        """Eseguito in background — non blocca la risposta HTTP."""
+        print(f"[IV_SNAPSHOT] Starting daily snapshot for {len(tickers)} tickers × {len(DTE_BUCKETS)} buckets")
+        snapshot = get_atm_iv_snapshot(tickers, DTE_BUCKETS, max_workers=10)
+
+        now = datetime.now(timezone.utc)
+        today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        saved = 0
+        skipped = 0
+
+        # Usa una sessione dedicata per il background task
+        from app.database import SessionLocal
+        bg_db = SessionLocal()
+        try:
+            for ticker, bucket_ivs in snapshot.items():
+                for dte_bucket, iv in bucket_ivs.items():
+                    if iv is None:
+                        skipped += 1
+                        continue
+
+                    # Evita duplicati: un record per ticker×bucket per giorno
+                    existing = (
+                        bg_db.query(models.IVHistory)
+                        .filter(
+                            models.IVHistory.ticker == ticker,
+                            models.IVHistory.dte_bucket == dte_bucket,
+                            models.IVHistory.recorded_at >= today_start,
+                        )
+                        .first()
+                    )
+                    if existing:
+                        # Media mobile se eseguito più volte nello stesso giorno
+                        existing.iv = (existing.iv + iv) / 2.0
+                    else:
+                        bg_db.add(models.IVHistory(
+                            ticker=ticker,
+                            iv=iv,
+                            dte_bucket=dte_bucket,
+                            recorded_at=now,
+                        ))
+                    saved += 1
+
+            bg_db.commit()
+            print(f"[IV_SNAPSHOT] Done: {saved} saved, {skipped} skipped (no data)")
+        except Exception as e:
+            print(f"[IV_SNAPSHOT] Error during save: {e}")
+            bg_db.rollback()
+        finally:
+            bg_db.close()
+
+    background_tasks.add_task(_run_snapshot)
+    return {"ok": True, "message": f"Snapshot started for {len(tickers)} tickers"}
 
 
 @router.get("/vol-surface/{symbol}")
@@ -518,7 +725,7 @@ def vol_surface(
         response_data = {
             "symbol": sym,
             "current_price": round(float(price), 2),
-            "option_type": "mixed",  # PUT IV for ITM (K<price), CALL IV for OTM (K>=price)
+            "option_type": "mixed",
             "x_strikes": [round(v, 2) for v in k_grid.tolist()],
             "y_dtes":    [int(v) for v in t_grid.tolist()],
             "z_iv":      [[round(v, 2) for v in row] for row in Z.tolist()],
@@ -535,21 +742,14 @@ def vol_surface(
             "n_raw": len(raw),
         }
 
-        print(f"[VOL-SURFACE] Response data prepared, size: {len(str(response_data))} chars")
-        print(f"[VOL-SURFACE] Returning response...")
         return response_data
 
     except HTTPException:
         raise
     except Exception as e:
-        print(f"\n{'='*80}")
-        print(f"[VOL-SURFACE ERROR] {sym}: Surface calculation failed")
-        print(f"  Error type: {type(e).__name__}")
-        print(f"  Error message: {e}")
-        print(f"{'='*80}")
+        print(f"[VOL-SURFACE ERROR] {sym}: {type(e).__name__}: {e}")
         traceback.print_exc()
-        print(f"{'='*80}\n")
         raise HTTPException(
             status_code=500,
-            detail=f"Errore nel calcolo della superficie di volatilità: {type(e).__name__}: {str(e)}"
-        )
+            detail=f"Errore nel calcolo della superficie: {type(e).__name__}: {str(e)}"
+             )

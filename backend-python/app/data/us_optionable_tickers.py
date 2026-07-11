@@ -126,3 +126,39 @@ UNIVERSE_BY_CATEGORY = {
     ],
     "all": US_OPTIONABLE_TICKERS
 }
+
+# Cache in-memory per evitare fetch ripetuti nello stesso processo
+_SP500_CACHE: list = []
+
+
+def get_iv_snapshot_universe() -> list:
+    """Ritorna l'universo completo per il daily IV snapshot.
+
+    Union di:
+    - US_OPTIONABLE_TICKERS (277 ticker curati, già presenti)
+    - S&P 500 (fetchati da Wikipedia, ~503 ticker)
+
+    Se Wikipedia non è raggiungibile, usa solo la lista base.
+    BRK.B / BF.B → convertiti in BRK-B / BF-B per compatibilità yfinance.
+    """
+    global _SP500_CACHE
+    base = set(US_OPTIONABLE_TICKERS)
+
+    if not _SP500_CACHE:
+        try:
+            import pandas as pd
+            tables = pd.read_html(
+                "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies",
+                timeout=15
+            )
+            sp500_raw = tables[0]["Symbol"].tolist()
+            # Wikipedia usa "." (BRK.B), yfinance vuole "-" (BRK-B)
+            _SP500_CACHE = [t.replace(".", "-") for t in sp500_raw]
+            print(f"[UNIVERSE] S&P 500 fetched: {len(_SP500_CACHE)} tickers")
+        except Exception as e:
+            print(f"[UNIVERSE] S&P 500 fetch failed, using base list only: {e}")
+            _SP500_CACHE = []
+
+    universe = sorted(base | set(_SP500_CACHE))
+    print(f"[UNIVERSE] Snapshot universe: {len(universe)} tickers (base={len(base)}, sp500={len(_SP500_CACHE)})")
+    return universe

@@ -31,10 +31,61 @@ import app.models  # noqa: F401 — registers all models with Base
 limiter = Limiter(key_func=get_remote_address)
 
 
+def _run_daily_iv_snapshot():
+    """Job APScheduler — eseguito ogni giorno alle 16:30 UTC (dopo chiusura mercato US).
+
+    Chiama l'endpoint interno /api/scanner/iv-snapshot via HTTP in-process.
+    Evita di importare logica di business direttamente nel main.
+    """
+    import requests as _requests
+    try:
+        key = settings.cron_internal_key
+        resp = _requests.post(
+            "http://localhost:8001/api/scanner/iv-snapshot",
+            headers={"x-internal-key": key},
+            timeout=10,  # Solo avvia il background task, non aspetta il completamento
+        )
+        print(f"[CRON] IV snapshot triggered: {resp.status_code} {resp.text[:100]}")
+    except Exception as e:
+        print(f"[CRON] Failed to trigger IV snapshot: {e}")
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Crea tabelle nuove (non tocca quelle esistenti)
     Base.metadata.create_all(bind=engine)
+
+    # Migration: aggiungi dte_bucket a iv_history se non esiste
+    try:
+        from sqlalchemy import text
+        with engine.connect() as conn:
+            conn.execute(text(
+                "ALTER TABLE iv_history ADD COLUMN IF NOT EXISTS dte_bucket INTEGER NOT NULL DEFAULT 30"
+            ))
+            conn.commit()
+            print("[MIGRATION] iv_history.dte_bucket OK")
+    except Exception as e:
+        # Colonna già presente o DB non PostgreSQL — non bloccare l'avvio
+        print(f"[MIGRATION] dte_bucket skip: {e}")
+
+    # APScheduler: daily IV snapshot alle 16:30 UTC
+    from apscheduler.schedulers.asyncio import AsyncIOScheduler
+    scheduler = AsyncIOScheduler(timezone="UTC")
+    scheduler.add_job(
+        _run_daily_iv_snapshot,
+        trigger="cron",
+        hour=16,
+        minute=30,
+        id="daily_iv_snapshot",
+        replace_existing=True,
+    )
+    scheduler.start()
+    print("[SCHEDULER] Daily IV snapshot scheduled at 16:30 UTC")
+
     yield
+
+    scheduler.shutdown(wait=False)
+    print("[SCHEDULER] Shutdown")
 
 
 app = FastAPI(

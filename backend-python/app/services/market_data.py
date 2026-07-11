@@ -715,3 +715,101 @@ def get_options_prices_bulk(symbol_keys: List[str]) -> Dict[str, Optional[Option
             except Exception:
                 results[sk] = None
     return results
+
+
+# ── Daily IV snapshot (cron) ─────────────────────────────────────────────────
+
+def _get_atm_iv_for_dte(symbol: str, target_dte: int) -> Optional[float]:
+    """Fetches ATM implied volatility for a given ticker and target DTE.
+
+    Finds the expiration closest to target_dte, picks the ATM call strike,
+    and returns the implied volatility as a decimal (0.25 = 25%).
+    Returns None if data is unavailable or invalid.
+    """
+    try:
+        import yfinance as yf
+        from datetime import date as _date
+        ticker = yf.Ticker(symbol)
+
+        expirations = ticker.options
+        if not expirations:
+            return None
+
+        today = _date.today()
+
+        # Trova la scadenza più vicina al target DTE
+        best_exp = min(
+            expirations,
+            key=lambda e: abs((_date.fromisoformat(e) - today).days - target_dte)
+        )
+
+        # Scadenza troppo distante dal target (>60 gg di scarto) → skip
+        actual_dte = (_date.fromisoformat(best_exp) - today).days
+        if abs(actual_dte - target_dte) > 60:
+            return None
+
+        chain = ticker.option_chain(best_exp)
+        calls = chain.calls
+        if calls.empty:
+            return None
+
+        # Spot price
+        fi = ticker.fast_info
+        spot = getattr(fi, 'last_price', None) or getattr(fi, 'regular_market_price', None)
+        if not spot:
+            hist = ticker.history(period="1d")
+            if not hist.empty:
+                spot = float(hist["Close"].iloc[-1])
+        if not spot:
+            return None
+
+        # Strike ATM (più vicino allo spot)
+        calls = calls.copy()
+        calls["_dist"] = (calls["strike"] - spot).abs()
+        atm_row = calls.loc[calls["_dist"].idxmin()]
+
+        iv = atm_row.get("impliedVolatility")
+        if iv is None or (hasattr(iv, '__float__') and math.isnan(float(iv))):
+            return None
+        iv_f = float(iv)
+        return iv_f if 0.01 < iv_f < 5.0 else None  # sanity: 1% < IV < 500%
+
+    except Exception as e:
+        print(f"[IV_SNAPSHOT] {symbol} @{target_dte}d: {type(e).__name__}: {e}")
+        return None
+
+
+def get_atm_iv_snapshot(
+    tickers: List[str],
+    dte_buckets: List[int] = None,
+    max_workers: int = 10,
+) -> Dict[str, Dict[int, Optional[float]]]:
+    """Fetches ATM IV for all tickers across DTE buckets in parallel.
+
+    Returns: { "AAPL": { 30: 0.2340, 60: 0.2280, 90: None, 180: 0.2150 }, ... }
+    None = data non disponibile per quel bucket.
+    Usa ThreadPoolExecutor per completare ~300 ticker × 4 bucket in ~2-3 min.
+    """
+    if dte_buckets is None:
+        dte_buckets = [30, 60, 90, 180]
+
+    results: Dict[str, Dict[int, Optional[float]]] = {t: {} for t in tickers}
+
+    # Crea tasks: (ticker, dte_bucket)
+    tasks = [(t, b) for t in tickers for b in dte_buckets]
+
+    def _fetch(task):
+        ticker, dte = task
+        return ticker, dte, _get_atm_iv_for_dte(ticker, dte)
+
+    with ThreadPoolExecutor(max_workers=max_workers) as pool:
+        futures = {pool.submit(_fetch, task): task for task in tasks}
+        for future in as_completed(futures):
+            try:
+                ticker, dte, iv = future.result()
+                results[ticker][dte] = iv
+            except Exception as e:
+                task = futures[future]
+                print(f"[IV_SNAPSHOT] Task {task} failed: {e}")
+
+    return results

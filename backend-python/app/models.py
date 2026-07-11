@@ -277,3 +277,29 @@ class CancellationFeedback(Base):
     reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     suggestions: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class IVHistory(Base):
+    """Storico IV ATM per ticker e DTE bucket — alimentato dal cron giornaliero
+    e (bootstrap) dallo scan utente.
+
+    dte_bucket: DTE approssimativo dell'opzione ATM usata per la misurazione.
+      30  = ATM ~30d (standard per IV Rank)
+      60  = ATM ~60d
+      90  = ATM ~90d
+      180 = ATM ~180d
+    IV salvata come decimale: 0.2500 = 25% IV.
+    """
+    __tablename__ = "iv_history"
+    __table_args__ = (
+        Index("iv_history_ticker_time_idx", "ticker", "recorded_at"),
+        Index("iv_history_ticker_bucket_time_idx", "ticker", "dte_bucket", "recorded_at"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    ticker: Mapped[str] = mapped_column(Text, nullable=False)
+    iv: Mapped[float] = mapped_column(nullable=False)        # es. 0.2500 = 25% IV
+    dte_bucket: Mapped[int] = mapped_column(Integer, nullable=False, default=30, server_default="30")
+    recorded_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )

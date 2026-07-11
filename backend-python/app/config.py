@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     admin_email: str = "sgarbo.fra@gmail.com"
     admin_secret: str = ""
     debug: bool = True
+    cron_internal_key: str = "dev-cron-key-change-in-prod"
 
 settings = Settings()
 
@@ -37,4 +38,4 @@ else:
 if settings.anthropic_api_key:
     print(f"[CONFIG] Anthropic API key loaded: {settings.anthropic_api_key[:10]}...")
 else:
-    print("[CONFIG] WARNING: ANTHROPIC_API_KEY not found!")
+     print("[CONFIG] WARNING: ANTHROPIC_API_KEY not found!")
