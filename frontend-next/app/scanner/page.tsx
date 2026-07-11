@@ -166,6 +166,7 @@ export default function ScannerPage() {
   const [error, setError] = useState<string | null>(null)
   const [hasScanned, setHasScanned] = useState(false)
   const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [compareSet, setCompareSet] = useState<Set<string>>(new Set())
   const [watchlists, setWatchlists] = useState<Watchlist[]>([])
   const [targetWl, setTargetWl] = useState('')
   const [saving, setSaving] = useState(false)
@@ -540,6 +541,20 @@ export default function ScannerPage() {
 
   const toggleResult = (key: string) =>
     setSelected(prev => { const s = new Set(prev); s.has(key) ? s.delete(key) : s.add(key); return s })
+
+  const toggleCompare = (key: string) =>
+    setCompareSet(prev => {
+      const s = new Set(prev)
+      if (s.has(key)) { s.delete(key); return s }
+      if (s.size >= 3) return prev   // max 3 contratti
+      s.add(key); return s
+    })
+
+  const goToCompare = () => {
+    const contracts = results.filter(r => compareSet.has(r.symbol_key))
+    sessionStorage.setItem('cs_compare_contracts', JSON.stringify(contracts))
+    router.push('/scanner/compare')
+  }
 
   const openAddModal = () => {
     if (selected.size === 0) return
@@ -1122,6 +1137,14 @@ export default function ScannerPage() {
               }}>
                 ANALY<br />SIS
               </th>
+              <th style={{
+                padding: '6px 8px', textAlign: 'center', fontWeight: 'bold',
+                fontSize: '10.5px', letterSpacing: '0.8px', color: '#00BB00',
+                borderLeft: `1px solid ${bb.border}`, width: '44px', minWidth: '44px',
+              }}
+                title="Seleziona 2-3 contratti da confrontare">
+                CMP
+              </th>
             </tr>
           </thead>
           <tbody style={{ backgroundColor: bb.bg }}>
@@ -1328,6 +1351,21 @@ export default function ScannerPage() {
                   >
                     <span style={{ cursor: 'pointer', fontSize: '15px' }} title="Opportunity Analysis">📊</span>
                   </td>
+                  <td
+                    style={{ padding: '4px 6px', textAlign: 'center', borderLeft: `1px solid ${bb.border}` }}
+                    onClick={e => { e.stopPropagation(); toggleCompare(r.symbol_key) }}
+                    title={compareSet.size >= 3 && !compareSet.has(r.symbol_key) ? 'Max 3 contratti selezionabili' : 'Seleziona per Compare'}
+                  >
+                    <input
+                      type="checkbox"
+                      readOnly
+                      checked={compareSet.has(r.symbol_key)}
+                      style={{
+                        cursor: compareSet.size >= 3 && !compareSet.has(r.symbol_key) ? 'not-allowed' : 'pointer',
+                        accentColor: '#00DD00',
+                      }}
+                    />
+                  </td>
                 </tr>
               )
             })}
@@ -1335,11 +1373,65 @@ export default function ScannerPage() {
         </table>
       </div>}
 
+      {/* Compare Banner */}
+      {view === 'scanner' && compareSet.size >= 2 && (
+        <div style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: '#001a00',
+          border: `2px solid #00DD00`,
+          borderBottom: 'none',
+          padding: '12px 20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '20px',
+          zIndex: 49,
+        }}>
+          <span style={{ fontSize: '13px', color: '#00DD00', letterSpacing: '1px', fontFamily: 'monospace' }}>
+            {compareSet.size} CONTRACTS SELECTED FOR COMPARISON
+          </span>
+          <button
+            onClick={goToCompare}
+            style={{
+              backgroundColor: '#00DD00',
+              color: '#000',
+              border: 'none',
+              padding: '8px 24px',
+              fontSize: '13px',
+              fontFamily: 'inherit',
+              fontWeight: 'bold',
+              letterSpacing: '1px',
+              cursor: 'pointer',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#00FF00')}
+            onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#00DD00')}>
+            COMPARE →
+          </button>
+          <button
+            onClick={() => setCompareSet(new Set())}
+            style={{
+              backgroundColor: 'transparent',
+              color: '#888',
+              border: '1px solid #333',
+              padding: '7px 14px',
+              fontSize: '12px',
+              fontFamily: 'inherit',
+              letterSpacing: '1px',
+              cursor: 'pointer',
+            }}>
+            CLEAR
+          </button>
+        </div>
+      )}
+
       {/* Action Bar */}
       {view === 'scanner' && selected.size > 0 && (
         <div style={{
           position: 'fixed',
-          bottom: 0,
+          bottom: compareSet.size >= 2 ? '62px' : 0,
           left: 0,
           right: 0,
           backgroundColor: bb.panel,
@@ -1410,87 +1502,4 @@ export default function ScannerPage() {
               paddingBottom: '8px',
               borderBottom: `1px solid ${bb.border}`
             }}>
-              ADD TO WATCHLIST
-            </div>
-
-            {watchlists.length === 0 && !creatingNew ? (
-              // CASO 1: No watchlists
-              <div>
-                <p style={{ color: bb.gray, marginBottom: '16px' }}>You have no watchlists yet.</p>
-                <button
-                  onClick={() => setCreatingNew(true)}
-                  style={{
-                    backgroundColor: bb.orange,
-                    color: '#000',
-                    border: 'none',
-                    padding: '8px 16px',
-                    fontSize: '13.2px',
-                    fontFamily: 'inherit',
-                    fontWeight: 'bold',
-                    letterSpacing: '1px',
-                    cursor: 'pointer',
-                    width: '100%'
-                  }}>
-                  CREATE NEW WATCHLIST
-                </button>
-              </div>
-            ) : creatingNew ? (
-              // CASO 3: Create new
-              <div>
-                <label style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
-                  <span style={{ color: bb.gray, fontSize: '12px', letterSpacing: '1px' }}>WATCHLIST NAME:</span>
-                  <input
-                    type="text"
-                    value={newWatchlistName}
-                    onChange={e => setNewWatchlistName(e.target.value)}
-                    placeholder="Enter name..."
-                    autoFocus
-                    style={{
-                      backgroundColor: bb.panel,
-                      border: `1px solid ${bb.border2}`,
-                      color: bb.orange,
-                      padding: '8px 12px',
-                      fontSize: '13.2px',
-                      fontFamily: 'inherit'
-                    }}
-                  />
-                </label>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <button
-                    onClick={() => { setCreatingNew(false); setNewWatchlistName('') }}
-                    style={{
-                      backgroundColor: 'transparent',
-                      border: `1px solid ${bb.border2}`,
-                      color: bb.gray,
-                      padding: '8px 16px',
-                      fontSize: '13.2px',
-                      fontFamily: 'inherit',
-                      letterSpacing: '1px',
-                      cursor: 'pointer',
-                      flex: 1
-                    }}>
-                    CANCEL
-                  </button>
-                  <button
-                    onClick={createWatchlistAndAdd}
-                    disabled={!newWatchlistName.trim() || saving}
-                    style={{
-                      backgroundColor: (!newWatchlistName.trim() || saving) ? bb.border2 : bb.green,
-                      color: '#000',
-                      border: 'none',
-                      padding: '8px 16px',
-                      fontSize: '13.2px',
-                      fontFamily: 'inherit',
-                      fontWeight: 'bold',
-                      letterSpacing: '1px',
-                      cursor: (!newWatchlistName.trim() || saving) ? 'not-allowed' : 'pointer',
-                      flex: 2
-                    }}>
-                    {saving ? 'CREATING...' : 'CREATE AND ADD →'}
-                  </button>
-                </div>
-              </div>
-            ) : (
-              // CASO 2: Select existing
-              <div>
-                <p style={{ color: bb.gray, marginBottom: '12px', fontSize: '13.2px' }}>S
+         

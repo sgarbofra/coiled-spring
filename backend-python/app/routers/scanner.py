@@ -500,8 +500,6 @@ def iv_snapshot(
     """
     from app.config import settings
 
-    # DEBUG: rimuovere dopo verifica
-    print(f"[IV_SNAPSHOT] key_received={x_internal_key!r} key_expected={settings.cron_internal_key!r}")
     if x_internal_key != settings.cron_internal_key:
         raise HTTPException(status_code=403, detail="Forbidden")
 
