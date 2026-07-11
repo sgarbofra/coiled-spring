@@ -24,6 +24,15 @@ type ScanResult = {
   theta: number; open_interest: number; volume: number; symbol_key: string
 }
 
+type IVRankData = {
+  current_iv: number
+  percentile_30d: number | null
+  percentile_90d: number | null
+  percentile_252d: number | null
+  data_points: number
+  days_tracked: number
+}
+
 type Watchlist = { id: string; name: string }
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -207,6 +216,10 @@ export default function ScannerPage() {
   const isLoadingFromStorage = useRef(false)
   // Enable saving to localStorage only after initial mount is complete
   const enableSaving = useRef(false)
+
+  // IV Rank data (fetched after scan for unique tickers)
+  const [ivRanks, setIvRanks] = useState<Record<string, IVRankData | null>>({})
+  const [ivRanksLoading, setIvRanksLoading] = useState(false)
 
   // API-loaded ticker universe (fetched at mount, cached)
   const [apiUniverse, setApiUniverse] = useState<Record<string, string[]> | null>(null)
@@ -479,6 +492,19 @@ export default function ScannerPage() {
       const data = await res.json()
       if (!res.ok || !data.ok) throw new Error(data.error || 'Scan failed')
       setResults(data.results)
+
+      // Fetch IV Rank per ticker unico (fire-and-forget, non blocca UI)
+      const uniqueTickers = [...new Set((data.results as ScanResult[]).map((r: ScanResult) => r.underlying))]
+      if (uniqueTickers.length > 0) {
+        setIvRanksLoading(true)
+        fetch(`/api/scanner/iv-ranks?tickers=${uniqueTickers.join(',')}`)
+          .then(r => r.json())
+          .then((rankData: Record<string, IVRankData | null>) => {
+            setIvRanks(rankData)
+          })
+          .catch(() => { /* non critico */ })
+          .finally(() => setIvRanksLoading(false))
+      }
 
       // Merge ticker names from backend with static ETF info
       const etfData: Record<string, { name: string; isin: string | null }> = {}
@@ -885,6 +911,23 @@ export default function ScannerPage() {
                     <span>{contractCount} CONTRACT{contractCount !== 1 ? 'S' : ''} FOUND</span>
                   )}
                 </span>
+                {(() => {
+                  const rank = ivRanks[t]
+                  if (!rank) return null
+                  return (
+                    <>
+                      <span> | </span>
+                      <span style={{
+                        color: rank.days_tracked >= 30 ? bb.yellow : '#666',
+                        fontSize: '11px',
+                        letterSpacing: '0.5px'
+                      }}
+                        title={`IV history: ${rank.data_points} data points over ${rank.days_tracked} days`}>
+                        IV HISTORY {rank.days_tracked}d
+                      </span>
+                    </>
+                  )
+                })()}
               </div>
             )
           })}
@@ -951,24 +994,23 @@ export default function ScannerPage() {
                   fontWeight: 'bold',
                   fontSize: '12px',
                   letterSpacing: '1px',
-                  opacity: 0.5,
-                  color: '#666',
+                  color: ivRanksLoading ? '#666' : bb.yellow,
                   position: 'relative',
                   cursor: 'help'
                 }}
                 onMouseEnter={() => setShowIvrHeaderTooltip(true)}
                 onMouseLeave={() => setShowIvrHeaderTooltip(false)}>
-                IVR
+                IVR{ivRanksLoading ? ' ⟳' : ''}
                 {showIvrHeaderTooltip && (
                   <div style={{
                     position: 'absolute',
                     bottom: 'calc(100% + 8px)',
                     left: '0',
                     backgroundColor: '#000',
-                    border: `1px solid ${bb.orange}`,
+                    border: `1px solid ${bb.yellow}`,
                     borderRadius: '4px',
                     padding: '8px 12px',
-                    width: '220px',
+                    width: '250px',
                     zIndex: 100,
                     fontFamily: 'Space Mono, monospace',
                     fontSize: '11px',
@@ -979,11 +1021,13 @@ export default function ScannerPage() {
                     fontWeight: 'normal',
                     letterSpacing: '0.5px'
                   }}>
-                    <div style={{ color: bb.orange, fontWeight: 'bold', marginBottom: '4px' }}>
-                      🔒 PRO FEATURE
+                    <div style={{ color: bb.yellow, fontWeight: 'bold', marginBottom: '4px' }}>
+                      IV RANK — 30d percentile
                     </div>
-                    <div style={{ lineHeight: '1.4' }}>
-                      IV Rank requires 52-week historical options data. Available on the Pro plan.
+                    <div style={{ lineHeight: '1.5' }}>
+                      % of trading days in the past 30d where IV was ≤ today&#39;s IV.
+                      High rank = elevated IV → favorable for premium selling.
+                      Self-accumulates from scan history — needs 10+ data points to display.
                     </div>
                     <div style={{
                       position: 'absolute',
@@ -993,7 +1037,7 @@ export default function ScannerPage() {
                       height: 0,
                       borderLeft: '6px solid transparent',
                       borderRight: '6px solid transparent',
-                      borderTop: `6px solid ${bb.orange}`
+                      borderTop: `6px solid ${bb.yellow}`
                     }} />
                   </div>
                 )}
@@ -1176,8 +1220,33 @@ export default function ScannerPage() {
                   <td style={{ padding: '6px 8px', color: r.iv < 5 ? bb.amber : bb.white }}>
                     {r.iv}%{r.iv < 5 && r.iv > 0 ? ' ⚠' : ''}
                   </td>
-                  <td style={{ padding: '6px 8px', color: '#444' }}>
-                    —
+                  <td style={{ padding: '6px 8px', position: 'relative' }}>
+                    {(() => {
+                      if (ivRanksLoading && !ivRanks[r.underlying]) {
+                        return <span style={{ color: '#555' }}>⟳</span>
+                      }
+                      const rank = ivRanks[r.underlying]
+                      if (!rank) return <span style={{ color: '#444' }}>—</span>
+                      if (rank.data_points < 10) {
+                        return (
+                          <span style={{ color: '#555', fontSize: '10px', letterSpacing: '0.5px' }}
+                            title={`Accumulating history: ${rank.data_points}/10 data points`}>
+                            {rank.data_points}/10
+                          </span>
+                        )
+                      }
+                      // Prefer 30d, fallback 90d, then 252d
+                      const pct = rank.percentile_30d ?? rank.percentile_90d ?? rank.percentile_252d
+                      if (pct === null) return <span style={{ color: '#444' }}>—</span>
+                      const label = rank.percentile_30d !== null ? '30d' : rank.percentile_90d !== null ? '90d' : '252d'
+                      const color = pct >= 70 ? bb.green : pct >= 40 ? bb.amber : bb.white
+                      return (
+                        <span style={{ color, fontWeight: 'bold', fontSize: '12px' }}
+                          title={`IV Rank (${label}): ${pct}th percentile — ${rank.days_tracked}d history, ${rank.data_points} points`}>
+                          {pct}<span style={{ fontSize: '9px', color: '#888', marginLeft: '2px' }}>{label}</span>
+                        </span>
+                      )
+                    })()}
                   </td>
                   <td style={{ padding: '6px 8px', color: bb.white }}>{r.delta}</td>
                   <td style={{ padding: '6px 8px', color: bb.white }}>{r.vega}</td>
@@ -1424,89 +1493,4 @@ export default function ScannerPage() {
             ) : (
               // CASO 2: Select existing
               <div>
-                <p style={{ color: bb.gray, marginBottom: '12px', fontSize: '13.2px' }}>Select a watchlist:</p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px', maxHeight: '300px', overflowY: 'auto' }}>
-                  {watchlists.map(w => (
-                    <label
-                      key={w.id}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '12px',
-                        padding: '12px',
-                        backgroundColor: selectedWatchlist === w.id ? bb.surface : bb.panel,
-                        border: `1px solid ${selectedWatchlist === w.id ? bb.orange : bb.border2}`,
-                        cursor: 'pointer'
-                      }}
-                      onClick={() => setSelectedWatchlist(w.id)}>
-                      <input
-                        type="radio"
-                        name="watchlist"
-                        value={w.id}
-                        checked={selectedWatchlist === w.id}
-                        onChange={() => setSelectedWatchlist(w.id)}
-                        style={{ cursor: 'pointer' }}
-                      />
-                      <span style={{ color: bb.orange, fontSize: '13.2px', letterSpacing: '0.5px' }}>{w.name}</span>
-                    </label>
-                  ))}
-                </div>
-                <button
-                  onClick={() => setCreatingNew(true)}
-                  style={{
-                    backgroundColor: 'transparent',
-                    border: `1px solid ${bb.border2}`,
-                    color: bb.amber,
-                    padding: '8px 16px',
-                    fontSize: '12px',
-                    fontFamily: 'inherit',
-                    letterSpacing: '1px',
-                    cursor: 'pointer',
-                    width: '100%',
-                    marginBottom: '16px'
-                  }}>
-                  + CREATE NEW WATCHLIST
-                </button>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <button
-                    onClick={closeModal}
-                    style={{
-                      backgroundColor: 'transparent',
-                      border: `1px solid ${bb.border2}`,
-                      color: bb.gray,
-                      padding: '8px 16px',
-                      fontSize: '13.2px',
-                      fontFamily: 'inherit',
-                      letterSpacing: '1px',
-                      cursor: 'pointer',
-                      flex: 1
-                    }}>
-                    CANCEL
-                  </button>
-                  <button
-                    onClick={addToExistingWatchlist}
-                    disabled={!selectedWatchlist || saving}
-                    style={{
-                      backgroundColor: (!selectedWatchlist || saving) ? bb.border2 : bb.green,
-                      color: '#000',
-                      border: 'none',
-                      padding: '8px 16px',
-                      fontSize: '13.2px',
-                      fontFamily: 'inherit',
-                      fontWeight: 'bold',
-                      letterSpacing: '1px',
-                      cursor: (!selectedWatchlist || saving) ? 'not-allowed' : 'pointer',
-                      flex: 2
-                    }}>
-                    {saving ? 'ADDING...' : 'ADD →'}
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
-    </ProtectedRoute>
-  )
-}
+                <p style={{ color: bb.gray, marginBottom: '12px', fontSize: '13.2px' }}>S
