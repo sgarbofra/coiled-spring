@@ -1502,4 +1502,172 @@ export default function ScannerPage() {
               paddingBottom: '8px',
               borderBottom: `1px solid ${bb.border}`
             }}>
-         
+              ADD TO WATCHLIST
+            </div>
+
+            {watchlists.length === 0 && !creatingNew ? (
+              // CASO 1: No watchlists
+              <div>
+                <p style={{ color: bb.gray, marginBottom: '16px' }}>You have no watchlists yet.</p>
+                <button
+                  onClick={() => setCreatingNew(true)}
+                  style={{
+                    backgroundColor: bb.orange,
+                    color: '#000',
+                    border: 'none',
+                    padding: '8px 16px',
+                    fontSize: '13.2px',
+                    fontFamily: 'inherit',
+                    fontWeight: 'bold',
+                    letterSpacing: '1px',
+                    cursor: 'pointer',
+                    width: '100%'
+                  }}>
+                  CREATE NEW WATCHLIST
+                </button>
+              </div>
+            ) : creatingNew ? (
+              // CASO 3: Create new
+              <div>
+                <label style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
+                  <span style={{ color: bb.gray, fontSize: '12px', letterSpacing: '1px' }}>WATCHLIST NAME:</span>
+                  <input
+                    type="text"
+                    value={newWatchlistName}
+                    onChange={e => setNewWatchlistName(e.target.value)}
+                    placeholder="Enter name..."
+                    autoFocus
+                    style={{
+                      backgroundColor: bb.panel,
+                      border: `1px solid ${bb.border2}`,
+                      color: bb.orange,
+                      padding: '8px 12px',
+                      fontSize: '13.2px',
+                      fontFamily: 'inherit'
+                    }}
+                  />
+                </label>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={() => { setCreatingNew(false); setNewWatchlistName('') }}
+                    style={{
+                      backgroundColor: 'transparent',
+                      border: `1px solid ${bb.border2}`,
+                      color: bb.gray,
+                      padding: '8px 16px',
+                      fontSize: '13.2px',
+                      fontFamily: 'inherit',
+                      letterSpacing: '1px',
+                      cursor: 'pointer',
+                      flex: 1
+                    }}>
+                    CANCEL
+                  </button>
+                  <button
+                    onClick={createWatchlistAndAdd}
+                    disabled={!newWatchlistName.trim() || saving}
+                    style={{
+                      backgroundColor: (!newWatchlistName.trim() || saving) ? bb.border2 : bb.green,
+                      color: '#000',
+                      border: 'none',
+                      padding: '8px 16px',
+                      fontSize: '13.2px',
+                      fontFamily: 'inherit',
+                      fontWeight: 'bold',
+                      letterSpacing: '1px',
+                      cursor: (!newWatchlistName.trim() || saving) ? 'not-allowed' : 'pointer',
+                      flex: 2
+                    }}>
+                    {saving ? 'CREATING...' : 'CREATE AND ADD →'}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              // CASO 2: Select existing
+              <div>
+                <p style={{ color: bb.gray, marginBottom: '12px', fontSize: '13.2px' }}>Select a watchlist:</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px', maxHeight: '300px', overflowY: 'auto' }}>
+                  {watchlists.map(w => (
+                    <label
+                      key={w.id}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px',
+                        padding: '12px',
+                        backgroundColor: selectedWatchlist === w.id ? bb.surface : bb.panel,
+                        border: `1px solid ${selectedWatchlist === w.id ? bb.orange : bb.border2}`,
+                        cursor: 'pointer'
+                      }}
+                      onClick={() => setSelectedWatchlist(w.id)}>
+                      <input
+                        type="radio"
+                        name="watchlist"
+                        value={w.id}
+                        checked={selectedWatchlist === w.id}
+                        onChange={() => setSelectedWatchlist(w.id)}
+                        style={{ cursor: 'pointer' }}
+                      />
+                      <span style={{ color: bb.orange, fontSize: '13.2px', letterSpacing: '0.5px' }}>{w.name}</span>
+                    </label>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setCreatingNew(true)}
+                  style={{
+                    backgroundColor: 'transparent',
+                    border: `1px solid ${bb.border2}`,
+                    color: bb.amber,
+                    padding: '8px 16px',
+                    fontSize: '12px',
+                    fontFamily: 'inherit',
+                    letterSpacing: '1px',
+                    cursor: 'pointer',
+                    width: '100%',
+                    marginBottom: '16px'
+                  }}>
+                  + CREATE NEW WATCHLIST
+                </button>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={closeModal}
+                    style={{
+                      backgroundColor: 'transparent',
+                      border: `1px solid ${bb.border2}`,
+                      color: bb.gray,
+                      padding: '8px 16px',
+                      fontSize: '13.2px',
+                      fontFamily: 'inherit',
+                      letterSpacing: '1px',
+                      cursor: 'pointer',
+                      flex: 1
+                    }}>
+                    CANCEL
+                  </button>
+                  <button
+                    onClick={addToExistingWatchlist}
+                    disabled={!selectedWatchlist || saving}
+                    style={{
+                      backgroundColor: (!selectedWatchlist || saving) ? bb.border2 : bb.green,
+                      color: '#000',
+                      border: 'none',
+                      padding: '8px 16px',
+                      fontSize: '13.2px',
+                      fontFamily: 'inherit',
+                      fontWeight: 'bold',
+                      letterSpacing: '1px',
+                      cursor: (!selectedWatchlist || saving) ? 'not-allowed' : 'pointer',
+                      flex: 2
+                    }}>
+                    {saving ? 'ADDING...' : 'ADD →'}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+    </ProtectedRoute>
+  )
+}
