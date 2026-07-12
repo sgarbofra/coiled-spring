@@ -175,7 +175,7 @@ export default function WatchlistsPage() {
           <div onClick={() => setSidebarOpen(false)} style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)', zIndex: 40 }} />
         )}
         <div style={{
-          width: '300px', flexShrink: 0,
+          width: '200px', flexShrink: 0,
           ...(isMobile ? {
             position: 'fixed', top: 0, left: 0, height: '100%', zIndex: 50,
             transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
