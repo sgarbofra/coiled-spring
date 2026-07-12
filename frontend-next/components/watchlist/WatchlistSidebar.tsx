@@ -116,15 +116,15 @@ export default function WatchlistSidebar({
       {/* Create new */}
       <div style={{ padding: '10px 12px', borderBottom: `1px solid ${bb.border}` }}>
         <div style={{ color: bb.gray, fontSize: '12px', letterSpacing: '1px', marginBottom: '4px' }}>NEW WATCHLIST</div>
-        <div style={{ display: 'flex', gap: '4px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           <input
             placeholder="NAME..." value={name} onChange={e => setName(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && createWatchlist()}
-            style={{ flex: 1, backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '4px 6px', fontSize: '14.4px', fontFamily: 'inherit' }}
+            style={{ width: '100%', boxSizing: 'border-box', backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '4px 6px', fontSize: '14.4px', fontFamily: 'inherit' }}
           />
           <button onClick={createWatchlist} disabled={creating}
-            style={{ backgroundColor: bb.orange, color: '#000', border: 'none', padding: '4px 8px', fontFamily: 'inherit', fontSize: '13.2px', fontWeight: 'bold', cursor: 'pointer', letterSpacing: '1px' }}>
-            ADD
+            style={{ width: '100%', backgroundColor: bb.orange, color: '#000', border: 'none', padding: '4px 6px', fontFamily: 'inherit', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer', letterSpacing: '1px' }}>
+            + ADD
           </button>
         </div>
       </div>
