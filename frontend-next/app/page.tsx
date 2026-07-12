@@ -186,7 +186,7 @@ export default function LandingPage() {
               </span>
             ))}
             <span style={{ marginLeft: 'auto', fontSize: '0.72rem', color: colors.dim, letterSpacing: '1px' }}>
-              DATA DELAYED · {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })} ET
+              DATA DELAYED · 15 MIN
             </span>
           </div>
         </div>
