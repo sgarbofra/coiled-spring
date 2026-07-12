@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useCallback, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { computeCandidateScore, computeWhyPanel, scoreColor } from '@/lib/cs-score'
 import WhatIfSimulator from '@/components/WhatIfSimulator'
@@ -439,6 +440,7 @@ function DC({ label, value, accent, span }: { label: string; value: string | num
 const AUTO_REFRESH_SEC = 120 // 2 min — allineato con OPTPRICE_TTL backend
 
 function PositionsTab({ portfolioId }: { portfolioId: number }) {
+  const router = useRouter()
   const [positions, setPositions] = useState<OpenPosition[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -552,6 +554,7 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
                 <Th right>PNL $</Th>
                 <Th right>PNL %</Th>
                 <Th right>CS</Th>
+                <Th>ANALY<br />SIS</Th>
                 <Th></Th>
               </tr>
             </thead>
@@ -600,8 +603,33 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
                       <span style={{ color: bb.gray, fontSize: '11px' }}>—</span>
                     )}
                   </td>
+                  {/* ANALYSIS button */}
+                  <td
+                    style={{ padding: '4px 6px', textAlign: 'center', borderBottom: `1px solid ${bb.border}` }}
+                    onClick={e => {
+                      e.stopPropagation()
+                      const spreadPct = (p.current_bid != null && p.current_ask != null && p.current_mid != null && p.current_mid > 0)
+                        ? (p.current_ask - p.current_bid) / p.current_mid
+                        : 0
+                      const params = new URLSearchParams({
+                        strike: String(p.strike),
+                        expiration: p.expiration.split('T')[0],
+                        type: p.option_type,
+                        delta: p.current_delta != null ? String(p.current_delta) : '',
+                        mid: p.current_mid != null ? String(p.current_mid) : '',
+                        spread_pct: String(spreadPct),
+                        oi: p.current_open_interest != null ? String(p.current_open_interest) : '',
+                        dte: String(p.dte),
+                        vega: p.current_vega != null ? String(p.current_vega) : '',
+                        theta: '',
+                      })
+                      router.push(`/scanner/opportunity/${p.underlying}?${params.toString()}`)
+                    }}
+                  >
+                    <span style={{ cursor: 'pointer', fontSize: '15px' }} title="Opportunity Analysis">📊</span>
+                  </td>
                   <td style={{ padding: '4px 8px', borderBottom: `1px solid ${bb.border}` }}>
-                    <button onClick={() => setCloseTarget(p)} style={{
+                    <button onClick={e => { e.stopPropagation(); setCloseTarget(p) }} style={{
                       border: `1px solid ${bb.red}`, backgroundColor: 'rgba(255,51,51,0.1)',
                       color: bb.red, padding: '2px 8px', fontSize: '11px', fontWeight: 'bold',
                       fontFamily: 'Courier New, monospace', cursor: 'pointer', letterSpacing: '1px',

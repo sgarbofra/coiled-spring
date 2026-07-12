@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { computeCandidateScore, computeWhyPanel, scoreColor } from '@/lib/cs-score'
 
 const bb = {
@@ -30,6 +31,7 @@ type Props = {
 }
 
 export default function WatchlistTable({ items, selectedIds = [], onSelectIds, onOpenItem }: Props) {
+  const router = useRouter()
   const [query, setQuery] = useState('')
   const [sortKey, setSortKey] = useState<SortKey>('symbol')
   const [sortAsc, setSortAsc] = useState(true)
@@ -102,11 +104,14 @@ export default function WatchlistTable({ items, selectedIds = [], onSelectIds, o
               <th style={{ borderBottom: `1px solid ${bb.border2}`, padding: '6px 8px', fontWeight: 'bold', fontSize: '10.5px', letterSpacing: '0.8px', color: bb.orange, whiteSpace: 'nowrap' }}>
                 CS SCORE
               </th>
+              <th style={{ borderBottom: `1px solid ${bb.border2}`, padding: '6px 8px', fontWeight: 'bold', fontSize: '10.5px', letterSpacing: '0.8px', color: bb.orange, textAlign: 'center', whiteSpace: 'nowrap' }}>
+                ANALY<br />SIS
+              </th>
             </tr>
           </thead>
           <tbody style={{ backgroundColor: bb.bg }}>
             {filtered.length === 0 ? (
-              <tr><td colSpan={14} style={{ padding: '24px', textAlign: 'center', color: bb.gray, fontSize: '13.2px', letterSpacing: '1px' }}>NO ITEMS FOUND</td></tr>
+              <tr><td colSpan={15} style={{ padding: '24px', textAlign: 'center', color: bb.gray, fontSize: '13.2px', letterSpacing: '1px' }}>NO ITEMS FOUND</td></tr>
             ) : filtered.map(item => {
               const isSelected = selectedIds.includes(item.id)
               const dte = item.dte ?? 999
@@ -185,6 +190,32 @@ export default function WatchlistTable({ items, selectedIds = [], onSelectIds, o
                         </>
                       )
                     })()}
+                  </td>
+                  {/* ANALYSIS button */}
+                  <td
+                    style={{ padding: '4px 6px', textAlign: 'center', borderBottom: `1px solid ${bb.border}` }}
+                    onClick={e => {
+                      e.stopPropagation()
+                      if (!item.underlyingSymbol || !item.strike || !item.expirationDate) return
+                      const spreadPctDecimal = (item.bid != null && item.ask != null && (item.bid + item.ask) > 0)
+                        ? (item.ask - item.bid) / ((item.bid + item.ask) / 2)
+                        : (item.bidAskSpread != null ? item.bidAskSpread / 100 : 0)
+                      const params = new URLSearchParams({
+                        strike: String(item.strike),
+                        expiration: item.expirationDate.split('T')[0],
+                        type: (item.optionSide ?? 'call').toLowerCase(),
+                        delta: item.delta != null ? String(item.delta) : '',
+                        mid: item.currentPremium != null ? String(item.currentPremium) : (item.premiumPaid != null ? String(item.premiumPaid) : ''),
+                        spread_pct: String(spreadPctDecimal),
+                        oi: item.openInterest != null ? String(item.openInterest) : '',
+                        dte: item.dte != null ? String(item.dte) : '',
+                        vega: item.vega != null ? String(item.vega) : '',
+                        theta: item.theta != null ? String(item.theta) : '',
+                      })
+                      router.push(`/scanner/opportunity/${item.underlyingSymbol}?${params.toString()}`)
+                    }}
+                  >
+                    <span style={{ cursor: 'pointer', fontSize: '15px' }} title="Opportunity Analysis">📊</span>
                   </td>
                 </tr>
               )
