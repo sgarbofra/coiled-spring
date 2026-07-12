@@ -4,6 +4,12 @@ import { AiPanelProvider } from '@/contexts/AiPanelContext'
 import LayoutContent from '@/components/LayoutContent'
 import './globals.css'
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+}
+
 export const metadata: Metadata = {
   title: 'Coiled Spring | Scanner Opzioni LEAPS — Terminale Antifragile',
   description: 'Scanner opzioni LEAPS con IV Rank, superficie di volatilità 3D e AI su 3.500+ titoli USA. Trova opzioni americane con volatilità compressa. LEAPS options scanner with IV Rank analysis for antifragile traders.',
