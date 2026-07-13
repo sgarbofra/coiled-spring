@@ -273,6 +273,101 @@ function HVChart({ prices }: { prices: PricePoint[] }) {
   )
 }
 
+// ── HV Rank Panel ─────────────────────────────────────────────────────────────
+function calcHV(prices: PricePoint[], window: number): number | null {
+  if (prices.length < window + 1) return null
+  const slice = prices.slice(prices.length - window - 1)
+  const logR = slice.slice(1).map((p, i) => Math.log(p.close / slice[i].close))
+  const mean = logR.reduce((a, b) => a + b, 0) / logR.length
+  const variance = logR.reduce((a, b) => a + (b - mean) ** 2, 0) / (logR.length - 1)
+  return Math.sqrt(variance * 252) * 100
+}
+
+function HVRankPanel({ prices }: { prices: PricePoint[] }) {
+  if (prices.length < 22) return null
+
+  // Calcola rolling HV20 su tutta la serie per il ranking
+  const allHV20: number[] = []
+  for (let i = 20; i < prices.length; i++) {
+    const slice = prices.slice(i - 20, i + 1)
+    const logR = slice.slice(1).map((p, j) => Math.log(p.close / slice[j].close))
+    const mean = logR.reduce((a, b) => a + b, 0) / logR.length
+    const variance = logR.reduce((a, b) => a + (b - mean) ** 2, 0) / (logR.length - 1)
+    allHV20.push(Math.sqrt(variance * 252) * 100)
+  }
+
+  const currentHV20 = allHV20[allHV20.length - 1]
+  const hv60 = calcHV(prices, 60)
+  const hv252 = calcHV(prices, 252)
+
+  // HV Rank = % di valori storici INFERIORI all'attuale (basso = vol compressa)
+  const belowCount = allHV20.filter(v => v < currentHV20).length
+  const hvRank = Math.round((belowCount / allHV20.length) * 100)
+
+  const rankColor = hvRank <= 30 ? '#00CC44' : hvRank <= 60 ? '#FFB300' : '#FF3333'
+  const rankLabel = hvRank <= 30 ? 'VOL COMPRESSA' : hvRank <= 60 ? 'VOL MEDIA' : 'VOL ELEVATA'
+
+  return (
+    <div style={{
+      marginTop: 8, marginBottom: 2,
+      background: bb.panel, border: `1px solid ${bb.border}`,
+      padding: '10px 14px',
+    }}>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+        <span style={{ fontSize: 10, color: bb.gray, letterSpacing: 1, fontFamily: 'monospace' }}>
+          HV RANK — VOL. STORICA COMPRESSA?
+        </span>
+        <span style={{ fontSize: 11, fontWeight: 'bold', color: rankColor, letterSpacing: 1, fontFamily: 'monospace' }}>
+          {rankLabel}
+        </span>
+      </div>
+
+      {/* Gauge bar */}
+      <div style={{ position: 'relative', height: 8, background: '#1a1a00', borderRadius: 2, marginBottom: 10 }}>
+        {/* Zone colorate statiche */}
+        <div style={{ position: 'absolute', left: 0, top: 0, width: '30%', height: '100%', background: 'rgba(0,204,68,0.25)', borderRadius: '2px 0 0 2px' }} />
+        <div style={{ position: 'absolute', left: '30%', top: 0, width: '30%', height: '100%', background: 'rgba(255,179,0,0.20)' }} />
+        <div style={{ position: 'absolute', left: '60%', top: 0, width: '40%', height: '100%', background: 'rgba(255,51,51,0.20)', borderRadius: '0 2px 2px 0' }} />
+        {/* Indicatore posizione */}
+        <div style={{
+          position: 'absolute', top: -2, left: `calc(${hvRank}% - 4px)`,
+          width: 8, height: 12, background: rankColor, borderRadius: 2,
+          boxShadow: `0 0 6px ${rankColor}`,
+        }} />
+      </div>
+
+      {/* Valori numerici */}
+      <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
+        <span style={{ fontSize: 11, fontFamily: 'monospace', color: bb.gray }}>
+          HV20 <span style={{ color: rankColor, fontWeight: 'bold' }}>{currentHV20.toFixed(1)}%</span>
+        </span>
+        {hv60 !== null && (
+          <span style={{ fontSize: 11, fontFamily: 'monospace', color: bb.gray }}>
+            HV60 <span style={{ color: bb.white }}>{hv60.toFixed(1)}%</span>
+          </span>
+        )}
+        {hv252 !== null && (
+          <span style={{ fontSize: 11, fontFamily: 'monospace', color: bb.gray }}>
+            HV252 <span style={{ color: bb.white }}>{hv252.toFixed(1)}%</span>
+          </span>
+        )}
+        <span style={{ fontSize: 11, fontFamily: 'monospace', color: bb.gray }}>
+          RANK <span style={{ color: rankColor, fontWeight: 'bold' }}>{hvRank}%</span>
+          <span style={{ color: bb.gray, fontSize: 10 }}> ({allHV20.length}d)</span>
+        </span>
+        {hv60 !== null && (
+          <span style={{ fontSize: 11, fontFamily: 'monospace', color: bb.gray }}>
+            HV20/HV60 <span style={{ color: currentHV20 < hv60 ? '#00CC44' : '#FF3333', fontWeight: 'bold' }}>
+              {(currentHV20 / hv60).toFixed(2)}x
+            </span>
+          </span>
+        )}
+      </div>
+    </div>
+  )
+}
+
 function FieldRow({ label, value, color }: { label: string; value: string; color?: string }) {
   return (
     <div
@@ -535,6 +630,7 @@ function OpportunityContent() {
           )}
           {history && !loadingChart && <PriceChart prices={history.prices} />}
           {history && !loadingChart && <HVChart prices={history.prices} />}
+          {history && !loadingChart && <HVRankPanel prices={history.prices} />}
 
           {currentPrice !== null && (
             <div
