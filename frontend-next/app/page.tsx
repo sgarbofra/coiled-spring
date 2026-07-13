@@ -554,7 +554,7 @@ export default function LandingPage() {
             <div className="book-grid" style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '5rem', alignItems: 'center' }}>
               <div style={{ textAlign: 'center' }}>
                 <a href="https://www.amazon.com/dp/B0H59BH9SL" target="_blank" rel="noopener noreferrer">
-                  <img src="/book-cover.jpg" alt="Coiled Spring Book" style={{ width: '100%', maxWidth: '240px', borderRadius: '4px', boxShadow: '0 8px 40px rgba(0,0,0,0.6)', transition: 'transform 0.2s ease' }}
+                  <img src="/book.png" alt="Coiled Spring Book" style={{ width: '100%', maxWidth: '240px', borderRadius: '4px', boxShadow: '0 8px 40px rgba(0,0,0,0.6)', transition: 'transform 0.2s ease' }}
                     onMouseEnter={(e) => (e.currentTarget as HTMLImageElement).style.transform = 'scale(1.03)'}
                     onMouseLeave={(e) => (e.currentTarget as HTMLImageElement).style.transform = 'scale(1)'} />
                 </a>
@@ -585,13 +585,13 @@ export default function LandingPage() {
                 </div>
 
                 <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                  <a href="https://www.amazon.com/dp/B0H59BH9SL" target="_blank" rel="noopener noreferrer"
+                  <a href="https://www.amazon.com/dp/B0H59CRSLN" target="_blank" rel="noopener noreferrer"
                     style={{ background: colors.orange, color: colors.bg, padding: '0.85rem 2rem', fontSize: '0.95rem', fontWeight: 'bold', letterSpacing: '1px', borderRadius: '4px', textDecoration: 'none', display: 'inline-block', transition: 'background 0.2s ease' }}
                     onMouseEnter={(e) => (e.currentTarget as HTMLAnchorElement).style.background = colors.orangeHover}
                     onMouseLeave={(e) => (e.currentTarget as HTMLAnchorElement).style.background = colors.orange}>
                     Buy on Amazon (EN) →
                   </a>
-                  <a href="https://www.amazon.com/dp/B0H59CRSLN" target="_blank" rel="noopener noreferrer"
+                  <a href="https://www.amazon.com/dp/B0H59BH9SL" target="_blank" rel="noopener noreferrer"
                     style={{ background: 'transparent', color: colors.orange, border: `2px solid ${colors.orange}`, padding: '0.85rem 2rem', fontSize: '0.95rem', fontWeight: 'bold', letterSpacing: '1px', borderRadius: '4px', textDecoration: 'none', display: 'inline-block', transition: 'all 0.2s ease' }}
                     onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = colors.orange; (e.currentTarget as HTMLAnchorElement).style.color = colors.bg }}
                     onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'; (e.currentTarget as HTMLAnchorElement).style.color = colors.orange }}>
