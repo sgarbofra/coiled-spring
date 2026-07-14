@@ -4,4 +4,4 @@ Disallow: /watchlists
 Disallow: /scanner
 Disallow: /settings
 Disallow: /portfolio
-Sitemap: https://coiledspring.app/sitemap.xml
+Sitemap: https://www.coiledspring.app/sitemap.xml
