@@ -64,6 +64,8 @@ class ScanResult(BaseModel):
     open_interest: int
     volume: int
     symbol_key: str
+    price_source: str = "mid"   # "mid" = liquid | "last" = illiquid/stale
+    is_stale: bool = False       # True when price_source == "last"
 
 
 class ScanResponse(BaseModel):

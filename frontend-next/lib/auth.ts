@@ -29,7 +29,7 @@ export function getToken(): string | null {
 export function setToken(token: string): void {
   if (typeof document === 'undefined') return
 
-  const cookieString = `${TOKEN_COOKIE_NAME}=${token}; path=/; max-age=${TOKEN_MAX_AGE}; SameSite=Lax`
+  const cookieString = `${TOKEN_COOKIE_NAME}=${token}; path=/; max-age=${TOKEN_MAX_AGE}; SameSite=Lax; Domain=.coiledspring.app; Secure`
   console.log('[AUTH] Setting cookie:', cookieString.substring(0, 50) + '...')
   document.cookie = cookieString
   console.log('[AUTH] Cookie set. Current cookies:', document.cookie)

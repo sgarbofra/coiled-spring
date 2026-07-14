@@ -176,4 +176,4 @@ class AlertOut(BaseModel):
     last_triggered_at: Optional[datetime]
     created_at: datetime
     updated_at: datetime
-    
+    model_config = {"from_attributes": True}

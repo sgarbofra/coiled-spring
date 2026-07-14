@@ -132,6 +132,8 @@ class OptionResult:
     open_interest: int
     volume: int
     symbol_key: str
+    price_source: str = "mid"   # "mid" = bid/ask liquid | "last" = illiquid, stale
+    is_stale: bool = False       # True when price_source != "mid"
 
 
 # ── Simple in-memory cache ────────────────────────────────────────────────────
@@ -300,14 +302,19 @@ def _yf_options_for_symbol(
 
                     # Calculate mid price first (needed for IV calculation if missing)
                     mid = 0.0
+                    price_source = "mid"   # default: liquid market (bid+ask)
                     if bid > 0 and ask > 0:
                         mid = (bid + ask) / 2
+                        price_source = "mid"
                     elif last_price > 0:
                         mid = last_price
+                        price_source = "last"   # illiquid: usa last traded price
                     elif bid > 0:
                         mid = bid
+                        price_source = "last"
                     elif ask > 0:
                         mid = ask
+                        price_source = "last"
 
                     # Scanner requires at least one price source
                     if mid <= 0:
@@ -395,6 +402,8 @@ def _yf_options_for_symbol(
                         open_interest=oi,
                         volume=vol,
                         symbol_key=symbol_key,
+                        price_source=price_source,
+                        is_stale=(price_source != "mid"),
                     ))
 
         print(f"\n[DEBUG {symbol}] Processing summary:")

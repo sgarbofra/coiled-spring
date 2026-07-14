@@ -54,7 +54,14 @@ export async function GET() {
     }
 
     const videos: YouTubeVideo[] = data.items
-      .filter((item: any) => item.snippet.title !== 'Private video' && item.snippet.title !== 'Deleted video')
+      .filter((item: any) => {
+        const title: string = item.snippet.title ?? ''
+        return (
+          title !== 'Private video' &&
+          title !== 'Deleted video' &&
+          !title.toLowerCase().includes('#shorts')
+        )
+      })
       .map((item: any) => ({
         videoId: item.snippet.resourceId.videoId,
         title: item.snippet.title,

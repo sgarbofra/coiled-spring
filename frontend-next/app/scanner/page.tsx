@@ -22,6 +22,8 @@ type ScanResult = {
   dte: number; bid: number; ask: number; mid: number; last_price: number; spread_pct: number
   iv: number; iv_rank: number; delta: number; gamma: number; vega: number
   theta: number; open_interest: number; volume: number; symbol_key: string
+  price_source?: string   // "mid" = liquid | "last" = illiquid/stale
+  is_stale?: boolean      // true when price calculated from last traded price (no bid/ask)
 }
 
 type IVRankData = {
@@ -36,9 +38,13 @@ type IVRankData = {
 type Watchlist = { id: string; name: string }
 
 const CATEGORY_LABELS: Record<string, string> = {
-  stocks:      'STOCKS',
-  etf:         'ETF',
-  indici:      'INDICI',
+  STOCKS:     'STOCKS (S&P 500 + MidCap)',
+  SPECIALI:   'SPECIALI (Meme, EV, Crypto)',
+  ETF:        'ETF',
+  // Legacy lowercase fallbacks (static universe)
+  stocks:     'STOCKS',
+  etf:        'ETF',
+  indici:     'INDICI',
   commodities: 'COMMODITIES',
 }
 
@@ -238,10 +244,18 @@ export default function ScannerPage() {
     setTimeout(() => searchRef.current?.focus(), 50)
   }
 
-  // Use STATIC_UNIVERSE for categories (frontend keys: stocks, etf, indici, commodities)
-  // Use API universe only for the "all" list to expand ticker coverage
-  const allTickersArray = apiUniverse?.all || ALL_TICKERS
-  const pool = assetClass ? (STATIC_UNIVERSE[assetClass] ?? []) : allTickersArray
+  // Use API universe when available (1100+ tickers), fallback to static
+  // Backend category keys: STOCKS, SPECIALI, ETF, ALL (uppercase)
+  const allTickersArray: string[] = (
+    apiUniverse?.ALL ||
+    apiUniverse?.all ||
+    (apiUniverse ? Object.values(apiUniverse).flat() : null) ||
+    ALL_TICKERS
+  )
+  // For category filter: try API category first (uppercase), then static fallback
+  const pool: string[] = assetClass
+    ? (apiUniverse?.[assetClass.toUpperCase()] ?? apiUniverse?.[assetClass] ?? STATIC_UNIVERSE[assetClass] ?? [])
+    : allTickersArray
   const filteredTickers = smartFilter(tickerSearch, pool, selectedTickers)
 
   const addTicker = (t: string) => {
@@ -716,11 +730,21 @@ export default function ScannerPage() {
           <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', color: bb.gray, fontSize: '12px', letterSpacing: '1px' }}>
             ASSET CLASS
             <select value={assetClass} onChange={e => handleAssetClass(e.target.value)}
-              style={{ backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '4px 8px', fontSize: '13.2px', fontFamily: 'inherit', width: '140px' }}>
-              <option value="">— SELECT —</option>
-              {Object.keys(CATEGORY_LABELS).map(cat => (
-                <option key={cat} value={cat}>{CATEGORY_LABELS[cat]}</option>
-              ))}
+              style={{ backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '4px 8px', fontSize: '13.2px', fontFamily: 'inherit', width: '200px' }}>
+              <option value="">— ALL ({allTickersArray.length}) —</option>
+              {/* API categories first, then static fallback */}
+              {apiUniverse
+                ? Object.keys(apiUniverse)
+                    .filter(k => k !== 'ALL' && k !== 'all')
+                    .map(cat => (
+                      <option key={cat} value={cat}>
+                        {CATEGORY_LABELS[cat] || cat} ({(apiUniverse[cat] || []).length})
+                      </option>
+                    ))
+                : Object.keys(STATIC_UNIVERSE).map(cat => (
+                    <option key={cat} value={cat}>{CATEGORY_LABELS[cat] || cat}</option>
+                  ))
+              }
             </select>
           </label>
 
@@ -1225,6 +1249,18 @@ export default function ScannerPage() {
                     onMouseEnter={() => setHoveredRiskKey(r.symbol_key)}
                     onMouseLeave={() => setHoveredRiskKey(null)}>
                     {r.underlying}
+                    {r.is_stale && (
+                      <span
+                        style={{
+                          marginLeft: '5px', fontSize: '9px', fontWeight: 'bold',
+                          color: '#000', backgroundColor: bb.amber,
+                          padding: '1px 4px', letterSpacing: '0.5px',
+                          verticalAlign: 'middle', cursor: 'help',
+                        }}
+                        title="⚠ ILLIQUID — Prezzi calcolati sul LAST PRICE (nessun bid/ask attivo). Il valore potrebbe essere vecchio e fuori mercato. Verificare prima di tradare.">
+                        LAST
+                      </span>
+                    )}
                     <RiskTooltip
                       props={{ spread_pct: r.spread_pct, open_interest: r.open_interest, dte: r.dte, earnings_date: null }}
                       idx={idx}
@@ -1235,11 +1271,30 @@ export default function ScannerPage() {
                   <td style={{ padding: '6px 8px', color: bb.white }}>{r.strike}</td>
                   <td style={{ padding: '6px 8px', color: bb.white }}>{r.expiration}</td>
                   <td style={{ padding: '6px 8px', color: bb.white }}>{r.dte}</td>
-                  <td style={{ padding: '6px 8px', color: bb.white }}>{r.bid}</td>
-                  <td style={{ padding: '6px 8px', color: bb.white }}>{r.ask}</td>
-                  <td style={{ padding: '6px 8px', fontWeight: 'bold', color: bb.orange }}>{r.mid}</td>
-                  <td style={{ padding: '6px 8px', color: bb.green }}>{r.last_price}</td>
-                  <td style={{ padding: '6px 8px', color: r.spread_pct > 5 ? bb.amber : bb.white }}>{r.spread_pct}%</td>
+                  <td style={{ padding: '6px 8px', color: r.is_stale ? '#555' : bb.white }}
+                    title={r.is_stale ? 'No bid/ask — value not available' : undefined}>
+                    {r.is_stale ? '—' : r.bid}
+                  </td>
+                  <td style={{ padding: '6px 8px', color: r.is_stale ? '#555' : bb.white }}
+                    title={r.is_stale ? 'No bid/ask — value not available' : undefined}>
+                    {r.is_stale ? '—' : r.ask}
+                  </td>
+                  {/* MID: amber + tooltip when stale (calculated from last price) */}
+                  <td style={{
+                    padding: '6px 8px', fontWeight: 'bold',
+                    color: r.is_stale ? bb.amber : bb.orange,
+                    position: 'relative', cursor: r.is_stale ? 'help' : 'default'
+                  }}
+                    title={r.is_stale
+                      ? '⚠ STALE — Calcolato su LAST PRICE (nessun bid/ask). Il valore potrebbe essere fuori mercato.'
+                      : undefined}>
+                    {r.mid}{r.is_stale && <span style={{ fontSize: '10px', marginLeft: '3px', color: bb.amber, opacity: 0.8 }}>L</span>}
+                  </td>
+                  <td style={{ padding: '6px 8px', color: r.is_stale ? bb.amber : bb.green }}>{r.last_price}</td>
+                  <td style={{ padding: '6px 8px', color: r.spread_pct >= 99 ? bb.amber : r.spread_pct > 5 ? bb.amber : bb.white }}
+                    title={r.spread_pct >= 99 ? 'Spread non disponibile — opzione illiquida (no bid/ask)' : undefined}>
+                    {r.spread_pct >= 99 ? '—' : `${r.spread_pct}%`}
+                  </td>
                   <td style={{ padding: '6px 8px', color: r.iv < 5 ? bb.amber : bb.white }}>
                     {r.iv}%{r.iv < 5 && r.iv > 0 ? ' ⚠' : ''}
                   </td>
