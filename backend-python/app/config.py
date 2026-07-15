@@ -27,6 +27,8 @@ class Settings(BaseSettings):
     admin_secret: str = ""
     debug: bool = True
     cron_internal_key: str = "dev-cron-key-change-in-prod"
+    google_client_id: str = ""
+    google_client_secret: str = ""
 
 settings = Settings()
 

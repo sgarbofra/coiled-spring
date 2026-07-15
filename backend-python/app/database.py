@@ -17,3 +17,6 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 class Base(DeclarativeBase):
     pass
+
+# Esportato per uso interno (es. background tasks che aprono la propria connessione)
+DATABASE_URL = _db_url

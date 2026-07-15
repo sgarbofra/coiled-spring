@@ -22,7 +22,7 @@ import yfinance as yf
 from app.config import settings
 from app.database import Base, engine
 from app.dependencies import get_db
-from app.routers import admin, ai_chat, auth, broker, hv_screener, market, notes, portfolio, scanner, stripe, watchlist_items, watchlists
+from app.routers import admin, ai_chat, auth, auth_google, broker, hv_screener, market, notes, portfolio, scanner, stripe, watchlist_items, watchlists
 from sqlalchemy.orm import Session
 
 import app.models  # noqa: F401 — registers all models with Base
@@ -85,6 +85,18 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         # Colonna già presente o DB non PostgreSQL — non bloccare l'avvio
         print(f"[MIGRATION] dte_bucket skip: {e}")
+
+    # Migration: aggiungi google_id a users se non esiste
+    try:
+        from sqlalchemy import text
+        with engine.connect() as conn:
+            conn.execute(text(
+                "ALTER TABLE users ADD COLUMN IF NOT EXISTS google_id TEXT UNIQUE"
+            ))
+            conn.commit()
+            print("[MIGRATION] users.google_id OK")
+    except Exception as e:
+        print(f"[MIGRATION] google_id skip: {e}")
 
     # APScheduler: daily IV snapshot alle 16:30 UTC
     from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -171,6 +183,7 @@ app.add_middleware(
 )
 
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
+app.include_router(auth_google.router, prefix="/api/auth/google", tags=["auth-google"])
 app.include_router(broker.router, prefix="/api/broker", tags=["broker"])
 app.include_router(stripe.router, prefix="/api/stripe", tags=["stripe"])
 app.include_router(watchlists.router, prefix="/api/watchlists", tags=["watchlists"])
@@ -351,4 +364,36 @@ def submit_cancellation_feedback(
     if not email:
         raise HTTPException(status_code=400, detail="Email is required")
 
-    # Save to databas
+    # Save to database
+    try:
+        feedback_entry = CancellationFeedback(
+            email=email,
+            reason=reason,
+            suggestions=suggestions
+        )
+        db.add(feedback_entry)
+        db.commit()
+        print(f"[CANCELLATION FEEDBACK] Saved for {email}")
+    except Exception as e:
+        print(f"[CANCELLATION FEEDBACK] DB Error: {e}")
+        db.rollback()
+        raise HTTPException(status_code=500, detail="Failed to save feedback")
+
+    # Send admin notification in background (don't block if fails)
+    try:
+        background_tasks.add_task(
+            send_cancellation_notification,
+            email,
+            reason,
+            suggestions
+        )
+    except Exception as e:
+        print(f"[CANCELLATION FEEDBACK] Failed to schedule notification: {e}")
+        # Don't fail the request if email scheduling fails
+
+    return {"ok": True, "message": "Feedback received"}
+
+
+@app.get("/health")
+def health():
+    return {"ok": True, "service": "coiled-spring-api"}
