@@ -144,4 +144,11 @@ export default function NavBar() {
           {/* Orario — nascosto su mobile */}
           {!isMobile && (
             <span style={{ color: '#FF6600', borderLeft: '1px solid #222200', paddingLeft: '8px', flexShrink: 0 }}>
-              {time
+              {timeStr}
+            </span>
+          )}
+        </div>
+      )}
+    </nav>
+  )
+}

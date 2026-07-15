@@ -766,4 +766,87 @@ export default function LandingPage() {
 
         {/* ── FAQ ──────────────────────────────────────────────────── */}
         <section id="faq" style={{ borderBottom: `1px solid ${colors.border}`, padding: '6rem 2rem', background: colors.surface }}>
-          <div style={
+          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+              <div style={{ display: 'inline-block', border: `1px solid ${colors.border2}`, padding: '0.28rem 1rem', marginBottom: '1.5rem', fontSize: '0.68rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono }}>◈ FAQ</div>
+              <h2 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: '700', color: colors.white, fontFamily: mono }}>
+                Common questions
+              </h2>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+              {faqs.map((faq, idx) => (
+                <div key={idx} style={{ borderBottom: `1px solid ${colors.border}` }}>
+                  <button onClick={() => setFaqOpen(faqOpen === idx ? null : idx)}
+                    style={{ width: '100%', padding: '1.35rem 0', background: 'transparent', border: 'none', color: faqOpen === idx ? colors.orange : colors.white, fontSize: '1rem', fontWeight: '600', textAlign: 'left', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: sans, transition: 'color 0.2s ease' }}
+                    onMouseEnter={(e) => { if (faqOpen !== idx) (e.currentTarget as HTMLButtonElement).style.color = '#d0d8e4' }}
+                    onMouseLeave={(e) => { if (faqOpen !== idx) (e.currentTarget as HTMLButtonElement).style.color = colors.white }}>
+                    <span style={{ paddingRight: '2rem' }}>{faq.question}</span>
+                    <span style={{ color: colors.orange, fontSize: '1rem', transform: faqOpen === idx ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.3s ease', flexShrink: 0 }}>▼</span>
+                  </button>
+                  <div className="faq-answer" style={{ maxHeight: faqOpen === idx ? '300px' : '0', paddingBottom: faqOpen === idx ? '1.35rem' : '0' }}>
+                    <p style={{ color: '#8892a0', lineHeight: '1.85', fontSize: '0.95rem', margin: 0 }}>
+                      {faq.answer}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── FINAL CTA ────────────────────────────────────────────── */}
+        <section style={{ padding: '8rem 2rem', textAlign: 'center', background: '#000000', borderBottom: `1px solid ${colors.border}` }}>
+          <div style={{ maxWidth: '680px', margin: '0 auto' }}>
+            <div style={{ display: 'inline-block', border: `1px solid ${colors.border2}`, padding: '0.28rem 1rem', marginBottom: '2rem', fontSize: '0.68rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono }}>◈ GET STARTED</div>
+            <h2 style={{ fontSize: 'clamp(1.75rem, 4.5vw, 3rem)', fontWeight: '700', color: colors.white, marginBottom: '1.25rem', fontFamily: mono, lineHeight: '1.2' }}>
+              The next compression window<br />is already forming.
+            </h2>
+            <p style={{ fontSize: '1rem', color: '#8892a0', marginBottom: '2.5rem', lineHeight: '1.75' }}>
+              Free beta access. No credit card. Scan the full US options market in minutes.
+            </p>
+            <button
+              onClick={() => router.push('/register')}
+              style={{ background: colors.orange, color: colors.bg, border: 'none', padding: '1.1rem 3rem', fontSize: '1rem', fontWeight: '700', letterSpacing: '0.5px', cursor: 'pointer', fontFamily: sans, borderRadius: '3px', transition: 'all 0.2s ease' }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = colors.orangeHover; e.currentTarget.style.transform = 'translateY(-2px)' }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = colors.orange; e.currentTarget.style.transform = 'translateY(0)' }}
+            >Start scanning free →</button>
+            <p style={{ marginTop: '1rem', fontSize: '0.78rem', color: '#333', fontFamily: mono, letterSpacing: '0.5px' }}>
+              Free tier · No credit card · Cancel anytime
+            </p>
+          </div>
+        </section>
+
+        {/* FOOTER */}
+        <footer style={{ padding: '4rem 2rem 2.5rem' }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '2rem', paddingBottom: '2.5rem', borderBottom: `1px solid ${colors.border}` }}>
+              <div>
+                <div style={{ fontSize: '1.1rem', fontWeight: '700', color: colors.orange, marginBottom: '0.4rem', letterSpacing: '2px', fontFamily: mono }}>COILED SPRING</div>
+                <p style={{ color: '#555', fontSize: '0.85rem', margin: 0 }}>Antifragile Options Trading</p>
+              </div>
+              <div style={{ display: 'flex', gap: '3rem', flexWrap: 'wrap' }}>
+                {[{ label: 'Login', href: '/login' }, { label: 'Register', href: '/register' }].map((link) => (
+                  <a key={link.href} href={link.href} style={{ color: '#555', textDecoration: 'none', fontSize: '0.875rem', transition: 'color 0.2s ease' }}
+                    onMouseEnter={(e) => (e.currentTarget as HTMLAnchorElement).style.color = colors.orange}
+                    onMouseLeave={(e) => (e.currentTarget as HTMLAnchorElement).style.color = '#555'}>
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+            <div style={{ paddingTop: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+              <span style={{ color: '#333', fontSize: '0.8rem', fontFamily: mono }}>© 2026 Coiled Spring. Built for traders who think in convexity.</span>
+              <a href="mailto:info@coiledspring.app" style={{ color: '#444', textDecoration: 'none', fontSize: '0.8rem', fontFamily: mono, transition: 'color 0.2s ease' }}
+                onMouseEnter={(e) => (e.currentTarget as HTMLAnchorElement).style.color = colors.orange}
+                onMouseLeave={(e) => (e.currentTarget as HTMLAnchorElement).style.color = '#444'}>
+                info@coiledspring.app
+              </a>
+            </div>
+          </div>
+        </footer>
+
+      </div>
+    </>
+  )
+}
