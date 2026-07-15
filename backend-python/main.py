@@ -22,7 +22,7 @@ import yfinance as yf
 from app.config import settings
 from app.database import Base, engine
 from app.dependencies import get_db
-from app.routers import admin, ai_chat, auth, broker, market, notes, portfolio, scanner, stripe, watchlist_items, watchlists
+from app.routers import admin, ai_chat, auth, broker, hv_screener, market, notes, portfolio, scanner, stripe, watchlist_items, watchlists
 from sqlalchemy.orm import Session
 
 import app.models  # noqa: F401 — registers all models with Base
@@ -48,6 +48,24 @@ def _run_daily_iv_snapshot():
         print(f"[CRON] IV snapshot triggered: {resp.status_code} {resp.text[:100]}")
     except Exception as e:
         print(f"[CRON] Failed to trigger IV snapshot: {e}")
+
+
+def _run_daily_hv_snapshot():
+    """Job APScheduler — eseguito ogni giorno alle 17:00 UTC (30 min dopo chiusura).
+
+    Ricalcola HV30/Rank/Pct per tutti i ticker dell'universo e fa upsert in hv_snapshots.
+    """
+    import requests as _requests
+    try:
+        key = settings.cron_internal_key
+        resp = _requests.post(
+            "http://localhost:8080/api/hv-screener/refresh",
+            headers={"x-internal-key": key},
+            timeout=10,
+        )
+        print(f"[CRON] HV snapshot triggered: {resp.status_code} {resp.text[:100]}")
+    except Exception as e:
+        print(f"[CRON] Failed to trigger HV snapshot: {e}")
 
 
 @asynccontextmanager
@@ -79,8 +97,17 @@ async def lifespan(app: FastAPI):
         id="daily_iv_snapshot",
         replace_existing=True,
     )
+    scheduler.add_job(
+        _run_daily_hv_snapshot,
+        trigger="cron",
+        hour=17,
+        minute=0,
+        id="daily_hv_snapshot",
+        replace_existing=True,
+    )
     scheduler.start()
     print("[SCHEDULER] Daily IV snapshot scheduled at 16:30 UTC")
+    print("[SCHEDULER] Daily HV snapshot scheduled at 17:00 UTC")
 
     # Pre-carica la lista S&P500 in cache al startup (evita lazy load al primo cron)
     try:
@@ -154,6 +181,7 @@ app.include_router(portfolio.router, prefix="/api/portfolio", tags=["portfolio"]
 app.include_router(market.router, prefix="/api/market", tags=["market"])
 app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
 app.include_router(notes.router, prefix="/api/notes", tags=["notes"])
+app.include_router(hv_screener.router, prefix="/api/hv-screener", tags=["hv-screener"])
 
 
 # Market movers - uses yahooquery in app.routers.market (cached 15min)
@@ -323,36 +351,4 @@ def submit_cancellation_feedback(
     if not email:
         raise HTTPException(status_code=400, detail="Email is required")
 
-    # Save to database
-    try:
-        feedback_entry = CancellationFeedback(
-            email=email,
-            reason=reason,
-            suggestions=suggestions
-        )
-        db.add(feedback_entry)
-        db.commit()
-        print(f"[CANCELLATION FEEDBACK] Saved for {email}")
-    except Exception as e:
-        print(f"[CANCELLATION FEEDBACK] DB Error: {e}")
-        db.rollback()
-        raise HTTPException(status_code=500, detail="Failed to save feedback")
-
-    # Send admin notification in background (don't block if fails)
-    try:
-        background_tasks.add_task(
-            send_cancellation_notification,
-            email,
-            reason,
-            suggestions
-        )
-    except Exception as e:
-        print(f"[CANCELLATION FEEDBACK] Failed to schedule notification: {e}")
-        # Don't fail the request if email scheduling fails
-
-    return {"ok": True, "message": "Feedback received"}
-
-
-@app.get("/health")
-def health():
-    return {"ok": True, "service": "coiled-spring-api"}
+    # Save to databas

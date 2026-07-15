@@ -303,3 +303,30 @@ class IVHistory(Base):
     recorded_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
+
+
+class HVSnapshot(Base):
+    """Snapshot giornaliero di Historical Volatility per tutti i ticker dell'universo.
+    
+    Alimentato dal job APScheduler (dopo chiusura mercato US).
+    Una riga per ticker — upsert giornaliero.
+    
+    hv30:           HV 30-day annualizzata (%), es. 28.5 = 28.5%
+    hv_rank:        (HV_today - HV_min_52w) / (HV_max_52w - HV_min_52w) * 100
+    hv_percentile:  % di giorni nelle ultime 252 sessioni con HV < HV_today
+    """
+    __tablename__ = "hv_snapshots"
+    __table_args__ = (
+        Index("hv_snapshots_rank_idx", "hv_rank"),
+        Index("hv_snapshots_pct_idx", "hv_percentile"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    ticker: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
+    company_name: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    hv30: Mapped[Optional[float]] = mapped_column(nullable=True)
+    hv_rank: Mapped[Optional[float]] = mapped_column(nullable=True)
+    hv_percentile: Mapped[Optional[float]] = mapped_column(nullable=True)
+    hv_52w_high: Mapped[Optional[float]] = mapped_column(nullable=True)
+    hv_52w_low: Mapped[Optional[float]] = mapped_column(nullable=True)
+    computed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)

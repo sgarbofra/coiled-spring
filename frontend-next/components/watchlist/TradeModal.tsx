@@ -412,7 +412,7 @@ function ResultPanel({ result, onClose }: { result: TradeResult; onClose: () => 
       )}
       {result.open_trade && (
         <div style={{ fontSize: '12px', color: bb.gray, textAlign: 'center' }}>
-          Nuova posizione aperta: {result.open_trade.direction.toUpperCase()} ×{result.open_trade.quantity} @ ${result.open_trade.entry_price}
+          New position opened: {result.open_trade.direction.toUpperCase()} ×{result.open_trade.quantity} @ ${result.open_trade.entry_price}
         </div>
       )}
       <button onClick={onClose}
@@ -447,3 +447,4 @@ const inputStyle: CSSProperties = {
   width: '100%',
   boxSizing: 'border-box',
 }
+   

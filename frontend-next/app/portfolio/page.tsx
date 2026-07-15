@@ -184,7 +184,7 @@ function CloseModal({ target, onDone, onCancel }: {
       if (!r.ok || !d.ok) throw new Error(d.error ?? 'Close error')
       onDone()
     } catch (e: unknown) {
-      setErr(e instanceof Error ? e.message : 'Errore')
+      setErr(e instanceof Error ? e.message : 'Error')
     } finally {
       setSubmitting(false)
     }
@@ -336,7 +336,7 @@ function PositionDetailDrawer({
               style={{ border: `1px solid ${bb.border2}`, backgroundColor: 'transparent', color: bb.gray, padding: '4px 10px', fontSize: '16px', fontFamily: 'inherit', cursor: 'pointer', lineHeight: 1 }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = bb.orange; e.currentTarget.style.color = bb.white }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = bb.border2; e.currentTarget.style.color = bb.gray }}
-              title="Chiudi pannello">
+              title="Close panel">
               ✕
             </button>
           </div>
@@ -455,12 +455,12 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
     try {
       const r = await fetch(`/api/portfolio/${portfolioId}/positions`, { credentials: 'include' })
       const d = await r.json()
-      if (!r.ok || !d.ok) throw new Error(d.error ?? 'Errore caricamento posizioni')
+      if (!r.ok || !d.ok) throw new Error(d.error ?? 'Error loading positions')
       setPositions(d.positions ?? [])
       setLastRefresh(new Date())
       setCountdown(AUTO_REFRESH_SEC)
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Errore')
+      setError(e instanceof Error ? e.message : 'Error')
     } finally {
       setLoading(false)
     }
@@ -854,12 +854,12 @@ export default function PortfolioPage() {
     try {
       const r = await fetch('/api/portfolio', { credentials: 'include' })
       const d = await r.json()
-      if (!r.ok || !d.ok) throw new Error(d.error ?? 'Errore')
+      if (!r.ok || !d.ok) throw new Error(d.error ?? 'Error')
       const list: Portfolio[] = d.portfolios ?? []
       setPortfolios(list)
       if (list.length > 0 && selectedId == null) setSelectedId(list[0].id)
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Errore')
+      setError(e instanceof Error ? e.message : 'Error')
     } finally {
       setLoading(false)
     }
@@ -879,12 +879,12 @@ export default function PortfolioPage() {
         body: JSON.stringify({ name }),
       })
       const d = await r.json()
-      if (!r.ok || !d.ok) throw new Error(d.error ?? 'Errore creazione')
+      if (!r.ok || !d.ok) throw new Error(d.error ?? 'Creation error')
       setNewName('')
       await loadPortfolios()
       setSelectedId(d.portfolio.id)
     } catch (e: unknown) {
-      alert(e instanceof Error ? e.message : 'Errore creazione')
+      alert(e instanceof Error ? e.message : 'Creation error')
     } finally {
       setCreating(false)
     }
@@ -1013,7 +1013,7 @@ export default function PortfolioPage() {
                   {selected.name}
                 </div>
                 <div style={{ fontSize: '12px', color: bb.gray }}>
-                  {selected.open_positions} posizioni aperte
+                  {selected.open_positions} open positions
                 </div>
               </div>
 
@@ -1039,3 +1039,4 @@ export default function PortfolioPage() {
     </ProtectedRoute>
   )
 }
+                   

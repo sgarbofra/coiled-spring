@@ -22,10 +22,11 @@ export default function NavBar() {
   const hasBroker = user?.has_broker ?? false
 
   const links = [
-    { href: '/watchlists', label: 'WATCHLIST' },
-    { href: '/scanner',    label: 'SCANNER' },
-    { href: '/portfolio',  label: 'PORTFOLIO' },
-    { href: '/settings',   label: 'SETTINGS' },
+    { href: '/watchlists',   label: 'WATCHLIST' },
+    { href: '/scanner',      label: 'SCANNER' },
+    { href: '/hv-screener',  label: isMobile ? 'HV' : 'HV SCREENER' },
+    { href: '/portfolio',    label: 'PORTFOLIO' },
+    { href: '/settings',     label: 'SETTINGS' },
   ]
 
   const now = new Date()
@@ -143,11 +144,4 @@ export default function NavBar() {
           {/* Orario — nascosto su mobile */}
           {!isMobile && (
             <span style={{ color: '#FF6600', borderLeft: '1px solid #222200', paddingLeft: '8px', flexShrink: 0 }}>
-              {timeStr}
-            </span>
-          )}
-        </div>
-      )}
-    </nav>
-  )
-}
+              {time
