@@ -447,4 +447,3 @@ const inputStyle: CSSProperties = {
   width: '100%',
   boxSizing: 'border-box',
 }
-   
