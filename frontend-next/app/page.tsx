@@ -118,10 +118,30 @@ export default function LandingPage() {
         body { font-family: ${sans}; background: #0c0e12; }
 
         /* monospace tabular numerics */
-        .cs-mono, [data-mono] {
+        .cs-mono,
+        [data-mono],
+        .ticker-bar .price,
+        .ticker-bar .change,
+        .scanner-mock .data-cell,
+        .scanner-mock .score-value,
+        .counter-number {
           font-family: 'JetBrains Mono', 'Courier New', monospace;
           font-variant-numeric: tabular-nums;
           font-feature-settings: "tnum" 1;
+        }
+
+        /* CTA button arrow animation */
+        .cta-button {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .cta-button .arrow {
+          display: inline-block;
+          transition: transform 0.2s ease;
+        }
+        .cta-button:hover .arrow {
+          transform: translateX(4px);
         }
 
         /* section separators */
@@ -267,9 +287,9 @@ export default function LandingPage() {
             {TICKER_STATIC.map((t, i) => (
               <span key={i} style={{ display: 'inline-flex', gap: '0.4rem', alignItems: 'center', fontSize: '0.73rem', letterSpacing: '0.5px', fontFamily: mono }}>
                 <span style={{ color: colors.dim, fontWeight: '700' }}>{t.label}</span>
-                <span className="cs-mono" style={{ color: t.dim ? colors.darkGray : colors.white, fontWeight: '500' }}>{t.value}</span>
+                <span className="cs-mono price" style={{ color: t.dim ? colors.darkGray : colors.white, fontWeight: '500' }}>{t.value}</span>
                 {t.change && (
-                  <span className="cs-mono" style={{ color: t.positive ? colors.green : colors.red, fontSize: '0.7rem' }}>
+                  <span className="cs-mono change" style={{ color: t.positive ? colors.green : colors.red, fontSize: '0.7rem' }}>
                     {t.change}
                   </span>
                 )}
@@ -372,11 +392,11 @@ export default function LandingPage() {
                     {SCANNER_MOCK.map((row, i) => (
                       <div key={i} className="scanner-row" style={{ display: 'grid', gridTemplateColumns: '64px 68px 52px 52px 52px 72px', gap: 0, padding: '0.45rem 1rem', transition: 'background 0.15s ease', cursor: 'default' }}>
                         <span style={{ fontFamily: mono, fontSize: '0.78rem', color: colors.orange, fontWeight: '700' }}>{row.ticker}</span>
-                        <span className="cs-mono" style={{ fontFamily: mono, fontSize: '0.78rem', color: '#8b94a3' }}>{row.strike}</span>
-                        <span style={{ fontFamily: mono, fontSize: '0.78rem', color: colors.white }}>{row.dte}</span>
-                        <span style={{ fontFamily: mono, fontSize: '0.78rem', color: row.ivr <= '15' ? colors.green : '#ffaa00' }}>{row.ivr}</span>
-                        <span className="cs-mono" style={{ fontFamily: mono, fontSize: '0.78rem', color: '#8b94a3' }}>{row.delta}</span>
-                        <span style={{ fontFamily: mono, fontSize: '0.85rem', color: row.csColor, fontWeight: '700' }}>{row.cs}</span>
+                        <span className="cs-mono data-cell" style={{ fontFamily: mono, fontSize: '0.78rem', color: '#8b94a3' }}>{row.strike}</span>
+                        <span className="cs-mono data-cell" style={{ fontFamily: mono, fontSize: '0.78rem', color: colors.white }}>{row.dte}</span>
+                        <span className="cs-mono data-cell" style={{ fontFamily: mono, fontSize: '0.78rem', color: row.ivr <= '15' ? colors.green : '#ffaa00' }}>{row.ivr}</span>
+                        <span className="cs-mono data-cell" style={{ fontFamily: mono, fontSize: '0.78rem', color: '#8b94a3' }}>{row.delta}</span>
+                        <span className="cs-mono score-value" style={{ fontFamily: mono, fontSize: '0.85rem', color: row.csColor, fontWeight: '700' }}>{row.cs}</span>
                       </div>
                     ))}
                   </div>
@@ -952,7 +972,7 @@ export default function LandingPage() {
               <div style={{ display: 'inline-block', border: `1px solid ${colors.border2}`, padding: '0.28rem 1rem', fontSize: '0.68rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono }}>◈ GET STARTED</div>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', border: `1px solid #1e2330`, background: '#050505', padding: '0.28rem 0.9rem', borderRadius: '3px' }}>
                 <span className="pulse-dot" style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: colors.green }} />
-                <span className="cs-mono" style={{ fontFamily: mono, fontSize: '0.68rem', color: colors.green, letterSpacing: '0.5px' }}>
+                <span className="cs-mono counter-number" style={{ fontFamily: mono, fontSize: '0.68rem', color: colors.green, letterSpacing: '0.5px' }}>
                   {scanCount.toLocaleString()} scans today
                 </span>
               </div>
@@ -965,24 +985,12 @@ export default function LandingPage() {
             </p>
             <button
               onClick={() => router.push('/register')}
-              style={{ background: colors.orange, color: colors.bg, border: 'none', padding: '1.1rem 3rem', fontSize: '1rem', fontWeight: '700', letterSpacing: '0.5px', cursor: 'pointer', fontFamily: sans, borderRadius: '3px', transition: 'all 0.2s ease', boxShadow: '0 0 30px rgba(232,119,34,0.42)' }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = colors.orangeHover;
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 0 50px rgba(232,119,34,0.6)';
-                const arr = e.currentTarget.querySelector('.btn-arrow') as HTMLElement | null;
-                if (arr) arr.style.transform = 'translateX(4px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = colors.orange;
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 0 30px rgba(232,119,34,0.42)';
-                const arr = e.currentTarget.querySelector('.btn-arrow') as HTMLElement | null;
-                if (arr) arr.style.transform = 'translateX(0)';
-              }}
+              className="cta-button"
+              style={{ background: colors.orange, color: colors.bg, border: 'none', padding: '1.1rem 3rem', fontSize: '1rem', fontWeight: '700', letterSpacing: '0.5px', cursor: 'pointer', fontFamily: sans, borderRadius: '3px', transition: 'background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease', boxShadow: '0 0 30px rgba(232,119,34,0.42)' }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = colors.orangeHover; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 0 50px rgba(232,119,34,0.6)' }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = colors.orange; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 0 30px rgba(232,119,34,0.42)' }}
             >
-              <span>Start scanning free </span>
-              <span className="btn-arrow" style={{ display: 'inline-block', transition: 'transform 0.2s ease' }}>→</span>
+              Start scanning free <span className="arrow">→</span>
             </button>
             <p style={{ marginTop: '1rem', fontSize: '0.78rem', color: '#333', fontFamily: mono, letterSpacing: '0.5px' }}>
               Free tier · No credit card · Cancel anytime
