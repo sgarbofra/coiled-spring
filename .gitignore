@@ -43,3 +43,7 @@ CoiledSpring_Feature_Roadmap_*.xlsx
 
 # Video promozionali
 frontend-next/public/*.mp4
+
+*.db-shm
+*.db-wal
+BS
