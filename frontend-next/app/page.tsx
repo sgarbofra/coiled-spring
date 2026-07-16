@@ -926,7 +926,15 @@ export default function LandingPage() {
         {/* ── FINAL CTA ────────────────────────────────────────────── */}
         <section style={{ padding: '8rem 2rem', textAlign: 'center', background: '#000000', borderBottom: `1px solid ${colors.border}` }}>
           <div style={{ maxWidth: '680px', margin: '0 auto' }}>
-            <div style={{ display: 'inline-block', border: `1px solid ${colors.border2}`, padding: '0.28rem 1rem', marginBottom: '2rem', fontSize: '0.68rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono }}>◈ GET STARTED</div>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', marginBottom: '1.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+              <div style={{ display: 'inline-block', border: `1px solid ${colors.border2}`, padding: '0.28rem 1rem', fontSize: '0.68rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono }}>◈ GET STARTED</div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', border: `1px solid #1e2330`, background: '#050505', padding: '0.28rem 0.9rem', borderRadius: '3px' }}>
+                <span className="pulse-dot" style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: colors.green }} />
+                <span style={{ fontFamily: mono, fontSize: '0.68rem', color: colors.green, letterSpacing: '0.5px' }}>
+                  {scanCount.toLocaleString()} scans today
+                </span>
+              </div>
+            </div>
             <h2 style={{ fontSize: 'clamp(1.75rem, 4.5vw, 3rem)', fontWeight: '700', color: colors.white, marginBottom: '1.25rem', fontFamily: mono, lineHeight: '1.2' }}>
               The next compression window<br />is already forming.
             </h2>
@@ -979,11 +987,3 @@ export default function LandingPage() {
     </>
   )
 }
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', border: `1px solid #1e2330`, background: '#050505', padding: '0.3rem 0.9rem', borderRadius: '3px' }}>
-                <span className="pulse-dot" style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: colors.green }} />
-                <span style={{ fontFamily: mono, fontSize: '0.68rem', color: colors.green, letterSpacing: '0.5px' }}>
-                  {scanCount.toLocaleString()} scans today
-                </span>
-              </div>
-            </div>
