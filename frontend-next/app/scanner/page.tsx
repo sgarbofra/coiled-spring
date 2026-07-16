@@ -720,7 +720,7 @@ export default function ScannerPage() {
     <ProtectedRoute>
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: isMobile ? '8px' : '16px', backgroundColor: bb.bg, color: bb.white, fontFamily: 'var(--font-mono)', fontSize: isMobile ? '12px' : '14.4px' }}>
       {/* Filter Panel */}
-      <div style={{ marginBottom: '16px', border: `1px solid ${bb.border2}`, backgroundColor: bb.surface, padding: '16px' }}>
+      <div className="scanner-filters" style={{ marginBottom: '16px', border: `1px solid ${bb.border2}`, backgroundColor: bb.surface, padding: '16px' }}>
         <div style={{ color: bb.yellow, fontSize: '13.2px', letterSpacing: '2px', fontWeight: 'bold', marginBottom: '12px', borderBottom: `1px solid ${bb.border}`, paddingBottom: '6px' }}>
           SCANNER FILTERS
         </div>
@@ -922,8 +922,8 @@ export default function ScannerPage() {
             const displayedCount = displayResults.filter(r => r.underlying === t).length
             const price = stockPrices[t]
             return (
-              <div key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: bb.gray, letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontWeight: 'bold', color: bb.orange }}>{t}</span>
+              <div key={t} className="scanner-info-bar" style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: bb.gray, letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span className="info-ticker" style={{ fontWeight: 'bold', color: bb.orange }}>{t}</span>
                 {info && (
                   <>
                     <span> · {info.name}</span>
@@ -933,7 +933,7 @@ export default function ScannerPage() {
                 <span> | </span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <span style={{ color: bb.orange, fontFamily: 'Space Mono, monospace', fontSize: '10px', letterSpacing: '1px' }}>LAST</span>
-                  <span style={{ color: bb.white, fontFamily: 'Space Mono, monospace', fontSize: '14px', fontWeight: 'bold' }}>
+                  <span className="info-last" style={{ color: bb.white, fontFamily: 'Space Mono, monospace', fontSize: '14px', fontWeight: 'bold' }}>
                     {price !== undefined && price !== null ? `$${price.toFixed(2)}` : '--'}
                   </span>
                 </span>
@@ -974,7 +974,7 @@ export default function ScannerPage() {
       )}
 
       {view === 'surface' ? null :
-      <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'auto', border: `1px solid ${bb.border2}` }}>
+      <div className="scanner-table-wrap" style={{ flex: 1, minHeight: 0, overflowY: 'auto', overflowX: 'auto', border: `1px solid ${bb.border2}` }}>
         <table style={{ width: '100%', minWidth: isMobile ? '900px' : undefined, borderCollapse: 'collapse', fontSize: isMobile ? '11px' : '13.2px' }}>
           <thead style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: bb.surface, color: bb.yellow, borderBottom: `1px solid ${bb.orange}` }}>
             <tr>
@@ -1117,7 +1117,7 @@ export default function ScannerPage() {
                   borderLeft: `1px solid ${bb.border2}`, userSelect: 'none',
                   width: '90px', minWidth: '90px',
                 }}>
-                {'COILED STRATEGY'}<br />{'CANDIDATE SCORE'}{' '}
+                {'CS SCORE'}{' '}
                 <span style={{ color: sortColumn === 'cs_score' ? bb.orange : '#444', fontSize: '10px' }}>
                   {sortColumn === 'cs_score' ? (sortDirection === 'asc' ? '▲' : '▼') : '↕'}
                 </span>{' '}
@@ -1273,11 +1273,11 @@ export default function ScannerPage() {
                   <td style={{ padding: '6px 8px', color: bb.white }}>{r.dte}</td>
                   <td style={{ padding: '6px 8px', color: r.is_stale ? '#555' : bb.white }}
                     title={r.is_stale ? 'No bid/ask — value not available' : undefined}>
-                    {r.is_stale ? '—' : r.bid}
+                    {r.is_stale || r.bid === 0 ? <span className="data-empty">—</span> : r.bid}
                   </td>
                   <td style={{ padding: '6px 8px', color: r.is_stale ? '#555' : bb.white }}
                     title={r.is_stale ? 'No bid/ask — value not available' : undefined}>
-                    {r.is_stale ? '—' : r.ask}
+                    {r.is_stale || r.ask === 0 ? <span className="data-empty">—</span> : r.ask}
                   </td>
                   {/* MID: amber + tooltip when stale (calculated from last price) */}
                   <td style={{

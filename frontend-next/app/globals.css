@@ -22,9 +22,9 @@
 
 /* ── CSS Variables — Day mode ─────────────────────────────────────────────── */
 body.day-mode {
-  --bg-primary:     #f8f9fb;
+  --bg-primary:     #f1f5f9;
   --bg-panel:       #ffffff;
-  --bg-hover:       #f1f3f5;
+  --bg-hover:       #e2e8f0;
   --accent:         #2563eb;
   --accent-dim:     rgba(37, 99, 235, 0.12);
   --text-primary:   #0f172a;
@@ -212,3 +212,87 @@ body.day-mode {
 }
 .coiled-ai-fab .fab-text { display: none; font-size: 12px; font-weight: 500; margin-left: 6px; }
 .coiled-ai-fab:hover .fab-text { display: inline; }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   DAY MODE OVERRIDES — Scanner + Global
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Fix #2 — Scanner card panels */
+.day-mode .scanner-filters {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.day-mode .scanner-table-wrap {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.day-mode .scanner-info-bar {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.day-mode .scanner-info-bar .accent { color: #2563eb; font-weight: 600; }
+.day-mode .info-ticker  { font-weight: 700; color: #2563eb; font-family: var(--font-mono); }
+.day-mode .info-last    { color: #0f172a; font-weight: 600; font-family: var(--font-mono); }
+.day-mode .info-count   {
+  margin-left: auto; background: var(--bg-primary);
+  padding: 2px 10px; border-radius: 4px;
+  font-size: 11px; color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+/* Fix #3 — Inputs più visibili */
+.day-mode .filter-input,
+.day-mode .filter-select {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+}
+.day-mode .filter-input:focus,
+.day-mode .filter-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+/* Fix #4 — Tabella strutturata */
+.day-mode .scanner-table { border-collapse: collapse; }
+.day-mode .scanner-table th {
+  background: #f8fafc;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  color: #64748b; padding: 10px 8px;
+  border-bottom: 2px solid #e2e8f0;
+}
+.day-mode .scanner-table td {
+  padding: 8px; border-bottom: 1px solid #f1f5f9;
+  font-size: 12px; color: #0f172a;
+}
+.day-mode .scanner-table tr:nth-child(even) td { background: #f8fafc; }
+.day-mode .scanner-table tr:hover td { background: #e2e8f0 !important; }
+
+/* Fix #5 — Dati assenti */
+.data-empty { color: #cbd5e1; font-style: normal; }
+.day-mode .data-empty { color: #94a3b8; }
+
+/* Fix #6 — CS Score day-mode */
+.day-mode .cs-score-num { color: #ea580c; }
+
+/* Fix #8 — Checkbox custom */
+.day-mode .scanner-checkbox { background: #ffffff; border: 1.5px solid #cbd5e1; }
+.day-mode .scanner-checkbox:checked { background: #2563eb; border-color: #2563eb; }
