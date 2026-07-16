@@ -14,17 +14,18 @@ type YouTubeVideo = {
 }
 
 const colors = {
-  bg: '#000000',
-  surface: '#0c0c0c',
+  bg: '#0c0e12',
+  surface: '#111318',
+  surface2: '#161922',
   border: '#1e2330',
   border2: '#2a2a2a',
   orange: '#e87722',
   orangeHover: '#d4651a',
-  white: '#FFFFFF',
-  gray: '#CCCCCC',
-  darkGray: '#666666',
-  green: '#00CC44',
-  red: '#FF3333',
+  white: '#f0f2f5',
+  gray: '#8b94a3',
+  darkGray: '#5a6270',
+  green: '#4ade80',
+  red: '#f87171',
   dim: '#444444',
 }
 
@@ -42,9 +43,9 @@ const TICKER_STATIC: TickerItem[] = [
 ]
 
 const SCANNER_MOCK = [
-  { ticker: 'SPY',  strike: '540C', dte: '421', ivr: '12', delta: '0.28', cs: '91', csColor: '#00CC44' },
-  { ticker: 'AAPL', strike: '195C', dte: '389', ivr: '18', delta: '0.32', cs: '87', csColor: '#00CC44' },
-  { ticker: 'TSLA', strike: '260C', dte: '350', ivr: '22', delta: '0.25', cs: '83', csColor: '#00CC44' },
+  { ticker: 'SPY',  strike: '540C', dte: '421', ivr: '12', delta: '0.28', cs: '91', csColor: '#4ade80' },
+  { ticker: 'AAPL', strike: '195C', dte: '389', ivr: '18', delta: '0.32', cs: '87', csColor: '#4ade80' },
+  { ticker: 'TSLA', strike: '260C', dte: '350', ivr: '22', delta: '0.25', cs: '83', csColor: '#4ade80' },
   { ticker: 'NVDA', strike: '900C', dte: '421', ivr: '09', delta: '0.30', cs: '79', csColor: colors.orange },
   { ticker: 'QQQ',  strike: '475C', dte: '389', ivr: '15', delta: '0.35', cs: '76', csColor: colors.orange },
 ]
@@ -114,11 +115,21 @@ export default function LandingPage() {
 
         * { box-sizing: border-box; }
         img { max-width: 100%; }
-        body { font-family: ${sans}; }
+        body { font-family: ${sans}; background: #0c0e12; }
+
+        /* monospace tabular numerics */
+        .cs-mono, [data-mono] {
+          font-family: 'JetBrains Mono', 'Courier New', monospace;
+          font-variant-numeric: tabular-nums;
+          font-feature-settings: "tnum" 1;
+        }
+
+        /* section separators */
+        section { border-top: 1px solid #1e2330; }
 
         @keyframes pulse-dot {
-          0%, 100% { opacity: 1; box-shadow: 0 0 6px #00CC44; }
-          50% { opacity: 0.4; box-shadow: 0 0 2px #00CC44; }
+          0%, 100% { opacity: 1; box-shadow: 0 0 6px #4ade80; }
+          50% { opacity: 0.4; box-shadow: 0 0 2px #4ade80; }
         }
         @keyframes blink-cursor {
           0%, 100% { opacity: 1; }
@@ -130,7 +141,7 @@ export default function LandingPage() {
         .nav-link {
           background: transparent;
           border: none;
-          color: #CCCCCC;
+          color: #8b94a3;
           font-size: 0.82rem;
           font-weight: 500;
           cursor: pointer;
@@ -195,8 +206,16 @@ export default function LandingPage() {
         }
 
         /* visual polish */
-        .feature-card { transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important; }
-        .feature-card:hover { border-color: rgba(232,119,34,0.4) !important; box-shadow: 0 12px 48px rgba(232,119,34,0.22) !important; }
+        .feature-card {
+          background: #111318;
+          border-radius: 10px;
+          transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+        }
+        .feature-card:hover {
+          border-color: rgba(232,119,34,0.4) !important;
+          box-shadow: 0 12px 48px rgba(232,119,34,0.22) !important;
+          transform: translateY(-2px) !important;
+        }
         @keyframes mockup-glow {
           0%,100% { box-shadow: 0 0 90px rgba(232,119,34,0.32),0 0 0 1px rgba(232,119,34,0.22),0 24px 60px rgba(0,0,0,0.5); }
           50%      { box-shadow: 0 0 130px rgba(232,119,34,0.46),0 0 0 1px rgba(232,119,34,0.32),0 24px 60px rgba(0,0,0,0.5); }
@@ -266,7 +285,7 @@ export default function LandingPage() {
         </div>
 
         {/* ── HERO ──────────────────────────────────────────────────── */}
-        <section style={{ position: 'relative', borderBottom: `1px solid ${colors.border}`, padding: '5rem 2rem', minHeight: '92vh', display: 'flex', alignItems: 'center', background: '#000000', overflow: 'hidden' }}>
+        <section style={{ position: 'relative', borderBottom: `1px solid ${colors.border}`, padding: '5rem 2rem', minHeight: '92vh', display: 'flex', alignItems: 'center', background: '#0c0e12', overflow: 'hidden' }}>
           <video autoPlay loop muted playsInline className="hero-video" style={{ position: 'absolute', top: '50%', left: '50%', minWidth: '100%', minHeight: '100%', width: 'auto', height: 'auto', transform: 'translate(-50%, calc(-50% + 2cm))', zIndex: 1, opacity: 0.55, objectFit: 'cover' }}>
             <source src="/hero-bg.mp4" type="video/mp4" />
           </video>
@@ -350,10 +369,10 @@ export default function LandingPage() {
                     {SCANNER_MOCK.map((row, i) => (
                       <div key={i} className="scanner-row" style={{ display: 'grid', gridTemplateColumns: '64px 68px 52px 52px 52px 72px', gap: 0, padding: '0.45rem 1rem', transition: 'background 0.15s ease', cursor: 'default' }}>
                         <span style={{ fontFamily: mono, fontSize: '0.78rem', color: colors.orange, fontWeight: '700' }}>{row.ticker}</span>
-                        <span style={{ fontFamily: mono, fontSize: '0.78rem', color: '#8892a0' }}>{row.strike}</span>
+                        <span style={{ fontFamily: mono, fontSize: '0.78rem', color: '#8b94a3' }}>{row.strike}</span>
                         <span style={{ fontFamily: mono, fontSize: '0.78rem', color: colors.white }}>{row.dte}</span>
                         <span style={{ fontFamily: mono, fontSize: '0.78rem', color: row.ivr <= '15' ? colors.green : '#ffaa00' }}>{row.ivr}</span>
-                        <span style={{ fontFamily: mono, fontSize: '0.78rem', color: '#8892a0' }}>{row.delta}</span>
+                        <span style={{ fontFamily: mono, fontSize: '0.78rem', color: '#8b94a3' }}>{row.delta}</span>
                         <span style={{ fontFamily: mono, fontSize: '0.85rem', color: row.csColor, fontWeight: '700' }}>{row.cs}</span>
                       </div>
                     ))}
@@ -381,7 +400,7 @@ export default function LandingPage() {
               <h2 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: '700', color: colors.white, fontFamily: mono, lineHeight: '1.25' }}>
                 Markets are cyclical.<br />Volatility has memory.
               </h2>
-              <p style={{ color: '#8892a0', fontSize: '1rem', maxWidth: '640px', margin: '1.5rem auto 0', lineHeight: '1.85' }}>
+              <p style={{ color: '#8b94a3', fontSize: '1rem', maxWidth: '640px', margin: '1.5rem auto 0', lineHeight: '1.85' }}>
                 Every major sell-off eventually ends. What follows is a slow compression of fear — and a window where long-dated options become historically cheap.
               </p>
             </div>
@@ -389,17 +408,17 @@ export default function LandingPage() {
             {/* Vertical timeline */}
             <div style={{ maxWidth: '680px', margin: '0 auto', position: 'relative', paddingLeft: '2.5rem' }}>
               {/* Gradient line */}
-              <div style={{ position: 'absolute', left: '11px', top: '14px', bottom: '14px', width: '2px', background: 'linear-gradient(to bottom, #FF3333 0%, #e87722 48%, #00CC44 100%)', opacity: 0.55 }} />
+              <div style={{ position: 'absolute', left: '11px', top: '14px', bottom: '14px', width: '2px', background: 'linear-gradient(to bottom, #f87171 0%, #e87722 48%, #4ade80 100%)', opacity: 0.55 }} />
               {[
                 { num: '01', label: 'CRISIS STRIKES',        headline: 'Fear spikes. VIX explodes.',
                   body: 'Market crashes trigger panic. Implied volatility surges to 40, 60, 80. Options become expensive. This is the wrong time to buy convexity.',
-                  color: '#FF3333' },
+                  color: '#f87171' },
                 { num: '02', label: 'VOLATILITY COMPRESSES', headline: 'Markets recover. Fear is forgotten.',
                   body: 'Over months, VIX drifts back to 12–18. IV Rank falls below 20. Long-dated options become historically cheap — high leverage at low cost.',
                   color: colors.orange },
                 { num: '03', label: 'THE SCANNER FINDS IT',  headline: 'Low IV Rank = entry window.',
                   body: 'Coiled Spring identifies underlyings where implied volatility is in the bottom quartile of its 12-month range. That’s your signal.',
-                  color: '#00CC44' },
+                  color: '#4ade80' },
               ].map((item, i) => (
                 <div key={i} style={{ position: 'relative', paddingBottom: i < 2 ? '3rem' : '0' }}>
                   {/* Dot */}
@@ -409,7 +428,7 @@ export default function LandingPage() {
                   <div>
                     <div style={{ fontSize: '0.62rem', color: item.color, fontWeight: '700', letterSpacing: '2.5px', marginBottom: '0.35rem', fontFamily: mono }}>{item.label}</div>
                     <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: colors.white, marginBottom: '0.65rem', lineHeight: '1.4', fontFamily: mono }}>{item.headline}</h3>
-                    <p style={{ color: '#8892a0', lineHeight: '1.8', fontSize: '0.92rem', margin: 0 }}>{item.body}</p>
+                    <p style={{ color: '#8b94a3', lineHeight: '1.8', fontSize: '0.92rem', margin: 0 }}>{item.body}</p>
                   </div>
                 </div>
               ))}
@@ -425,7 +444,7 @@ export default function LandingPage() {
               <h2 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: '700', color: colors.white, fontFamily: mono }}>
                 Where is volatility right now?
               </h2>
-              <p style={{ color: '#8892a0', fontSize: '0.95rem', maxWidth: '560px', margin: '1rem auto 0', lineHeight: '1.7' }}>
+              <p style={{ color: '#8b94a3', fontSize: '0.95rem', maxWidth: '560px', margin: '1rem auto 0', lineHeight: '1.7' }}>
                 Live VIX and market data — check the current volatility regime before scanning for opportunities.
               </p>
             </div>
@@ -470,7 +489,7 @@ export default function LandingPage() {
                 <div
                   key={i}
                   className="step-card"
-                  style={{ background: '#080a0e', border: `1px solid ${colors.border}`, borderTop: `2px solid ${colors.orange}`, padding: '2.25rem', borderRadius: '4px' }}
+                  style={{ background: '#111318', border: `1px solid ${colors.border}`, borderTop: `2px solid ${colors.orange}`, padding: '2.25rem', borderRadius: '10px' }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', marginBottom: '1.5rem' }}>
                     <div style={{ background: 'rgba(232,119,34,0.08)', border: `1px solid rgba(232,119,34,0.18)`, padding: '0.65rem', borderRadius: '5px' }}>
@@ -481,7 +500,7 @@ export default function LandingPage() {
                   <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: colors.white, marginBottom: '0.875rem', fontFamily: mono, lineHeight: '1.35' }}>
                     {item.title}
                   </h3>
-                  <p style={{ color: '#8892a0', lineHeight: '1.8', fontSize: '0.92rem' }}>
+                  <p style={{ color: '#8b94a3', lineHeight: '1.8', fontSize: '0.92rem' }}>
                     {item.body}
                   </p>
                 </div>
@@ -500,14 +519,14 @@ export default function LandingPage() {
                 <path d="M 20 120 A 100 100 0 0 1 197 57" fill="none" stroke="#e87722" strokeWidth="16" strokeLinecap="round"/>
                 <text x="120" y="110" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="52" fontWeight="700" fill="#e87722">78</text>
                 <text x="120" y="130" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="13" fill="#555">/100</text>
-                <text x="120" y="150" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="10" fontWeight="700" fill="#00CC44" letterSpacing="2">STRUCTURAL EDGE</text>
+                <text x="120" y="150" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="10" fontWeight="700" fill="#4ade80" letterSpacing="2">STRUCTURAL EDGE</text>
                 <text x="18" y="140" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="9" fill="#3a3a3a">0</text>
                 <text x="222" y="140" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="9" fill="#3a3a3a">100</text>
               </svg>
               <h2 style={{ fontSize: 'clamp(1.4rem, 2.5vw, 2rem)', fontWeight: '700', color: colors.white, marginBottom: '0.75rem', fontFamily: mono, lineHeight: '1.25', marginTop: '1rem' }}>
                 The CS Score:<br />one number that matters
               </h2>
-              <p style={{ color: '#8892a0', lineHeight: '1.75', fontSize: '0.92rem', marginBottom: '0.75rem' }}>
+              <p style={{ color: '#8b94a3', lineHeight: '1.75', fontSize: '0.92rem', marginBottom: '0.75rem' }}>
                 Each contract gets a score 0–100. Above 70: cheap vol, liquid, positioned for expansion.
               </p>
               <p style={{ color: '#555', lineHeight: '1.7', fontSize: '0.8rem', fontStyle: 'italic', borderLeft: `2px solid ${colors.border2}`, paddingLeft: '0.75rem', textAlign: 'left' }}>
@@ -572,7 +591,7 @@ export default function LandingPage() {
                 <div
                   key={i}
                   className="feature-card"
-                  style={{ position: 'relative', background: '#080a0e', border: `1px solid ${colors.border}`, borderTop: `2px solid ${colors.orange}`, padding: '2rem', borderRadius: '4px' }}
+                  style={{ position: 'relative', background: '#111318', border: `1px solid ${colors.border}`, borderTop: `2px solid ${colors.orange}`, padding: '2rem', borderRadius: '10px' }}
                 >
                   {feat.badge && (
                     <div style={{ position: 'absolute', top: '1rem', right: '1rem', background: feat.badge === 'PRO' ? colors.orange : '#1a1a1a', color: feat.badge === 'PRO' ? colors.bg : '#666', fontSize: '0.6rem', fontWeight: '700', padding: '0.2rem 0.5rem', borderRadius: '2px', fontFamily: mono, letterSpacing: '1px' }}>
@@ -583,7 +602,7 @@ export default function LandingPage() {
                     {feat.icon}
                   </div>
                   <h3 style={{ fontSize: '1.05rem', fontWeight: '700', color: colors.white, marginBottom: '0.7rem', fontFamily: mono, lineHeight: '1.3' }}>{feat.title}</h3>
-                  <p style={{ color: '#8892a0', lineHeight: '1.8', fontSize: '0.9rem' }}>{feat.body}</p>
+                  <p style={{ color: '#8b94a3', lineHeight: '1.8', fontSize: '0.9rem' }}>{feat.body}</p>
                 </div>
               ))}
             </div>
@@ -596,7 +615,7 @@ export default function LandingPage() {
             <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
               <div style={{ display: 'inline-block', border: `1px solid ${colors.border2}`, padding: '0.28rem 1rem', marginBottom: '1.5rem', fontSize: '0.68rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono }}>◈ TUTORIALS</div>
               <h2 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: '700', color: colors.white, fontFamily: mono }}>Learn the platform</h2>
-              <p style={{ color: '#8892a0', marginTop: '1rem', fontSize: '0.95rem' }}>
+              <p style={{ color: '#8b94a3', marginTop: '1rem', fontSize: '0.95rem' }}>
                 Step-by-step walkthroughs of every feature.{' '}
                 <a href="https://youtube.com/@coiledspringapp" target="_blank" rel="noopener noreferrer" style={{ color: colors.orange, textDecoration: 'none' }}>Full channel →</a>
               </p>
@@ -642,7 +661,7 @@ export default function LandingPage() {
               <h2 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: '700', color: colors.white, fontFamily: mono }}>
                 Study the crashes
               </h2>
-              <p style={{ color: '#8892a0', fontSize: '0.95rem', maxWidth: '560px', margin: '1rem auto 0', lineHeight: '1.7' }}>
+              <p style={{ color: '#8b94a3', fontSize: '0.95rem', maxWidth: '560px', margin: '1rem auto 0', lineHeight: '1.7' }}>
                 Every major vol spike was preceded by a period of compression. Understanding the pattern is the first step to exploiting it.
               </p>
             </div>
@@ -696,7 +715,7 @@ export default function LandingPage() {
                 <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.25rem)', fontWeight: '700', color: colors.white, marginBottom: '1.5rem', fontFamily: mono, lineHeight: '1.25' }}>
                   The intellectual foundation
                 </h2>
-                <p style={{ color: '#8892a0', lineHeight: '1.85', fontSize: '1rem', marginBottom: '2rem' }}>
+                <p style={{ color: '#8b94a3', lineHeight: '1.85', fontSize: '1rem', marginBottom: '2rem' }}>
                   Written by a 20-year capital markets professional, the book explains the theory behind buying volatility when it&apos;s cheap — why financial crises are structurally predictable, why LEAPS options are the right instrument, and how to construct positions that benefit from market dislocations without requiring precise timing.
                 </p>
 
@@ -710,7 +729,7 @@ export default function LandingPage() {
                   ].map((point, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.65rem' }}>
                       <span style={{ color: colors.orange, fontWeight: '700', flexShrink: 0, marginTop: '0.1rem', fontFamily: mono }}>→</span>
-                      <span style={{ color: '#8892a0', lineHeight: '1.6', fontSize: '0.92rem' }}>{point}</span>
+                      <span style={{ color: '#8b94a3', lineHeight: '1.6', fontSize: '0.92rem' }}>{point}</span>
                     </div>
                   ))}
                 </div>
@@ -745,7 +764,7 @@ export default function LandingPage() {
               <h2 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: '700', color: colors.white, marginBottom: '1rem', fontFamily: mono }}>
                 Structured options education
               </h2>
-              <p style={{ fontSize: '1rem', color: '#8892a0', maxWidth: '600px', margin: '0 auto', lineHeight: '1.75' }}>
+              <p style={{ fontSize: '1rem', color: '#8b94a3', maxWidth: '600px', margin: '0 auto', lineHeight: '1.75' }}>
                 A modular video course — from options fundamentals to advanced vol strategies. Complete each module, pass the quiz, unlock the next.
               </p>
             </div>
@@ -835,7 +854,7 @@ export default function LandingPage() {
                         {'MODULE ' + String(idx + 1).padStart(2, '0')}
                       </div>
                       {/* title */}
-                      <h3 style={{ fontSize: '0.95rem', fontWeight: '700', color: mod.free ? colors.white : mod.placeholder ? '#2a2a2a' : '#8892a0', marginBottom: mod.bullets.length > 0 ? '0.85rem' : '0', lineHeight: '1.4', paddingRight: '4rem' }}>
+                      <h3 style={{ fontSize: '0.95rem', fontWeight: '700', color: mod.free ? colors.white : mod.placeholder ? '#2a2a2a' : '#8b94a3', marginBottom: mod.bullets.length > 0 ? '0.85rem' : '0', lineHeight: '1.4', paddingRight: '4rem' }}>
                         {mod.title}
                       </h3>
                       {/* bullets */}
@@ -913,7 +932,7 @@ export default function LandingPage() {
                     <span style={{ color: colors.orange, fontSize: '1rem', transform: faqOpen === idx ? 'rotate(180deg)' : 'rotate(0)', transition: 'transform 0.3s ease', flexShrink: 0 }}>▼</span>
                   </button>
                   <div className="faq-answer" style={{ maxHeight: faqOpen === idx ? '300px' : '0', paddingBottom: faqOpen === idx ? '1.35rem' : '0' }}>
-                    <p style={{ color: '#8892a0', lineHeight: '1.85', fontSize: '0.95rem', margin: 0 }}>
+                    <p style={{ color: '#8b94a3', lineHeight: '1.85', fontSize: '0.95rem', margin: 0 }}>
                       {faq.answer}
                     </p>
                   </div>
@@ -924,7 +943,7 @@ export default function LandingPage() {
         </section>
 
         {/* ── FINAL CTA ────────────────────────────────────────────── */}
-        <section style={{ padding: '8rem 2rem', textAlign: 'center', background: '#000000', borderBottom: `1px solid ${colors.border}` }}>
+        <section style={{ padding: '8rem 2rem', textAlign: 'center', background: '#0c0e12', borderBottom: `1px solid ${colors.border}` }}>
           <div style={{ maxWidth: '680px', margin: '0 auto' }}>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', marginBottom: '1.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
               <div style={{ display: 'inline-block', border: `1px solid ${colors.border2}`, padding: '0.28rem 1rem', fontSize: '0.68rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono }}>◈ GET STARTED</div>
@@ -938,14 +957,14 @@ export default function LandingPage() {
             <h2 style={{ fontSize: 'clamp(1.75rem, 4.5vw, 3rem)', fontWeight: '700', color: colors.white, marginBottom: '1.25rem', fontFamily: mono, lineHeight: '1.2' }}>
               The next compression window<br />is already forming.
             </h2>
-            <p style={{ fontSize: '1rem', color: '#8892a0', marginBottom: '2.5rem', lineHeight: '1.75' }}>
+            <p style={{ fontSize: '1rem', color: '#8b94a3', marginBottom: '2.5rem', lineHeight: '1.75' }}>
               Free beta access. No credit card. Scan the full US options market in minutes.
             </p>
             <button
               onClick={() => router.push('/register')}
               style={{ background: colors.orange, color: colors.bg, border: 'none', padding: '1.1rem 3rem', fontSize: '1rem', fontWeight: '700', letterSpacing: '0.5px', cursor: 'pointer', fontFamily: sans, borderRadius: '3px', transition: 'all 0.2s ease', boxShadow: '0 0 30px rgba(232,119,34,0.42)' }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = colors.orangeHover; e.currentTarget.style.transform = 'translateY(-2px)' }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = colors.orange; e.currentTarget.style.transform = 'translateY(0)' }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = colors.orangeHover; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 0 50px rgba(232,119,34,0.6)' }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = colors.orange; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 0 30px rgba(232,119,34,0.42)' }}
             >Start scanning free →</button>
             <p style={{ marginTop: '1rem', fontSize: '0.78rem', color: '#333', fontFamily: mono, letterSpacing: '0.5px' }}>
               Free tier · No credit card · Cancel anytime
