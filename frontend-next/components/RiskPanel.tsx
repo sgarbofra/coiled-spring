@@ -26,17 +26,17 @@ export function computeFlags(props: RiskPanelProps): RiskFlag[] {
 
   // 1. Wide spread (spread_pct arriva come percentuale, es. 12.5 = 12.5%)
   if (spread_pct > 10) {
-    flags.push({ label: `⚠ Wide Spread (${spread_pct.toFixed(1)}%)`, color: '#FF3333' })
+    flags.push({ label: `⚠ Wide Spread (${spread_pct.toFixed(1)}%)`, color: 'var(--negative)' })
   }
 
   // 2. Low open interest
   if (open_interest < 100) {
-    flags.push({ label: '⚠ Low Open Interest', color: '#FF3333' })
+    flags.push({ label: '⚠ Low Open Interest', color: 'var(--negative)' })
   }
 
   // 3. Short DTE
   if (dte < 300) {
-    flags.push({ label: `⚠ Short DTE (${dte} days)`, color: '#FFAA00' })
+    flags.push({ label: `⚠ Short DTE (${dte} days)`, color: 'var(--accent)' })
   }
 
   // 4. Earnings within 14 days
@@ -47,7 +47,7 @@ export function computeFlags(props: RiskPanelProps): RiskFlag[] {
     ed.setHours(0, 0, 0, 0)
     const daysToEarnings = Math.round((ed.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
     if (daysToEarnings >= 0 && daysToEarnings <= 14) {
-      flags.push({ label: `⚠ Earnings in ${daysToEarnings} days`, color: '#FF3333' })
+      flags.push({ label: `⚠ Earnings in ${daysToEarnings} days`, color: 'var(--negative)' })
     }
   }
 
@@ -62,12 +62,12 @@ export default function RiskPanel(props: RiskPanelProps) {
       display: 'flex',
       flexDirection: 'column',
       gap: '4px',
-      fontFamily: 'Courier New, monospace',
+      fontFamily: 'var(--font-mono)',
       fontSize: '11px',
       background: 'transparent',
     }}>
       {flags.length === 0 ? (
-        <span style={{ color: '#00DD00' }}>✅ No immediate risks</span>
+        <span style={{ color: 'var(--positive)' }}>✅ No immediate risks</span>
       ) : (
         flags.map((f, i) => (
           <span key={i} style={{ color: f.color }}>{f.label}</span>
@@ -99,7 +99,7 @@ export function RiskTooltip({
       ...(showBelow ? { top: 'calc(100% + 6px)' } : { bottom: 'calc(100% + 6px)' }),
       left: 0,
       backgroundColor: '#000',
-      border: '1px solid #333300',
+      border: '1px solid var(--border)',
       borderRadius: '3px',
       padding: '8px 12px',
       zIndex: 300,
@@ -108,7 +108,7 @@ export function RiskTooltip({
       boxShadow: '0 4px 16px rgba(0,0,0,0.8)',
     }}>
       <div style={{
-        fontFamily: 'Courier New, monospace',
+        fontFamily: 'var(--font-mono)',
         fontSize: '10px',
         color: '#888',
         letterSpacing: '0.5px',
@@ -122,11 +122,11 @@ export function RiskTooltip({
       {showBelow ? (
         <div style={{ position: 'absolute', top: '-6px', left: '14px', width: 0, height: 0,
           borderLeft: '6px solid transparent', borderRight: '6px solid transparent',
-          borderBottom: '6px solid #333300' }} />
+          borderBottom: '6px solid var(--border)' }} />
       ) : (
         <div style={{ position: 'absolute', bottom: '-6px', left: '14px', width: 0, height: 0,
           borderLeft: '6px solid transparent', borderRight: '6px solid transparent',
-          borderTop: '6px solid #333300' }} />
+          borderTop: '6px solid var(--border)' }} />
       )}
     </div>
   )

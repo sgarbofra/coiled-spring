@@ -3,10 +3,10 @@
 import { useMemo, useState } from 'react'
 
 const bb = {
-  bg: '#000000', surface: '#0a0a00', panel: '#111100',
-  border: '#222200', border2: '#333300',
-  orange: '#FF6600', amber: '#FFAA00', yellow: '#FFE000',
-  green: '#00DD00', red: '#FF3333', white: '#CCCCCC', gray: '#FFFFFF',
+  bg: 'var(--bg-primary)', surface: 'var(--bg-panel)', panel: 'var(--bg-panel)',
+  border: 'var(--border)', border2: 'var(--border)',
+  orange: 'var(--accent)', amber: 'var(--accent)', yellow: 'var(--accent)',
+  green: 'var(--positive)', red: 'var(--negative)', white: 'var(--text-primary)', gray: 'var(--text-primary)',
 }
 
 type ScannerResult = {
@@ -48,7 +48,7 @@ export default function AddFromScannerModal({ open, watchlistId, candidates, onC
   if (!open) return null
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)', padding: '16px', fontFamily: 'Courier New, monospace' }}>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.5)', padding: '16px', fontFamily: 'var(--font-mono)' }}>
       <div style={{ maxHeight: '85vh', width: '100%', maxWidth: '1200px', overflow: 'hidden', border: `1px solid ${bb.border2}`, backgroundColor: bb.bg, color: bb.white }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `2px solid ${bb.orange}`, padding: '12px 16px' }}>
           <div>

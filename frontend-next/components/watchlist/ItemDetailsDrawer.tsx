@@ -5,10 +5,10 @@ import TradeModal from './TradeModal'
 import { computeCandidateScore, computeWhyPanel, scoreColor } from '@/lib/cs-score'
 
 const bb = {
-  bg: '#000000', surface: '#0a0a00', panel: '#111100',
-  border: '#222200', border2: '#333300',
-  orange: '#FF6600', amber: '#FFAA00', yellow: '#FFE000',
-  green: '#00DD00', red: '#FF3333', white: '#CCCCCC', gray: '#FFFFFF',
+  bg: 'var(--bg-primary)', surface: 'var(--bg-panel)', panel: 'var(--bg-panel)',
+  border: 'var(--border)', border2: 'var(--border)',
+  orange: 'var(--accent)', amber: 'var(--accent)', yellow: 'var(--accent)',
+  green: 'var(--positive)', red: 'var(--negative)', white: 'var(--text-primary)', gray: 'var(--text-primary)',
 }
 
 type Alert = {
@@ -134,7 +134,7 @@ export default function ItemDetailsDrawer({ watchlistId, itemId, open, onClose }
   if (!open) return null
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.6)', fontFamily: 'Courier New, monospace' }}>
+    <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.6)', fontFamily: 'var(--font-mono)' }}>
       <div style={{ height: '100%', width: '100%', maxWidth: '600px', overflowY: 'auto', backgroundColor: bb.bg, color: bb.white, borderLeft: `1px solid ${bb.border2}` }}>
 
         {/* Header */}

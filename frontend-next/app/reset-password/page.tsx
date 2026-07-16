@@ -5,9 +5,9 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
 const bb = {
-  bg: '#000000', surface: '#0a0a00', border: '#222200', border2: '#333300',
-  orange: '#FF6600', amber: '#FFAA00', yellow: '#FFE000',
-  green: '#00DD00', red: '#FF3333', white: '#CCCCCC', gray: '#FFFFFF',
+  bg: '#000000', surface: 'var(--bg-panel)', border: 'var(--border)', border2: 'var(--border)',
+  orange: 'var(--accent)', amber: 'var(--accent)', yellow: 'var(--accent)',
+  green: 'var(--positive)', red: 'var(--negative)', white: 'var(--text-primary)', gray: '#FFFFFF',
 }
 
 function ResetPasswordContent() {
@@ -68,7 +68,7 @@ function ResetPasswordContent() {
   }
 
   return (
-    <div style={{ backgroundColor: bb.bg, minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Courier New, monospace' }}>
+    <div style={{ backgroundColor: bb.bg, minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-mono)' }}>
       <div style={{ width: '400px' }}>
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: '24px' }}>
@@ -104,7 +104,7 @@ function ResetPasswordContent() {
                     onChange={e => setNewPassword(e.target.value)}
                     required
                     minLength={6}
-                    style={{ width: '100%', backgroundColor: '#0a0a00', border: `1px solid ${bb.border2}`, color: bb.orange, padding: '6px 8px', fontSize: '15.6px', fontFamily: 'inherit' }}
+                    style={{ width: '100%', backgroundColor: 'var(--bg-panel)', border: `1px solid ${bb.border2}`, color: bb.orange, padding: '6px 8px', fontSize: '15.6px', fontFamily: 'inherit' }}
                   />
                 </div>
 
@@ -118,7 +118,7 @@ function ResetPasswordContent() {
                     onChange={e => setConfirmPassword(e.target.value)}
                     required
                     minLength={6}
-                    style={{ width: '100%', backgroundColor: '#0a0a00', border: `1px solid ${bb.border2}`, color: bb.orange, padding: '6px 8px', fontSize: '15.6px', fontFamily: 'inherit' }}
+                    style={{ width: '100%', backgroundColor: 'var(--bg-panel)', border: `1px solid ${bb.border2}`, color: bb.orange, padding: '6px 8px', fontSize: '15.6px', fontFamily: 'inherit' }}
                   />
                 </div>
 

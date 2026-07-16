@@ -7,10 +7,10 @@ import { computeCandidateScore, computeWhyPanel, scoreColor } from '@/lib/cs-sco
 import WhatIfSimulator from '@/components/WhatIfSimulator'
 
 const bb = {
-  bg: '#000000', surface: '#0a0a00', panel: '#111100',
-  border: '#222200', border2: '#333300',
-  orange: '#FF6600', amber: '#FFAA00', yellow: '#FFE000',
-  green: '#00DD00', red: '#FF3333', white: '#CCCCCC', gray: '#999999',
+  bg: '#000000', surface: 'var(--bg-panel)', panel: 'var(--bg-panel)',
+  border: 'var(--border)', border2: 'var(--border)',
+  orange: 'var(--accent)', amber: 'var(--accent)', yellow: 'var(--accent)',
+  green: 'var(--positive)', red: 'var(--negative)', white: 'var(--text-primary)', gray: '#999999',
 }
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -206,7 +206,7 @@ function CloseModal({ target, onDone, onCancel }: {
     }} onClick={onCancel}>
       <div onClick={e => e.stopPropagation()} style={{
         backgroundColor: bb.bg, border: `1px solid ${bb.orange}`,
-        padding: '24px', width: '420px', fontFamily: 'Courier New, monospace', color: bb.white,
+        padding: '24px', width: '420px', fontFamily: 'var(--font-mono)', color: bb.white,
       }}>
         <div style={{ fontSize: '16px', fontWeight: 'bold', color: bb.orange, letterSpacing: '1px', marginBottom: '16px' }}>
           CLOSE POSITION
@@ -308,7 +308,7 @@ function PositionDetailDrawer({
       position: 'fixed', inset: 0, zIndex: 50,
       display: 'flex', justifyContent: 'flex-end',
       backgroundColor: 'rgba(0,0,0,0.6)',
-      fontFamily: 'Courier New, monospace',
+      fontFamily: 'var(--font-mono)',
     }}
       onClick={onClose}>
       <div style={{
@@ -480,8 +480,8 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
 
   const totalPnl = positions.reduce((s, p) => s + (p.unrealized_pnl ?? 0), 0)
 
-  if (loading) return <div style={{ color: bb.amber, padding: '24px', fontFamily: 'Courier New, monospace' }}>LOADING...</div>
-  if (error) return <div style={{ color: bb.red, padding: '24px', fontFamily: 'Courier New, monospace' }}>{error}</div>
+  if (loading) return <div style={{ color: bb.amber, padding: '24px', fontFamily: 'var(--font-mono)' }}>LOADING...</div>
+  if (error) return <div style={{ color: bb.red, padding: '24px', fontFamily: 'var(--font-mono)' }}>{error}</div>
 
   return (
     <div>
@@ -517,7 +517,7 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
           <button onClick={load} disabled={loading} style={{
             border: `1px solid ${bb.border2}`, backgroundColor: 'transparent',
             color: bb.amber, padding: '4px 12px', fontSize: '12px',
-            fontFamily: 'Courier New, monospace', cursor: 'pointer', letterSpacing: '1px',
+            fontFamily: 'var(--font-mono)', cursor: 'pointer', letterSpacing: '1px',
             opacity: loading ? 0.5 : 1,
           }}>↻ {loading ? 'LOADING...' : 'REFRESH'}</button>
           <div style={{ fontSize: '11px', color: bb.gray, letterSpacing: '0.5px' }}>
@@ -535,7 +535,7 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
         </div>
       ) : (
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', fontFamily: 'Courier New, monospace' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', fontFamily: 'var(--font-mono)' }}>
             <thead>
               <tr>
                 <Th>UNDERLYING</Th>
@@ -596,7 +596,7 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
                   </Td>
                   <Td right color={pnlColor(p.unrealized_pnl_pct)}>{fmtPct(p.unrealized_pnl_pct)}</Td>
                   {/* CS Score badge — click riga per dettaglio */}
-                  <td style={{ padding: '4px 8px', borderBottom: `1px solid ${bb.border}`, textAlign: 'right', fontFamily: 'Courier New, monospace' }}>
+                  <td style={{ padding: '4px 8px', borderBottom: `1px solid ${bb.border}`, textAlign: 'right', fontFamily: 'var(--font-mono)' }}>
                     {csScore != null ? (
                       <span style={{ fontWeight: 'bold', fontSize: '13px', color: scoreColor(csScore) }}>{csScore}</span>
                     ) : (
@@ -632,7 +632,7 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
                     <button onClick={e => { e.stopPropagation(); setCloseTarget(p) }} style={{
                       border: `1px solid ${bb.red}`, backgroundColor: 'rgba(255,51,51,0.1)',
                       color: bb.red, padding: '2px 8px', fontSize: '11px', fontWeight: 'bold',
-                      fontFamily: 'Courier New, monospace', cursor: 'pointer', letterSpacing: '1px',
+                      fontFamily: 'var(--font-mono)', cursor: 'pointer', letterSpacing: '1px',
                       whiteSpace: 'nowrap',
                     }}>CLOSE</button>
                   </td>
@@ -666,11 +666,11 @@ function GreeksTab({ portfolioId }: { portfolioId: number }) {
       .finally(() => setLoading(false))
   }, [portfolioId])
 
-  if (loading) return <div style={{ color: bb.amber, padding: '24px', fontFamily: 'Courier New, monospace' }}>LOADING...</div>
-  if (error) return <div style={{ color: bb.red, padding: '24px', fontFamily: 'Courier New, monospace' }}>{error}</div>
+  if (loading) return <div style={{ color: bb.amber, padding: '24px', fontFamily: 'var(--font-mono)' }}>LOADING...</div>
+  if (error) return <div style={{ color: bb.red, padding: '24px', fontFamily: 'var(--font-mono)' }}>{error}</div>
 
   if (rows.length === 0) return (
-    <div style={{ color: bb.gray, padding: '32px', textAlign: 'center', fontSize: '13px', letterSpacing: '1px', fontFamily: 'Courier New, monospace' }}>
+    <div style={{ color: bb.gray, padding: '32px', textAlign: 'center', fontSize: '13px', letterSpacing: '1px', fontFamily: 'var(--font-mono)' }}>
       NO OPEN POSITIONS — GREEKS UNAVAILABLE
     </div>
   )
@@ -695,14 +695,14 @@ function GreeksTab({ portfolioId }: { portfolioId: number }) {
         ].map(item => (
           <div key={item.label} style={{ backgroundColor: bb.surface, border: `1px solid ${bb.border2}`, padding: '12px' }}>
             <div style={{ fontSize: '11px', color: bb.gray, letterSpacing: '1px', marginBottom: '4px' }}>{item.label}</div>
-            <div style={{ fontSize: '22px', fontWeight: 'bold', color: item.color, fontFamily: 'Courier New, monospace' }}>{item.value}</div>
+            <div style={{ fontSize: '22px', fontWeight: 'bold', color: item.color, fontFamily: 'var(--font-mono)' }}>{item.value}</div>
           </div>
         ))}
       </div>
 
       {/* Per-underlying breakdown */}
       <Label>EXPOSURE BY UNDERLYING</Label>
-      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', fontFamily: 'Courier New, monospace' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', fontFamily: 'var(--font-mono)' }}>
         <thead>
           <tr>
             <Th>UNDERLYING</Th>
@@ -764,12 +764,12 @@ function HistoryTab({ portfolioId }: { portfolioId: number }) {
       backgroundColor: filter === f ? 'rgba(255,102,0,0.15)' : 'transparent',
       color: filter === f ? bb.orange : bb.gray,
       padding: '3px 10px', fontSize: '12px',
-      fontFamily: 'Courier New, monospace', cursor: 'pointer', letterSpacing: '1px',
+      fontFamily: 'var(--font-mono)', cursor: 'pointer', letterSpacing: '1px',
     }}>{label}</button>
   )
 
-  if (loading) return <div style={{ color: bb.amber, padding: '24px', fontFamily: 'Courier New, monospace' }}>LOADING...</div>
-  if (error) return <div style={{ color: bb.red, padding: '24px', fontFamily: 'Courier New, monospace' }}>{error}</div>
+  if (loading) return <div style={{ color: bb.amber, padding: '24px', fontFamily: 'var(--font-mono)' }}>LOADING...</div>
+  if (error) return <div style={{ color: bb.red, padding: '24px', fontFamily: 'var(--font-mono)' }}>{error}</div>
 
   return (
     <div>
@@ -779,7 +779,7 @@ function HistoryTab({ portfolioId }: { portfolioId: number }) {
         {filterBtn('open', 'OPEN')}
         {filterBtn('closed', 'CLOSED')}
         {filter !== 'open' && (
-          <div style={{ marginLeft: 'auto', fontSize: '13px', fontFamily: 'Courier New, monospace' }}>
+          <div style={{ marginLeft: 'auto', fontSize: '13px', fontFamily: 'var(--font-mono)' }}>
             <span style={{ color: bb.gray, letterSpacing: '1px', marginRight: '8px' }}>REALIZED PNL:</span>
             <span style={{ color: pnlColor(totalRealized), fontWeight: 'bold' }}>{fmtPnl(totalRealized)}</span>
           </div>
@@ -787,12 +787,12 @@ function HistoryTab({ portfolioId }: { portfolioId: number }) {
       </div>
 
       {trades.length === 0 ? (
-        <div style={{ color: bb.gray, padding: '32px', textAlign: 'center', fontSize: '13px', letterSpacing: '1px', fontFamily: 'Courier New, monospace' }}>
+        <div style={{ color: bb.gray, padding: '32px', textAlign: 'center', fontSize: '13px', letterSpacing: '1px', fontFamily: 'var(--font-mono)' }}>
           NO TRADES
         </div>
       ) : (
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', fontFamily: 'Courier New, monospace' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', fontFamily: 'var(--font-mono)' }}>
             <thead>
               <tr>
                 <Th>UNDERLYING</Th>
@@ -917,14 +917,14 @@ export default function PortfolioPage() {
       backgroundColor: 'transparent',
       color: tab === t ? bb.orange : bb.gray,
       padding: '8px 16px', fontSize: '13px',
-      fontFamily: 'Courier New, monospace', cursor: 'pointer', letterSpacing: '1px',
+      fontFamily: 'var(--font-mono)', cursor: 'pointer', letterSpacing: '1px',
       fontWeight: tab === t ? 'bold' : 'normal',
     }}>{label}</button>
   )
 
   return (
     <ProtectedRoute>
-      <div style={{ display: 'flex', height: '100%', backgroundColor: bb.bg, fontFamily: 'Courier New, monospace', color: bb.white, overflow: 'hidden' }}>
+      <div style={{ display: 'flex', height: '100%', backgroundColor: bb.bg, fontFamily: 'var(--font-mono)', color: bb.white, overflow: 'hidden' }}>
 
         {/* ── Sidebar ── */}
         <div style={{ width: '220px', minWidth: '220px', borderRight: `1px solid ${bb.border2}`, display: 'flex', flexDirection: 'column', padding: '12px', gap: '4px', overflowY: 'auto' }}>
@@ -1039,3 +1039,4 @@ export default function PortfolioPage() {
     </ProtectedRoute>
   )
 }
+                   

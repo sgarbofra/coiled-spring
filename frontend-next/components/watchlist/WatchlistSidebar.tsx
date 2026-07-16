@@ -3,10 +3,10 @@
 import { useEffect, useState } from 'react'
 
 const bb = {
-  bg: '#000000', surface: '#0a0a00', panel: '#111100',
-  border: '#222200', border2: '#333300',
-  orange: '#FF6600', amber: '#FFAA00', yellow: '#FFE000',
-  green: '#00DD00', red: '#FF3333', white: '#CCCCCC', gray: '#FFFFFF',
+  bg: 'var(--bg-primary)', surface: 'var(--bg-panel)', panel: 'var(--bg-panel)',
+  border: 'var(--border)', border2: 'var(--border)',
+  orange: 'var(--accent)', amber: 'var(--accent)', yellow: 'var(--accent)',
+  green: 'var(--positive)', red: 'var(--negative)', white: 'var(--text-primary)', gray: 'var(--text-primary)',
 }
 
 type Watchlist = { id: string; name: string; isActive: boolean; createdAt?: string }
@@ -106,7 +106,7 @@ export default function WatchlistSidebar({
   }
 
   return (
-    <aside style={{ backgroundColor: bb.bg, borderRight: `1px solid ${bb.border2}`, height: '100%', display: 'flex', flexDirection: 'column', fontFamily: 'Courier New, monospace', fontSize: '14.4px' }}>
+    <aside style={{ backgroundColor: bb.bg, borderRight: `1px solid ${bb.border2}`, height: '100%', display: 'flex', flexDirection: 'column', fontFamily: 'var(--font-mono)', fontSize: '14.4px' }}>
       {/* Header */}
       <div style={{ borderBottom: `1px solid ${bb.orange}`, padding: '8px 12px', backgroundColor: bb.surface }}>
         <div style={{ color: bb.yellow, fontSize: '13.2px', letterSpacing: '2px', fontWeight: 'bold' }}>WATCHLISTS</div>

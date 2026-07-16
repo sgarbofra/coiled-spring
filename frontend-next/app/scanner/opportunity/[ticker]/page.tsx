@@ -212,11 +212,11 @@ function HVChart({ prices }: { prices: PricePoint[] }) {
     ? (hvData.find((d) => d.idx === hoverIdx) ?? hvData[hvData.length - 1])
     : null
 
-  const hvColor = '#00DD00'
+  const hvColor = 'var(--positive)'
 
   return (
     <div ref={containerRef} style={{ width: '100%', marginTop: 6 }}>
-      <div style={{ padding: '0 0 2px 58px', fontSize: 10, fontFamily: 'monospace', color: bb.gray, letterSpacing: 0.5 }}>
+      <div style={{ padding: '0 0 2px 58px', fontSize: 10, fontFamily: 'var(--font-mono)', color: bb.gray, letterSpacing: 0.5 }}>
         HV 20D (VOL. STORICA ANNUALIZZATA)
       </div>
       <svg
@@ -304,7 +304,7 @@ function HVRankPanel({ prices }: { prices: PricePoint[] }) {
   const belowCount = allHV20.filter(v => v < currentHV20).length
   const hvRank = Math.round((belowCount / allHV20.length) * 100)
 
-  const rankColor = hvRank <= 30 ? '#00CC44' : hvRank <= 60 ? '#FFB300' : '#FF3333'
+  const rankColor = hvRank <= 30 ? 'var(--positive)' : hvRank <= 60 ? '#FFB300' : 'var(--negative)'
   const rankLabel = hvRank <= 30 ? 'VOL COMPRESSA' : hvRank <= 60 ? 'VOL MEDIA' : 'VOL ELEVATA'
 
   return (
@@ -315,10 +315,10 @@ function HVRankPanel({ prices }: { prices: PricePoint[] }) {
     }}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-        <span style={{ fontSize: 10, color: bb.gray, letterSpacing: 1, fontFamily: 'monospace' }}>
+        <span style={{ fontSize: 10, color: bb.gray, letterSpacing: 1, fontFamily: 'var(--font-mono)' }}>
           HV RANK — VOL. STORICA COMPRESSA?
         </span>
-        <span style={{ fontSize: 11, fontWeight: 'bold', color: rankColor, letterSpacing: 1, fontFamily: 'monospace' }}>
+        <span style={{ fontSize: 11, fontWeight: 'bold', color: rankColor, letterSpacing: 1, fontFamily: 'var(--font-mono)' }}>
           {rankLabel}
         </span>
       </div>
@@ -339,26 +339,26 @@ function HVRankPanel({ prices }: { prices: PricePoint[] }) {
 
       {/* Valori numerici */}
       <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-        <span style={{ fontSize: 11, fontFamily: 'monospace', color: bb.gray }}>
+        <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: bb.gray }}>
           HV20 <span style={{ color: rankColor, fontWeight: 'bold' }}>{currentHV20.toFixed(1)}%</span>
         </span>
         {hv60 !== null && (
-          <span style={{ fontSize: 11, fontFamily: 'monospace', color: bb.gray }}>
+          <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: bb.gray }}>
             HV60 <span style={{ color: bb.white }}>{hv60.toFixed(1)}%</span>
           </span>
         )}
         {hv252 !== null && (
-          <span style={{ fontSize: 11, fontFamily: 'monospace', color: bb.gray }}>
+          <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: bb.gray }}>
             HV252 <span style={{ color: bb.white }}>{hv252.toFixed(1)}%</span>
           </span>
         )}
-        <span style={{ fontSize: 11, fontFamily: 'monospace', color: bb.gray }}>
+        <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: bb.gray }}>
           RANK <span style={{ color: rankColor, fontWeight: 'bold' }}>{hvRank}%</span>
           <span style={{ color: bb.gray, fontSize: 10 }}> ({allHV20.length}d)</span>
         </span>
         {hv60 !== null && (
-          <span style={{ fontSize: 11, fontFamily: 'monospace', color: bb.gray }}>
-            HV20/HV60 <span style={{ color: currentHV20 < hv60 ? '#00CC44' : '#FF3333', fontWeight: 'bold' }}>
+          <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: bb.gray }}>
+            HV20/HV60 <span style={{ color: currentHV20 < hv60 ? 'var(--positive)' : 'var(--negative)', fontWeight: 'bold' }}>
               {(currentHV20 / hv60).toFixed(2)}x
             </span>
           </span>
@@ -481,7 +481,7 @@ function OpportunityContent() {
   const riskFlagList = computeFlags({ spread_pct, open_interest: oi, dte, earnings_date: earningsDate })
   const flagCount = riskFlagList.length
   const riskLevel = flagCount === 0 ? 'LOW' : flagCount <= 2 ? 'MEDIUM' : 'HIGH'
-  const riskColor = flagCount === 0 ? '#00CC00' : flagCount <= 2 ? '#FFAA00' : '#FF3333'
+  const riskColor = flagCount === 0 ? 'var(--positive)' : flagCount <= 2 ? 'var(--accent)' : 'var(--negative)'
 
   const currentPrice = history?.prices.at(-1)?.close ?? null
   const low1y = history ? Math.min(...history.prices.map((p) => p.close)) : null
@@ -543,7 +543,7 @@ function OpportunityContent() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: bb.bg, color: bb.white, fontFamily: 'monospace' }}>
+    <div style={{ minHeight: '100vh', background: bb.bg, color: bb.white, fontFamily: 'var(--font-mono)' }}>
       <div
         style={{
           background: bb.surface,
@@ -579,7 +579,7 @@ function OpportunityContent() {
             background: 'transparent',
             border: `1px solid ${bb.border2}`,
             color: bb.amber,
-            fontFamily: 'monospace',
+            fontFamily: 'var(--font-mono)',
             fontSize: 12,
             padding: '6px 14px',
             cursor: 'pointer',
@@ -680,7 +680,7 @@ function OpportunityContent() {
                   background: 'transparent',
                   border: `1px solid ${bb.yellow}`,
                   color: bb.yellow,
-                  fontFamily: 'monospace',
+                  fontFamily: 'var(--font-mono)',
                   fontSize: 10,
                   padding: '3px 10px',
                   cursor: 'pointer',
@@ -717,7 +717,7 @@ function OpportunityContent() {
                 const buckets = [30, 60, 90, 180]
                 return (
                   <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11, fontFamily: 'monospace' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11, fontFamily: 'var(--font-mono)' }}>
                       <thead>
                         <tr style={{ borderBottom: `1px solid ${bb.border2}` }}>
                           <th style={{ textAlign: 'left', padding: '4px 10px', color: bb.gray, fontWeight: 600 }}>DATE</th>
@@ -838,7 +838,7 @@ function OpportunityContent() {
               <div style={{ background: bb.panel, border: `1px solid ${bb.border2}`, padding: '14px 16px', marginBottom: 14 }}>
                 <div style={{ fontSize: 11, color: bb.amber, letterSpacing: 1, marginBottom: 10 }}>CS SCORE</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                  <span style={{ fontSize: 38, fontWeight: 700, color: sColor, fontFamily: 'monospace', lineHeight: 1, minWidth: 56 }}>
+                  <span style={{ fontSize: 38, fontWeight: 700, color: sColor, fontFamily: 'var(--font-mono)', lineHeight: 1, minWidth: 56 }}>
                     {score}
                   </span>
                   <div style={{ flex: 1 }}>
@@ -856,7 +856,7 @@ function OpportunityContent() {
                 <div style={{ background: bb.panel, border: `1px solid ${bb.border2}`, padding: '14px 16px', marginBottom: 14 }}>
                   <div style={{ fontSize: 11, color: bb.amber, letterSpacing: 1, marginBottom: 10 }}>SCORE BREAKDOWN</div>
                   {why.map((line, i) => (
-                    <div key={i} style={{ fontSize: 12, color: bb.white, padding: '4px 0', borderBottom: i < why.length - 1 ? `1px solid ${bb.border}` : 'none', fontFamily: 'monospace' }}>
+                    <div key={i} style={{ fontSize: 12, color: bb.white, padding: '4px 0', borderBottom: i < why.length - 1 ? `1px solid ${bb.border}` : 'none', fontFamily: 'var(--font-mono)' }}>
                       {line}
                     </div>
                   ))}
@@ -866,17 +866,17 @@ function OpportunityContent() {
               <div style={{ background: bb.panel, border: `1px solid ${bb.border2}`, padding: '14px 16px' }}>
                 <div style={{ fontSize: 11, color: bb.amber, letterSpacing: 1, marginBottom: 10 }}>RISK FLAGS</div>
                 {riskFlagList.length === 0 ? (
-                  <div style={{ color: bb.green, fontSize: 12, fontFamily: 'monospace', padding: '3px 0' }}>✅ No immediate risks</div>
+                  <div style={{ color: bb.green, fontSize: 12, fontFamily: 'var(--font-mono)', padding: '3px 0' }}>✅ No immediate risks</div>
                 ) : (
                   riskFlagList.map((f, i) => (
-                    <div key={i} style={{ fontSize: 12, color: f.color, fontFamily: 'monospace', padding: '5px 0', borderBottom: i < riskFlagList.length - 1 ? `1px solid ${bb.border}` : 'none' }}>
+                    <div key={i} style={{ fontSize: 12, color: f.color, fontFamily: 'var(--font-mono)', padding: '5px 0', borderBottom: i < riskFlagList.length - 1 ? `1px solid ${bb.border}` : 'none' }}>
                       {f.label}
                     </div>
                   ))
                 )}
                 <div style={{ marginTop: 10, paddingTop: 8, borderTop: `1px solid ${bb.border2}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: 11, color: bb.gray, fontFamily: 'monospace', letterSpacing: 1 }}>OVERALL RISK</span>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: riskColor, fontFamily: 'monospace', letterSpacing: 2 }}>{riskLevel}</span>
+                  <span style={{ fontSize: 11, color: bb.gray, fontFamily: 'var(--font-mono)', letterSpacing: 1 }}>OVERALL RISK</span>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: riskColor, fontFamily: 'var(--font-mono)', letterSpacing: 2 }}>{riskLevel}</span>
                 </div>
               </div>
             </>
@@ -898,7 +898,7 @@ function OpportunityContent() {
                 background: aiLoading ? bb.border : 'transparent',
                 border: `1px solid ${bb.orange}`,
                 color: bb.orange,
-                fontFamily: 'monospace',
+                fontFamily: 'var(--font-mono)',
                 fontSize: 10,
                 padding: '3px 10px',
                 cursor: aiLoading ? 'default' : 'pointer',
@@ -949,7 +949,7 @@ function OpportunityContent() {
                 background: bb.bg,
                 border: `1px solid ${bb.border2}`,
                 color: bb.white,
-                fontFamily: 'monospace',
+                fontFamily: 'var(--font-mono)',
                 fontSize: 11,
                 lineHeight: 1.6,
                 padding: '8px 10px',
@@ -983,8 +983,8 @@ export default function OpportunityPage() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#FF6600',
-            fontFamily: 'monospace',
+            color: 'var(--accent)',
+            fontFamily: 'var(--font-mono)',
             fontSize: 14,
           }}
         >

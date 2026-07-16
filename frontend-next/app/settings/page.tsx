@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation'
 import ProtectedRoute from '@/components/ProtectedRoute'
 
 const bb = {
-  bg: '#000000', surface: '#0a0a00', panel: '#111100',
-  border: '#222200', border2: '#333300',
-  orange: '#FF6600', amber: '#FFAA00', yellow: '#FFE000',
-  green: '#00DD00', red: '#FF3333', white: '#CCCCCC', gray: '#FFFFFF',
+  bg: 'var(--bg-primary)', surface: 'var(--bg-panel)', panel: 'var(--bg-panel)',
+  border: 'var(--border)', border2: 'var(--border)',
+  orange: 'var(--accent)', amber: 'var(--accent)', yellow: 'var(--accent)',
+  green: 'var(--positive)', red: 'var(--negative)', white: 'var(--text-primary)', gray: 'var(--text-primary)',
 }
 
 type PlanKey = 'free' | 'pro' | 'pro_byok'
@@ -125,7 +125,7 @@ export default function SettingsPage() {
 
   return (
     <ProtectedRoute>
-    <div style={{ backgroundColor: bb.bg, minHeight: '100vh', padding: '40px 24px', color: bb.white, fontFamily: 'Courier New, monospace' }}>
+    <div style={{ backgroundColor: bb.bg, minHeight: '100vh', padding: '40px 24px', color: bb.white, fontFamily: 'var(--font-mono)' }}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
 
         <div style={{ marginBottom: '32px', display: 'flex', alignItems: 'center', gap: '16px', borderBottom: `2px solid ${bb.orange}`, paddingBottom: '12px' }}>

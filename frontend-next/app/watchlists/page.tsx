@@ -10,10 +10,10 @@ import ItemDetailsDrawer from '@/components/watchlist/ItemDetailsDrawer'
 import AddFromScannerModal from '@/components/watchlist/AddFromScannerModal'
 
 const bb = {
-  bg: '#000000', surface: '#0a0a00', panel: '#111100',
-  border: '#222200', border2: '#333300',
-  orange: '#FF6600', amber: '#FFAA00', yellow: '#FFE000',
-  green: '#00DD00', red: '#FF3333', white: '#CCCCCC', gray: '#FFFFFF',
+  bg: 'var(--bg-primary)', surface: 'var(--bg-panel)', panel: 'var(--bg-panel)',
+  border: 'var(--border)', border2: 'var(--border)',
+  orange: 'var(--accent)', amber: 'var(--accent)', yellow: 'var(--accent)',
+  green: 'var(--positive)', red: 'var(--negative)', white: 'var(--text-primary)', gray: 'var(--text-primary)',
 }
 
 type Watchlist = { id: string; name: string; isActive: boolean }
@@ -168,7 +168,7 @@ export default function WatchlistsPage() {
     <ProtectedRoute>
     <>
       <OnboardingModal />
-      <div style={{ display: 'flex', height: '100vh', width: '100%', overflow: 'hidden', backgroundColor: bb.bg, color: bb.white, fontFamily: 'Courier New, monospace', position: 'relative' }}>
+      <div style={{ display: 'flex', height: '100vh', width: '100%', overflow: 'hidden', backgroundColor: bb.bg, color: bb.white, fontFamily: 'var(--font-mono)', position: 'relative' }}>
 
         {/* Sidebar — fissa su desktop, overlay su mobile */}
         {isMobile && sidebarOpen && (

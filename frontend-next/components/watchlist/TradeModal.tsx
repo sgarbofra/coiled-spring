@@ -3,10 +3,10 @@
 import React, { useEffect, useState, CSSProperties } from 'react'
 
 const bb = {
-  bg: '#000000', surface: '#0a0a00', panel: '#111100',
-  border: '#222200', border2: '#333300',
-  orange: '#FF6600', amber: '#FFAA00', yellow: '#FFE000',
-  green: '#00DD00', red: '#FF3333', white: '#CCCCCC', gray: '#888888',
+  bg: 'var(--bg-primary)', surface: 'var(--bg-panel)', panel: 'var(--bg-panel)',
+  border: 'var(--border)', border2: 'var(--border)',
+  orange: 'var(--accent)', amber: 'var(--accent)', yellow: 'var(--accent)',
+  green: 'var(--positive)', red: 'var(--negative)', white: 'var(--text-primary)', gray: 'var(--text-secondary)',
 }
 
 type SavedInstrument = {
@@ -217,7 +217,7 @@ export default function TradeModal({ item, open, onClose }: Props) {
       position: 'fixed', inset: 0, zIndex: 100,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       backgroundColor: 'rgba(0,0,0,0.75)',
-      fontFamily: 'Courier New, monospace',
+      fontFamily: 'var(--font-mono)',
     }}>
       <div style={{
         width: '100%', maxWidth: '480px', backgroundColor: bb.bg,
@@ -438,12 +438,13 @@ function Label({ children }: { children: React.ReactNode }) {
 }
 
 const inputStyle: CSSProperties = {
-  backgroundColor: '#0a0a00',
-  border: `1px solid #333300`,
-  color: '#FF6600',
+  backgroundColor: 'var(--bg-panel)',
+  border: `1px solid var(--border)`,
+  color: 'var(--accent)',
   padding: '7px 10px',
   fontSize: '14px',
-  fontFamily: 'Courier New, monospace',
+  fontFamily: 'var(--font-mono)',
   width: '100%',
   boxSizing: 'border-box',
 }
+   

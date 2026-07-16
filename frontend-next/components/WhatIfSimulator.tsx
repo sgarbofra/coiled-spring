@@ -6,10 +6,10 @@ import dynamic from 'next/dynamic'
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false })
 
 const bb = {
-  bg: '#000000', surface: '#0a0a00', panel: '#111100',
-  border: '#222200', border2: '#333300',
-  orange: '#FF6600', amber: '#FFAA00', yellow: '#FFE000',
-  green: '#00DD00', red: '#FF3333', white: '#CCCCCC', gray: '#666600',
+  bg: '#000000', surface: 'var(--bg-panel)', panel: 'var(--bg-panel)',
+  border: 'var(--border)', border2: 'var(--border)',
+  orange: 'var(--accent)', amber: 'var(--accent)', yellow: 'var(--accent)',
+  green: 'var(--positive)', red: 'var(--negative)', white: 'var(--text-primary)', gray: '#666600',
 }
 
 // ── Black-Scholes (TypeScript) ─────────────────────────────────────────────
@@ -55,8 +55,8 @@ type PosData = {
 // ── Chart config ───────────────────────────────────────────────────────────
 
 const TIME_CURVES = [
-  { days: 0,   label: 'Today',  color: '#FF6600', width: 2.5 },
-  { days: 7,   label: '+7d',    color: '#FFE000', width: 1.8 },
+  { days: 0,   label: 'Today',  color: 'var(--accent)', width: 2.5 },
+  { days: 7,   label: '+7d',    color: 'var(--accent)', width: 1.8 },
   { days: 30,  label: '+30d',   color: '#AAFFAA', width: 1.8 },
   { days: 90,  label: '+90d',   color: '#00CCDD', width: 1.8 },
   { days: 180, label: '+180d',  color: '#4488FF', width: 1.5 },
@@ -151,38 +151,38 @@ function buildLayout(isMulti: boolean, positions: PosData[]): object {
   return {
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(10,10,0,0.7)',
-    font: { family: 'Courier New, monospace', color: '#AAAA00', size: 11 },
+    font: { family: 'var(--font-mono)', color: '#AAAA00', size: 11 },
     margin: { t: 16, r: 24, b: 56, l: 90 },
     xaxis: {
-      title: { text: xTitle, font: { color: '#FFAA00', size: 11 } },
-      tickcolor: '#333300', gridcolor: '#1a1a00',
-      zerolinecolor: '#FF6600', zerolinewidth: 2,
+      title: { text: xTitle, font: { color: 'var(--accent)', size: 11 } },
+      tickcolor: 'var(--border)', gridcolor: '#1a1a00',
+      zerolinecolor: 'var(--accent)', zerolinewidth: 2,
       color: '#888800', ticksuffix: '%',
     },
     yaxis: {
-      title: { text: 'Portfolio P&L ($)', font: { color: '#FFAA00', size: 11 } },
-      tickcolor: '#333300', gridcolor: '#1a1a00',
+      title: { text: 'Portfolio P&L ($)', font: { color: 'var(--accent)', size: 11 } },
+      tickcolor: 'var(--border)', gridcolor: '#1a1a00',
       zerolinecolor: '#666600', zerolinewidth: 1,
       color: '#888800', tickprefix: '$', tickformat: ',.0f',
     },
     legend: {
       bgcolor: 'rgba(0,0,0,0.6)', font: { color: '#CCCC00', size: 11 },
-      bordercolor: '#333300', borderwidth: 1,
+      bordercolor: 'var(--border)', borderwidth: 1,
       x: 0.01, y: 0.99, xanchor: 'left', yanchor: 'top',
     },
     hovermode: 'x unified',
     hoverlabel: {
-      bgcolor: '#111100', bordercolor: '#FF6600',
-      font: { color: '#FFFFFF', family: 'Courier New', size: 11 },
+      bgcolor: 'var(--bg-panel)', bordercolor: 'var(--accent)',
+      font: { color: '#FFFFFF', family: 'JetBrains Mono', size: 11 },
     },
     shapes: [{
       // Vertical marker at x=0 (current price)
       type: 'line', x0: 0, x1: 0, yref: 'paper', y0: 0, y1: 1,
-      line: { color: '#FF6600', width: 1.5, dash: 'dash' },
+      line: { color: 'var(--accent)', width: 1.5, dash: 'dash' },
     }],
     annotations: [{
       x: 0, yref: 'paper', y: 1.0, text: '▼ NOW',
-      showarrow: false, font: { color: '#FF6600', size: 10, family: 'Courier New' },
+      showarrow: false, font: { color: 'var(--accent)', size: 10, family: 'JetBrains Mono' },
       xanchor: 'center', yanchor: 'bottom',
     }],
   }
@@ -251,7 +251,7 @@ export default function WhatIfSimulator({ portfolioId }: { portfolioId: number }
     <div style={{
       background: bb.surface,
       border: `1px solid ${bb.border2}`,
-      fontFamily: 'Courier New, monospace',
+      fontFamily: 'var(--font-mono)',
     }}>
 
       {/* Header */}
@@ -291,7 +291,7 @@ export default function WhatIfSimulator({ portfolioId }: { portfolioId: number }
             IV SHIFT — shift all implied volatilities proportionally
           </span>
           <span style={{
-            fontSize: 13, fontWeight: 700, fontFamily: 'monospace',
+            fontSize: 13, fontWeight: 700, fontFamily: 'var(--font-mono)',
             color: ivShift > 0 ? bb.red : ivShift < 0 ? bb.green : bb.gray,
             minWidth: 60, textAlign: 'right',
           }}>

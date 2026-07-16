@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation'
 
 const bb = {
   bg: '#000000',
-  surface: '#111100',
-  border: '#FF6B00',
-  orange: '#FF6B00',
-  amber: '#FFAA00',
-  white: '#CCCCCC',
+  surface: 'var(--bg-panel)',
+  border: 'var(--accent)',
+  orange: 'var(--accent)',
+  amber: 'var(--accent)',
+  white: 'var(--text-primary)',
   gray: '#FFFFFF',
 }
 
@@ -50,7 +50,7 @@ export default function OnboardingModal() {
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 9999,
-        fontFamily: 'Courier New, monospace',
+        fontFamily: 'var(--font-mono)',
         padding: '16px',
       }}
       onClick={handleClose}

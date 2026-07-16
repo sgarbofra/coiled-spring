@@ -188,7 +188,7 @@ function HVScreenerContent() {
     backgroundColor: bb.panel,
     border: `1px solid ${bb.border2}`,
     color: 'var(--text-primary)',
-    fontFamily: 'Courier New, monospace',
+    fontFamily: 'var(--font-mono)',
     fontSize: '12px',
     padding: '3px 6px',
     width: '64px',
@@ -208,7 +208,7 @@ function HVScreenerContent() {
 
   // ── Render ───────────────────────────────────────────────────────────────────
   return (
-    <div style={{ backgroundColor: bb.bg, minHeight: '100vh', fontFamily: 'Courier New, monospace', color: 'var(--text-primary)' }}>
+    <div style={{ backgroundColor: bb.bg, minHeight: '100vh', fontFamily: 'var(--font-mono)', color: 'var(--text-primary)' }}>
 
       {/* Header */}
       <div style={{

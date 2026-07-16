@@ -718,7 +718,7 @@ export default function ScannerPage() {
 
   return (
     <ProtectedRoute>
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: isMobile ? '8px' : '16px', backgroundColor: bb.bg, color: bb.white, fontFamily: 'Courier New, monospace', fontSize: isMobile ? '12px' : '14.4px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: isMobile ? '8px' : '16px', backgroundColor: bb.bg, color: bb.white, fontFamily: 'var(--font-mono)', fontSize: isMobile ? '12px' : '14.4px' }}>
       {/* Filter Panel */}
       <div style={{ marginBottom: '16px', border: `1px solid ${bb.border2}`, backgroundColor: bb.surface, padding: '16px' }}>
         <div style={{ color: bb.yellow, fontSize: '13.2px', letterSpacing: '2px', fontWeight: 'bold', marginBottom: '12px', borderBottom: `1px solid ${bb.border}`, paddingBottom: '6px' }}>
@@ -922,7 +922,7 @@ export default function ScannerPage() {
             const displayedCount = displayResults.filter(r => r.underlying === t).length
             const price = stockPrices[t]
             return (
-              <div key={t} style={{ fontFamily: 'Courier New, monospace', fontSize: '12px', color: bb.gray, letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div key={t} style={{ fontFamily: 'var(--font-mono)', fontSize: '12px', color: bb.gray, letterSpacing: '0.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span style={{ fontWeight: 'bold', color: bb.orange }}>{t}</span>
                 {info && (
                   <>
@@ -1131,7 +1131,7 @@ export default function ScannerPage() {
                     position: 'absolute', bottom: 'calc(100% + 8px)', right: 0,
                     backgroundColor: '#000', border: `1px solid ${bb.orange}`,
                     padding: '10px 14px', width: '260px', zIndex: 100,
-                    fontFamily: 'Courier New, monospace', fontSize: '11px',
+                    fontFamily: 'var(--font-mono)', fontSize: '11px',
                     color: '#ccc', boxShadow: '0 4px 12px rgba(0,0,0,0.6)',
                     whiteSpace: 'normal', textAlign: 'left', fontWeight: 'normal',
                     letterSpacing: '0.5px', lineHeight: '1.5',
@@ -1144,9 +1144,9 @@ export default function ScannerPage() {
                       Not yet Opportunity Score — that requires historical IV data.
                     </div>
                     <div style={{ marginTop: '8px', display: 'flex', gap: '8px', fontSize: '10px' }}>
-                      <span style={{ color: '#00DD00' }}>■ &gt;75 Excellent</span>
-                      <span style={{ color: '#FFAA00' }}>■ 70-75 Good</span>
-                      <span style={{ color: '#FF3333' }}>■ &lt;70 Weak</span>
+                      <span style={{ color: 'var(--positive)' }}>■ &gt;75 Excellent</span>
+                      <span style={{ color: 'var(--accent)' }}>■ 70-75 Good</span>
+                      <span style={{ color: 'var(--negative)' }}>■ &lt;70 Weak</span>
                     </div>
                     <div style={{ position: 'absolute', bottom: '-6px', right: '20px', width: 0, height: 0,
                       borderLeft: '6px solid transparent', borderRight: '6px solid transparent',
@@ -1196,7 +1196,7 @@ export default function ScannerPage() {
                   padding: '20px 24px',
                   maxWidth: '600px',
                   margin: '0 auto',
-                  fontFamily: 'Courier New, monospace',
+                  fontFamily: 'var(--font-mono)',
                 }}>
                   <div style={{
                     color: bb.orange,
@@ -1356,7 +1356,7 @@ export default function ScannerPage() {
                                 right: 0,
                                 backgroundColor: '#000', border: `1px solid ${color}`,
                                 padding: '8px 12px', zIndex: 200, minWidth: '200px',
-                                fontFamily: 'Courier New, monospace', fontSize: '11px',
+                                fontFamily: 'var(--font-mono)', fontSize: '11px',
                                 textAlign: 'left', whiteSpace: 'nowrap',
                                 boxShadow: '0 4px 12px rgba(0,0,0,0.7)',
                               }}>
@@ -1417,7 +1417,7 @@ export default function ScannerPage() {
                       checked={compareSet.has(r.symbol_key)}
                       style={{
                         cursor: compareSet.size >= 3 && !compareSet.has(r.symbol_key) ? 'not-allowed' : 'pointer',
-                        accentColor: '#00DD00',
+                        accentColor: 'var(--positive)',
                       }}
                     />
                   </td>
@@ -1436,7 +1436,7 @@ export default function ScannerPage() {
           left: 0,
           right: 0,
           backgroundColor: '#001a00',
-          border: `2px solid #00DD00`,
+          border: `2px solid var(--positive)`,
           borderBottom: 'none',
           padding: '12px 20px',
           display: 'flex',
@@ -1445,13 +1445,13 @@ export default function ScannerPage() {
           gap: '20px',
           zIndex: 49,
         }}>
-          <span style={{ fontSize: '13px', color: '#00DD00', letterSpacing: '1px', fontFamily: 'monospace' }}>
+          <span style={{ fontSize: '13px', color: 'var(--positive)', letterSpacing: '1px', fontFamily: 'var(--font-mono)' }}>
             {compareSet.size} CONTRACTS SELECTED FOR COMPARISON
           </span>
           <button
             onClick={goToCompare}
             style={{
-              backgroundColor: '#00DD00',
+              backgroundColor: 'var(--positive)',
               color: '#000',
               border: 'none',
               padding: '8px 24px',
@@ -1462,7 +1462,7 @@ export default function ScannerPage() {
               cursor: 'pointer',
             }}
             onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#00FF00')}
-            onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#00DD00')}>
+            onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--positive)')}>
             COMPARE →
           </button>
           <button

@@ -5,10 +5,10 @@ import { useRouter } from 'next/navigation'
 import { computeCandidateScore, computeWhyPanel, scoreColor } from '@/lib/cs-score'
 
 const bb = {
-  bg: '#000000', surface: '#0a0a00', panel: '#111100',
-  border: '#222200', border2: '#333300',
-  orange: '#FF6600', amber: '#FFAA00', yellow: '#FFE000',
-  green: '#00DD00', red: '#FF3333', white: '#CCCCCC', gray: '#FFFFFF',
+  bg: 'var(--bg-primary)', surface: 'var(--bg-panel)', panel: 'var(--bg-panel)',
+  border: 'var(--border)', border2: 'var(--border)',
+  orange: 'var(--accent)', amber: 'var(--accent)', yellow: 'var(--accent)',
+  green: 'var(--positive)', red: 'var(--negative)', white: 'var(--text-primary)', gray: 'var(--text-primary)',
 }
 
 type SavedInstrument = {
@@ -62,7 +62,7 @@ export default function WatchlistTable({ items, selectedIds = [], onSelectIds, o
   )
 
   return (
-    <div style={{ backgroundColor: bb.bg, height: '100%', display: 'flex', flexDirection: 'column', padding: '12px', fontFamily: 'Courier New, monospace', fontSize: '14.4px' }}>
+    <div style={{ backgroundColor: bb.bg, height: '100%', display: 'flex', flexDirection: 'column', padding: '12px', fontFamily: 'var(--font-mono)', fontSize: '14.4px' }}>
       {/* Toolbar */}
       <div style={{ borderBottom: `1px solid ${bb.border2}`, paddingBottom: '10px', marginBottom: '10px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '6px' }}>
         <input
@@ -118,7 +118,7 @@ export default function WatchlistTable({ items, selectedIds = [], onSelectIds, o
               const isExpired = dte <= 0
               const isExpiringSoon = dte > 0 && dte < 30
               const rowOpacity = (isExpired || isExpiringSoon) ? 0.5 : 1
-              const textColor = (isExpired || isExpiringSoon) ? '#666666' : bb.white
+              const textColor = (isExpired || isExpiringSoon) ? 'var(--text-secondary)' : bb.white
 
               return (
                 <tr key={item.id} style={{ borderBottom: `1px solid ${bb.border}`, backgroundColor: isSelected ? bb.panel : 'transparent', opacity: rowOpacity }}
@@ -128,26 +128,26 @@ export default function WatchlistTable({ items, selectedIds = [], onSelectIds, o
                     <input type="checkbox" checked={isSelected} onChange={() => toggle(item.id)} style={{ cursor: 'pointer' }} />
                   </td>
                   <td style={{ padding: '6px 8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <button onClick={() => onOpenItem(item)} style={{ background: 'none', border: 'none', color: (isExpired || isExpiringSoon) ? '#666666' : bb.orange, fontFamily: 'inherit', fontSize: 'inherit', fontWeight: 'bold', cursor: 'pointer', textDecoration: 'none', letterSpacing: '0.5px' }}
+                    <button onClick={() => onOpenItem(item)} style={{ background: 'none', border: 'none', color: (isExpired || isExpiringSoon) ? 'var(--text-secondary)' : bb.orange, fontFamily: 'inherit', fontSize: 'inherit', fontWeight: 'bold', cursor: 'pointer', textDecoration: 'none', letterSpacing: '0.5px' }}
                       onMouseEnter={e => (e.target as HTMLElement).style.textDecoration = 'underline'}
                       onMouseLeave={e => (e.target as HTMLElement).style.textDecoration = 'none'}>
                       {item.symbol}
                     </button>
                     {isExpired && <span style={{ fontSize: '10px', padding: '2px 4px', backgroundColor: '#333333', color: '#999999', borderRadius: '2px', letterSpacing: '0.5px' }}>EXPIRED</span>}
-                    {isExpiringSoon && <span style={{ fontSize: '10px', padding: '2px 4px', backgroundColor: '#332200', color: '#FFAA00', borderRadius: '2px', letterSpacing: '0.5px' }}>EXPIRES SOON</span>}
+                    {isExpiringSoon && <span style={{ fontSize: '10px', padding: '2px 4px', backgroundColor: '#332200', color: 'var(--accent)', borderRadius: '2px', letterSpacing: '0.5px' }}>EXPIRES SOON</span>}
                   </td>
                   <td style={{ padding: '6px 8px', color: textColor }}>{item.underlyingSymbol}</td>
-                  <td style={{ padding: '6px 8px', color: (isExpired || isExpiringSoon) ? '#666666' : bb.amber }}>{item.optionSide ?? '-'}</td>
+                  <td style={{ padding: '6px 8px', color: (isExpired || isExpiringSoon) ? 'var(--text-secondary)' : bb.amber }}>{item.optionSide ?? '-'}</td>
                   <td style={{ padding: '6px 8px', color: textColor }}>{item.strike ?? '-'}</td>
                   <td style={{ padding: '6px 8px', color: textColor }}>{item.expirationDate ? new Date(item.expirationDate).toLocaleDateString() : '-'}</td>
                   <td style={{ padding: '6px 8px', color: textColor }}>{item.dte ?? '-'}</td>
                   <td style={{ padding: '6px 8px', color: textColor }}>{fmt(item.premiumPaid)}</td>
                   <td style={{ padding: '6px 8px', color: textColor }}>{fmt(item.bid)}</td>
                   <td style={{ padding: '6px 8px', color: textColor }}>{fmt(item.ask)}</td>
-                  <td style={{ padding: '6px 8px', color: (isExpired || isExpiringSoon) ? '#666666' : bb.amber }}>{item.ivCurrent ? `${Number(item.ivCurrent).toFixed(1)}%` : '-'}</td>
+                  <td style={{ padding: '6px 8px', color: (isExpired || isExpiringSoon) ? 'var(--text-secondary)' : bb.amber }}>{item.ivCurrent ? `${Number(item.ivCurrent).toFixed(1)}%` : '-'}</td>
                   <td style={{ padding: '6px 8px', color: textColor }}>{fmt(item.delta)}</td>
                   <td style={{ padding: '6px 8px', color: textColor }}>{fmt(item.theta)}</td>
-                  <td style={{ padding: '6px 8px', color: (isExpired || isExpiringSoon) ? '#666666' : bb.orange }}>{item.vega != null ? Number(item.vega).toFixed(3) : '—'}</td>
+                  <td style={{ padding: '6px 8px', color: (isExpired || isExpiringSoon) ? 'var(--text-secondary)' : bb.orange }}>{item.vega != null ? Number(item.vega).toFixed(3) : '—'}</td>
                   <td style={{ padding: '6px 8px', textAlign: 'center', position: 'relative', cursor: 'default' }}
                     onMouseEnter={() => setHoveredScoreId(item.id)}
                     onMouseLeave={() => setHoveredScoreId(null)}>
@@ -160,7 +160,7 @@ export default function WatchlistTable({ items, selectedIds = [], onSelectIds, o
                         spread_pct: spreadPct, open_interest: item.openInterest
                       })
                       if (score == null) return <span style={{ color: '#444' }}>—</span>
-                      const color = (isExpired || isExpiringSoon) ? '#666666' : scoreColor(score)
+                      const color = (isExpired || isExpiringSoon) ? 'var(--text-secondary)' : scoreColor(score)
                       const why = computeWhyPanel({
                         delta: item.delta, vega: item.vega, dte: item.dte,
                         spread_pct: spreadPct, open_interest: item.openInterest
@@ -173,7 +173,7 @@ export default function WatchlistTable({ items, selectedIds = [], onSelectIds, o
                               position: 'absolute', bottom: 'calc(100% + 6px)', right: 0,
                               backgroundColor: '#000', border: `1px solid ${color}`,
                               padding: '8px 12px', zIndex: 200, minWidth: '200px',
-                              fontFamily: 'Courier New, monospace', fontSize: '11px',
+                              fontFamily: 'var(--font-mono)', fontSize: '11px',
                               textAlign: 'left', whiteSpace: 'nowrap',
                               boxShadow: '0 4px 12px rgba(0,0,0,0.7)',
                             }}>

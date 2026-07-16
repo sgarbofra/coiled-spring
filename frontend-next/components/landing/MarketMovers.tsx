@@ -48,7 +48,7 @@ export default function MarketMovers() {
     return (
       <div style={{
         background: '#0a0a0a',
-        border: '1px solid #222200',
+        border: '1px solid var(--border)',
         borderRadius: '8px',
         padding: '1.5rem',
         fontFamily: 'Space Mono, monospace',
@@ -68,7 +68,7 @@ export default function MarketMovers() {
   return (
     <div style={{
       background: '#0a0a0a',
-      border: '1px solid #222200',
+      border: '1px solid var(--border)',
       borderRadius: '8px',
       overflow: 'hidden',
       boxShadow: '0 4px 16px rgba(255, 102, 0, 0.1)',
@@ -78,13 +78,13 @@ export default function MarketMovers() {
     }}>
       {/* Header */}
       <div style={{
-        background: '#000000',
+        background: 'var(--bg-primary)',
         padding: '1rem 1.5rem',
-        borderBottom: '1px solid #222200',
+        borderBottom: '1px solid var(--border)',
       }}>
         <div style={{
           fontSize: '0.85rem',
-          color: '#FF6600',
+          color: 'var(--accent)',
           fontWeight: 'bold',
           letterSpacing: '1px',
           fontFamily: 'Space Mono, monospace',
@@ -100,20 +100,20 @@ export default function MarketMovers() {
         overflowY: 'auto',
       }}>
         {/* Gainers */}
-        <div style={{ color: '#00DD00', fontSize: '0.7rem', marginBottom: '0.4rem', fontWeight: 'bold', letterSpacing: '0.5px' }}>
+        <div style={{ color: 'var(--positive)', fontSize: '0.7rem', marginBottom: '0.4rem', fontWeight: 'bold', letterSpacing: '0.5px' }}>
           ▲ TOP GAINERS
         </div>
         {data?.gainers.slice(0, 5).map((mover) => {
           const companyName = getCompanyName(mover.ticker)
           return (
             <div key={mover.ticker} style={{ display: 'flex', alignItems: 'center', padding: '0.3rem 0', borderBottom: '1px solid #1a1a1a', gap: '0.5rem', minWidth: 0 }}>
-              <span style={{ color: '#FF6600', fontWeight: 'bold', fontSize: '0.85rem', flexShrink: 0 }}>
+              <span style={{ color: 'var(--accent)', fontWeight: 'bold', fontSize: '0.85rem', flexShrink: 0 }}>
                 {mover.ticker}
               </span>
               <span style={{ color: '#555', fontSize: '0.72rem', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {companyName}
               </span>
-              <span style={{ color: '#00DD00', fontSize: '0.85rem', fontWeight: 'bold', flexShrink: 0, minWidth: '62px', textAlign: 'right' }}>
+              <span style={{ color: 'var(--positive)', fontSize: '0.85rem', fontWeight: 'bold', flexShrink: 0, minWidth: '62px', textAlign: 'right' }}>
                 +{(mover.change_percent ?? 0).toFixed(2)}%
               </span>
             </div>
@@ -128,7 +128,7 @@ export default function MarketMovers() {
           const companyName = getCompanyName(mover.ticker)
           return (
             <div key={mover.ticker} style={{ display: 'flex', alignItems: 'center', padding: '0.3rem 0', borderBottom: idx < 4 ? '1px solid #1a1a1a' : 'none', gap: '0.5rem', minWidth: 0 }}>
-              <span style={{ color: '#FF6600', fontWeight: 'bold', fontSize: '0.85rem', flexShrink: 0 }}>
+              <span style={{ color: 'var(--accent)', fontWeight: 'bold', fontSize: '0.85rem', flexShrink: 0 }}>
                 {mover.ticker}
               </span>
               <span style={{ color: '#555', fontSize: '0.72rem', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>

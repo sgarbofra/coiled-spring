@@ -8,10 +8,10 @@ import { useUser } from '@/contexts/UserContext'
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false })
 
 const bb = {
-  bg: '#0a0a0a', surface: '#111111', panel: '#111111',
-  border: '#1e2330', border2: '#2a3040',
-  orange: '#e87722', amber: '#e87722', yellow: '#e87722',
-  green: '#4ade80', red: '#f87171', white: '#f0f2f5', gray: '#8b94a3',
+  bg: 'var(--bg-primary)', surface: 'var(--bg-panel)', panel: 'var(--bg-panel)',
+  border: 'var(--border)', border2: 'var(--border)',
+  orange: 'var(--accent)', amber: 'var(--accent)', yellow: 'var(--accent)',
+  green: 'var(--positive)', red: 'var(--negative)', white: 'var(--text-primary)', gray: 'var(--text-secondary)',
 }
 
 type VolData = {
@@ -197,7 +197,7 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px', border: `1px solid ${bb.border2}`, backgroundColor: bb.surface, padding: '48px', fontFamily: 'Courier New, monospace' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px', border: `1px solid ${bb.border2}`, backgroundColor: bb.surface, padding: '48px', fontFamily: 'var(--font-mono)' }}>
         <span style={{ fontSize: '38.4px', color: bb.orange, animation: 'spin 1s linear infinite' }}>⟳</span>
         <p style={{ fontSize: '13.2px', color: bb.gray, letterSpacing: '1px' }}>
           BUILDING VOLATILITY SURFACE FOR <strong style={{ color: bb.white }}>{symbol}</strong>...
@@ -211,7 +211,7 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
 
   if (error) {
     return (
-      <div style={{ border: `1px solid ${bb.red}`, backgroundColor: '#1a0000', padding: '12px 16px', fontSize: '13.2px', color: bb.red, fontFamily: 'Courier New, monospace' }}>
+      <div style={{ border: `1px solid ${bb.red}`, backgroundColor: '#1a0000', padding: '12px 16px', fontSize: '13.2px', color: bb.red, fontFamily: 'var(--font-mono)' }}>
         ▶ ERROR: {error.toUpperCase()}
       </div>
     )
@@ -225,16 +225,16 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
   const ivAvg = ivFlat.reduce((a, b) => a + b, 0) / ivFlat.length
 
   const CS_COLORSCALE: [number, string][] = [
-    [0,    '#FF3333'],
-    [0.50, '#FF6600'],
-    [0.69, '#FFAA00'],
-    [0.75, '#FFE000'],
-    [1.0,  '#00DD00'],
+    [0,    'var(--negative)'],
+    [0.50, 'var(--accent)'],
+    [0.69, 'var(--accent)'],
+    [0.75, 'var(--accent)'],
+    [1.0,  'var(--positive)'],
   ]
 
   return (
     <>
-      <div style={{ border: `1px solid ${bb.border2}`, backgroundColor: bb.surface, fontFamily: 'Courier New, monospace' }}>
+      <div style={{ border: `1px solid ${bb.border2}`, backgroundColor: bb.surface, fontFamily: 'var(--font-mono)' }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid ${bb.orange}`, padding: '12px 16px', flexWrap: 'wrap', gap: 8 }}>
           <div>
@@ -256,7 +256,7 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             {/* Toggle IV / CS Score */}
-            <div style={{ display: 'flex', border: `1px solid ${bb.border2}`, overflow: 'hidden', fontSize: '11px', fontFamily: 'Courier New, monospace' }}>
+            <div style={{ display: 'flex', border: `1px solid ${bb.border2}`, overflow: 'hidden', fontSize: '11px', fontFamily: 'var(--font-mono)' }}>
               {(['iv', 'cs'] as const).map(mode => (
                 <button
                   key={mode}
@@ -319,8 +319,8 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
                 ],
                 colorbar: {
                   title: { text: colorMode === 'cs' ? 'CS Score' : 'IV (%)', side: 'right' as const },
-                  tickfont: { color: '#f0f2f5', size: 12 },
-                  titlefont: { color: '#f0f2f5', size: 13 },
+                  tickfont: { color: 'var(--text-primary)', size: 12 },
+                  titlefont: { color: 'var(--text-primary)', size: 13 },
                   thickness: 15,
                 },
                 hovertemplate:
@@ -351,8 +351,8 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
               width: undefined,
               height: 520,
               autosize: true,
-              paper_bgcolor: '#0a0a0a',
-              plot_bgcolor: '#0a0a0a',
+              paper_bgcolor: 'var(--bg-primary)',
+              plot_bgcolor: 'var(--bg-primary)',
               margin: { l: 0, r: 60, t: 20, b: 0 },
               scene: {
                 bgcolor: bb.bg,
@@ -387,7 +387,7 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
                   eye: { x: 1.5, y: -1.5, z: 0.8 },
                 },
               },
-              font: { color: '#f0f2f5', family: "'JetBrains Mono', 'Courier New', monospace" },
+              font: { color: 'var(--text-primary)', family: "'JetBrains Mono', var(--font-mono)" },
             } as never}
             config={{
               responsive: true,
@@ -435,9 +435,9 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
             </p>
           ) : (
             <p style={{ fontSize: '12px', color: bb.gray, letterSpacing: '0.5px' }}>
-              <span style={{ color: '#00DD00', fontWeight: 'bold' }}>VERDE</span> = CS SCORE 75–100 (CANDIDATO FORTE) ·{' '}
-              <span style={{ color: '#FFAA00', fontWeight: 'bold' }}>ARANCIO</span> = CS SCORE 50–75 (ACCETTABILE) ·{' '}
-              <span style={{ color: '#FF3333', fontWeight: 'bold' }}>ROSSO</span> = CS SCORE &lt;50 (EVITA) ·{' '}
+              <span style={{ color: 'var(--positive)', fontWeight: 'bold' }}>VERDE</span> = CS SCORE 75–100 (CANDIDATO FORTE) ·{' '}
+              <span style={{ color: 'var(--accent)', fontWeight: 'bold' }}>ARANCIO</span> = CS SCORE 50–75 (ACCETTABILE) ·{' '}
+              <span style={{ color: 'var(--negative)', fontWeight: 'bold' }}>ROSSO</span> = CS SCORE &lt;50 (EVITA) ·{' '}
               ALTEZZA = IV IMPLICITA. <span style={{ color: bb.orange, fontWeight: 'bold' }}>CLICK TO ADD TO WATCHLIST</span>.
             </p>
           )}
@@ -446,7 +446,7 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
 
       {/* Option Details Modal */}
       {selectedOption && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.8)', fontFamily: 'Courier New, monospace' }}
+        <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.8)', fontFamily: 'var(--font-mono)' }}
           onClick={() => setSelectedOption(null)}>
           <div style={{ width: '100%', maxWidth: '500px', border: `2px solid ${bb.orange}`, backgroundColor: bb.bg, color: bb.white }}
             onClick={e => e.stopPropagation()}>

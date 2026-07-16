@@ -5,10 +5,10 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 import { scannerStore } from '@/lib/scanner-store'
 
 const bb = {
-  bg: '#000000', surface: '#0a0a00', panel: '#111100',
-  border: '#222200', border2: '#333300',
-  orange: '#FF6600', amber: '#FFAA00', yellow: '#FFE000',
-  green: '#00DD00', red: '#FF3333', white: '#CCCCCC', gray: '#FFFFFF',
+  bg: 'var(--bg-primary)', surface: 'var(--bg-panel)', panel: 'var(--bg-panel)',
+  border: 'var(--border)', border2: 'var(--border)',
+  orange: 'var(--accent)', amber: 'var(--accent)', yellow: 'var(--accent)',
+  green: 'var(--positive)', red: 'var(--negative)', white: 'var(--text-primary)', gray: 'var(--text-primary)',
 }
 
 type Message = { role: 'user' | 'assistant'; content: string }
@@ -110,7 +110,7 @@ export default function AiChatPage() {
 
   return (
     <ProtectedRoute>
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', backgroundColor: bb.bg, color: bb.white, fontFamily: 'Courier New, monospace' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', backgroundColor: bb.bg, color: bb.white, fontFamily: 'var(--font-mono)' }}>
       {/* Messages */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {messages.length === 0 && (

@@ -5,12 +5,12 @@ import { useEffect, useState } from 'react'
 const colors = {
   bg: '#000000',
   surface: '#0a0a0a',
-  border: '#222200',
-  orange: '#FF6600',
-  orangeHover: '#FF8833',
+  border: 'var(--border)',
+  orange: 'var(--accent)',
+  orangeHover: 'var(--accent)',
   white: '#FFFFFF',
-  gray: '#CCCCCC',
-  darkGray: '#666666',
+  gray: 'var(--text-primary)',
+  darkGray: 'var(--text-secondary)',
 }
 
 type VixDataPoint = {

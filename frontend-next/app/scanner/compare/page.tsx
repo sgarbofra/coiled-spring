@@ -6,10 +6,10 @@ import { computeCandidateScore, computeWhyPanel, scoreColor } from '@/lib/cs-sco
 import { computeFlags } from '@/components/RiskPanel'
 
 const bb = {
-  bg: '#000000', surface: '#0a0a00', panel: '#111100',
-  border: '#222200', border2: '#333300',
-  orange: '#FF6600', amber: '#FFAA00', yellow: '#FFE000',
-  green: '#00DD00', red: '#FF3333', white: '#CCCCCC', gray: '#888888',
+  bg: '#000000', surface: 'var(--bg-panel)', panel: 'var(--bg-panel)',
+  border: 'var(--border)', border2: 'var(--border)',
+  orange: 'var(--accent)', amber: 'var(--accent)', yellow: 'var(--accent)',
+  green: 'var(--positive)', red: 'var(--negative)', white: 'var(--text-primary)', gray: 'var(--text-secondary)',
   bestBg: '#003300',
 }
 
@@ -155,7 +155,7 @@ function CompareContent() {
 
   if (contracts.length === 0) {
     return (
-      <div style={{ minHeight: '100vh', background: bb.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: bb.amber, fontFamily: 'monospace', fontSize: 14 }}>
+      <div style={{ minHeight: '100vh', background: bb.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: bb.amber, fontFamily: 'var(--font-mono)', fontSize: 14 }}>
         No contracts selected.{' '}
         <span style={{ color: bb.orange, cursor: 'pointer', marginLeft: 8 }} onClick={() => router.push('/scanner')}>
           ← Back to Scanner
@@ -176,7 +176,7 @@ function CompareContent() {
     borderBottom: `1px solid ${bb.border}`,
     background: isBest ? bb.bestBg : 'transparent',
     color: isBest ? bb.green : (extraColor ?? bb.white),
-    fontFamily: 'monospace',
+    fontFamily: 'var(--font-mono)',
     fontSize: 13,
     fontWeight: isBest ? 700 : 400,
     transition: 'background 0.2s',
@@ -186,7 +186,7 @@ function CompareContent() {
     padding: '7px 14px',
     textAlign: 'left',
     color: bb.gray,
-    fontFamily: 'monospace',
+    fontFamily: 'var(--font-mono)',
     fontSize: 12,
     letterSpacing: 1,
     borderBottom: `1px solid ${bb.border}`,
@@ -196,7 +196,7 @@ function CompareContent() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: bb.bg, color: bb.white, fontFamily: 'monospace' }}>
+    <div style={{ minHeight: '100vh', background: bb.bg, color: bb.white, fontFamily: 'var(--font-mono)' }}>
       {/* Header */}
       <div style={{ background: bb.surface, borderBottom: `1px solid ${bb.border2}`, padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
@@ -211,7 +211,7 @@ function CompareContent() {
         </div>
         <button
           onClick={() => router.back()}
-          style={{ background: 'transparent', border: `1px solid ${bb.border2}`, color: bb.amber, fontFamily: 'monospace', fontSize: 12, padding: '6px 14px', cursor: 'pointer', letterSpacing: 1 }}
+          style={{ background: 'transparent', border: `1px solid ${bb.border2}`, color: bb.amber, fontFamily: 'var(--font-mono)', fontSize: 12, padding: '6px 14px', cursor: 'pointer', letterSpacing: 1 }}
         >
           ← Back to Scanner
         </button>
@@ -416,7 +416,7 @@ function CompareContent() {
                   background: 'transparent',
                   border: `1px solid ${bb.orange}`,
                   color: bb.orange,
-                  fontFamily: 'monospace',
+                  fontFamily: 'var(--font-mono)',
                   fontSize: 12,
                   padding: '6px 14px',
                   cursor: 'pointer',
@@ -436,7 +436,7 @@ function CompareContent() {
 export default function ComparePage() {
   return (
     <Suspense fallback={
-      <div style={{ minHeight: '100vh', background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FF6600', fontFamily: 'monospace' }}>
+      <div style={{ minHeight: '100vh', background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent)', fontFamily: 'var(--font-mono)' }}>
         Loading…
       </div>
     }>

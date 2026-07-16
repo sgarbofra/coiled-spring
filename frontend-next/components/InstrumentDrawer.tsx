@@ -73,12 +73,12 @@ export default function InstrumentDrawer({
           <div style={{
             marginBottom: '16px',
             padding: '10px 14px',
-            background: '#0a0a00',
-            border: '1px solid #222200',
+            background: 'var(--bg-panel)',
+            border: '1px solid var(--border)',
             borderRadius: '4px',
           }}>
             <div style={{
-              fontFamily: 'Courier New, monospace',
+              fontFamily: 'var(--font-mono)',
               fontSize: '10px',
               color: '#888',
               letterSpacing: '0.5px',
