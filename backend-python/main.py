@@ -34,16 +34,16 @@ limiter = Limiter(key_func=get_remote_address)
 def _run_daily_iv_snapshot():
     """Job APScheduler — eseguito ogni giorno alle 16:30 UTC (dopo chiusura mercato US).
 
-    Chiama l'endpoint interno /api/scanner/iv-snapshot via HTTP in-process.
-    Evita di importare logica di business direttamente nel main.
+    Chiama l'endpoint interno usando la porta dinamica Railway ($PORT).
     """
-    import requests as _requests
+    import os, requests as _requests
+    port = os.environ.get("PORT", "8080")
     try:
         key = settings.cron_internal_key
         resp = _requests.post(
-            "http://localhost:8080/api/scanner/iv-snapshot",
+            f"http://localhost:{port}/api/scanner/iv-snapshot",
             headers={"x-internal-key": key},
-            timeout=10,  # Solo avvia il background task, non aspetta il completamento
+            timeout=10,
         )
         print(f"[CRON] IV snapshot triggered: {resp.status_code} {resp.text[:100]}")
     except Exception as e:
@@ -55,11 +55,12 @@ def _run_daily_hv_snapshot():
 
     Ricalcola HV30/Rank/Pct per tutti i ticker dell'universo e fa upsert in hv_snapshots.
     """
-    import requests as _requests
+    import os, requests as _requests
+    port = os.environ.get("PORT", "8080")
     try:
         key = settings.cron_internal_key
         resp = _requests.post(
-            "http://localhost:8080/api/hv-screener/refresh",
+            f"http://localhost:{port}/api/hv-screener/refresh",
             headers={"x-internal-key": key},
             timeout=10,
         )
