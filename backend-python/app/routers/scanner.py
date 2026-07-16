@@ -511,7 +511,7 @@ def iv_snapshot(
     def _run_snapshot():
         """Eseguito in background — non blocca la risposta HTTP."""
         print(f"[IV_SNAPSHOT] Starting daily snapshot for {len(tickers)} tickers × {len(DTE_BUCKETS)} buckets")
-        snapshot = get_atm_iv_snapshot(tickers, DTE_BUCKETS, max_workers=3)
+        snapshot = get_atm_iv_snapshot(tickers, DTE_BUCKETS)
 
         now = datetime.now(timezone.utc)
         today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)

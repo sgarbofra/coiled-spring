@@ -728,111 +728,104 @@ def get_options_prices_bulk(symbol_keys: List[str]) -> Dict[str, Optional[Option
 
 # ── Daily IV snapshot (cron) ─────────────────────────────────────────────────
 
-def _get_atm_iv_for_dte(symbol: str, target_dte: int) -> Optional[float]:
-    """Fetches ATM implied volatility for a given ticker and target DTE.
+def _get_all_dte_ivs(symbol: str, dte_buckets: List[int]) -> Dict[int, Optional[float]]:
+    """Fetches ATM IV for ALL DTE buckets in a single yfinance session.
 
-    Finds the expiration closest to target_dte, picks the ATM call strike,
-    and returns the implied volatility as a decimal (0.25 = 25%).
-    Returns None if data is unavailable or invalid.
+    One yf.Ticker per symbol → one options list fetch → option chains cached
+    per expiry so the same chain is never downloaded twice.
+    Returns {30: iv_or_None, 60: iv_or_None, 90: iv_or_None, 180: iv_or_None}.
     """
+    import yfinance as yf
+    from datetime import date as _date
+    from typing import Any
+
+    result: Dict[int, Optional[float]] = {dte: None for dte in dte_buckets}
     try:
-        import yfinance as yf
-        from datetime import date as _date
-        ticker = yf.Ticker(symbol)
+        ticker_obj = yf.Ticker(symbol)
 
-        expirations = ticker.options
-        if not expirations:
-            return None
-
-        today = _date.today()
-
-        # Trova la scadenza più vicina al target DTE
-        best_exp = min(
-            expirations,
-            key=lambda e: abs((_date.fromisoformat(e) - today).days - target_dte)
-        )
-
-        # Scadenza troppo distante dal target (>60 gg di scarto) → skip
-        actual_dte = (_date.fromisoformat(best_exp) - today).days
-        if abs(actual_dte - target_dte) > 60:
-            return None
-
-        chain = ticker.option_chain(best_exp)
-        calls = chain.calls
-        if calls.empty:
-            return None
-
-        # Spot price
-        fi = ticker.fast_info
+        # --- Spot price (fetched once) ---
+        fi = ticker_obj.fast_info
         spot = getattr(fi, 'last_price', None) or getattr(fi, 'regular_market_price', None)
         if not spot:
-            hist = ticker.history(period="1d")
+            hist = ticker_obj.history(period="1d")
             if not hist.empty:
                 spot = float(hist["Close"].iloc[-1])
         if not spot:
-            return None
+            return result
 
-        # Strike ATM (più vicino allo spot)
-        calls = calls.copy()
-        calls["_dist"] = (calls["strike"] - spot).abs()
-        atm_row = calls.loc[calls["_dist"].idxmin()]
+        # --- Available expirations (fetched once) ---
+        expirations = ticker_obj.options
+        if not expirations:
+            return result
 
-        iv = atm_row.get("impliedVolatility")
-        if iv is None or (hasattr(iv, '__float__') and math.isnan(float(iv))):
-            return None
-        iv_f = float(iv)
-        return iv_f if 0.01 < iv_f < 5.0 else None  # sanity: 1% < IV < 500%
+        today = _date.today()
+        chain_cache: Dict[str, Any] = {}  # cache: exp_str → option_chain
+
+        for target_dte in dte_buckets:
+            best_exp = min(
+                expirations,
+                key=lambda e: abs((_date.fromisoformat(e) - today).days - target_dte),
+            )
+            actual_dte = (_date.fromisoformat(best_exp) - today).days
+            if abs(actual_dte - target_dte) > 60:
+                continue  # nessuna scadenza abbastanza vicina al target
+
+            # Usa chain cachata se già scaricata per questa expiry
+            if best_exp not in chain_cache:
+                chain_cache[best_exp] = ticker_obj.option_chain(best_exp)
+
+            calls = chain_cache[best_exp].calls
+            if calls.empty:
+                continue
+
+            calls = calls.copy()
+            calls["_dist"] = (calls["strike"] - spot).abs()
+            atm_row = calls.loc[calls["_dist"].idxmin()]
+
+            iv = atm_row.get("impliedVolatility")
+            if iv is None or (hasattr(iv, '__float__') and math.isnan(float(iv))):
+                continue
+            iv_f = float(iv)
+            if 0.01 < iv_f < 5.0:  # sanity: 1% < IV < 500%
+                result[target_dte] = iv_f
 
     except Exception as e:
-        print(f"[IV_SNAPSHOT] {symbol} @{target_dte}d: {type(e).__name__}: {e}")
-        return None
+        print(f"[IV_SNAPSHOT] {symbol}: {type(e).__name__}: {e}")
+
+    return result
 
 
 def get_atm_iv_snapshot(
     tickers: List[str],
     dte_buckets: List[int] = None,
-    max_workers: int = 3,
 ) -> Dict[str, Dict[int, Optional[float]]]:
-    """Fetches ATM IV for all tickers across DTE buckets in parallel.
+    """Fetches ATM IV for all tickers across DTE buckets — sequential, rate-limit-safe.
 
-    Returns: { "AAPL": { 30: 0.2340, 60: 0.2280, 90: None, 180: 0.2150 }, ... }
-    None = data non disponibile per quel bucket.
+    Strategy:
+    - 1 yf.Ticker session per symbol (not 4) → drastically fewer API calls
+    - Option chains cached within a session (shared expiries reuse the download)
+    - Pure sequential loop + 1.5s base sleep between tickers
+    - ~32 min for 1107-ticker universe → well within daily window
 
-    Processa i ticker a batch da 50 con 8s di pausa tra batch per evitare
-    YFRateLimitError su 1000+ ticker. max_workers=3 riduce la pressione su yfinance.
+    Returns: { "AAPL": {30: 0.234, 60: 0.228, 90: None, 180: 0.215}, ... }
     """
     import time as _time, random as _random
 
     if dte_buckets is None:
         dte_buckets = [30, 60, 90, 180]
 
-    results: Dict[str, Dict[int, Optional[float]]] = {t: {} for t in tickers}
-    BATCH_SIZE = 50
-    BATCH_SLEEP = 8  # secondi tra batch
+    results: Dict[str, Dict[int, Optional[float]]] = {}
+    TICKER_SLEEP = 1.5   # secondi tra ticker (base) — senza parallelismo è sufficiente
+    LOG_EVERY = 50
 
-    def _fetch(task):
-        _time.sleep(_random.uniform(0.1, 0.4))  # jitter per distribuire le richieste
-        ticker, dte = task
-        return ticker, dte, _get_atm_iv_for_dte(ticker, dte)
+    for i, ticker in enumerate(tickers):
+        results[ticker] = _get_all_dte_ivs(ticker, dte_buckets)
 
-    # Processa un batch di ticker alla volta
-    for batch_start in range(0, len(tickers), BATCH_SIZE):
-        batch = tickers[batch_start: batch_start + BATCH_SIZE]
-        tasks = [(t, b) for t in batch for b in dte_buckets]
+        if (i + 1) % LOG_EVERY == 0 or (i + 1) == len(tickers):
+            print(f"[IV_SNAPSHOT] Progress: {i+1}/{len(tickers)} tickers processed")
 
-        with ThreadPoolExecutor(max_workers=max_workers) as pool:
-            futures = {pool.submit(_fetch, task): task for task in tasks}
-            for future in as_completed(futures):
-                try:
-                    ticker, dte, iv = future.result()
-                    results[ticker][dte] = iv
-                except Exception as e:
-                    task = futures[future]
-                    print(f"[IV_SNAPSHOT] Task {task} failed: {e}")
-
-        batch_end = min(batch_start + BATCH_SIZE, len(tickers))
-        print(f"[IV_SNAPSHOT] Batch {batch_start+1}-{batch_end}/{len(tickers)} done — sleeping {BATCH_SLEEP}s")
-        if batch_end < len(tickers):
-            _time.sleep(BATCH_SLEEP)
+        # Sleep tra ticker (non sull'ultimo)
+        if i < len(tickers) - 1:
+            _time.sleep(TICKER_SLEEP + _random.uniform(0.0, 0.5))
 
     return results
