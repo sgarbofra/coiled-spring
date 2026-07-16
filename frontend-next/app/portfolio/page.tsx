@@ -1039,4 +1039,3 @@ export default function PortfolioPage() {
     </ProtectedRoute>
   )
 }
-                   
