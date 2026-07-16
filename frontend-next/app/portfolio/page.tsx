@@ -7,10 +7,10 @@ import { computeCandidateScore, computeWhyPanel, scoreColor } from '@/lib/cs-sco
 import WhatIfSimulator from '@/components/WhatIfSimulator'
 
 const bb = {
-  bg: '#000000', surface: 'var(--bg-panel)', panel: 'var(--bg-panel)',
+  bg: 'var(--bg-primary)', surface: 'var(--bg-panel)', panel: 'var(--bg-panel)',
   border: 'var(--border)', border2: 'var(--border)',
   orange: 'var(--accent)', amber: 'var(--accent)', yellow: 'var(--accent)',
-  green: 'var(--positive)', red: 'var(--negative)', white: 'var(--text-primary)', gray: '#999999',
+  green: 'var(--positive)', red: 'var(--negative)', white: 'var(--text-primary)', gray: 'var(--text-secondary)',
 }
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -400,7 +400,7 @@ function PositionDetailDrawer({
               <>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
                   <span style={{ fontSize: '36px', fontWeight: 'bold', color: scoreColor(score) }}>{score}</span>
-                  <span style={{ fontSize: '11px', color: '#555' }}>/100</span>
+                  <span style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>/100</span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   {why.map((line, i) => (
@@ -411,7 +411,7 @@ function PositionDetailDrawer({
                 </div>
               </>
             ) : (
-              <div style={{ color: '#555', fontSize: '13px' }}>— Greeks non disponibili (IV mancante)</div>
+              <div style={{ color: 'var(--text-tertiary)', fontSize: '13px' }}>— Greeks non disponibili (IV mancante)</div>
             )}
           </section>
 
@@ -966,7 +966,7 @@ export default function PortfolioPage() {
                     letterSpacing: '0.5px', opacity: deleting === p.id ? 0.4 : 1,
                     flexShrink: 0,
                   }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = '#1a0000' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'color-mix(in srgb, var(--negative) 10%, transparent)' }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}
                 >
                   {deleting === p.id ? '...' : 'DEL'}
