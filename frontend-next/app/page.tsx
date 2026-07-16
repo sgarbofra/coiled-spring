@@ -173,6 +173,20 @@ export default function LandingPage() {
           .hero-cta { flex-direction: column !important; align-items: center !important; }
           .hero-cta button, .hero-cta a { width: 100% !important; text-align: center !important; }
         }
+
+        /* ── Academy 3+2 grid ── */
+        .academy-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1.1rem; }
+        .academy-card { grid-column: span 2; }
+        .academy-card-wide { grid-column: span 3; }
+        .course-works-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+        @media (max-width: 900px) {
+          .academy-grid { grid-template-columns: 1fr !important; }
+          .academy-card, .academy-card-wide { grid-column: span 1 !important; }
+          .course-works-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+        @media (max-width: 480px) {
+          .course-works-grid { grid-template-columns: 1fr !important; }
+        }
       `}</style>
 
       <div style={{ minHeight: '100vh', background: colors.bg, color: colors.white, fontFamily: sans }}>
@@ -725,32 +739,135 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.1rem', marginBottom: '3rem' }}>
-              {[
-                { title: 'Introduction to LEAPS Options', desc: 'What LEAPS are, why they differ from short-dated options, and when to use them.', free: true },
-                { title: 'Implied Volatility & IV Rank', desc: 'How to read IV, calculate IV Rank, and identify historically compressed volatility windows.' },
-                { title: 'The CS Score Explained', desc: 'The formula behind the Coiled Spring Score and how each component drives the final rating.' },
-                { title: 'Scanning for Opportunities', desc: 'Using the terminal scanner with filters: DTE, Delta, IV Rank, and the CS Score threshold.' },
-                { title: 'Position Sizing with Coiled AI', desc: 'Risk-based position sizing, portfolio allocation rules, and how to use the AI assistant.' },
-                { title: 'Watchlist & Portfolio Management', desc: 'Building, tracking, and managing open positions through expiration.' },
-              ].map((mod, idx) => (
-                <div key={idx} style={{ background: colors.surface, border: `1px solid ${idx === 0 ? colors.orange : colors.border}`, borderRadius: '5px', padding: '1.5rem', position: 'relative', opacity: idx === 0 ? 1 : 0.6, transition: 'opacity 0.2s ease' }}
-                  onMouseEnter={(e) => (e.currentTarget as HTMLDivElement).style.opacity = '1'}
-                  onMouseLeave={(e) => (e.currentTarget as HTMLDivElement).style.opacity = idx === 0 ? '1' : '0.6'}>
-                  <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
-                    {idx === 0 ? (
-                      <span style={{ fontSize: '0.6rem', fontWeight: '700', color: colors.bg, background: colors.orange, padding: '0.2rem 0.5rem', borderRadius: '2px', fontFamily: mono, letterSpacing: '0.5px' }}>FREE PREVIEW</span>
-                    ) : (
-                      <span style={{ fontSize: '0.875rem', color: '#333' }}>🔒</span>
-                    )}
-                  </div>
-                  <div style={{ fontSize: '0.62rem', color: idx === 0 ? colors.orange : '#444', fontWeight: '700', letterSpacing: '2px', marginBottom: '0.6rem', fontFamily: mono }}>
-                    MODULE {String(idx + 1).padStart(2, '0')}
-                  </div>
-                  <h3 style={{ fontSize: '0.95rem', fontWeight: '700', color: idx === 0 ? colors.white : '#8892a0', marginBottom: '0.5rem', lineHeight: '1.4' }}>{mod.title}</h3>
-                  <p style={{ color: '#555', fontSize: '0.83rem', lineHeight: '1.6' }}>{mod.desc}</p>
+{/* ── MODULE GRID 3+2 ── */}
+            {(() => {
+              const modules: { title: string; free: boolean; placeholder: boolean; bullets: string[] }[] = [
+                {
+                  title: 'Foundations of Options and Pricing',
+                  free: true,
+                  placeholder: false,
+                  bullets: [
+                    'What an option is: rights vs. obligations, calls vs. puts',
+                    'Strike price, expiration, intrinsic value and time value',
+                    'How theoretical pricing models estimate fair value (Black-Scholes assumptions)',
+                    'The first Greeks: Delta and Gamma',
+                    'Basic strategies: covered call, protective put, vertical spread',
+                  ],
+                },
+                {
+                  title: 'Volatility, Theoretical Value and Market Conditions',
+                  free: false,
+                  placeholder: false,
+                  bullets: [
+                    'Historical volatility vs. implied volatility, and how each is estimated',
+                    'Vega and Theta, and how Gamma interacts with them',
+                    'Reading a volatility term structure and skew',
+                    'Advanced risk: Gamma scalping, volatility mean reversion',
+                    'How changing market conditions reprice an option in real time',
+                  ],
+                },
+                {
+                  title: 'Spread Construction and Relative Value',
+                  free: false,
+                  placeholder: false,
+                  bullets: [
+                    'Building vertical spreads (bull/bear, debit/credit) and vol spreads (straddle, strangle)',
+                    'Ratio spreads and backspreads: when to use them and their tail risk',
+                    'Dollar-Delta equalization to compare instruments across different markets',
+                    'Evaluating relative value across strikes and expirations accounting for skew',
+                    'Final checklist before entering a multi-leg spread (payoff, Greeks, margin, liquidity)',
+                  ],
+                },
+                {
+                  title: 'Module 04 — Coming Soon',
+                  free: false,
+                  placeholder: true,
+                  bullets: [],
+                },
+                {
+                  title: 'Module 05 — Coming Soon',
+                  free: false,
+                  placeholder: true,
+                  bullets: [],
+                },
+              ]
+              return (
+                <div className="academy-grid" style={{ marginBottom: '3rem' }}>
+                  {modules.map((mod, idx) => (
+                    <div
+                      key={idx}
+                      className={idx < 3 ? 'academy-card' : 'academy-card-wide'}
+                      style={{
+                        background: mod.placeholder ? 'transparent' : colors.surface,
+                        border: `1px solid ${mod.free ? colors.orange : mod.placeholder ? '#1a1a1a' : colors.border}`,
+                        borderRadius: '5px',
+                        padding: '1.5rem',
+                        position: 'relative',
+                        opacity: mod.free ? 1 : mod.placeholder ? 0.3 : 0.65,
+                        transition: 'opacity 0.2s ease',
+                        display: 'flex',
+                        flexDirection: 'column',
+                      }}
+                      onMouseEnter={(e) => { if (!mod.placeholder) (e.currentTarget as HTMLDivElement).style.opacity = '1' }}
+                      onMouseLeave={(e) => { (e.currentTarget as HTMLDivElement).style.opacity = mod.free ? '1' : mod.placeholder ? '0.3' : '0.65' }}
+                    >
+                      {/* badge */}
+                      <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
+                        {mod.free ? (
+                          <span style={{ fontSize: '0.6rem', fontWeight: '700', color: colors.bg, background: colors.orange, padding: '0.2rem 0.5rem', borderRadius: '2px', fontFamily: mono, letterSpacing: '0.5px' }}>FREE PREVIEW</span>
+                        ) : (
+                          <span style={{ fontSize: '0.8rem', color: mod.placeholder ? '#222' : '#444' }}>🔒</span>
+                        )}
+                      </div>
+                      {/* label */}
+                      <div style={{ fontSize: '0.62rem', color: mod.free ? colors.orange : mod.placeholder ? '#2a2a2a' : '#444', fontWeight: '700', letterSpacing: '2px', marginBottom: '0.5rem', fontFamily: mono }}>
+                        {'MODULE ' + String(idx + 1).padStart(2, '0')}
+                      </div>
+                      {/* title */}
+                      <h3 style={{ fontSize: '0.95rem', fontWeight: '700', color: mod.free ? colors.white : mod.placeholder ? '#2a2a2a' : '#8892a0', marginBottom: mod.bullets.length > 0 ? '0.85rem' : '0', lineHeight: '1.4', paddingRight: '4rem' }}>
+                        {mod.title}
+                      </h3>
+                      {/* bullets */}
+                      {mod.bullets.length > 0 && (
+                        <>
+                          <div style={{ fontSize: '0.6rem', color: mod.free ? colors.orange : '#555', fontWeight: '700', letterSpacing: '2px', marginBottom: '0.45rem', fontFamily: mono }}>
+                            {"WHAT YOU'LL LEARN"}
+                          </div>
+                          <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                            {mod.bullets.map((b, bi) => (
+                              <li key={bi} style={{ fontSize: '0.79rem', color: mod.free ? '#aab0ba' : '#606870', lineHeight: '1.55', display: 'flex', gap: '0.5rem' }}>
+                                <span style={{ color: mod.free ? colors.orange : '#555', flexShrink: 0, marginTop: '0.05rem' }}>{'>'}</span>
+                                {b}
+                              </li>
+                            ))}
+                          </ul>
+                        </>
+                      )}
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )
+            })()}
+
+            {/* ── HOW THE COURSE WORKS ── */}
+            <div style={{ marginBottom: '3.5rem' }}>
+              <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
+                <div style={{ fontSize: '0.68rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono }}>{'◈ HOW THE COURSE WORKS'}</div>
+              </div>
+              <div className="course-works-grid">
+                {[
+                  { icon: '▶', label: 'Learn at your own pace', desc: 'Video lessons and readings structured in progressive modules — no deadlines, no pressure.' },
+                  { icon: '🔓', label: 'Unlock module by module', desc: 'Each module unlocks after you complete the previous one and pass a short quiz.' },
+                  { icon: '◈', label: 'Ask Coiled AI', desc: 'Every module comes with an AI assistant to answer your questions in context, in real time.' },
+                  { icon: '⌘', label: 'Apply in the terminal', desc: 'Every concept links directly to a live feature inside the Coiled Spring terminal.' },
+                ].map((item, idx) => (
+                  <div key={idx} style={{ background: colors.surface, border: `1px solid ${colors.border}`, borderRadius: '5px', padding: '1.25rem 1.25rem 1.4rem', display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+                    <div style={{ fontSize: '1rem', marginBottom: '0.15rem' }}>{item.icon}</div>
+                    <div style={{ fontSize: '0.78rem', fontWeight: '700', color: colors.white, fontFamily: mono, letterSpacing: '0.3px', lineHeight: '1.35' }}>{item.label}</div>
+                    <p style={{ fontSize: '0.79rem', color: '#606870', lineHeight: '1.6', margin: 0 }}>{item.desc}</p>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div style={{ textAlign: 'center' }}>
@@ -759,7 +876,7 @@ export default function LandingPage() {
                 style={{ background: colors.orange, color: colors.bg, border: 'none', padding: '0.875rem 2.25rem', fontSize: '0.9rem', fontWeight: '700', letterSpacing: '0.5px', cursor: 'pointer', fontFamily: sans, borderRadius: '3px', transition: 'background 0.2s ease' }}
                 onMouseEnter={(e) => e.currentTarget.style.background = colors.orangeHover}
                 onMouseLeave={(e) => e.currentTarget.style.background = colors.orange}
-              >Register for early access →</button>
+              >{'Register for early access →'}</button>
             </div>
           </div>
         </section>
