@@ -5,17 +5,17 @@
 
 /* ── CSS Variables — Night (default) ─────────────────────────────────────── */
 :root {
-  --bg-primary:     #0a0a0a;
-  --bg-panel:       #111111;
-  --bg-hover:       #1a1a1a;
+  --bg-primary:     #0d1117;
+  --bg-panel:       #161b22;
+  --bg-hover:       #1c2128;
   --accent:         #e87722;
   --accent-dim:     rgba(232, 119, 34, 0.15);
-  --text-primary:   #f0f2f5;
-  --text-secondary: #8b94a3;
-  --text-tertiary:  #5a6270;
-  --border:         #1e2330;
-  --positive:       #4ade80;
-  --negative:       #f87171;
+  --text-primary:   #e6edf3;
+  --text-secondary: #8b949e;
+  --text-tertiary:  #484f58;
+  --border:         #30363d;
+  --positive:       #3fb950;
+  --negative:       #f85149;
   --font-mono:      'JetBrains Mono', 'Courier New', monospace;
   --font-sans:      'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
