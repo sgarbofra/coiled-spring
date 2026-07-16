@@ -394,6 +394,16 @@ function OpportunityContent() {
 
   const ticker = (params?.ticker as string)?.toUpperCase() ?? ''
 
+  // ── Modalità: HV screener (mode=hv) vs Scanner opzione ────────────────────
+  const mode = searchParams.get('mode') ?? ''
+  const isHVMode = mode === 'hv'
+  const hvHV30 = parseFloat(searchParams.get('hv30') ?? '0')
+  const hvRankParam = parseFloat(searchParams.get('hv_rank') ?? '0')
+  const hvPct = parseFloat(searchParams.get('hv_pct') ?? '0')
+  const hv52wHigh = parseFloat(searchParams.get('hv_52w_high') ?? '0')
+  const hv52wLow = parseFloat(searchParams.get('hv_52w_low') ?? '0')
+  const companyName = searchParams.get('company') ?? ''
+
   const strike = parseFloat(searchParams.get('strike') ?? '0')
   const expiration = searchParams.get('expiration') ?? ''
   const optType = (searchParams.get('type') ?? 'call').toLowerCase()
@@ -556,18 +566,23 @@ function OpportunityContent() {
       >
         <div>
           <div style={{ fontSize: 11, color: bb.gray, marginBottom: 4 }}>
-            <span style={{ cursor: 'pointer', color: bb.amber }} onClick={() => router.push('/scanner')}>
-              Scanner
+            <span style={{ cursor: 'pointer', color: bb.amber }} onClick={() => router.push(isHVMode ? '/hv-screener' : '/scanner')}>
+              {isHVMode ? 'HV Screener' : 'Scanner'}
             </span>
             <span style={{ margin: '0 6px', color: bb.border2 }}>›</span>
-            <span style={{ color: bb.gray }}>Opportunity</span>
+            <span style={{ color: bb.gray }}>{isHVMode ? 'Volatility Detail' : 'Opportunity'}</span>
           </div>
           <h1 style={{ margin: 0, fontSize: 20, color: bb.orange, letterSpacing: 1 }}>
-            {ticker} — Opportunity Analysis
+            {ticker} — {isHVMode ? 'Volatility Analysis' : 'Opportunity Analysis'}
+            {isHVMode && companyName && (
+              <span style={{ fontSize: 13, color: bb.gray, marginLeft: 10, fontWeight: 400, letterSpacing: 0 }}>
+                {companyName}
+              </span>
+            )}
           </h1>
         </div>
         <button
-          onClick={() => router.back()}
+          onClick={() => isHVMode ? router.push('/hv-screener') : router.back()}
           style={{
             background: 'transparent',
             border: `1px solid ${bb.border2}`,
@@ -756,167 +771,129 @@ function OpportunityContent() {
             boxSizing: 'border-box',
           }}
         >
-          <div
-            style={{
-              background: bb.panel,
-              border: `1px solid ${bb.border2}`,
-              padding: '14px 16px',
-              marginBottom: 14,
-            }}
-          >
-            <div style={{ fontSize: 11, color: bb.amber, letterSpacing: 1, marginBottom: 10 }}>
-              CONTRACT DETAILS
-            </div>
-            <FieldRow label="Ticker" value={ticker} color={bb.orange} />
-            <FieldRow label="Type" value={optType.toUpperCase()} color={optType === 'call' ? bb.green : bb.red} />
-            <FieldRow label="Strike" value={`$${strike.toFixed(2)}`} />
-            <FieldRow label="Expiration" value={expiration} />
-            <FieldRow
-              label="DTE"
-              value={`${dte} days`}
-              color={dte >= 300 ? bb.green : dte >= 150 ? bb.amber : bb.red}
-            />
-            <FieldRow label="Mid Price" value={`$${mid.toFixed(2)}`} />
-            <FieldRow
-              label="Spread"
-              value={`${spread_pct.toFixed(1)}%`}
-              color={spread_pct <= 5 ? bb.green : spread_pct <= 10 ? bb.amber : bb.red}
-            />
-            <FieldRow label="Open Int." value={oi.toLocaleString()} color={oi >= 100 ? bb.green : bb.red} />
-            <FieldRow label="Delta" value={delta.toFixed(3)} />
-            <FieldRow
-              label="Vega"
-              value={vega.toFixed(4)}
-              color={vega >= 1.0 ? bb.green : vega >= 0.5 ? bb.amber : bb.red}
-            />
-            <FieldRow label="Theta" value={theta.toFixed(4)} color={bb.red} />
-          </div>
-
-          <div
-            style={{
-              background: bb.panel,
-              border: `1px solid ${bb.border2}`,
-              padding: '14px 16px',
-              marginBottom: 14,
-            }}
-          >
-            <div style={{ fontSize: 11, color: bb.amber, letterSpacing: 1, marginBottom: 10 }}>
-              CS SCORE
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-              <span
-                style={{
-                  fontSize: 38,
-                  fontWeight: 700,
-                  color: sColor,
-                  fontFamily: 'monospace',
-                  lineHeight: 1,
-                  minWidth: 56,
-                }}
-              >
-                {score}
-              </span>
-              <div style={{ flex: 1 }}>
-                <div style={{ height: 6, background: bb.border, borderRadius: 3, overflow: 'hidden' }}>
-                  <div
-                    style={{
-                      width: `${Math.min(score, 100)}%`,
-                      height: '100%',
-                      background: sColor,
-                      borderRadius: 3,
-                      transition: 'width 0.5s ease',
-                    }}
-                  />
+          {isHVMode ? (
+            /* ── HV MODE: pannello snapshot volatilità ───────────────────────── */
+            <>
+              <div style={{ background: bb.panel, border: `1px solid ${bb.border2}`, padding: '14px 16px', marginBottom: 14 }}>
+                <div style={{ fontSize: 11, color: bb.amber, letterSpacing: 1, marginBottom: 12 }}>
+                  HV SNAPSHOT — {ticker}
                 </div>
-                <div style={{ fontSize: 10, color: bb.gray, marginTop: 4 }}>
-                  {score > 75 ? 'STRONG CANDIDATE' : score >= 70 ? 'ACCEPTABLE' : 'WEAK / AVOID'}
+                {(() => {
+                  const rankColor = hvRankParam >= 80 ? bb.red : hvRankParam >= 50 ? bb.amber : bb.green
+                  const rankLabel = hvRankParam >= 80 ? 'VOLATILITÀ ELEVATA' : hvRankParam >= 50 ? 'VOLATILITÀ MEDIA' : 'VOL COMPRESSA'
+                  return (
+                    <>
+                      <FieldRow label="HV 30D" value={hvHV30 > 0 ? `${hvHV30.toFixed(1)}%` : '—'} color={bb.white} />
+                      <FieldRow label="HV Rank" value={hvRankParam > 0 ? `${hvRankParam.toFixed(1)}` : '—'} color={rankColor} />
+                      <FieldRow label="HV Percentile" value={hvPct > 0 ? `${hvPct.toFixed(1)}%` : '—'} color={bb.white} />
+                      <FieldRow label="52W HV High" value={hv52wHigh > 0 ? `${hv52wHigh.toFixed(1)}%` : '—'} color={bb.red} />
+                      <FieldRow label="52W HV Low" value={hv52wLow > 0 ? `${hv52wLow.toFixed(1)}%` : '—'} color={bb.green} />
+                      {currentPrice !== null && (
+                        <FieldRow label="Last Price" value={`$${currentPrice.toFixed(2)}`} color={bb.orange} />
+                      )}
+                      {low1y !== null && <FieldRow label="1Y Low" value={`$${low1y.toFixed(2)}`} color={bb.red} />}
+                      {high1y !== null && <FieldRow label="1Y High" value={`$${high1y.toFixed(2)}`} color={bb.green} />}
+                      {/* Rank gauge */}
+                      <div style={{ marginTop: 14 }}>
+                        <div style={{ fontSize: 10, color: rankColor, letterSpacing: 1, marginBottom: 6, fontWeight: 700 }}>
+                          {rankLabel}
+                        </div>
+                        <div style={{ position: 'relative', height: 8, background: '#1a1a00', borderRadius: 2 }}>
+                          <div style={{ position: 'absolute', left: 0, top: 0, width: '30%', height: '100%', background: 'rgba(0,221,0,0.25)', borderRadius: '2px 0 0 2px' }} />
+                          <div style={{ position: 'absolute', left: '30%', top: 0, width: '30%', height: '100%', background: 'rgba(255,170,0,0.20)' }} />
+                          <div style={{ position: 'absolute', left: '60%', top: 0, width: '40%', height: '100%', background: 'rgba(255,51,51,0.20)', borderRadius: '0 2px 2px 0' }} />
+                          <div style={{
+                            position: 'absolute', top: -2,
+                            left: `calc(${Math.min(hvRankParam, 100)}% - 4px)`,
+                            width: 8, height: 12, background: rankColor, borderRadius: 2,
+                            boxShadow: `0 0 6px ${rankColor}`,
+                          }} />
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4, fontSize: 9, color: bb.gray }}>
+                          <span>0 — VOL MIN</span>
+                          <span>100 — VOL MAX</span>
+                        </div>
+                      </div>
+                    </>
+                  )
+                })()}
+              </div>
+              <div style={{ background: bb.panel, border: `1px solid ${bb.border2}`, padding: '12px 14px', fontSize: 11, color: bb.gray, lineHeight: 1.6 }}>
+                <div style={{ color: bb.amber, fontSize: 10, letterSpacing: 1, marginBottom: 6 }}>NOTA</div>
+                I grafici a sinistra mostrano Price History 1Y e HV 20D calcolata in tempo reale dai prezzi di chiusura. I valori HV Rank in questo pannello provengono dal daily snapshot dell&apos;HV Screener.
+              </div>
+            </>
+          ) : (
+            /* ── SCANNER MODE: contract details + CS Score + Risk ──────────── */
+            <>
+              <div style={{ background: bb.panel, border: `1px solid ${bb.border2}`, padding: '14px 16px', marginBottom: 14 }}>
+                <div style={{ fontSize: 11, color: bb.amber, letterSpacing: 1, marginBottom: 10 }}>
+                  CONTRACT DETAILS
+                </div>
+                <FieldRow label="Ticker" value={ticker} color={bb.orange} />
+                <FieldRow label="Type" value={optType.toUpperCase()} color={optType === 'call' ? bb.green : bb.red} />
+                <FieldRow label="Strike" value={`$${strike.toFixed(2)}`} />
+                <FieldRow label="Expiration" value={expiration} />
+                <FieldRow label="DTE" value={`${dte} days`} color={dte >= 300 ? bb.green : dte >= 150 ? bb.amber : bb.red} />
+                <FieldRow label="Mid Price" value={`$${mid.toFixed(2)}`} />
+                <FieldRow label="Spread" value={`${spread_pct.toFixed(1)}%`} color={spread_pct <= 5 ? bb.green : spread_pct <= 10 ? bb.amber : bb.red} />
+                <FieldRow label="Open Int." value={oi.toLocaleString()} color={oi >= 100 ? bb.green : bb.red} />
+                <FieldRow label="Delta" value={delta.toFixed(3)} />
+                <FieldRow label="Vega" value={vega.toFixed(4)} color={vega >= 1.0 ? bb.green : vega >= 0.5 ? bb.amber : bb.red} />
+                <FieldRow label="Theta" value={theta.toFixed(4)} color={bb.red} />
+              </div>
+
+              <div style={{ background: bb.panel, border: `1px solid ${bb.border2}`, padding: '14px 16px', marginBottom: 14 }}>
+                <div style={{ fontSize: 11, color: bb.amber, letterSpacing: 1, marginBottom: 10 }}>CS SCORE</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                  <span style={{ fontSize: 38, fontWeight: 700, color: sColor, fontFamily: 'monospace', lineHeight: 1, minWidth: 56 }}>
+                    {score}
+                  </span>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ height: 6, background: bb.border, borderRadius: 3, overflow: 'hidden' }}>
+                      <div style={{ width: `${Math.min(score, 100)}%`, height: '100%', background: sColor, borderRadius: 3, transition: 'width 0.5s ease' }} />
+                    </div>
+                    <div style={{ fontSize: 10, color: bb.gray, marginTop: 4 }}>
+                      {score > 75 ? 'STRONG CANDIDATE' : score >= 70 ? 'ACCEPTABLE' : 'WEAK / AVOID'}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          {why.length > 0 && (
-            <div
-              style={{
-                background: bb.panel,
-                border: `1px solid ${bb.border2}`,
-                padding: '14px 16px',
-                marginBottom: 14,
-              }}
-            >
-              <div style={{ fontSize: 11, color: bb.amber, letterSpacing: 1, marginBottom: 10 }}>
-                SCORE BREAKDOWN
-              </div>
-              {why.map((line, i) => (
-                <div
-                  key={i}
-                  style={{
-                    fontSize: 12,
-                    color: bb.white,
-                    padding: '4px 0',
-                    borderBottom: i < why.length - 1 ? `1px solid ${bb.border}` : 'none',
-                    fontFamily: 'monospace',
-                  }}
-                >
-                  {line}
+              {why.length > 0 && (
+                <div style={{ background: bb.panel, border: `1px solid ${bb.border2}`, padding: '14px 16px', marginBottom: 14 }}>
+                  <div style={{ fontSize: 11, color: bb.amber, letterSpacing: 1, marginBottom: 10 }}>SCORE BREAKDOWN</div>
+                  {why.map((line, i) => (
+                    <div key={i} style={{ fontSize: 12, color: bb.white, padding: '4px 0', borderBottom: i < why.length - 1 ? `1px solid ${bb.border}` : 'none', fontFamily: 'monospace' }}>
+                      {line}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              )}
+
+              <div style={{ background: bb.panel, border: `1px solid ${bb.border2}`, padding: '14px 16px' }}>
+                <div style={{ fontSize: 11, color: bb.amber, letterSpacing: 1, marginBottom: 10 }}>RISK FLAGS</div>
+                {riskFlagList.length === 0 ? (
+                  <div style={{ color: bb.green, fontSize: 12, fontFamily: 'monospace', padding: '3px 0' }}>✅ No immediate risks</div>
+                ) : (
+                  riskFlagList.map((f, i) => (
+                    <div key={i} style={{ fontSize: 12, color: f.color, fontFamily: 'monospace', padding: '5px 0', borderBottom: i < riskFlagList.length - 1 ? `1px solid ${bb.border}` : 'none' }}>
+                      {f.label}
+                    </div>
+                  ))
+                )}
+                <div style={{ marginTop: 10, paddingTop: 8, borderTop: `1px solid ${bb.border2}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: 11, color: bb.gray, fontFamily: 'monospace', letterSpacing: 1 }}>OVERALL RISK</span>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: riskColor, fontFamily: 'monospace', letterSpacing: 2 }}>{riskLevel}</span>
+                </div>
+              </div>
+            </>
           )}
-
-          <div
-            style={{
-              background: bb.panel,
-              border: `1px solid ${bb.border2}`,
-              padding: '14px 16px',
-            }}
-          >
-            <div style={{ fontSize: 11, color: bb.amber, letterSpacing: 1, marginBottom: 10 }}>
-              RISK FLAGS
-            </div>
-            {riskFlagList.length === 0 ? (
-              <div style={{ color: bb.green, fontSize: 12, fontFamily: 'monospace', padding: '3px 0' }}>
-                ✅ No immediate risks
-              </div>
-            ) : (
-              riskFlagList.map((f, i) => (
-                <div
-                  key={i}
-                  style={{
-                    fontSize: 12,
-                    color: f.color,
-                    fontFamily: 'monospace',
-                    padding: '5px 0',
-                    borderBottom: i < riskFlagList.length - 1 ? `1px solid ${bb.border}` : 'none',
-                  }}
-                >
-                  {f.label}
-                </div>
-              ))
-            )}
-            <div
-              style={{
-                marginTop: 10,
-                paddingTop: 8,
-                borderTop: `1px solid ${bb.border2}`,
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <span style={{ fontSize: 11, color: bb.gray, fontFamily: 'monospace', letterSpacing: 1 }}>
-                OVERALL RISK
-              </span>
-              <span style={{ fontSize: 13, fontWeight: 700, color: riskColor, fontFamily: 'monospace', letterSpacing: 2 }}>
-                {riskLevel}
-              </span>
-            </div>
-          </div>
         </div>
       </div>
 
-      {/* ── COILED AI ANALYSIS + PERSONAL NOTES ─────────────────── */}
-      <div style={{ borderTop: `1px solid ${bb.border}`, padding: '20px 24px', display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+      {/* ── COILED AI ANALYSIS + PERSONAL NOTES — solo in scanner mode ── */}
+      {!isHVMode && <div style={{ borderTop: `1px solid ${bb.border}`, padding: '20px 24px', display: 'flex', gap: 20, flexWrap: 'wrap' }}>
 
         {/* AI Summary */}
         <div style={{ flex: '1 1 340px', border: `1px solid ${bb.orange}`, background: bb.panel, boxSizing: 'border-box' }}>
@@ -993,7 +970,7 @@ function OpportunityContent() {
             <div style={{ fontSize: 9, color: bb.gray, marginTop: 4 }}>Saved automatically on focus loss.</div>
           </div>
         </div>
-      </div>
+      </div>}
 
       {/* ── VOLATILITY SURFACE ─────────────────────────────────── */}
       <div style={{ borderTop: `1px solid ${bb.border}`, padding: '20px 24px' }}>

@@ -397,8 +397,19 @@ function HVScreenerContent() {
                     }}
                     onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#0d0d00')}
                     onMouseLeave={e => (e.currentTarget.style.backgroundColor = isEven ? bb.bg : bb.surface)}
-                    onClick={() => router.push(`/scanner/opportunity/${row.ticker}`)}
-                    title={`Open ${row.ticker} analysis`}
+                    onClick={() => {
+                      const qp = new URLSearchParams({
+                        mode: 'hv',
+                        hv30: (row.hv30 ?? '').toString(),
+                        hv_rank: (row.hv_rank ?? '').toString(),
+                        hv_pct: (row.hv_percentile ?? '').toString(),
+                        hv_52w_high: (row.hv_52w_high ?? '').toString(),
+                        hv_52w_low: (row.hv_52w_low ?? '').toString(),
+                        company: row.company_name ?? '',
+                      })
+                      router.push(`/scanner/opportunity/${row.ticker}?${qp.toString()}`)
+                    }}
+                    title={`Open ${row.ticker} volatility analysis`}
                   >
                     {/* Ticker */}
                     <td style={{ padding: '6px 10px', color: bb.amber, fontWeight: 'bold', letterSpacing: '0.5px' }}>
