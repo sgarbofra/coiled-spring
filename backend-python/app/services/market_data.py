@@ -791,34 +791,48 @@ def _get_atm_iv_for_dte(symbol: str, target_dte: int) -> Optional[float]:
 def get_atm_iv_snapshot(
     tickers: List[str],
     dte_buckets: List[int] = None,
-    max_workers: int = 10,
+    max_workers: int = 3,
 ) -> Dict[str, Dict[int, Optional[float]]]:
     """Fetches ATM IV for all tickers across DTE buckets in parallel.
 
     Returns: { "AAPL": { 30: 0.2340, 60: 0.2280, 90: None, 180: 0.2150 }, ... }
     None = data non disponibile per quel bucket.
-    Usa ThreadPoolExecutor per completare ~300 ticker × 4 bucket in ~2-3 min.
+
+    Processa i ticker a batch da 50 con 8s di pausa tra batch per evitare
+    YFRateLimitError su 1000+ ticker. max_workers=3 riduce la pressione su yfinance.
     """
+    import time as _time, random as _random
+
     if dte_buckets is None:
         dte_buckets = [30, 60, 90, 180]
 
     results: Dict[str, Dict[int, Optional[float]]] = {t: {} for t in tickers}
-
-    # Crea tasks: (ticker, dte_bucket)
-    tasks = [(t, b) for t in tickers for b in dte_buckets]
+    BATCH_SIZE = 50
+    BATCH_SLEEP = 8  # secondi tra batch
 
     def _fetch(task):
+        _time.sleep(_random.uniform(0.1, 0.4))  # jitter per distribuire le richieste
         ticker, dte = task
         return ticker, dte, _get_atm_iv_for_dte(ticker, dte)
 
-    with ThreadPoolExecutor(max_workers=max_workers) as pool:
-        futures = {pool.submit(_fetch, task): task for task in tasks}
-        for future in as_completed(futures):
-            try:
-                ticker, dte, iv = future.result()
-                results[ticker][dte] = iv
-            except Exception as e:
-                task = futures[future]
-                print(f"[IV_SNAPSHOT] Task {task} failed: {e}")
+    # Processa un batch di ticker alla volta
+    for batch_start in range(0, len(tickers), BATCH_SIZE):
+        batch = tickers[batch_start: batch_start + BATCH_SIZE]
+        tasks = [(t, b) for t in batch for b in dte_buckets]
+
+        with ThreadPoolExecutor(max_workers=max_workers) as pool:
+            futures = {pool.submit(_fetch, task): task for task in tasks}
+            for future in as_completed(futures):
+                try:
+                    ticker, dte, iv = future.result()
+                    results[ticker][dte] = iv
+                except Exception as e:
+                    task = futures[future]
+                    print(f"[IV_SNAPSHOT] Task {task} failed: {e}")
+
+        batch_end = min(batch_start + BATCH_SIZE, len(tickers))
+        print(f"[IV_SNAPSHOT] Batch {batch_start+1}-{batch_end}/{len(tickers)} done — sleeping {BATCH_SLEEP}s")
+        if batch_end < len(tickers):
+            _time.sleep(BATCH_SLEEP)
 
     return results
