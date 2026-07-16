@@ -16,7 +16,7 @@ type YouTubeVideo = {
 const colors = {
   bg: '#000000',
   surface: '#0c0c0c',
-  border: '#1c1c1c',
+  border: '#1e2330',
   border2: '#2a2a2a',
   orange: '#e87722',
   orangeHover: '#d4651a',
@@ -56,6 +56,7 @@ export default function LandingPage() {
   const [tutorialsLoading, setTutorialsLoading] = useState(true)
   const [documentaryVideos, setDocumentaryVideos] = useState<YouTubeVideo[]>([])
   const [documentariesLoading, setDocumentariesLoading] = useState(true)
+  const [scanCount, setScanCount] = useState(1198)
 
   useEffect(() => {
     fetch('/api/youtube-tutorials')
@@ -71,6 +72,11 @@ export default function LandingPage() {
       .then(data => { if (data.ok && data.videos) setDocumentaryVideos(data.videos) })
       .catch(() => {})
       .finally(() => setDocumentariesLoading(false))
+  }, [])
+
+  useEffect(() => {
+    const id = setInterval(() => setScanCount(n => n + Math.floor(Math.random() * 3 + 1)), 2600)
+    return () => clearInterval(id)
   }, [])
 
   const scrollToSection = (id: string) => {
@@ -187,6 +193,15 @@ export default function LandingPage() {
         @media (max-width: 480px) {
           .course-works-grid { grid-template-columns: 1fr !important; }
         }
+
+        /* visual polish */
+        .feature-card { transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important; }
+        .feature-card:hover { border-color: rgba(232,119,34,0.4) !important; box-shadow: 0 12px 48px rgba(232,119,34,0.22) !important; }
+        @keyframes mockup-glow {
+          0%,100% { box-shadow: 0 0 90px rgba(232,119,34,0.32),0 0 0 1px rgba(232,119,34,0.22),0 24px 60px rgba(0,0,0,0.5); }
+          50%      { box-shadow: 0 0 130px rgba(232,119,34,0.46),0 0 0 1px rgba(232,119,34,0.32),0 24px 60px rgba(0,0,0,0.5); }
+        }
+        .hero-mockup > div:first-child { animation: mockup-glow 5s ease-in-out infinite; }
       `}</style>
 
       <div style={{ minHeight: '100vh', background: colors.bg, color: colors.white, fontFamily: sans }}>
@@ -306,7 +321,7 @@ export default function LandingPage() {
 
               {/* Right: terminal mockup */}
               <div className="hero-mockup" style={{ flexShrink: 0, width: '480px' }}>
-                <div style={{ background: '#080a0e', border: `1px solid ${colors.border2}`, borderRadius: '6px', overflow: 'hidden', boxShadow: `0 0 60px rgba(232,119,34,0.12), 0 0 0 1px rgba(232,119,34,0.08)` }}>
+                <div style={{ background: '#080a0e', border: `1px solid ${colors.border2}`, borderRadius: '6px', overflow: 'hidden', boxShadow: `0 0 90px rgba(232,119,34,0.32), 0 0 0 1px rgba(232,119,34,0.22), 0 24px 60px rgba(0,0,0,0.5)` }}>
                   {/* Terminal header bar */}
                   <div style={{ background: '#0f1117', borderBottom: `1px solid ${colors.border}`, padding: '0.6rem 1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', gap: '0.4rem' }}>
@@ -371,41 +386,31 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="thesis-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1px', background: colors.border }}>
+            {/* Vertical timeline */}
+            <div style={{ maxWidth: '680px', margin: '0 auto', position: 'relative', paddingLeft: '2.5rem' }}>
+              {/* Gradient line */}
+              <div style={{ position: 'absolute', left: '11px', top: '14px', bottom: '14px', width: '2px', background: 'linear-gradient(to bottom, #FF3333 0%, #e87722 48%, #00CC44 100%)', opacity: 0.55 }} />
               {[
-                {
-                  num: '01',
-                  label: 'CRISIS STRIKES',
-                  headline: 'Fear spikes. VIX explodes.',
+                { num: '01', label: 'CRISIS STRIKES',        headline: 'Fear spikes. VIX explodes.',
                   body: 'Market crashes trigger panic. Implied volatility surges to 40, 60, 80. Options become expensive. This is the wrong time to buy convexity.',
-                  color: '#FF3333',
-                },
-                {
-                  num: '02',
-                  label: 'VOLATILITY COMPRESSES',
-                  headline: 'Markets recover. Fear is forgotten.',
+                  color: '#FF3333' },
+                { num: '02', label: 'VOLATILITY COMPRESSES', headline: 'Markets recover. Fear is forgotten.',
                   body: 'Over months, VIX drifts back to 12–18. IV Rank falls below 20. Long-dated options become historically cheap — high leverage at low cost.',
-                  color: colors.orange,
-                },
-                {
-                  num: '03',
-                  label: 'THE SCANNER FINDS IT',
-                  headline: 'Low IV Rank = entry window.',
-                  body: 'Coiled Spring identifies underlyings where implied volatility is in the bottom quartile of its 12-month range. That\'s your signal.',
-                  color: '#00CC44',
-                },
-              ].map((panel, i) => (
-                <div key={i} style={{ background: colors.bg, padding: '3rem 2.5rem' }}>
-                  <div style={{ fontSize: '0.65rem', color: panel.color, fontWeight: '700', letterSpacing: '2.5px', marginBottom: '0.5rem', fontFamily: mono }}>
-                    {panel.num} — {panel.label}
+                  color: colors.orange },
+                { num: '03', label: 'THE SCANNER FINDS IT',  headline: 'Low IV Rank = entry window.',
+                  body: 'Coiled Spring identifies underlyings where implied volatility is in the bottom quartile of its 12-month range. That’s your signal.',
+                  color: '#00CC44' },
+              ].map((item, i) => (
+                <div key={i} style={{ position: 'relative', paddingBottom: i < 2 ? '3rem' : '0' }}>
+                  {/* Dot */}
+                  <div style={{ position: 'absolute', left: '-2.5rem', top: '3px', width: '24px', height: '24px', borderRadius: '50%', background: item.color, border: `2px solid ${colors.bg}`, display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
+                    <span style={{ fontSize: '0.52rem', fontWeight: '800', fontFamily: mono, color: colors.bg }}>{item.num}</span>
                   </div>
-                  <div style={{ width: '36px', height: '2px', background: panel.color, marginBottom: '1.5rem' }} />
-                  <h3 style={{ fontSize: '1.15rem', fontWeight: '700', color: colors.white, marginBottom: '1rem', lineHeight: '1.4', fontFamily: mono }}>
-                    {panel.headline}
-                  </h3>
-                  <p style={{ color: '#8892a0', lineHeight: '1.8', fontSize: '0.93rem' }}>
-                    {panel.body}
-                  </p>
+                  <div>
+                    <div style={{ fontSize: '0.62rem', color: item.color, fontWeight: '700', letterSpacing: '2.5px', marginBottom: '0.35rem', fontFamily: mono }}>{item.label}</div>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: colors.white, marginBottom: '0.65rem', lineHeight: '1.4', fontFamily: mono }}>{item.headline}</h3>
+                    <p style={{ color: '#8892a0', lineHeight: '1.8', fontSize: '0.92rem', margin: 0 }}>{item.body}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -488,19 +493,25 @@ export default function LandingPage() {
         {/* ── CS SCORE ─────────────────────────────────────────────── */}
         <section style={{ borderBottom: `1px solid ${colors.border}`, padding: '6rem 2rem', background: colors.surface }}>
           <div className="cs-score-grid" style={{ maxWidth: '1100px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'center' }}>
-            <div>
-              <div style={{ display: 'inline-block', border: `1px solid ${colors.border2}`, padding: '0.28rem 1rem', marginBottom: '1.5rem', fontSize: '0.68rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono }}>◈ COMPOSITE SIGNAL</div>
-              <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.25rem)', fontWeight: '700', color: colors.white, marginBottom: '1.5rem', fontFamily: mono, lineHeight: '1.25' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+              <div style={{ display: 'inline-block', border: `1px solid ${colors.border2}`, padding: '0.28rem 1rem', marginBottom: '1.25rem', fontSize: '0.68rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono }}>◈ COMPOSITE SIGNAL</div>
+              <svg viewBox="0 0 240 160" width="220" height="147" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 20 120 A 100 100 0 0 1 220 120" fill="none" stroke="#1e2330" strokeWidth="16" strokeLinecap="round"/>
+                <path d="M 20 120 A 100 100 0 0 1 197 57" fill="none" stroke="#e87722" strokeWidth="16" strokeLinecap="round"/>
+                <text x="120" y="110" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="52" fontWeight="700" fill="#e87722">78</text>
+                <text x="120" y="130" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="13" fill="#555">/100</text>
+                <text x="120" y="150" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="10" fontWeight="700" fill="#00CC44" letterSpacing="2">STRUCTURAL EDGE</text>
+                <text x="18" y="140" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="9" fill="#3a3a3a">0</text>
+                <text x="222" y="140" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="9" fill="#3a3a3a">100</text>
+              </svg>
+              <h2 style={{ fontSize: 'clamp(1.4rem, 2.5vw, 2rem)', fontWeight: '700', color: colors.white, marginBottom: '0.75rem', fontFamily: mono, lineHeight: '1.25', marginTop: '1rem' }}>
                 The CS Score:<br />one number that matters
               </h2>
-              <p style={{ color: '#8892a0', lineHeight: '1.85', fontSize: '1rem', marginBottom: '1.25rem' }}>
-                Each scanned contract receives a CS Score from 0 to 100. It aggregates the five factors that determine whether a long option trade has structural edge.
+              <p style={{ color: '#8892a0', lineHeight: '1.75', fontSize: '0.92rem', marginBottom: '0.75rem' }}>
+                Each contract gets a score 0–100. Above 70: cheap vol, liquid, positioned for expansion.
               </p>
-              <p style={{ color: '#8892a0', lineHeight: '1.85', fontSize: '1rem' }}>
-                Above 70: the setup is historically cheap, liquid, and positioned for vol expansion. Below 40: too expensive or illiquid to justify the risk.
-              </p>
-              <p style={{ color: '#555', lineHeight: '1.7', fontSize: '0.85rem', marginTop: '1.5rem', fontStyle: 'italic', borderLeft: `2px solid ${colors.border2}`, paddingLeft: '1rem' }}>
-                The CS Score is a signal for buyers only. It has no meaning for short premium strategies.
+              <p style={{ color: '#555', lineHeight: '1.7', fontSize: '0.8rem', fontStyle: 'italic', borderLeft: `2px solid ${colors.border2}`, paddingLeft: '0.75rem', textAlign: 'left' }}>
+                Buyers only. No meaning for short premium strategies.
               </p>
             </div>
 
@@ -924,13 +935,14 @@ export default function LandingPage() {
             </p>
             <button
               onClick={() => router.push('/register')}
-              style={{ background: colors.orange, color: colors.bg, border: 'none', padding: '1.1rem 3rem', fontSize: '1rem', fontWeight: '700', letterSpacing: '0.5px', cursor: 'pointer', fontFamily: sans, borderRadius: '3px', transition: 'all 0.2s ease' }}
+              style={{ background: colors.orange, color: colors.bg, border: 'none', padding: '1.1rem 3rem', fontSize: '1rem', fontWeight: '700', letterSpacing: '0.5px', cursor: 'pointer', fontFamily: sans, borderRadius: '3px', transition: 'all 0.2s ease', boxShadow: '0 0 30px rgba(232,119,34,0.42)' }}
               onMouseEnter={(e) => { e.currentTarget.style.background = colors.orangeHover; e.currentTarget.style.transform = 'translateY(-2px)' }}
               onMouseLeave={(e) => { e.currentTarget.style.background = colors.orange; e.currentTarget.style.transform = 'translateY(0)' }}
             >Start scanning free →</button>
             <p style={{ marginTop: '1rem', fontSize: '0.78rem', color: '#333', fontFamily: mono, letterSpacing: '0.5px' }}>
               Free tier · No credit card · Cancel anytime
             </p>
+            <p style={{ marginTop: '0.4rem', fontSize: '0.82rem', color: '#555', fontFamily: mono }}>1,200+ traders already scanning</p>
           </div>
         </section>
 
@@ -967,3 +979,11 @@ export default function LandingPage() {
     </>
   )
 }
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', border: `1px solid #1e2330`, background: '#050505', padding: '0.3rem 0.9rem', borderRadius: '3px' }}>
+                <span className="pulse-dot" style={{ display: 'inline-block', width: '6px', height: '6px', borderRadius: '50%', background: colors.green }} />
+                <span style={{ fontFamily: mono, fontSize: '0.68rem', color: colors.green, letterSpacing: '0.5px' }}>
+                  {scanCount.toLocaleString()} scans today
+                </span>
+              </div>
+            </div>
