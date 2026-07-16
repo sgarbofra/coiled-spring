@@ -7,6 +7,22 @@ import { useUser } from '@/contexts/UserContext'
 
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false })
 
+// Plotly can't resolve CSS variables — must use static hex values per theme
+const DARK_PLOT = {
+  bg:      '#0d1117',
+  panel:   '#161b22',
+  text:    '#e6edf3',
+  grid:    '#30363d',
+  axis:    '#8b949e',
+}
+const LIGHT_PLOT = {
+  bg:      '#f1f5f9',
+  panel:   '#ffffff',
+  text:    '#0f172a',
+  grid:    '#cbd5e1',
+  axis:    '#475569',
+}
+
 const bb = {
   bg: 'var(--bg-primary)', surface: 'var(--bg-panel)', panel: 'var(--bg-panel)',
   border: 'var(--border)', border2: 'var(--border)',
@@ -51,6 +67,16 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [selectedOption, setSelectedOption] = useState<OptionDetails | null>(null)
+  const [isDayMode, setIsDayMode] = useState(false)
+  useEffect(() => {
+    const check = () => setIsDayMode(document.body.classList.contains('day-mode'))
+    check()
+    const obs = new MutationObserver(check)
+    obs.observe(document.body, { attributes: true, attributeFilter: ['class'] })
+    return () => obs.disconnect()
+  }, [])
+  const plt = isDayMode ? LIGHT_PLOT : DARK_PLOT
+
   const [colorMode, setColorMode] = useState<'iv' | 'cs'>(defaultColorMode)
   const [watchlists, setWatchlists] = useState<Watchlist[]>([])
   const [selectedWatchlist, setSelectedWatchlist] = useState<string>('')
@@ -319,8 +345,8 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
                 ],
                 colorbar: {
                   title: { text: colorMode === 'cs' ? 'CS Score' : 'IV (%)', side: 'right' as const },
-                  tickfont: { color: 'var(--text-primary)', size: 12 },
-                  titlefont: { color: 'var(--text-primary)', size: 13 },
+                  tickfont: { color: plt.text, size: 12 },
+                  titlefont: { color: plt.text, size: 13 },
                   thickness: 15,
                 },
                 hovertemplate:
@@ -351,43 +377,43 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
               width: undefined,
               height: 520,
               autosize: true,
-              paper_bgcolor: 'var(--bg-primary)',
-              plot_bgcolor: 'var(--bg-primary)',
+              paper_bgcolor: plt.bg,
+              plot_bgcolor: plt.bg,
               margin: { l: 0, r: 60, t: 20, b: 0 },
               scene: {
-                bgcolor: bb.bg,
+                bgcolor: plt.panel,
                 xaxis: {
-                  title: { text: 'STRIKE PRICE ($)', font: { color: bb.white, size: 13 } },
-                  tickfont: { color: bb.white, size: 11 },
-                  gridcolor: bb.border2,
-                  zerolinecolor: bb.white,
+                  title: { text: 'STRIKE PRICE ($)', font: { color: plt.text, size: 13 } },
+                  tickfont: { color: plt.axis, size: 11 },
+                  gridcolor: plt.grid,
+                  zerolinecolor: plt.axis,
                   showline: true,
-                  linecolor: bb.white,
+                  linecolor: plt.grid,
                   linewidth: 2,
                 },
                 yaxis: {
-                  title: { text: 'DTE (DAYS)', font: { color: bb.white, size: 13 } },
-                  tickfont: { color: bb.white, size: 11 },
-                  gridcolor: bb.border2,
-                  zerolinecolor: bb.white,
+                  title: { text: 'DTE (DAYS)', font: { color: plt.text, size: 13 } },
+                  tickfont: { color: plt.axis, size: 11 },
+                  gridcolor: plt.grid,
+                  zerolinecolor: plt.axis,
                   showline: true,
-                  linecolor: bb.white,
+                  linecolor: plt.grid,
                   linewidth: 2,
                 },
                 zaxis: {
-                  title: { text: 'IV (%)', font: { color: bb.white, size: 13 } },
-                  tickfont: { color: bb.white, size: 11 },
-                  gridcolor: bb.border2,
-                  zerolinecolor: bb.white,
+                  title: { text: 'IV (%)', font: { color: plt.text, size: 13 } },
+                  tickfont: { color: plt.axis, size: 11 },
+                  gridcolor: plt.grid,
+                  zerolinecolor: plt.axis,
                   showline: true,
-                  linecolor: bb.white,
+                  linecolor: plt.grid,
                   linewidth: 2,
                 },
                 camera: {
                   eye: { x: 1.5, y: -1.5, z: 0.8 },
                 },
               },
-              font: { color: 'var(--text-primary)', family: "'JetBrains Mono', var(--font-mono)" },
+              font: { color: plt.text, family: "'JetBrains Mono', 'Courier New', monospace" },
             } as never}
             config={{
               responsive: true,
