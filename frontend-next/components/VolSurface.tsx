@@ -8,10 +8,10 @@ import { useUser } from '@/contexts/UserContext'
 const Plot = dynamic(() => import('react-plotly.js'), { ssr: false })
 
 const bb = {
-  bg: '#000000', surface: '#0a0a00', panel: '#111100',
-  border: '#222200', border2: '#333300',
-  orange: '#FF6600', amber: '#FFAA00', yellow: '#FFE000',
-  green: '#00DD00', red: '#FF3333', white: '#CCCCCC', gray: '#FFFFFF',
+  bg: '#0a0a0a', surface: '#111111', panel: '#111111',
+  border: '#1e2330', border2: '#2a3040',
+  orange: '#e87722', amber: '#e87722', yellow: '#e87722',
+  green: '#4ade80', red: '#f87171', white: '#f0f2f5', gray: '#8b94a3',
 }
 
 type VolData = {
@@ -309,18 +309,18 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
                   cmax: 100,
                 } : {}),
                 colorscale: colorMode === 'cs' ? CS_COLORSCALE : [
-                  [0,    '#001a33'],
-                  [0.2,  '#0066cc'],
-                  [0.4,  '#00cccc'],
-                  [0.55, '#66ff66'],
-                  [0.7,  '#FFAA00'],
-                  [0.85, '#FF6600'],
-                  [1,    '#FF3333'],
+                  [0,    'hsl(210, 80%, 25%)'],
+                  [0.15, 'hsl(210, 78%, 42%)'],
+                  [0.35, 'hsl(185, 75%, 52%)'],
+                  [0.55, 'hsl(145, 65%, 55%)'],
+                  [0.72, 'hsl(38, 90%, 55%)'],
+                  [0.88, 'hsl(20, 88%, 52%)'],
+                  [1,    'hsl(0, 82%, 58%)'],
                 ],
                 colorbar: {
                   title: { text: colorMode === 'cs' ? 'CS Score' : 'IV (%)', side: 'right' as const },
-                  tickfont: { color: bb.white, size: 12 },
-                  titlefont: { color: bb.white, size: 13 },
+                  tickfont: { color: '#f0f2f5', size: 12 },
+                  titlefont: { color: '#f0f2f5', size: 13 },
                   thickness: 15,
                 },
                 hovertemplate:
@@ -337,14 +337,22 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
                   },
                 },
                 opacity: 0.92,
+                lighting: {
+                  ambient: 0.5,
+                  diffuse: 0.85,
+                  specular: 0.5,
+                  roughness: 0.3,
+                  fresnel: 0.4,
+                },
+                lightposition: { x: 100, y: 100, z: 150 },
               } as never,
             ]}
             layout={{
               width: undefined,
               height: 520,
               autosize: true,
-              paper_bgcolor: bb.bg,
-              plot_bgcolor: bb.bg,
+              paper_bgcolor: '#0a0a0a',
+              plot_bgcolor: '#0a0a0a',
               margin: { l: 0, r: 60, t: 20, b: 0 },
               scene: {
                 bgcolor: bb.bg,
@@ -379,7 +387,7 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
                   eye: { x: 1.5, y: -1.5, z: 0.8 },
                 },
               },
-              font: { color: bb.white, family: 'Courier New, monospace' },
+              font: { color: '#f0f2f5', family: "'JetBrains Mono', 'Courier New', monospace" },
             } as never}
             config={{
               responsive: true,

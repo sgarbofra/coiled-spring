@@ -7,11 +7,11 @@ import RiskPanel, { computeFlags } from '@/components/RiskPanel'
 import VolSurface from '@/components/VolSurface'
 
 const bb = {
-  bg: '#000000', surface: '#0a0a00', panel: '#111100',
-  border: '#222200', border2: '#333300',
-  orange: '#FF6600', amber: '#FFAA00', yellow: '#FFE000',
-  green: '#00DD00', red: '#FF3333', white: '#CCCCCC', gray: '#888888',
-  gridLine: '#1a1a00',
+  bg: 'var(--bg-primary)', surface: 'var(--bg-panel)', panel: 'var(--bg-panel)',
+  border: 'var(--border)', border2: 'var(--border)',
+  orange: 'var(--accent)', amber: 'var(--accent)', yellow: 'var(--accent)',
+  green: 'var(--positive)', red: 'var(--negative)', white: 'var(--text-primary)', gray: 'var(--text-secondary)',
+  gridLine: 'var(--border)',
 }
 
 type PricePoint = { date: string; close: number }
@@ -370,17 +370,9 @@ function HVRankPanel({ prices }: { prices: PricePoint[] }) {
 
 function FieldRow({ label, value, color }: { label: string; value: string; color?: string }) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '5px 0',
-        borderBottom: `1px solid ${bb.border}`,
-      }}
-    >
-      <span style={{ color: bb.gray, fontSize: 12, fontFamily: 'monospace' }}>{label}</span>
-      <span style={{ color: color ?? bb.white, fontSize: 13, fontFamily: 'monospace', fontWeight: 600 }}>
+    <div className="contract-row">
+      <span className="contract-label">{label}</span>
+      <span className="contract-value" style={{ color: color ?? 'var(--text-primary)' }}>
         {value}
       </span>
     </div>

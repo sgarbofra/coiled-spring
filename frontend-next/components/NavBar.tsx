@@ -10,6 +10,8 @@ export default function NavBar() {
   const router = useRouter()
   const { user } = useUser()
   const [isMobile, setIsMobile] = useState(false)
+  const [time, setTime] = useState('')
+  const [isDayMode, setIsDayMode] = useState(false)
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
@@ -18,36 +20,49 @@ export default function NavBar() {
     return () => window.removeEventListener('resize', check)
   }, [])
 
-  const isPro = user?.plan === 'pro' || user?.plan === 'pro_byok'
-  const hasBroker = user?.has_broker ?? false
+  // Clock
+  useEffect(() => {
+    const tick = () => setTime(new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', second: '2-digit' }))
+    tick()
+    const id = setInterval(tick, 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  // Theme — init from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('theme') || 'night'
+    if (saved === 'day') {
+      document.body.classList.add('day-mode')
+      setIsDayMode(true)
+    }
+  }, [])
+
+  const toggleTheme = () => {
+    const next = !isDayMode
+    setIsDayMode(next)
+    if (next) {
+      document.body.classList.add('day-mode')
+      localStorage.setItem('theme', 'day')
+    } else {
+      document.body.classList.remove('day-mode')
+      localStorage.setItem('theme', 'night')
+    }
+  }
 
   const links = [
-    { href: '/watchlists',   label: 'WATCHLIST' },
-    { href: '/scanner',      label: 'SCANNER' },
-    { href: '/hv-screener',  label: isMobile ? 'HV' : 'HV SCREENER' },
-    { href: '/portfolio',    label: 'PORTFOLIO' },
-    { href: '/settings',     label: 'SETTINGS' },
+    { href: '/watchlists',  label: 'WATCHLIST' },
+    { href: '/scanner',     label: 'SCANNER' },
+    { href: '/hv-screener', label: isMobile ? 'HV' : 'HV SCREENER' },
+    { href: '/portfolio',   label: 'PORTFOLIO' },
+    { href: '/settings',    label: 'SETTINGS' },
   ]
-
-  const now = new Date()
-  const timeStr = now.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
 
   const handleLogout = async () => {
     try {
-      // Call backend to delete httpOnly cookie
-      await fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include',
-      })
-
-      // Clear all localStorage
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' })
       localStorage.clear()
-
-      // Force hard reload to clear React state
       window.location.href = '/'
-    } catch (error) {
-      console.error('Logout error:', error)
-      // Force hard reload even if logout fails
+    } catch {
       localStorage.clear()
       window.location.href = '/'
     }
@@ -55,33 +70,29 @@ export default function NavBar() {
 
   return (
     <nav style={{
-      backgroundColor: '#000000',
-      borderBottom: '1px solid #FF6600',
-      fontFamily: 'Courier New, monospace',
-      fontSize: '14.4px',
-    }} className="flex items-center gap-0 px-2 py-1">
+      backgroundColor: 'var(--bg-panel)',
+      borderBottom: '1px solid var(--border)',
+      fontFamily: 'var(--font-sans)',
+      fontSize: '13px',
+      position: 'sticky',
+      top: 0,
+      zIndex: 50,
+    }} className="flex items-center px-3 gap-0">
       {/* Logo */}
-      <div style={{ paddingRight: '8px', marginRight: '4px', display: 'flex', alignItems: 'center' }}>
-        <img src="/logo.png" alt="Coiled Spring" style={{ height: isMobile ? '36px' : '56px', width: 'auto', display: 'block' }} />
+      <div style={{ paddingRight: '12px', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+        <img src="/logo.png" alt="Coiled Spring" style={{ height: isMobile ? '32px' : '48px', width: 'auto', display: 'block' }} />
       </div>
 
-      {/* Nav links */}
-      <div className="flex items-center gap-0">
-        {links.filter(l => l.show !== false).map(l => {
+      {/* Nav tabs — underline style */}
+      <div className="flex items-stretch gap-0" style={{ alignSelf: 'stretch' }}>
+        {links.map(l => {
           const active = path.startsWith(l.href)
           return (
-            <Link key={l.href} href={l.href} style={{
-              color: active ? '#000000' : '#FFAA00',
-              backgroundColor: active ? '#FF6600' : 'transparent',
-              padding: isMobile ? '2px 6px' : '2px 10px',
-              borderRight: '1px solid #222200',
-              fontWeight: active ? 'bold' : 'normal',
-              letterSpacing: isMobile ? '0px' : '1px',
-              fontSize: isMobile ? '11px' : '13.2px',
-              textDecoration: 'none',
-            }}
-            onMouseEnter={e => { if (!active) (e.target as HTMLElement).style.color = '#FF6600' }}
-            onMouseLeave={e => { if (!active) (e.target as HTMLElement).style.color = '#FFAA00' }}
+            <Link
+              key={l.href}
+              href={l.href}
+              className={`nav-tab${active ? ' active' : ''}`}
+              style={{ fontSize: isMobile ? '10px' : undefined, padding: isMobile ? '8px 8px' : undefined }}
             >
               {l.label}
             </Link>
@@ -92,61 +103,70 @@ export default function NavBar() {
       {/* Spacer */}
       <div className="flex-1" />
 
-      {/* Right side — user info */}
+      {/* Right side */}
       {user && (
-        <div className="flex items-center gap-2" style={{ fontSize: '13.2px' }}>
-          {/* Piano badge — sempre visibile */}
+        <div className="flex items-center gap-2" style={{ fontSize: '12px', flexShrink: 0 }}>
+          {/* Plan badge */}
           <span style={{
-            backgroundColor: user.plan === 'pro_byok' ? '#005500' :
-                             user.plan === 'pro' ? '#003366' : '#222200',
-            color: user.plan === 'pro_byok' ? '#00DD00' :
-                   user.plan === 'pro' ? '#00CCCC' : '#FFFFFF',
-            padding: '1px 6px',
-            border: `1px solid ${user.plan === 'pro_byok' ? '#00DD00' : user.plan === 'pro' ? '#00CCCC' : '#333300'}`,
-            fontWeight: 'bold',
-            fontSize: '11px',
-            letterSpacing: '1px',
-            flexShrink: 0,
+            background: user.plan === 'pro_byok' ? 'rgba(74,222,128,0.12)' :
+                        user.plan === 'pro' ? 'rgba(37,99,235,0.12)' : 'var(--bg-hover)',
+            color: user.plan === 'pro_byok' ? 'var(--positive)' :
+                   user.plan === 'pro' ? '#60a5fa' : 'var(--text-secondary)',
+            padding: '2px 8px',
+            border: `1px solid ${user.plan === 'pro_byok' ? 'rgba(74,222,128,0.3)' : user.plan === 'pro' ? 'rgba(37,99,235,0.3)' : 'var(--border)'}`,
+            borderRadius: '4px',
+            fontWeight: '600',
+            fontSize: '10px',
+            letterSpacing: '0.5px',
+            fontFamily: 'var(--font-mono)',
           }}>
             {user.plan === 'pro_byok' ? 'BYOK' : user.plan.toUpperCase()}
           </span>
 
-          {/* Email — nascosta su mobile */}
+          {/* Email */}
           {!isMobile && (
-            <span style={{ color: '#FFFFFF', fontSize: '12px' }}>{user.email}</span>
+            <span style={{ color: 'var(--text-secondary)', fontSize: '11px' }}>{user.email}</span>
           )}
 
-          {/* Upgrade — solo FREE */}
+          {/* Upgrade */}
           {user.plan === 'free' && (
             <button onClick={() => router.push('/pricing')} style={{
-              backgroundColor: '#FF6B00', color: '#000000', border: 'none',
-              padding: '2px 6px', fontSize: '10px', fontWeight: 'bold',
-              letterSpacing: '0.5px', cursor: 'pointer', fontFamily: 'inherit', borderRadius: '2px', flexShrink: 0,
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#FF8833')}
-            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#FF6B00')}>
+              background: 'var(--accent)', color: 'var(--bg-primary)',
+              border: 'none', padding: '3px 8px', fontSize: '10px', fontWeight: '600',
+              letterSpacing: '0.3px', cursor: 'pointer', fontFamily: 'var(--font-sans)',
+              borderRadius: '4px', flexShrink: 0,
+            }}>
               {isMobile ? '▲' : 'UPGRADE'}
             </button>
           )}
 
           {/* Logout */}
           <button onClick={handleLogout} style={{
-            backgroundColor: 'transparent', color: '#FF6600',
-            border: '1px solid #FF6600', padding: '2px 6px',
-            fontSize: '10px', fontWeight: 'bold', letterSpacing: '0.5px',
-            cursor: 'pointer', fontFamily: 'inherit', borderRadius: '2px', flexShrink: 0,
+            background: 'transparent', color: 'var(--accent)',
+            border: '1px solid var(--border)', padding: '3px 8px',
+            fontSize: '10px', fontWeight: '500', letterSpacing: '0.3px',
+            cursor: 'pointer', fontFamily: 'var(--font-sans)', borderRadius: '4px', flexShrink: 0,
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#FF6600'; e.currentTarget.style.color = '#000000' }}
-          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#FF6600' }}>
+          onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'var(--accent-dim)' }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'transparent' }}>
             {isMobile ? '✕' : 'LOGOUT'}
           </button>
 
-          {/* Orario — nascosto su mobile */}
+          {/* Clock */}
           {!isMobile && (
-            <span style={{ color: '#FF6600', borderLeft: '1px solid #222200', paddingLeft: '8px', flexShrink: 0 }}>
-              {timeStr}
+            <span style={{
+              color: 'var(--accent)', borderLeft: '1px solid var(--border)',
+              paddingLeft: '10px', fontFamily: 'var(--font-mono)', fontSize: '11px',
+              fontVariantNumeric: 'tabular-nums', flexShrink: 0,
+            }}>
+              {time}
             </span>
           )}
+
+          {/* Theme toggle */}
+          <button className="theme-toggle" onClick={toggleTheme} title={isDayMode ? 'Switch to Night' : 'Switch to Day'}>
+            {isDayMode ? '☀️' : '🌙'}
+          </button>
         </div>
       )}
     </nav>

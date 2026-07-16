@@ -6,11 +6,13 @@ import ProtectedRoute from '@/components/ProtectedRoute'
 
 // ── Palette terminale ─────────────────────────────────────────────────────────
 const bb = {
-  bg: '#000000', surface: '#0a0a00', panel: '#111100',
-  border: '#222200', border2: '#333300',
-  orange: '#FF6600', amber: '#FFAA00', yellow: '#FFE000',
-  green: '#00DD00', red: '#FF3333', white: '#CCCCCC', gray: '#888888',
-  redBg: '#1a0000', orangeBg: '#1a0800', greenBg: '#001a00',
+  bg: 'var(--bg-primary)', surface: 'var(--bg-panel)', panel: 'var(--bg-panel)',
+  border: 'var(--border)', border2: 'var(--border)',
+  orange: 'var(--accent)', amber: 'var(--accent)', yellow: 'var(--accent)',
+  green: 'var(--positive)', red: 'var(--negative)', white: 'var(--text-primary)', gray: 'var(--text-secondary)',
+  redBg: 'color-mix(in srgb, var(--negative) 10%, transparent)',
+  orangeBg: 'var(--accent-dim)',
+  greenBg: 'color-mix(in srgb, var(--positive) 10%, transparent)',
 }
 
 // ── Tipi ──────────────────────────────────────────────────────────────────────
@@ -30,17 +32,24 @@ type SortDir = 'asc' | 'desc'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function hvRankColor(rank: number | null): string {
-  if (rank === null) return bb.gray
-  if (rank >= 80) return bb.red
-  if (rank >= 50) return bb.amber
-  return bb.green
+  if (rank === null) return 'var(--text-secondary)'
+  if (rank >= 80) return 'var(--negative)'
+  if (rank >= 50) return 'var(--accent)'
+  return 'var(--positive)'
 }
 
 function hvRankBg(rank: number | null): string {
   if (rank === null) return 'transparent'
-  if (rank >= 80) return bb.redBg
-  if (rank >= 50) return bb.orangeBg
-  return bb.greenBg
+  if (rank >= 80) return 'color-mix(in srgb, var(--negative) 10%, transparent)'
+  if (rank >= 50) return 'var(--accent-dim)'
+  return 'color-mix(in srgb, var(--positive) 10%, transparent)'
+}
+
+function hvRankClass(rank: number | null): string {
+  if (rank === null) return 'cs-mono'
+  if (rank >= 80) return 'hv-rank-high'
+  if (rank >= 50) return 'hv-rank-med'
+  return 'hv-rank-low'
 }
 
 function fmt(v: number | null, decimals = 1): string {
@@ -178,7 +187,7 @@ function HVScreenerContent() {
   const inputStyle: React.CSSProperties = {
     backgroundColor: bb.panel,
     border: `1px solid ${bb.border2}`,
-    color: bb.white,
+    color: 'var(--text-primary)',
     fontFamily: 'Courier New, monospace',
     fontSize: '12px',
     padding: '3px 6px',
@@ -199,7 +208,7 @@ function HVScreenerContent() {
 
   // ── Render ───────────────────────────────────────────────────────────────────
   return (
-    <div style={{ backgroundColor: bb.bg, minHeight: '100vh', fontFamily: 'Courier New, monospace', color: bb.white }}>
+    <div style={{ backgroundColor: bb.bg, minHeight: '100vh', fontFamily: 'Courier New, monospace', color: 'var(--text-primary)' }}>
 
       {/* Header */}
       <div style={{
@@ -212,7 +221,7 @@ function HVScreenerContent() {
           <span style={{ color: bb.orange, fontWeight: 'bold', fontSize: '15px', letterSpacing: '2px' }}>
             HV SCREENER
           </span>
-          <span style={{ color: bb.gray, fontSize: '11px', marginLeft: '10px' }}>
+          <span style={{ color: 'var(--text-secondary)', fontSize: '11px', marginLeft: '10px' }}>
             Historical Volatility — all underlyings
           </span>
         </div>
@@ -259,7 +268,7 @@ function HVScreenerContent() {
       }}>
         {/* Search */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span style={{ color: bb.gray, fontSize: '11px' }}>TICKER</span>
+          <span style={{ color: 'var(--text-secondary)', fontSize: '11px' }}>TICKER</span>
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
@@ -270,7 +279,7 @@ function HVScreenerContent() {
 
         {/* HV30 */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-          <span style={{ color: bb.gray, fontSize: '11px' }}>HV30%</span>
+          <span style={{ color: 'var(--text-secondary)', fontSize: '11px' }}>HV30%</span>
           <input value={hv30Min} onChange={e => setHv30Min(e.target.value)} placeholder="min" style={inputStyle} />
           <span style={{ color: bb.gray }}>–</span>
           <input value={hv30Max} onChange={e => setHv30Max(e.target.value)} placeholder="max" style={inputStyle} />
@@ -278,7 +287,7 @@ function HVScreenerContent() {
 
         {/* HV Rank */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-          <span style={{ color: bb.gray, fontSize: '11px' }}>HV RANK</span>
+          <span style={{ color: 'var(--text-secondary)', fontSize: '11px' }}>HV RANK</span>
           <input value={hvRankMin} onChange={e => setHvRankMin(e.target.value)} placeholder="min" style={inputStyle} />
           <span style={{ color: bb.gray }}>–</span>
           <input value={hvRankMax} onChange={e => setHvRankMax(e.target.value)} placeholder="max" style={inputStyle} />
@@ -286,7 +295,7 @@ function HVScreenerContent() {
 
         {/* HV Percentile */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-          <span style={{ color: bb.gray, fontSize: '11px' }}>HV PCT</span>
+          <span style={{ color: 'var(--text-secondary)', fontSize: '11px' }}>HV PCT</span>
           <input value={hvPctMin} onChange={e => setHvPctMin(e.target.value)} placeholder="min" style={inputStyle} />
           <span style={{ color: bb.gray }}>–</span>
           <input value={hvPctMax} onChange={e => setHvPctMax(e.target.value)} placeholder="max" style={inputStyle} />
@@ -306,7 +315,7 @@ function HVScreenerContent() {
         )}
 
         <div style={{ flex: 1 }} />
-        <span style={{ color: bb.gray, fontSize: '11px' }}>
+        <span style={{ color: 'var(--text-secondary)', fontSize: '11px' }}>
           {loading ? 'Loading...' : `${filtered.length} tickers`}
           {hasFilters && allData.length > 0 && ` / ${allData.length} total`}
         </span>
@@ -317,7 +326,7 @@ function HVScreenerContent() {
         <div style={{ padding: '20px 16px', color: bb.red, fontSize: '13px' }}>
           ⚠ {error}
           {error.includes('empty') || error.includes('data') ? (
-            <div style={{ color: bb.gray, fontSize: '11px', marginTop: '8px' }}>
+            <div style={{ color: 'var(--text-secondary)', fontSize: '11px', marginTop: '8px' }}>
               The daily job (17:00 UTC) will populate the table on the next run.
               For local testing, trigger the refresh manually via the backend.
             </div>
@@ -384,18 +393,16 @@ function HVScreenerContent() {
                 </tr>
               )}
               {!loading && pageData.map((row, i) => {
-                const rankColor = hvRankColor(row.hv_rank)
-                const rankBg = hvRankBg(row.hv_rank)
                 const isEven = i % 2 === 0
                 return (
                   <tr
                     key={row.ticker}
                     style={{
-                      backgroundColor: isEven ? bb.bg : bb.surface,
+                      backgroundColor: 'var(--bg-primary)',
                       borderBottom: `1px solid ${bb.border}`,
                       cursor: 'pointer',
                     }}
-                    onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#0d0d00')}
+                    onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--bg-hover)')}
                     onMouseLeave={e => (e.currentTarget.style.backgroundColor = isEven ? bb.bg : bb.surface)}
                     onClick={() => {
                       const qp = new URLSearchParams({
@@ -412,30 +419,20 @@ function HVScreenerContent() {
                     title={`Open ${row.ticker} volatility analysis`}
                   >
                     {/* Ticker */}
-                    <td style={{ padding: '6px 10px', color: bb.amber, fontWeight: 'bold', letterSpacing: '0.5px' }}>
+                    <td style={{ padding: '6px 10px', color: 'var(--accent)', fontWeight: '600' }}>
                       {row.ticker}
                     </td>
                     {/* Nome */}
-                    <td style={{ padding: '6px 10px', color: bb.gray, fontSize: '11px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <td style={{ padding: '6px 10px', color: 'var(--text-secondary)', fontSize: '11px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {row.company_name ?? ''}
                     </td>
                     {/* HV30 */}
-                    <td style={{ padding: '6px 10px', textAlign: 'right', color: bb.white }}>
+                    <td style={{ padding: '6px 10px', textAlign: 'right', color: 'var(--text-primary)' }}>
                       {fmt(row.hv30)}%
                     </td>
                     {/* HV Rank */}
                     <td style={{ padding: '4px 10px', textAlign: 'right' }}>
-                      <span style={{
-                        display: 'inline-block',
-                        backgroundColor: rankBg,
-                        color: rankColor,
-                        fontWeight: 'bold',
-                        padding: '2px 8px',
-                        border: `1px solid ${rankColor}`,
-                        minWidth: '44px',
-                        textAlign: 'center',
-                        fontSize: '12px',
-                      }}>
+                      <span className={hvRankClass(row.hv_rank)}>
                         {fmt(row.hv_rank)}
                       </span>
                     </td>
@@ -532,7 +529,7 @@ function HVScreenerContent() {
               }
             }}
             style={{
-              ...{ backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.white },
+              ...{ backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: 'var(--text-primary)' },
               fontFamily: 'inherit', fontSize: '11px', padding: '2px 4px', width: '44px',
             }}
           />

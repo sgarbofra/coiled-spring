@@ -1,57 +1,214 @@
 @import "tailwindcss";
 
-@theme {
-  --font-mono: 'Courier New', 'Consolas', 'Lucida Console', monospace;
+/* ── Google Fonts ─────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-  /* Bloomberg palette */
-  --color-bb-black:   #000000;
-  --color-bb-dark:    #0a0a00;
-  --color-bb-surface: #111100;
-  --color-bb-panel:   #1a1900;
-  --color-bb-border:  #222200;
-  --color-bb-border2: #333300;
-  --color-bb-orange:  #FF6600;
-  --color-bb-amber:   #FFAA00;
-  --color-bb-yellow:  #FFE000;
-  --color-bb-green:   #00DD00;
-  --color-bb-red:     #FF3333;
-  --color-bb-cyan:    #00CCCC;
-  --color-bb-white:   #CCCCCC;
-  --color-bb-gray:    #FFFFFF;
-  --color-bb-muted:   #333322;
+/* ── CSS Variables — Night (default) ─────────────────────────────────────── */
+:root {
+  --bg-primary:     #0a0a0a;
+  --bg-panel:       #111111;
+  --bg-hover:       #1a1a1a;
+  --accent:         #e87722;
+  --accent-dim:     rgba(232, 119, 34, 0.15);
+  --text-primary:   #f0f2f5;
+  --text-secondary: #8b94a3;
+  --text-tertiary:  #5a6270;
+  --border:         #1e2330;
+  --positive:       #4ade80;
+  --negative:       #f87171;
+  --font-mono:      'JetBrains Mono', 'Courier New', monospace;
+  --font-sans:      'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
+/* ── CSS Variables — Day mode ─────────────────────────────────────────────── */
+body.day-mode {
+  --bg-primary:     #f8f9fb;
+  --bg-panel:       #ffffff;
+  --bg-hover:       #f1f3f5;
+  --accent:         #2563eb;
+  --accent-dim:     rgba(37, 99, 235, 0.12);
+  --text-primary:   #0f172a;
+  --text-secondary: #64748b;
+  --text-tertiary:  #94a3b8;
+  --border:         #e2e8f0;
+  --positive:       #16a34a;
+  --negative:       #dc2626;
+}
+
+/* ── Base ─────────────────────────────────────────────────────────────────── */
 @layer base {
   *, *::before, *::after { box-sizing: border-box; }
 
   html, body {
-    background-color: #000000;
-    color: #CCCCCC;
-    font-family: 'Courier New', 'Consolas', 'Lucida Console', monospace;
-    font-size: 15.6px;
-    line-height: 1.4;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
 
-  /* Scrollbar Bloomberg style */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: #000000; }
-  ::-webkit-scrollbar-thumb { background: #333300; }
-  ::-webkit-scrollbar-thumb:hover { background: #FF6600; }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg-primary); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
-  /* Input overrides */
   input, select, textarea {
-    font-family: inherit;
-    background: #0a0a00;
-    color: #CCCCCC;
-    border: 1px solid #222200;
-    border-radius: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--bg-panel);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
   }
   input:focus, select:focus, textarea:focus {
     outline: none;
-    border-color: #FF6600;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-dim);
   }
 
-  /* Selection */
-  ::selection { background: #FF6600; color: #000000; }
+  ::selection { background: var(--accent); color: var(--bg-primary); }
 }
+
+/* ── Monospace numerics ───────────────────────────────────────────────────── */
+.cs-mono, .ticker-val, .scanner-num, .hv-rank-pill, .counter-number {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ── Nav tab underline ────────────────────────────────────────────────────── */
+.nav-tab {
+  padding: 10px 12px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+  background: transparent;
+  text-decoration: none;
+  display: inline-block;
+  white-space: nowrap;
+}
+.nav-tab:hover { color: var(--text-primary); }
+.nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ── Theme toggle ─────────────────────────────────────────────────────────── */
+.theme-toggle {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 7px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-secondary);
+  transition: border-color 0.15s ease, color 0.15s ease;
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── HV Rank pills ────────────────────────────────────────────────────────── */
+.hv-rank-high {
+  color: var(--negative);
+  background: color-mix(in srgb, var(--negative) 10%, transparent);
+  padding: 2px 8px; border-radius: 4px;
+  font-family: var(--font-mono); font-size: 12px;
+  font-variant-numeric: tabular-nums; display: inline-block;
+}
+.hv-rank-med {
+  color: var(--accent);
+  background: var(--accent-dim);
+  padding: 2px 8px; border-radius: 4px;
+  font-family: var(--font-mono); font-size: 12px;
+  font-variant-numeric: tabular-nums; display: inline-block;
+}
+.hv-rank-low {
+  color: var(--positive);
+  background: color-mix(in srgb, var(--positive) 10%, transparent);
+  padding: 2px 8px; border-radius: 4px;
+  font-family: var(--font-mono); font-size: 12px;
+  font-variant-numeric: tabular-nums; display: inline-block;
+}
+
+/* ── Filter inputs ────────────────────────────────────────────────────────── */
+.filter-label {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.05em;
+  text-transform: uppercase; color: var(--text-secondary);
+  margin-bottom: 4px; display: block;
+}
+.filter-input, .filter-select {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px 10px;
+  font-family: var(--font-mono); font-size: 12px; color: var(--text-primary); width: 100%;
+}
+.filter-input:focus, .filter-select:focus {
+  border-color: var(--accent); outline: none; box-shadow: 0 0 0 2px var(--accent-dim);
+}
+.scanner-checkbox {
+  width: 14px; height: 14px; border: 1px solid var(--border);
+  border-radius: 3px; background: transparent; cursor: pointer;
+  appearance: none; -webkit-appearance: none; flex-shrink: 0;
+}
+.scanner-checkbox:checked { background: var(--accent); border-color: var(--accent); }
+
+/* ── Scanner table ────────────────────────────────────────────────────────── */
+.scanner-table { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 12px; }
+.scanner-table th {
+  text-align: left; padding: 8px; font-size: 10px; font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary);
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+.scanner-table td { padding: 7px 8px; border-bottom: 1px solid var(--border); color: var(--text-primary); white-space: nowrap; }
+.scanner-table tr:hover td { background: var(--bg-hover); cursor: pointer; }
+.scanner-table td.numeric { text-align: right; font-variant-numeric: tabular-nums; }
+.scanner-table td.ticker-cell { color: var(--accent); font-weight: 500; }
+.scanner-table td.pos { color: var(--positive); }
+.scanner-table td.neg { color: var(--negative); }
+
+/* ── Contract rows ────────────────────────────────────────────────────────── */
+.contract-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.contract-label { font-size: 10px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-secondary); }
+.contract-value { font-family: var(--font-mono); font-size: 13px; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.contract-value.accent { color: var(--accent); }
+.contract-value.positive { color: var(--positive); }
+.contract-value.negative { color: var(--negative); }
+
+/* ── CS Score block ───────────────────────────────────────────────────────── */
+.cs-score-num { font-family: var(--font-mono); font-size: 36px; font-weight: 500; color: var(--accent); line-height: 1; font-variant-numeric: tabular-nums; }
+.cs-score-bar { width: 100%; height: 4px; background: var(--border); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+.cs-score-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.4s ease; }
+
+/* ── Info bar ─────────────────────────────────────────────────────────────── */
+.scanner-info-bar {
+  background: var(--bg-panel); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  padding: 6px 16px; font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary);
+  display: flex; gap: 1.5rem; align-items: center;
+}
+.scanner-info-bar .accent { color: var(--accent); font-weight: 500; }
+
+/* ── Coiled AI FAB ────────────────────────────────────────────────────────── */
+.coiled-ai-fab {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--accent); color: var(--bg-primary);
+  display: flex; align-items: center; justify-content: center;
+  position: fixed; bottom: 24px; right: 24px; cursor: pointer;
+  box-shadow: 0 4px 20px var(--accent-dim);
+  transition: width 0.25s ease, border-radius 0.25s ease, padding 0.25s ease, box-shadow 0.25s ease;
+  z-index: 100; overflow: hidden; white-space: nowrap; border: none;
+  font-family: var(--font-sans);
+}
+.coiled-ai-fab:hover {
+  width: auto; padding: 0 20px; border-radius: 24px; gap: 8px;
+  box-shadow: 0 4px 30px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.coiled-ai-fab .fab-text { display: none; font-size: 12px; font-weight: 500; margin-left: 6px; }
+.coiled-ai-fab:hover .fab-text { display: inline; }

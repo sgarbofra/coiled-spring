@@ -11,10 +11,10 @@ import { RiskTooltip } from '@/components/RiskPanel'
 const VolSurface = dynamic(() => import('@/components/VolSurface'), { ssr: false })
 
 const bb = {
-  bg: '#000000', surface: '#0a0a00', panel: '#111100',
-  border: '#222200', border2: '#333300',
-  orange: '#FF6600', amber: '#FFAA00', yellow: '#FFE000',
-  green: '#00DD00', red: '#FF3333', white: '#CCCCCC', gray: '#FFFFFF',
+  bg: 'var(--bg-primary)', surface: 'var(--bg-panel)', panel: 'var(--bg-panel)',
+  border: 'var(--border)', border2: 'var(--border)',
+  orange: 'var(--accent)', amber: 'var(--accent)', yellow: 'var(--accent)',
+  green: 'var(--positive)', red: 'var(--negative)', white: 'var(--text-primary)', gray: 'var(--text-secondary)',
 }
 
 type ScanResult = {
@@ -727,7 +727,7 @@ export default function ScannerPage() {
 
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'end' }}>
           {/* Asset Class */}
-          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', color: bb.gray, fontSize: '12px', letterSpacing: '1px' }}>
+          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             ASSET CLASS
             <select value={assetClass} onChange={e => handleAssetClass(e.target.value)}
               style={{ backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '4px 8px', fontSize: '13.2px', fontFamily: 'inherit', width: '200px' }}>
@@ -797,64 +797,64 @@ export default function ScannerPage() {
             )}
           </label>
 
-          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', color: bb.gray, fontSize: '12px', letterSpacing: '1px' }}>
+          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             TYPE
             <select value={optionType} onChange={e => setOptionType(e.target.value)}
-              style={{ backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '4px 8px', fontSize: '13.2px', fontFamily: 'inherit', width: '110px' }}>
+              className="filter-select" style={{ width: '110px' }}>
               <option value="call">CALL</option>
               <option value="put">PUT</option>
               <option value="both">BOTH</option>
             </select>
           </label>
 
-          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', color: bb.gray, fontSize: '12px', letterSpacing: '1px' }}>
+          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             DTE MIN
             <input type="number" value={dteMin} onChange={e => setDteMin(e.target.value)}
-              style={{ backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '4px 6px', fontSize: '13.2px', fontFamily: 'inherit', width: '70px' }} />
+              className="filter-input" style={{ width: '70px' }} />
           </label>
-          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', color: bb.gray, fontSize: '12px', letterSpacing: '1px' }}>
+          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             DTE MAX
             <input type="number" value={dteMax} onChange={e => setDteMax(e.target.value)}
-              style={{ backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '4px 6px', fontSize: '13.2px', fontFamily: 'inherit', width: '70px' }} />
+              className="filter-input" style={{ width: '70px' }} />
           </label>
 
-          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', color: bb.gray, fontSize: '12px', letterSpacing: '1px' }}>
+          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             DELTA MIN
             <input type="number" step="0.01" value={deltaMin} onChange={e => setDeltaMin(e.target.value)}
-              style={{ backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '4px 6px', fontSize: '13.2px', fontFamily: 'inherit', width: '70px' }} />
+              className="filter-input" style={{ width: '70px' }} />
           </label>
-          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', color: bb.gray, fontSize: '12px', letterSpacing: '1px' }}>
+          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             DELTA MAX
             <input type="number" step="0.01" value={deltaMax} onChange={e => setDeltaMax(e.target.value)}
-              style={{ backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '4px 6px', fontSize: '13.2px', fontFamily: 'inherit', width: '70px' }} />
+              className="filter-input" style={{ width: '70px' }} />
           </label>
 
-          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', color: bb.gray, fontSize: '12px', letterSpacing: '1px' }}>
+          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             STRIKE MIN
             <input type="number" value={strikeMin} onChange={e => setStrikeMin(e.target.value)}
               placeholder="0"
-              style={{ backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '4px 6px', fontSize: '13.2px', fontFamily: 'inherit', width: '80px' }} />
+              className="filter-input" style={{ width: '80px' }} />
           </label>
-          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', color: bb.gray, fontSize: '12px', letterSpacing: '1px' }}>
+          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             STRIKE MAX
             <input type="number" value={strikeMax} onChange={e => setStrikeMax(e.target.value)}
               placeholder="∞"
-              style={{ backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '4px 6px', fontSize: '13.2px', fontFamily: 'inherit', width: '80px' }} />
+              className="filter-input" style={{ width: '80px' }} />
           </label>
         </div>
 
         <div style={{ marginTop: '12px', display: 'flex', flexWrap: 'wrap', alignItems: 'end', gap: '12px' }}>
-          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', color: bb.gray, fontSize: '12px', letterSpacing: '1px' }}>
+          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             IV MIN %
             <input type="number" value={ivMin} onChange={e => setIvMin(e.target.value)}
               placeholder="0"
-              style={{ backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '4px 6px', fontSize: '13.2px', fontFamily: 'inherit', width: '80px' }} />
+              className="filter-input" style={{ width: '80px' }} />
           </label>
-          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', color: bb.gray, fontSize: '12px', letterSpacing: '1px' }}>
+          <label style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             IV MAX %
             <input type="number" value={ivMax} onChange={e => setIvMax(e.target.value)}
               placeholder="∞"
-              style={{ backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '4px 6px', fontSize: '13.2px', fontFamily: 'inherit', width: '80px' }} />
+              className="filter-input" style={{ width: '80px' }} />
           </label>
 
           <div style={{ display: 'flex', gap: '8px' }}>
@@ -1243,7 +1243,7 @@ export default function ScannerPage() {
                   onMouseEnter={e => { if (!isSelected) (e.currentTarget as HTMLElement).style.backgroundColor = bb.surface }}
                   onMouseLeave={e => { if (!isSelected) (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent' }}>
                   <td style={{ padding: '6px 8px' }}>
-                    <input type="checkbox" readOnly checked={isSelected} style={{ cursor: 'pointer' }} />
+                    <input type="checkbox" readOnly checked={isSelected} className="scanner-checkbox" />
                   </td>
                   <td style={{ padding: '6px 8px', fontWeight: 'bold', color: bb.orange, position: 'relative' }}
                     onMouseEnter={() => setHoveredRiskKey(r.symbol_key)}
