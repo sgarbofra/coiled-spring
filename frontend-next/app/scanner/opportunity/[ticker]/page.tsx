@@ -417,16 +417,26 @@ function OpportunityContent() {
   const [ivHistory, setIvHistory] = useState<IVRecord[] | null>(null)
   const [ivHistoryLoading, setIvHistoryLoading] = useState(false)
   const [ivHistoryOpen, setIvHistoryOpen] = useState(false)
+  const [ivHistoryError, setIvHistoryError] = useState<string | null>(null)
 
   const fetchIvHistory = async () => {
     if (ivHistory !== null) { setIvHistoryOpen((o) => !o); return }
     setIvHistoryLoading(true)
     setIvHistoryOpen(true)
+    setIvHistoryError(null)
     try {
       const res = await fetch(`/api/scanner/iv-history/${ticker}`, { credentials: 'include' })
       const data = await res.json()
+      if (!res.ok) {
+        setIvHistoryError(`API error ${res.status}: ${data.error ?? data.detail ?? 'unknown'}`)
+        setIvHistory([])
+        return
+      }
       setIvHistory(data.records ?? [])
-    } catch { setIvHistory([]) } finally { setIvHistoryLoading(false) }
+    } catch (e) {
+      setIvHistoryError(`Network error: ${e instanceof Error ? e.message : String(e)}`)
+      setIvHistory([])
+    } finally { setIvHistoryLoading(false) }
   }
 
   // ── AI Summary state ──────────────────────────────────────────────────────
@@ -701,7 +711,12 @@ function OpportunityContent() {
               {ivHistoryLoading && (
                 <div style={{ color: bb.amber, fontSize: 12, padding: '20px 0' }}>Loading IV history…</div>
               )}
-              {!ivHistoryLoading && ivHistory !== null && ivHistory.length === 0 && (
+              {!ivHistoryLoading && ivHistoryError && (
+                <div style={{ color: bb.red, fontSize: 12, fontFamily: 'var(--font-mono)' }}>
+                  ⚠ {ivHistoryError}
+                </div>
+              )}
+              {!ivHistoryLoading && !ivHistoryError && ivHistory !== null && ivHistory.length === 0 && (
                 <div style={{ color: bb.gray, fontSize: 12, fontStyle: 'italic' }}>
                   No IV history yet — data accumulates daily after 16:30 UTC.
                 </div>

@@ -3,10 +3,11 @@ import { pythonFetch } from '@/lib/python-api'
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { ticker: string } }
+  { params }: { params: Promise<{ ticker: string }> }
 ) {
   try {
-    const ticker = params.ticker?.toUpperCase()
+    const { ticker: rawTicker } = await params
+    const ticker = rawTicker?.toUpperCase()
     if (!ticker) {
       return NextResponse.json({ error: 'Missing ticker' }, { status: 400 })
     }
