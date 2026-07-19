@@ -250,12 +250,15 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
   const ivMax = Math.max(...ivFlat)
   const ivAvg = ivFlat.reduce((a, b) => a + b, 0) / ivFlat.length
 
+  // CS Score colorscale: 0=red, 50=orange, 75+=green
+  // NOTE: Plotly cannot resolve CSS vars — must use static hex values (see DARK_PLOT / LIGHT_PLOT pattern above)
   const CS_COLORSCALE: [number, string][] = [
-    [0,    'var(--negative)'],
-    [0.50, 'var(--accent)'],
-    [0.69, 'var(--accent)'],
-    [0.75, 'var(--accent)'],
-    [1.0,  'var(--positive)'],
+    [0,    '#F85149'],   // Red        — CS 0–30  (evita)
+    [0.30, '#D9312A'],   // Deep red   — CS 30
+    [0.50, '#FF6B35'],   // Orange     — CS 50    (accettabile)
+    [0.65, '#E3B341'],   // Yellow     — CS 65    (transizione)
+    [0.75, '#3FB950'],   // Green      — CS 75    (candidato)
+    [1.0,  '#00C853'],   // Lime green — CS 100   (ottimo)
   ]
 
   return (
