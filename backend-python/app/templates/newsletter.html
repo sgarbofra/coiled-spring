@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: 'Inter', sans-serif; background: #f8f9fb; color: #0f172a; padding: 24px; }
+    .container { max-width: 640px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 32px; border: 1px solid #e2e8f0; }
+    h1 { font-size: 22px; font-weight: 600; margin-bottom: 4px; color: #0f172a; }
+    .subtitle { font-size: 13px; color: #64748b; margin-bottom: 24px; }
+    .meta { font-size: 12px; color: #94a3b8; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #e2e8f0; }
+    .regime { background: #f1f5f9; padding: 12px 16px; border-radius: 8px; margin-bottom: 24px; font-size: 13px; color: #334155; }
+    .candidate { border-top: 1px solid #e2e8f0; padding: 20px 0; }
+    .candidate-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+    .ticker { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 600; color: #2563eb; }
+    .score { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #ea580c; font-weight: 500; }
+    .metrics { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #64748b; margin-bottom: 10px; }
+    .summary { font-size: 14px; line-height: 1.6; color: #334155; }
+    .divider { border: none; border-top: 1px solid #e2e8f0; margin: 24px 0; }
+    .disclaimer { font-size: 11px; color: #94a3b8; line-height: 1.5; border-top: 1px solid #e2e8f0; padding-top: 16px; margin-top: 24px; }
+    .cta { margin-top: 20px; text-align: center; }
+    .cta a { color: #2563eb; text-decoration: none; font-weight: 500; }
+    .no-candidates { text-align: center; padding: 32px 0; color: #64748b; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📊 Coiled Spring Weekly Scan</h1>
+    <div class="subtitle">{{ date_str }}</div>
+
+    <div class="meta">
+      Universe scanned: 1,136 tickers | Setups found: {{ setups_found }} |
+      Filter: HV Rank &le; 25% &middot; CS Score &ge; 65 &middot; CS Score v2.4
+    </div>
+
+    <div class="regime">
+      <strong>Market regime:</strong> VIX {{ vix_close }} | 2Y/10Y spread {{ yield_spread }} |
+      {{ low_iv_count }} tickers with HV Rank &lt; 25% ({{ low_iv_delta }} vs last week)
+    </div>
+
+    {% if candidates %}
+    <p style="font-size:14px;color:#334155;margin-bottom:20px;">
+      This week&apos;s scan identified {{ setups_found }} tickers with compressed historical volatility.
+      Here are the top {{ candidates|length }} setups ranked by CS Score.
+    </p>
+
+    {% for c in candidates %}
+    <div class="candidate">
+      <div class="candidate-header">
+        <span class="ticker">{{ c.ticker }}</span>
+        <span class="score">CS Score: {{ c.cs_score }}</span>
+      </div>
+      <div class="metrics">
+        HV Rank: {{ c.hv_rank }}% | IV (ATM 30d): {{ c.iv }}% | HV30: {{ c.hv30 }}% |
+        Bid/Ask: ${{ c.bid }} / ${{ c.ask }} | Spread: {{ c.spread_pct }}% | Last: ${{ c.last }}
+      </div>
+      <div class="summary">&rarr; {{ c.ai_summary }}</div>
+    </div>
+    {% endfor %}
+
+    {% else %}
+    <div class="no-candidates">
+      <strong>No contracts met the minimum quality and liquidity thresholds this week.</strong><br>
+      The scanner will run again next Monday. Market data: end-of-day snapshot, delayed third-party data.
+    </div>
+    {% endif %}
+
+    <hr class="divider">
+
+    <div class="disclaimer">
+      <strong>Disclaimer:</strong>
+      Coiled Spring Terminal provides general educational analytics and market information.
+      The screening results shown here are not personalized investment advice, investment recommendations
+      or solicitations to buy or sell financial instruments under MiFID II (2014/65/EU) or any other
+      applicable regulation. Screening results are not trade recommendations.
+      Market data are sourced from third parties (Yahoo Finance) and are end-of-day snapshots —
+      not real-time. Data may be delayed, incomplete or inaccurate. Options involve substantial risk
+      and may not be suitable for all investors. Past screening results do not guarantee future performance.
+    </div>
+
+    <div class="cta">
+      <a href="https://coiledspring.app">👉 Full analysis and Volatility Surface at coiledspring.app</a><br><br>
+      <a href="https://amazon.it/dp/B0H59CRSLN">📖 Coiled Spring Strategy — the book</a>
+    </div>
+  </div>
+</body>
+</html>

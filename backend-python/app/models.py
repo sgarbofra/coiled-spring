@@ -306,12 +306,32 @@ class IVHistory(Base):
     )
 
 
+class NewsletterLog(Base):
+    """Log di ogni esecuzione del job newsletter settimanale.
+
+    week_key: chiave idempotenza, formato "newsletter_YYYY_WNN" — unique per settimana.
+    status:   running | success | error | skipped
+    """
+    __tablename__ = "newsletter_log"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    run_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    week_key: Mapped[str] = mapped_column(Text, unique=True, nullable=False)
+    tickers_scanned: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    setups_found: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    tickers_published: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    substack_draft_id: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="running")
+    error_message: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
 class HVSnapshot(Base):
     """Snapshot giornaliero di Historical Volatility per tutti i ticker dell'universo.
-    
+
     Alimentato dal job APScheduler (dopo chiusura mercato US).
-    Una riga per ticker — upsert giornaliero.
-    
+    Una riga per ticker \u2014 upsert giornaliero.
+
     hv30:           HV 30-day annualizzata (%), es. 28.5 = 28.5%
     hv_rank:        (HV_today - HV_min_52w) / (HV_max_52w - HV_min_52w) * 100
     hv_percentile:  % di giorni nelle ultime 252 sessioni con HV < HV_today
@@ -331,3 +351,51 @@ class HVSnapshot(Base):
     hv_52w_high: Mapped[Optional[float]] = mapped_column(nullable=True)
     hv_52w_low: Mapped[Optional[float]] = mapped_column(nullable=True)
     computed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+# \u2500\u2500 Academy \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
+
+class QuizAttempt(Base):
+    """Un tentativo di quiz per un modulo.
+
+    question_ids: lista di 10 ID domanda selezionati da Next.js dalla question bank.
+    answers:      lista di {question_id, chosen_idx, correct} \u2014 una entry per risposta data.
+    status:       'open' mentre il quiz \u00e8 in corso, 'finished' quando completato.
+    score/passed: valorizzati solo a status='finished'.
+    """
+    __tablename__ = "quiz_attempts"
+    __table_args__ = (
+        Index("quiz_attempts_user_module_status_idx", "user_id", "module_id", "status"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    module_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    question_ids: Mapped[list] = mapped_column(JSON, nullable=False, default=list)
+    answers: Mapped[list] = mapped_column(JSON, nullable=False, default=list)
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="open")  # open | finished
+    score: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    passed: Mapped[Optional[bool]] = mapped_column(Boolean, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
+class QuizResult(Base):
+    """Record finale di un quiz completato. Una riga per attempt riuscito.
+
+    Usato per determinare lo sblocco dei moduli successivi
+    (modulo N+1 sbloccato se esiste almeno un QuizResult con passed=True per modulo N).
+    """
+    __tablename__ = "quiz_results"
+    __table_args__ = (
+        Index("quiz_results_user_module_idx", "user_id", "module_id"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    module_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    attempt_id: Mapped[int] = mapped_column(Integer, ForeignKey("quiz_attempts.id", ondelete="CASCADE"), nullable=False)
+    score: Mapped[int] = mapped_column(Integer, nullable=False)
+    total: Mapped[int] = mapped_column(Integer, nullable=False)
+    passed: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

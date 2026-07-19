@@ -54,6 +54,7 @@ export default function NavBar() {
     { href: '/scanner',     label: 'SCANNER' },
     { href: '/hv-screener', label: isMobile ? 'HV' : 'HV SCREENER' },
     { href: '/portfolio',   label: 'PORTFOLIO' },
+    { href: '/academy',     label: 'ACADEMY' },
     { href: '/settings',    label: 'SETTINGS' },
   ]
 

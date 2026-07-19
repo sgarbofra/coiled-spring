@@ -782,7 +782,7 @@ export default function LandingPage() {
             <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
                 <div style={{ display: 'inline-block', border: `1px solid ${colors.border2}`, padding: '0.28rem 1rem', fontSize: '0.68rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono }}>◈ COILED SPRING ACADEMY</div>
-                <span style={{ background: colors.orange, color: colors.bg, fontSize: '0.6rem', fontWeight: '700', letterSpacing: '1px', padding: '0.2rem 0.5rem', borderRadius: '2px', fontFamily: mono }}>COMING SOON</span>
+                <span style={{ background: colors.green, color: colors.bg, fontSize: '0.6rem', fontWeight: '700', letterSpacing: '1px', padding: '0.2rem 0.5rem', borderRadius: '2px', fontFamily: mono }}>NOW LIVE</span>
               </div>
               <h2 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: '700', color: colors.white, marginBottom: '1rem', fontFamily: mono }}>
                 Structured options education
@@ -923,13 +923,19 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div style={{ textAlign: 'center' }}>
+            <div style={{ textAlign: 'center', display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
               <button
                 onClick={() => router.push('/register')}
+                style={{ background: 'transparent', color: colors.orange, border: `1px solid ${colors.orange}`, padding: '0.875rem 2.25rem', fontSize: '0.9rem', fontWeight: '700', letterSpacing: '0.5px', cursor: 'pointer', fontFamily: sans, borderRadius: '3px', transition: 'background 0.2s ease' }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(232,119,34,0.1)' }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
+              >{'Create free account'}</button>
+              <button
+                onClick={() => router.push('/academy')}
                 style={{ background: colors.orange, color: colors.bg, border: 'none', padding: '0.875rem 2.25rem', fontSize: '0.9rem', fontWeight: '700', letterSpacing: '0.5px', cursor: 'pointer', fontFamily: sans, borderRadius: '3px', transition: 'background 0.2s ease' }}
                 onMouseEnter={(e) => e.currentTarget.style.background = colors.orangeHover}
                 onMouseLeave={(e) => e.currentTarget.style.background = colors.orange}
-              >{'Register for early access →'}</button>
+              >{'Start Module 1 — Free →'}</button>
             </div>
           </div>
         </section>

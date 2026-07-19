@@ -1,0 +1,6110 @@
+{
+  "version": "1.0",
+  "module": 1,
+  "total_slides": 27,
+  "total_questions": 270,
+  "slides": [
+    {
+      "slide_num": 1,
+      "title": "Cover — Module 1 Introduction",
+      "questions": [
+        {
+          "id": "4a294155-8537-4f87-9367-b19769713300",
+          "text": "Module 1 covers which main subject?",
+          "answers": [
+            {
+              "text": "Options fundamentals — what they are, how they work, and the key Greeks",
+              "correct": true
+            },
+            {
+              "text": "Futures and forward contracts",
+              "correct": false
+            },
+            {
+              "text": "Stock screening and portfolio management",
+              "correct": false
+            },
+            {
+              "text": "Forex trading and currency hedging",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "9198054a-2cc5-491e-a66f-2de2fb7e29cf",
+          "text": "An option is called a 'derivative' because...",
+          "answers": [
+            {
+              "text": "Its value is derived from the price of an underlying asset",
+              "correct": true
+            },
+            {
+              "text": "It is more complex than a stock",
+              "correct": false
+            },
+            {
+              "text": "It was invented after stocks",
+              "correct": false
+            },
+            {
+              "text": "It derives income for the holder",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "ac81f34e-e63f-4253-bade-85f19d36a282",
+          "text": "Options can be written on which of the following?",
+          "answers": [
+            {
+              "text": "Stocks, ETFs, indices and commodities",
+              "correct": true
+            },
+            {
+              "text": "Only individual stocks",
+              "correct": false
+            },
+            {
+              "text": "Only government bonds",
+              "correct": false
+            },
+            {
+              "text": "Only cryptocurrency",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "0e5fdc39-49b0-4153-b9c6-b3338b4545fe",
+          "text": "Who is Module 1 designed for?",
+          "answers": [
+            {
+              "text": "Beginners with little to no prior options experience",
+              "correct": true
+            },
+            {
+              "text": "Experienced traders needing advanced Greeks",
+              "correct": false
+            },
+            {
+              "text": "Fund managers hedging large portfolios",
+              "correct": false
+            },
+            {
+              "text": "Algorithmic traders building pricing models",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "eb17df22-8580-42b0-bae2-b6133348042f",
+          "text": "The correct analogy for an option is...",
+          "answers": [
+            {
+              "text": "An insurance contract — you pay a premium for protection or opportunity",
+              "correct": true
+            },
+            {
+              "text": "A savings account with guaranteed return",
+              "correct": false
+            },
+            {
+              "text": "A loan secured against an asset",
+              "correct": false
+            },
+            {
+              "text": "A futures contract with mandatory delivery",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "6fe3beba-6d5e-4477-872d-f8f9d155a263",
+          "text": "The three main variables that drive an option's value are...",
+          "answers": [
+            {
+              "text": "Price, time, and volatility",
+              "correct": true
+            },
+            {
+              "text": "Earnings, dividends, and interest rates",
+              "correct": false
+            },
+            {
+              "text": "Volume, open interest, and bid-ask spread",
+              "correct": false
+            },
+            {
+              "text": "P/E ratio, revenue growth, and debt",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "ee345989-fb89-42f8-acef-563ade10ffc4",
+          "text": "By the end of Module 1, a student should be able to...",
+          "answers": [
+            {
+              "text": "Explain what options are, how they are priced, and how the five Greeks work",
+              "correct": true
+            },
+            {
+              "text": "Build a full algorithmic trading strategy",
+              "correct": false
+            },
+            {
+              "text": "Manage a diversified options portfolio independently",
+              "correct": false
+            },
+            {
+              "text": "Execute arbitrage strategies on the CBOE",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "2685e7a5-10ec-4bb7-9921-aae288ac8e79",
+          "text": "Options are primarily used for...",
+          "answers": [
+            {
+              "text": "Hedging, income generation, and directional speculation",
+              "correct": true
+            },
+            {
+              "text": "Dividend collection and long-term growth",
+              "correct": false
+            },
+            {
+              "text": "High-frequency market making only",
+              "correct": false
+            },
+            {
+              "text": "Currency conversion in international trade",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "af6874f3-3bfb-4749-8aa2-1daa9974470e",
+          "text": "What distinguishes Module 1 from Module 2?",
+          "answers": [
+            {
+              "text": "Module 1 covers fundamentals; Module 2 dives into volatility in depth",
+              "correct": true
+            },
+            {
+              "text": "Module 1 is for sellers; Module 2 is for buyers",
+              "correct": false
+            },
+            {
+              "text": "Module 1 covers indices; Module 2 covers stocks",
+              "correct": false
+            },
+            {
+              "text": "Module 1 covers Greeks; Module 2 covers basics",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "dd2bf6db-c331-4be2-a4c7-4e6b8163686d",
+          "text": "Before studying options Greeks, a student must first understand...",
+          "answers": [
+            {
+              "text": "What an option is, how premiums are structured, and basic payoff profiles",
+              "correct": true
+            },
+            {
+              "text": "Advanced calculus and stochastic models",
+              "correct": false
+            },
+            {
+              "text": "Corporate bond pricing and yield curves",
+              "correct": false
+            },
+            {
+              "text": "Macroeconomic policy and central bank decisions",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 2,
+      "title": "Course Overview",
+      "questions": [
+        {
+          "id": "e2f86acf-f602-46a1-ac10-25e83af52258",
+          "text": "Module 1 is structured around how many main learning steps?",
+          "answers": [
+            {
+              "text": "6 steps progressing from basics to Greek analysis",
+              "correct": true
+            },
+            {
+              "text": "2 steps: theory and practice",
+              "correct": false
+            },
+            {
+              "text": "10 steps one per Greek",
+              "correct": false
+            },
+            {
+              "text": "3 steps covering only the Greeks",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "ca17f7de-40d6-40ed-a588-617ff07df5f7",
+          "text": "Step 2 of the module covers...",
+          "answers": [
+            {
+              "text": "The Call and Put options — the two basic option types",
+              "correct": true
+            },
+            {
+              "text": "Delta and Gamma only",
+              "correct": false
+            },
+            {
+              "text": "Black-Scholes pricing",
+              "correct": false
+            },
+            {
+              "text": "Implied volatility and IV Rank",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "bb14a09d-5ca4-4c9d-89de-b9756014a88e",
+          "text": "LEAPS are introduced in which step?",
+          "answers": [
+            {
+              "text": "Step 3 — pricing and time decay",
+              "correct": true
+            },
+            {
+              "text": "Step 1 — basic definitions",
+              "correct": false
+            },
+            {
+              "text": "Step 5 — Greek analysis",
+              "correct": false
+            },
+            {
+              "text": "Step 6 — advanced models",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "92c8e048-fa74-4fbb-af02-cce55d2683ac",
+          "text": "Which step covers the five Greeks?",
+          "answers": [
+            {
+              "text": "Steps 4 and 5",
+              "correct": true
+            },
+            {
+              "text": "Steps 1 and 2",
+              "correct": false
+            },
+            {
+              "text": "Step 6 only",
+              "correct": false
+            },
+            {
+              "text": "Steps 2 and 3",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "c5aae305-45ad-46f6-938f-6ff8b732b52e",
+          "text": "What concept bridges options basics and Greek analysis?",
+          "answers": [
+            {
+              "text": "The non-linearity of options instruments",
+              "correct": true
+            },
+            {
+              "text": "The put-call parity theorem",
+              "correct": false
+            },
+            {
+              "text": "The efficient market hypothesis",
+              "correct": false
+            },
+            {
+              "text": "The Black-Scholes model",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "2e170062-3283-4721-8f46-55da12230c47",
+          "text": "Module 2 will focus on...",
+          "answers": [
+            {
+              "text": "Volatility in depth — implied vs historical, IV Rank, and the volatility surface",
+              "correct": true
+            },
+            {
+              "text": "Options on futures and commodities",
+              "correct": false
+            },
+            {
+              "text": "Earnings plays and event-driven strategies",
+              "correct": false
+            },
+            {
+              "text": "Delta hedging and market making",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "737f2df7-9709-4243-89d9-83f542fe6503",
+          "text": "Step 1 of the module introduces...",
+          "answers": [
+            {
+              "text": "What an option is: rights, obligations, buyers, sellers",
+              "correct": true
+            },
+            {
+              "text": "The full Black-Scholes formula",
+              "correct": false
+            },
+            {
+              "text": "Advanced volatility surface analysis",
+              "correct": false
+            },
+            {
+              "text": "Portfolio-level Greek management",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "045dccd5-a12d-4b3d-b076-00aba5137897",
+          "text": "Premium decomposition into intrinsic and time value is covered in...",
+          "answers": [
+            {
+              "text": "Step 3",
+              "correct": true
+            },
+            {
+              "text": "Step 1",
+              "correct": false
+            },
+            {
+              "text": "Step 5",
+              "correct": false
+            },
+            {
+              "text": "Step 6",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "63ec928b-74e3-4bb2-b023-70dd1b72442d",
+          "text": "The course begins with fundamentals and progressively covers...",
+          "answers": [
+            {
+              "text": "Pricing mechanics, then Greek sensitivities",
+              "correct": true
+            },
+            {
+              "text": "Greeks first, then basic definitions",
+              "correct": false
+            },
+            {
+              "text": "Advanced models first, then simplification",
+              "correct": false
+            },
+            {
+              "text": "Only theoretical concepts, no examples",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "1bda3124-b2db-4525-b082-bf3e6cc7e13a",
+          "text": "The overview slide is useful because...",
+          "answers": [
+            {
+              "text": "It gives students a roadmap of what they will learn and in what order",
+              "correct": true
+            },
+            {
+              "text": "It contains all the trading rules needed",
+              "correct": false
+            },
+            {
+              "text": "It replaces the need to study the other slides",
+              "correct": false
+            },
+            {
+              "text": "It explains the Black-Scholes formula visually",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 3,
+      "title": "An Option: A Right, Not an Obligation",
+      "questions": [
+        {
+          "id": "ed3c6a9c-f7ee-42e5-902f-f2d9d746e4a9",
+          "text": "What does buying an option give you?",
+          "answers": [
+            {
+              "text": "The right but not the obligation to buy or sell at a fixed price",
+              "correct": true
+            },
+            {
+              "text": "The obligation to buy or sell at market price",
+              "correct": false
+            },
+            {
+              "text": "A guaranteed profit if the underlying moves",
+              "correct": false
+            },
+            {
+              "text": "Ownership of the underlying asset",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "834eef55-283b-4e9f-980d-9799be367c7b",
+          "text": "What is the maximum loss for an option buyer?",
+          "answers": [
+            {
+              "text": "The premium paid",
+              "correct": true
+            },
+            {
+              "text": "The full value of the underlying asset",
+              "correct": false
+            },
+            {
+              "text": "The strike price minus the current market price",
+              "correct": false
+            },
+            {
+              "text": "Unlimited — options can lose more than their cost",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "736aeafe-4650-4dc6-ba22-7a978ffd98c5",
+          "text": "If an option expires worthless, what does the buyer lose?",
+          "answers": [
+            {
+              "text": "Only the premium paid — nothing more",
+              "correct": true
+            },
+            {
+              "text": "The strike price",
+              "correct": false
+            },
+            {
+              "text": "The full value of the underlying",
+              "correct": false
+            },
+            {
+              "text": "The difference between strike and market price",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "61673f49-c842-4aab-9b45-3a074da3a3f3",
+          "text": "Who pays the premium in an options contract?",
+          "answers": [
+            {
+              "text": "The buyer pays the premium to the seller",
+              "correct": true
+            },
+            {
+              "text": "The seller pays the buyer for taking risk",
+              "correct": false
+            },
+            {
+              "text": "The exchange charges both parties equally",
+              "correct": false
+            },
+            {
+              "text": "No premium is paid — only at settlement",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "bc52f9f2-90d3-44af-a0b4-afd17b2c7d90",
+          "text": "What is the 'strike price' of an option?",
+          "answers": [
+            {
+              "text": "The fixed price at which the underlying can be bought or sold",
+              "correct": true
+            },
+            {
+              "text": "The current market price of the underlying",
+              "correct": false
+            },
+            {
+              "text": "The price the option trades at on the exchange",
+              "correct": false
+            },
+            {
+              "text": "The premium paid divided by 100",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "5fa585eb-f103-4592-a156-6575066d584f",
+          "text": "What is the 'expiration date'?",
+          "answers": [
+            {
+              "text": "The date after which the option can no longer be exercised",
+              "correct": true
+            },
+            {
+              "text": "The date the premium is refunded",
+              "correct": false
+            },
+            {
+              "text": "The date the stock splits",
+              "correct": false
+            },
+            {
+              "text": "The settlement date for stock dividends",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "aefb7e2f-5984-484c-a297-33004b97de57",
+          "text": "Options are called 'asymmetric' instruments because...",
+          "answers": [
+            {
+              "text": "The buyer's max loss is capped but potential gain is unlimited",
+              "correct": true
+            },
+            {
+              "text": "They trade only in the morning session",
+              "correct": false
+            },
+            {
+              "text": "Their value changes faster than stocks",
+              "correct": false
+            },
+            {
+              "text": "They require a margin account to trade",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "14b990ac-d8a9-49e7-969e-bc827d03b68e",
+          "text": "What distinguishes an option from a futures contract?",
+          "answers": [
+            {
+              "text": "An option gives a right; a futures contract creates an obligation for both parties",
+              "correct": true
+            },
+            {
+              "text": "Futures are more expensive than options",
+              "correct": false
+            },
+            {
+              "text": "Options have no expiration date",
+              "correct": false
+            },
+            {
+              "text": "Futures cannot be used for hedging",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "db5a99b5-6365-4ae3-8ac3-350d10bc670f",
+          "text": "An option buyer's risk is limited to...",
+          "answers": [
+            {
+              "text": "The premium paid for the option",
+              "correct": true
+            },
+            {
+              "text": "The full value of the underlying",
+              "correct": false
+            },
+            {
+              "text": "50% of the underlying value",
+              "correct": false
+            },
+            {
+              "text": "The margin requirement",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "3756bafe-a621-4696-8188-109e741f8cdb",
+          "text": "Why is an option described as a 'conditional' instrument?",
+          "answers": [
+            {
+              "text": "The buyer's right only has value IF the underlying moves favorably",
+              "correct": true
+            },
+            {
+              "text": "Options are only valid in certain market conditions",
+              "correct": false
+            },
+            {
+              "text": "Options expire only if conditions are not met",
+              "correct": false
+            },
+            {
+              "text": "The seller must obtain regulatory approval",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 4,
+      "title": "Buyer vs Seller: Two Sides of the Contract",
+      "questions": [
+        {
+          "id": "d0bcdc0e-eb9e-4e3f-a559-592e80c1376a",
+          "text": "What obligation does the option SELLER have?",
+          "answers": [
+            {
+              "text": "Must fulfill the contract if the buyer chooses to exercise",
+              "correct": true
+            },
+            {
+              "text": "Must pay the buyer a daily premium",
+              "correct": false
+            },
+            {
+              "text": "Must buy the underlying at the strike price immediately",
+              "correct": false
+            },
+            {
+              "text": "Has no obligations — only the buyer has obligations",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "2269ceaf-fce5-4386-af11-3160ec231d04",
+          "text": "Who has the obligation in an options contract?",
+          "answers": [
+            {
+              "text": "The seller (writer) has the obligation to perform",
+              "correct": true
+            },
+            {
+              "text": "The buyer has the obligation",
+              "correct": false
+            },
+            {
+              "text": "Both parties have equal obligations",
+              "correct": false
+            },
+            {
+              "text": "The exchange has the obligation",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "013950cb-0844-488f-aa96-0682f1540ef3",
+          "text": "What does the option seller receive in exchange for taking on the obligation?",
+          "answers": [
+            {
+              "text": "The premium paid upfront by the buyer",
+              "correct": true
+            },
+            {
+              "text": "A share of any profits made by the buyer",
+              "correct": false
+            },
+            {
+              "text": "A guaranteed fixed return",
+              "correct": false
+            },
+            {
+              "text": "The underlying asset at expiration",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "1be51072-15d4-4472-ae79-ad6781d46196",
+          "text": "If a call option is exercised by the buyer, what must the seller do?",
+          "answers": [
+            {
+              "text": "Deliver the underlying asset at the strike price",
+              "correct": true
+            },
+            {
+              "text": "Pay cash equal to the premium",
+              "correct": false
+            },
+            {
+              "text": "Refund the premium to the buyer",
+              "correct": false
+            },
+            {
+              "text": "Buy more call options to hedge",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "8e36c6c0-a420-4dd8-9106-226c46a56c67",
+          "text": "An option seller's maximum profit is...",
+          "answers": [
+            {
+              "text": "The premium received — no more",
+              "correct": true
+            },
+            {
+              "text": "Unlimited as the stock rises",
+              "correct": false
+            },
+            {
+              "text": "The strike price minus the premium",
+              "correct": false
+            },
+            {
+              "text": "100% of the underlying's value",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "2dd04da1-7d8d-4136-812e-7092fa492c03",
+          "text": "Which party decides whether to exercise the option?",
+          "answers": [
+            {
+              "text": "The buyer — it is entirely the buyer's choice",
+              "correct": true
+            },
+            {
+              "text": "The seller decides if and when to exercise",
+              "correct": false
+            },
+            {
+              "text": "The exchange decides based on price",
+              "correct": false
+            },
+            {
+              "text": "The broker decides automatically",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "00aa605f-326e-487e-a45e-424e0751c7a9",
+          "text": "The premium flows from...",
+          "answers": [
+            {
+              "text": "Buyer to seller at the time of purchase",
+              "correct": true
+            },
+            {
+              "text": "Seller to buyer at expiration",
+              "correct": false
+            },
+            {
+              "text": "Exchange to both parties equally",
+              "correct": false
+            },
+            {
+              "text": "Buyer to exchange, then to seller at expiration",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "1307b9d4-5656-4047-affa-a02254620c92",
+          "text": "If an option expires worthless, who benefits?",
+          "answers": [
+            {
+              "text": "The seller — keeps the full premium with no further obligation",
+              "correct": true
+            },
+            {
+              "text": "The buyer — receives a partial refund",
+              "correct": false
+            },
+            {
+              "text": "Both parties break even",
+              "correct": false
+            },
+            {
+              "text": "The exchange retains the premium",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "9f48dd05-49ef-464f-91e1-2df126e81f54",
+          "text": "The seller of a call option profits most when...",
+          "answers": [
+            {
+              "text": "The underlying price stays below the strike at expiration",
+              "correct": true
+            },
+            {
+              "text": "The underlying price rises sharply",
+              "correct": false
+            },
+            {
+              "text": "IV increases dramatically",
+              "correct": false
+            },
+            {
+              "text": "The buyer exercises early",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "e6323740-05bb-4562-bfc8-f80330032251",
+          "text": "The seller's risk profile compared to the buyer's is...",
+          "answers": [
+            {
+              "text": "Opposite — seller has limited profit (premium) and large/unlimited risk",
+              "correct": true
+            },
+            {
+              "text": "Identical — both have the same risk",
+              "correct": false
+            },
+            {
+              "text": "The seller has no risk; only the buyer is at risk",
+              "correct": false
+            },
+            {
+              "text": "The seller has lower risk because they receive premium",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 5,
+      "title": "Why Options Exist",
+      "questions": [
+        {
+          "id": "a664832e-de04-4bc5-9185-4adafda9e9c2",
+          "text": "Options were originally created for...",
+          "answers": [
+            {
+              "text": "Hedging and risk management purposes",
+              "correct": true
+            },
+            {
+              "text": "Pure speculation on price movements",
+              "correct": false
+            },
+            {
+              "text": "Generating arbitrage profits for banks",
+              "correct": false
+            },
+            {
+              "text": "Replacing stock ownership",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "db9ba6bd-418a-4407-a01e-628d6bc8c38b",
+          "text": "In the wheat farmer example, the farmer buys a Put to...",
+          "answers": [
+            {
+              "text": "Lock in a minimum selling price for the harvest",
+              "correct": true
+            },
+            {
+              "text": "Profit if wheat prices rise",
+              "correct": false
+            },
+            {
+              "text": "Receive dividend income from wheat",
+              "correct": false
+            },
+            {
+              "text": "Avoid paying taxes on the harvest",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "a1b92adb-0437-43a1-a0e8-e4887d9c3222",
+          "text": "If wheat prices rise above the strike, what does the hedging farmer do?",
+          "answers": [
+            {
+              "text": "Sells wheat at market price and lets the Put expire worthless",
+              "correct": true
+            },
+            {
+              "text": "Exercises the Put to sell at the higher price",
+              "correct": false
+            },
+            {
+              "text": "Rolls the Put to a higher strike",
+              "correct": false
+            },
+            {
+              "text": "Buys a Call to offset the Put",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "ee4f040f-7f54-4835-986d-1f411a8cdebb",
+          "text": "Options function similarly to...",
+          "answers": [
+            {
+              "text": "Insurance — you pay a premium for protection against adverse outcomes",
+              "correct": true
+            },
+            {
+              "text": "A savings account with fixed interest",
+              "correct": false
+            },
+            {
+              "text": "A guaranteed profit strategy",
+              "correct": false
+            },
+            {
+              "text": "A leveraged stock purchase",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "d03ce01a-7682-48fe-9f48-ce5a868495fc",
+          "text": "What is 'hedging' in the context of options?",
+          "answers": [
+            {
+              "text": "Using options to reduce or offset the risk of adverse price movements",
+              "correct": true
+            },
+            {
+              "text": "Betting on future price movements for profit",
+              "correct": false
+            },
+            {
+              "text": "Selling options to generate income",
+              "correct": false
+            },
+            {
+              "text": "Buying both calls and puts simultaneously",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "cca0ba94-e095-4918-889c-d78050eff800",
+          "text": "The wheat farmer's maximum cost of protection is...",
+          "answers": [
+            {
+              "text": "The premium paid for the Put option",
+              "correct": true
+            },
+            {
+              "text": "The strike price of the Put",
+              "correct": false
+            },
+            {
+              "text": "The difference between market price and strike",
+              "correct": false
+            },
+            {
+              "text": "Unlimited if wheat prices fall",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "e0f211e4-f8bc-43f1-8798-31455bcce8e0",
+          "text": "What happens when the Put 'insurance' is not needed (wheat prices rise)?",
+          "answers": [
+            {
+              "text": "The farmer loses only the premium — like an unused insurance policy",
+              "correct": true
+            },
+            {
+              "text": "The farmer must pay the seller a penalty",
+              "correct": false
+            },
+            {
+              "text": "The broker refunds half the premium",
+              "correct": false
+            },
+            {
+              "text": "The Put automatically converts to a Call",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "acaf6c15-fb03-4f79-bc0e-4d20dcb05287",
+          "text": "Options allow investors to...",
+          "answers": [
+            {
+              "text": "Define their maximum loss before entering a position",
+              "correct": true
+            },
+            {
+              "text": "Guarantee a profit on every trade",
+              "correct": false
+            },
+            {
+              "text": "Avoid all market risk entirely",
+              "correct": false
+            },
+            {
+              "text": "Trade without a brokerage account",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "9da3a249-7edf-4d92-b699-188748c94df7",
+          "text": "A market maker's primary role is to...",
+          "answers": [
+            {
+              "text": "Provide liquidity by continuously quoting bid and ask prices",
+              "correct": true
+            },
+            {
+              "text": "Manipulate prices for profit",
+              "correct": false
+            },
+            {
+              "text": "Regulate options markets",
+              "correct": false
+            },
+            {
+              "text": "Only sell options, never buy them",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "47b10ac5-eff1-461d-a035-c17f68619a34",
+          "text": "The key difference between an option hedge and owning the underlying directly is...",
+          "answers": [
+            {
+              "text": "The option limits downside to the premium while preserving full upside participation",
+              "correct": true
+            },
+            {
+              "text": "Options always cost more than the underlying",
+              "correct": false
+            },
+            {
+              "text": "Options provide no protection against loss",
+              "correct": false
+            },
+            {
+              "text": "Options eliminate all market risk",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 6,
+      "title": "The Structural Advantage: Defined Risk",
+      "questions": [
+        {
+          "id": "a080b22e-fc71-460f-b604-1255d8140fa8",
+          "text": "What is the primary structural advantage of buying options vs stocks?",
+          "answers": [
+            {
+              "text": "Maximum loss is defined and limited to the premium paid",
+              "correct": true
+            },
+            {
+              "text": "Options always outperform stocks",
+              "correct": false
+            },
+            {
+              "text": "Options pay dividends",
+              "correct": false
+            },
+            {
+              "text": "Options have no transaction costs",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "6894a6b2-1832-4222-8521-b274f378c6ea",
+          "text": "'Leverage' in options means...",
+          "answers": [
+            {
+              "text": "Controlling 100 shares with a fraction of the capital required to own them",
+              "correct": true
+            },
+            {
+              "text": "Borrowing money to buy stocks",
+              "correct": false
+            },
+            {
+              "text": "Doubling your position size",
+              "correct": false
+            },
+            {
+              "text": "Using margin to trade options",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "b0bbaadb-315a-415d-9fa6-c17b977b4248",
+          "text": "One standard options contract controls how many shares?",
+          "answers": [
+            {
+              "text": "100 shares",
+              "correct": true
+            },
+            {
+              "text": "10 shares",
+              "correct": false
+            },
+            {
+              "text": "1,000 shares",
+              "correct": false
+            },
+            {
+              "text": "50 shares",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "7a32238a-688e-49a0-8501-a6770f51ee2a",
+          "text": "If a stock falls to zero and you own a call option, your loss is...",
+          "answers": [
+            {
+              "text": "Limited to the premium paid for the option",
+              "correct": true
+            },
+            {
+              "text": "Equal to the strike price",
+              "correct": false
+            },
+            {
+              "text": "Equal to the stock's market value",
+              "correct": false
+            },
+            {
+              "text": "Unlimited",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "38365d7e-a87e-4232-8850-64649188debc",
+          "text": "'Capital efficiency' in options refers to...",
+          "answers": [
+            {
+              "text": "Achieving similar directional exposure while deploying less capital",
+              "correct": true
+            },
+            {
+              "text": "Finding the cheapest broker commissions",
+              "correct": false
+            },
+            {
+              "text": "Reducing premium costs through negotiation",
+              "correct": false
+            },
+            {
+              "text": "Trading only liquid options with tight spreads",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "3e8d071a-f825-4bfd-9a05-9b684ab826e7",
+          "text": "The 'asymmetry' of options means...",
+          "answers": [
+            {
+              "text": "Capped downside (premium) with potentially large upside for buyers",
+              "correct": true
+            },
+            {
+              "text": "Both buyer and seller have the same risk",
+              "correct": false
+            },
+            {
+              "text": "Options always gain value over time",
+              "correct": false
+            },
+            {
+              "text": "The premium grows with the underlying",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "5ae25a14-c07d-4a6d-acdd-cb723ad10549",
+          "text": "Compared to owning stock, buying a call option provides...",
+          "answers": [
+            {
+              "text": "Similar directional upside with significantly less capital at risk",
+              "correct": true
+            },
+            {
+              "text": "Higher dividends",
+              "correct": false
+            },
+            {
+              "text": "Zero time decay",
+              "correct": false
+            },
+            {
+              "text": "Better voting rights",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "77be6da8-3c1b-4088-95a4-bf20a6d6b359",
+          "text": "You know your maximum loss on an options position...",
+          "answers": [
+            {
+              "text": "Before you enter the trade",
+              "correct": true
+            },
+            {
+              "text": "Only after the option expires",
+              "correct": false
+            },
+            {
+              "text": "Only if you exercise the option",
+              "correct": false
+            },
+            {
+              "text": "At the end of the trading day",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "ae742a5e-4152-49a0-8d8d-045f55faf564",
+          "text": "Which is NOT an advantage of buying options vs owning the stock?",
+          "answers": [
+            {
+              "text": "Options positions always appreciate faster than equivalent stock positions",
+              "correct": true
+            },
+            {
+              "text": "Defined maximum loss",
+              "correct": false
+            },
+            {
+              "text": "Capital efficiency",
+              "correct": false
+            },
+            {
+              "text": "Asymmetric payoff",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "f7685068-70c3-41d1-8ff2-f477b8db822c",
+          "text": "Tesla stock at $250: 100 shares costs $25,000. A call option (premium $8) controls 100 shares for...",
+          "answers": [
+            {
+              "text": "$800 — with the same directional exposure",
+              "correct": true
+            },
+            {
+              "text": "$2,500",
+              "correct": false
+            },
+            {
+              "text": "$25,000",
+              "correct": false
+            },
+            {
+              "text": "$250",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 7,
+      "title": "Exchange-Traded vs OTC Options",
+      "questions": [
+        {
+          "id": "e9965819-6007-4d2e-bd23-a964770ef860",
+          "text": "What does 'exchange-traded' mean for options?",
+          "answers": [
+            {
+              "text": "Options listed and traded on a regulated exchange with standardized contracts",
+              "correct": true
+            },
+            {
+              "text": "Options traded exclusively on the internet",
+              "correct": false
+            },
+            {
+              "text": "Options that can only be bought, not sold",
+              "correct": false
+            },
+            {
+              "text": "Options with no expiration date",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "e30f61c6-db58-43e1-990d-55386640df8b",
+          "text": "The CBOE is known for...",
+          "answers": [
+            {
+              "text": "Being the world's largest options exchange",
+              "correct": true
+            },
+            {
+              "text": "Trading only European-style options",
+              "correct": false
+            },
+            {
+              "text": "Exclusively listing index options",
+              "correct": false
+            },
+            {
+              "text": "Being a government-regulated monopoly",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "90e35faf-d8c3-4445-a777-f4c522487004",
+          "text": "OTC options differ from exchange-traded options because...",
+          "answers": [
+            {
+              "text": "OTC options are customized contracts negotiated directly between parties",
+              "correct": true
+            },
+            {
+              "text": "OTC options are cheaper",
+              "correct": false
+            },
+            {
+              "text": "OTC options have no premium",
+              "correct": false
+            },
+            {
+              "text": "OTC options are only for retail investors",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "1046078c-9177-4ae4-8427-3795ba6b81c9",
+          "text": "Which risk is specific to OTC options but NOT exchange-traded options?",
+          "answers": [
+            {
+              "text": "Counterparty risk — the other party may default",
+              "correct": true
+            },
+            {
+              "text": "Price risk",
+              "correct": false
+            },
+            {
+              "text": "Liquidity risk in a bull market",
+              "correct": false
+            },
+            {
+              "text": "Regulatory risk from the SEC",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "ac7ea6bd-8138-4791-b17a-9e7c44d6cb6f",
+          "text": "The Options Clearing Corporation (OCC) acts as...",
+          "answers": [
+            {
+              "text": "The central counterparty guaranteeing all exchange-traded options",
+              "correct": true
+            },
+            {
+              "text": "A government agency regulating premiums",
+              "correct": false
+            },
+            {
+              "text": "A market maker for all options",
+              "correct": false
+            },
+            {
+              "text": "The broker between retail investors",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "3f148f47-fb04-44da-b4c1-678cc3b9e78c",
+          "text": "Which type of options would a large institution use to hedge a unique non-standard position?",
+          "answers": [
+            {
+              "text": "OTC options with customized strike prices and expiration dates",
+              "correct": true
+            },
+            {
+              "text": "Exchange-traded weekly options",
+              "correct": false
+            },
+            {
+              "text": "ATM index options",
+              "correct": false
+            },
+            {
+              "text": "LEAPS on the S&P 500",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "d80babcb-9fe5-4703-be86-3af3d66d1393",
+          "text": "Retail investors typically use...",
+          "answers": [
+            {
+              "text": "Exchange-traded options with standardized contracts",
+              "correct": true
+            },
+            {
+              "text": "OTC options for better pricing",
+              "correct": false
+            },
+            {
+              "text": "Exotic OTC derivatives",
+              "correct": false
+            },
+            {
+              "text": "Only European-style index options",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "31b7ac0b-689b-48f4-85a1-a25038b57477",
+          "text": "'Open interest' in exchange-traded options represents...",
+          "answers": [
+            {
+              "text": "The total number of outstanding contracts not yet settled",
+              "correct": true
+            },
+            {
+              "text": "The daily trading volume",
+              "correct": false
+            },
+            {
+              "text": "The number of available strike prices",
+              "correct": false
+            },
+            {
+              "text": "The total premium paid today",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "ae471a18-c3a4-4182-bc14-5a337e7e0b07",
+          "text": "Standardization in exchange-traded options means...",
+          "answers": [
+            {
+              "text": "Strike prices, expiration dates, and contract sizes are predefined",
+              "correct": true
+            },
+            {
+              "text": "All options have the same premium",
+              "correct": false
+            },
+            {
+              "text": "All options expire on the same date",
+              "correct": false
+            },
+            {
+              "text": "Only one strike per underlying is listed",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "ee6f5282-1006-49d1-bb29-9a6cb666369c",
+          "text": "Exchange-traded options benefit from...",
+          "answers": [
+            {
+              "text": "Standardized contracts, central clearing, and high liquidity",
+              "correct": true
+            },
+            {
+              "text": "Custom expiration dates and strikes",
+              "correct": false
+            },
+            {
+              "text": "No counterparty risk AND higher flexibility",
+              "correct": false
+            },
+            {
+              "text": "Lower premiums than OTC contracts",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 8,
+      "title": "The Call: Right to Buy",
+      "questions": [
+        {
+          "id": "c8f0665f-543c-4d18-9895-23380a6f1764",
+          "text": "A Call option gives the buyer the right to...",
+          "answers": [
+            {
+              "text": "Buy the underlying asset at the strike price before or at expiration",
+              "correct": true
+            },
+            {
+              "text": "Sell the underlying at the strike price",
+              "correct": false
+            },
+            {
+              "text": "Receive the difference between market and strike price in cash",
+              "correct": false
+            },
+            {
+              "text": "Force the seller to buy shares",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "e0977df0-5529-4736-941c-5edb39bf0114",
+          "text": "The breakeven price for a call option buyer is...",
+          "answers": [
+            {
+              "text": "Strike price + premium paid",
+              "correct": true
+            },
+            {
+              "text": "Strike price − premium paid",
+              "correct": false
+            },
+            {
+              "text": "Premium paid × 100",
+              "correct": false
+            },
+            {
+              "text": "Strike price only",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "c3c699b3-3599-4dcf-ae42-03d2ed753195",
+          "text": "Gold is at $2,000. You buy a call with strike $2,000, premium $50. Your breakeven is...",
+          "answers": [
+            {
+              "text": "$2,050",
+              "correct": true
+            },
+            {
+              "text": "$1,950",
+              "correct": false
+            },
+            {
+              "text": "$2,000",
+              "correct": false
+            },
+            {
+              "text": "$2,100",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "836b888a-9b29-4ef7-9261-11403091c9f8",
+          "text": "Maximum loss for a call option buyer is...",
+          "answers": [
+            {
+              "text": "The premium paid — regardless of how far the stock falls",
+              "correct": true
+            },
+            {
+              "text": "The strike price",
+              "correct": false
+            },
+            {
+              "text": "The difference between market and strike",
+              "correct": false
+            },
+            {
+              "text": "Unlimited",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "84facb86-6c16-47ac-9259-0bf4087b3ee1",
+          "text": "A call option is profitable at expiration when...",
+          "answers": [
+            {
+              "text": "The underlying price exceeds the strike price plus the premium paid",
+              "correct": true
+            },
+            {
+              "text": "The underlying price exceeds the strike price only",
+              "correct": false
+            },
+            {
+              "text": "The underlying price is below the strike",
+              "correct": false
+            },
+            {
+              "text": "The option has not been exercised",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "fb544766-22bb-4587-b3ba-3cc209235804",
+          "text": "The maximum gain on a long call is...",
+          "answers": [
+            {
+              "text": "Theoretically unlimited as the underlying price rises",
+              "correct": true
+            },
+            {
+              "text": "The premium received",
+              "correct": false
+            },
+            {
+              "text": "The strike price",
+              "correct": false
+            },
+            {
+              "text": "The difference between two strikes",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "f45b726d-f742-413f-95ba-694cd4322991",
+          "text": "If the underlying price stays below the strike at expiration, the call...",
+          "answers": [
+            {
+              "text": "Expires worthless and the buyer loses the full premium",
+              "correct": true
+            },
+            {
+              "text": "Is automatically exercised at a loss",
+              "correct": false
+            },
+            {
+              "text": "Is rolled to the next month",
+              "correct": false
+            },
+            {
+              "text": "Converts to a put option",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "b3661a20-de5e-4846-b2cf-1d2d5ffefa2a",
+          "text": "Buying a call option is a strategy used when you expect...",
+          "answers": [
+            {
+              "text": "The underlying price to rise",
+              "correct": true
+            },
+            {
+              "text": "The underlying price to fall",
+              "correct": false
+            },
+            {
+              "text": "IV to collapse",
+              "correct": false
+            },
+            {
+              "text": "The underlying to stay flat",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "282e7be8-1176-418d-a8c3-531831ab8150",
+          "text": "Gold Call strike $2,000, premium $50. Gold expires at $2,300. Profit per ounce is...",
+          "answers": [
+            {
+              "text": "$250 ($2,300 − $2,000 − $50)",
+              "correct": true
+            },
+            {
+              "text": "$300",
+              "correct": false
+            },
+            {
+              "text": "$200",
+              "correct": false
+            },
+            {
+              "text": "$350",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "117c2d90-485b-478b-9f43-79195feb1a39",
+          "text": "If a call option expires exactly at-the-money (underlying = strike price), the buyer...",
+          "answers": [
+            {
+              "text": "Loses the full premium paid (no intrinsic value)",
+              "correct": true
+            },
+            {
+              "text": "Breaks even",
+              "correct": false
+            },
+            {
+              "text": "Receives the premium back",
+              "correct": false
+            },
+            {
+              "text": "Profits by exercising",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 9,
+      "title": "The Put: Right to Sell",
+      "questions": [
+        {
+          "id": "c2d52568-5d83-4ca9-bbec-7573b4377fe7",
+          "text": "A Put option gives the buyer the right to...",
+          "answers": [
+            {
+              "text": "Sell the underlying asset at the strike price before or at expiration",
+              "correct": true
+            },
+            {
+              "text": "Buy the underlying at the strike price",
+              "correct": false
+            },
+            {
+              "text": "Receive premium if the stock rises",
+              "correct": false
+            },
+            {
+              "text": "Force the seller to sell shares",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "612e03be-de7f-43bf-8b92-ca5d38a1c270",
+          "text": "The breakeven for a put option buyer is...",
+          "answers": [
+            {
+              "text": "Strike price minus the premium paid",
+              "correct": true
+            },
+            {
+              "text": "Strike price plus the premium paid",
+              "correct": false
+            },
+            {
+              "text": "Premium paid only",
+              "correct": false
+            },
+            {
+              "text": "Strike price divided by 2",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "d464aff3-7fd3-4b57-8341-1eab479659a9",
+          "text": "Buying a put option is primarily useful for...",
+          "answers": [
+            {
+              "text": "Bearish speculation OR hedging an existing long position",
+              "correct": true
+            },
+            {
+              "text": "Bullish speculation on rising prices",
+              "correct": false
+            },
+            {
+              "text": "Generating dividend income",
+              "correct": false
+            },
+            {
+              "text": "Avoiding stock market risk entirely",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "52313c6f-d52e-409d-8f9d-6f1ec265d5da",
+          "text": "Wheat at $5/bushel. Put strike $5, premium $0.30. Effective minimum selling price if Put is exercised?",
+          "answers": [
+            {
+              "text": "$4.70 ($5.00 strike − $0.30 premium)",
+              "correct": true
+            },
+            {
+              "text": "$5.30",
+              "correct": false
+            },
+            {
+              "text": "$5.00",
+              "correct": false
+            },
+            {
+              "text": "$4.40",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "c7b4370b-5641-40a5-91f8-32a3a269d8fa",
+          "text": "Maximum loss for a put option buyer is...",
+          "answers": [
+            {
+              "text": "The premium paid",
+              "correct": true
+            },
+            {
+              "text": "The strike price",
+              "correct": false
+            },
+            {
+              "text": "The full market value of the underlying",
+              "correct": false
+            },
+            {
+              "text": "Unlimited",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "519328a6-3df7-49ea-bb78-2b0e99d3b4ce",
+          "text": "Maximum gain on a long put is approximately...",
+          "answers": [
+            {
+              "text": "Strike price minus premium (if the underlying falls to zero)",
+              "correct": true
+            },
+            {
+              "text": "Unlimited — the stock can fall indefinitely",
+              "correct": false
+            },
+            {
+              "text": "The premium received",
+              "correct": false
+            },
+            {
+              "text": "Strike price times 100",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "a9f06f84-b8d4-4205-9b1f-d9e18cc7b735",
+          "text": "A put option is most valuable when...",
+          "answers": [
+            {
+              "text": "The underlying price falls significantly below the strike price",
+              "correct": true
+            },
+            {
+              "text": "The underlying price rises above the strike",
+              "correct": false
+            },
+            {
+              "text": "IV collapses after earnings",
+              "correct": false
+            },
+            {
+              "text": "The option approaches expiration with stock above strike",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "7053f727-d5b6-4538-aa6a-02b6a6fb48fb",
+          "text": "If a stock rises significantly after you buy a put, you will likely...",
+          "answers": [
+            {
+              "text": "Let the put expire worthless and lose only the premium paid",
+              "correct": true
+            },
+            {
+              "text": "Exercise the put at a profit",
+              "correct": false
+            },
+            {
+              "text": "Receive compensation from the seller",
+              "correct": false
+            },
+            {
+              "text": "Sell the put for more than you paid",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "8a4f2971-7cd4-4a15-b34f-648fa7e2f20a",
+          "text": "Puts are used as 'portfolio insurance' because...",
+          "answers": [
+            {
+              "text": "They increase in value when the underlying asset falls, offsetting stock losses",
+              "correct": true
+            },
+            {
+              "text": "They guarantee a return on the portfolio",
+              "correct": false
+            },
+            {
+              "text": "They eliminate all downside risk for free",
+              "correct": false
+            },
+            {
+              "text": "They pay dividends equal to the premium",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "5b5bf836-2303-4e9e-94f7-0a62f32e2c6d",
+          "text": "Put strike $100, premium $5. Stock goes to $0 at expiration. Profit per share is...",
+          "answers": [
+            {
+              "text": "$95 ($100 strike − $5 premium)",
+              "correct": true
+            },
+            {
+              "text": "$100",
+              "correct": false
+            },
+            {
+              "text": "$5",
+              "correct": false
+            },
+            {
+              "text": "$105",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 10,
+      "title": "European vs American Exercise Style",
+      "questions": [
+        {
+          "id": "11113b12-2491-4422-b70c-0365b937de80",
+          "text": "American-style options can be exercised...",
+          "answers": [
+            {
+              "text": "Any time up to and including the expiration date",
+              "correct": true
+            },
+            {
+              "text": "Only at expiration",
+              "correct": false
+            },
+            {
+              "text": "Only in the first week after purchase",
+              "correct": false
+            },
+            {
+              "text": "Only by institutional investors",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "d5990c5d-2a20-4694-a5db-72358e3c88d8",
+          "text": "European-style options can be exercised...",
+          "answers": [
+            {
+              "text": "Only at expiration — not before",
+              "correct": true
+            },
+            {
+              "text": "Any time during the contract",
+              "correct": false
+            },
+            {
+              "text": "Only after 30 days",
+              "correct": false
+            },
+            {
+              "text": "Twice — at midpoint and at expiration",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "54d5b56d-90cf-4056-8016-889ca2c5cd92",
+          "text": "SPX (S&P 500 index options) are typically...",
+          "answers": [
+            {
+              "text": "European-style",
+              "correct": true
+            },
+            {
+              "text": "American-style",
+              "correct": false
+            },
+            {
+              "text": "Both styles depending on the broker",
+              "correct": false
+            },
+            {
+              "text": "Neither — they use a separate system",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "de89cadd-031e-4053-84f3-a9c61a0139f4",
+          "text": "Options on individual stocks (Apple, Tesla, etc.) are typically...",
+          "answers": [
+            {
+              "text": "American-style",
+              "correct": true
+            },
+            {
+              "text": "European-style",
+              "correct": false
+            },
+            {
+              "text": "Asian-style",
+              "correct": false
+            },
+            {
+              "text": "Bermudan-style",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "119d1592-8a93-4cdb-a967-7b83b86cca65",
+          "text": "Why is early exercise of an American option almost never optimal?",
+          "answers": [
+            {
+              "text": "Selling in the market recovers both intrinsic value AND remaining time value; exercising only gets intrinsic",
+              "correct": true
+            },
+            {
+              "text": "Early exercise triggers a tax penalty",
+              "correct": false
+            },
+            {
+              "text": "The broker charges an extra fee for early exercise",
+              "correct": false
+            },
+            {
+              "text": "The seller can refuse early exercise",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "92664310-9d74-4c1c-b56c-e947b5c4a250",
+          "text": "If you exercise an option early, you forfeit...",
+          "answers": [
+            {
+              "text": "The remaining time value of the option",
+              "correct": true
+            },
+            {
+              "text": "The intrinsic value",
+              "correct": false
+            },
+            {
+              "text": "The premium originally paid",
+              "correct": false
+            },
+            {
+              "text": "Nothing — early exercise is always equivalent",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "718c2ff1-451f-4cfe-bb3e-90a9fa6e7896",
+          "text": "The terms 'European' and 'American' in options refer to...",
+          "answers": [
+            {
+              "text": "The exercise rule, NOT the geographic location of trading",
+              "correct": true
+            },
+            {
+              "text": "The currency in which premiums are paid",
+              "correct": false
+            },
+            {
+              "text": "The exchange where options are listed",
+              "correct": false
+            },
+            {
+              "text": "The type of underlying asset",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "fa9d0269-6c11-4654-91b1-a9a1b80e5336",
+          "text": "LEAPS on individual stocks are...",
+          "answers": [
+            {
+              "text": "American-style — exercisable any time before expiration",
+              "correct": true
+            },
+            {
+              "text": "European-style only",
+              "correct": false
+            },
+            {
+              "text": "Cash-settled like SPX options",
+              "correct": false
+            },
+            {
+              "text": "Not exercisable — only cash settled",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "7cb0a65c-263a-4427-a349-13cb49de9f6c",
+          "text": "The best action for a profitable in-the-money option before expiration is usually...",
+          "answers": [
+            {
+              "text": "Sell the option in the market to capture both intrinsic and time value",
+              "correct": true
+            },
+            {
+              "text": "Exercise immediately to lock in profit",
+              "correct": false
+            },
+            {
+              "text": "Hold until expiration to maximize value",
+              "correct": false
+            },
+            {
+              "text": "Convert it to a put",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "91f736b9-a867-43ff-92ef-456db0cd7c10",
+          "text": "Why would an investor choose to sell rather than exercise a long call option?",
+          "answers": [
+            {
+              "text": "Selling recovers the time value premium that would be lost by exercising",
+              "correct": true
+            },
+            {
+              "text": "Sellers always get better prices",
+              "correct": false
+            },
+            {
+              "text": "The IRS requires selling not exercising",
+              "correct": false
+            },
+            {
+              "text": "Exercising incurs a fee that selling avoids",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 11,
+      "title": "Payoff at Expiration: Long Call",
+      "questions": [
+        {
+          "id": "f90bba1e-c3b9-48ec-b644-d0ee898c3744",
+          "text": "A long call's payoff at expiration when the underlying is below the strike is...",
+          "answers": [
+            {
+              "text": "Zero (option expires worthless) — the buyer's net loss is the premium",
+              "correct": true
+            },
+            {
+              "text": "Equal to the strike price",
+              "correct": false
+            },
+            {
+              "text": "Equal to the underlying price",
+              "correct": false
+            },
+            {
+              "text": "Negative and equal to the difference",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "c0990540-7a76-4cf1-a0e9-6561e46238ef",
+          "text": "Call strike $100, premium $5. Stock at $80 at expiration. Net P&L?",
+          "answers": [
+            {
+              "text": "−$5 (lose the full premium; option expires worthless)",
+              "correct": true
+            },
+            {
+              "text": "−$20",
+              "correct": false
+            },
+            {
+              "text": "−$25",
+              "correct": false
+            },
+            {
+              "text": "$0",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "b68049e9-ed07-4acb-aac9-3f5c4df7d7db",
+          "text": "Call strike $100, premium $5. Stock at $115 at expiration. Net profit per share?",
+          "answers": [
+            {
+              "text": "+$10 ($115 − $100 − $5)",
+              "correct": true
+            },
+            {
+              "text": "+$15",
+              "correct": false
+            },
+            {
+              "text": "−$5",
+              "correct": false
+            },
+            {
+              "text": "$5",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "40d88308-5814-438d-990c-86b592056e10",
+          "text": "The 'hockey stick' payoff shape refers to...",
+          "answers": [
+            {
+              "text": "Flat loss below the strike, then linearly increasing profit above the breakeven",
+              "correct": true
+            },
+            {
+              "text": "Exponential growth above the strike",
+              "correct": false
+            },
+            {
+              "text": "A curved loss below and above the strike",
+              "correct": false
+            },
+            {
+              "text": "V-shaped profit centered at the strike",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "2ae0f1b9-6265-4063-bffb-e9244a23f598",
+          "text": "For a long call (strike $100, premium $5), what stock price gives exactly breakeven?",
+          "answers": [
+            {
+              "text": "$105 (strike + premium)",
+              "correct": true
+            },
+            {
+              "text": "$95",
+              "correct": false
+            },
+            {
+              "text": "$100",
+              "correct": false
+            },
+            {
+              "text": "$110",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "b02e5308-3d18-453a-8f97-44609c459a62",
+          "text": "Above the breakeven price, each $1 rise in the underlying adds approximately...",
+          "answers": [
+            {
+              "text": "$1 in profit per share (when Delta approaches 1.0 at expiration)",
+              "correct": true
+            },
+            {
+              "text": "$0.50 in profit",
+              "correct": false
+            },
+            {
+              "text": "$2 in profit",
+              "correct": false
+            },
+            {
+              "text": "The premium amount in profit",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "08a02d76-3dd5-47ba-822f-c41ce895a799",
+          "text": "Call strike $100, premium $5, stock at $150 at expiration. Profit per share?",
+          "answers": [
+            {
+              "text": "$45 ($150 − $100 − $5)",
+              "correct": true
+            },
+            {
+              "text": "$50",
+              "correct": false
+            },
+            {
+              "text": "$40",
+              "correct": false
+            },
+            {
+              "text": "$55",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "e6be25ee-8639-4450-ac19-4f906b90fe58",
+          "text": "The maximum loss on a long call always equals...",
+          "answers": [
+            {
+              "text": "The premium paid — regardless of how far the stock falls",
+              "correct": true
+            },
+            {
+              "text": "The strike price",
+              "correct": false
+            },
+            {
+              "text": "The underlying's full market value",
+              "correct": false
+            },
+            {
+              "text": "The difference between market and strike",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "d1a2ff3a-2304-4fdf-afaa-1c17ae6a6da2",
+          "text": "A long call position benefits from...",
+          "answers": [
+            {
+              "text": "Rising underlying price and/or rising implied volatility",
+              "correct": true
+            },
+            {
+              "text": "Falling underlying price",
+              "correct": false
+            },
+            {
+              "text": "Time passing with no price movement",
+              "correct": false
+            },
+            {
+              "text": "Falling interest rates",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "c187c8f6-d873-4cc6-91de-f520f51bcf24",
+          "text": "Call strike $100, premium $5, 2 contracts. Stock expires at $120. Total profit?",
+          "answers": [
+            {
+              "text": "$3,000 [(120−100−5) × 200 shares]",
+              "correct": true
+            },
+            {
+              "text": "$1,500",
+              "correct": false
+            },
+            {
+              "text": "$2,000",
+              "correct": false
+            },
+            {
+              "text": "$4,000",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 12,
+      "title": "Structural Advantage vs Owning Stock",
+      "questions": [
+        {
+          "id": "12caf5b7-c072-4079-b87d-6e8e44a3806f",
+          "text": "Tesla at $250. Buying 100 shares requires capital of...",
+          "answers": [
+            {
+              "text": "$25,000",
+              "correct": true
+            },
+            {
+              "text": "$2,500",
+              "correct": false
+            },
+            {
+              "text": "$250",
+              "correct": false
+            },
+            {
+              "text": "$250,000",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "c038825c-ba95-4550-8ae2-7c8cc8180fc8",
+          "text": "A Tesla call (strike $270, premium $8): maximum loss per contract is...",
+          "answers": [
+            {
+              "text": "$800 (8 × 100 shares)",
+              "correct": true
+            },
+            {
+              "text": "$27,000",
+              "correct": false
+            },
+            {
+              "text": "$8",
+              "correct": false
+            },
+            {
+              "text": "$2,700",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "3d670456-a0e8-4aa6-8ba8-78170d0fc79b",
+          "text": "If Tesla rises from $250 to $350, which position uses less capital for similar P&L direction?",
+          "answers": [
+            {
+              "text": "The call option — similar directional gain but ~30x less capital at risk",
+              "correct": true
+            },
+            {
+              "text": "100 shares of stock — same capital, better gain",
+              "correct": false
+            },
+            {
+              "text": "Both positions require the same capital",
+              "correct": false
+            },
+            {
+              "text": "The option always outperforms the stock",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "2a29dadd-744d-4550-8691-16e0464cd376",
+          "text": "'Defined risk' means the option buyer...",
+          "answers": [
+            {
+              "text": "Knows the exact maximum loss before entering the trade",
+              "correct": true
+            },
+            {
+              "text": "Cannot lose any money",
+              "correct": false
+            },
+            {
+              "text": "Has a guaranteed minimum return",
+              "correct": false
+            },
+            {
+              "text": "Is protected by the exchange",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "d8ae1608-b433-40ee-be56-14a180f0f279",
+          "text": "Options provide leverage because...",
+          "answers": [
+            {
+              "text": "You control 100 shares while risking only the premium paid",
+              "correct": true
+            },
+            {
+              "text": "Options grow faster than stocks in all conditions",
+              "correct": false
+            },
+            {
+              "text": "Brokers lend money for free to options buyers",
+              "correct": false
+            },
+            {
+              "text": "Options don't require a margin account",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "22fda75b-c177-4a4b-84f4-3ed4396cb7b5",
+          "text": "If a stock goes to zero and you own a call option, you lose...",
+          "answers": [
+            {
+              "text": "Only the premium paid — not the full stock value",
+              "correct": true
+            },
+            {
+              "text": "The full strike price",
+              "correct": false
+            },
+            {
+              "text": "Both the premium and the stock value",
+              "correct": false
+            },
+            {
+              "text": "Nothing — the exchange covers the loss",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "453a36b2-53ed-4a56-89f4-50fc72caa733",
+          "text": "The main advantage of options over stock for a directional bet is...",
+          "answers": [
+            {
+              "text": "Capital efficiency — similar exposure with significantly less capital at risk",
+              "correct": true
+            },
+            {
+              "text": "Dividend collection",
+              "correct": false
+            },
+            {
+              "text": "Voting rights at shareholder meetings",
+              "correct": false
+            },
+            {
+              "text": "Guaranteed profit if the stock moves",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "2e51b201-e10f-4f86-926f-2394dc9a6327",
+          "text": "'Asymmetric return' for an option buyer means...",
+          "answers": [
+            {
+              "text": "The loss is limited to the premium; the potential gain is much larger",
+              "correct": true
+            },
+            {
+              "text": "The gain equals the loss in all scenarios",
+              "correct": false
+            },
+            {
+              "text": "Returns are symmetric around the strike",
+              "correct": false
+            },
+            {
+              "text": "The option pays twice the stock return",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "ca529b99-02fe-496b-9cb8-711aecb1ff36",
+          "text": "Tesla call (premium $8/share, 1 contract). Tesla rises to $350 from $250 strike $270. Intrinsic at expiry?",
+          "answers": [
+            {
+              "text": "$80 per share ($350 − $270)",
+              "correct": true
+            },
+            {
+              "text": "$100",
+              "correct": false
+            },
+            {
+              "text": "$8",
+              "correct": false
+            },
+            {
+              "text": "$30",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "b624942c-35e1-44ab-b70b-dfa31e41ebfb",
+          "text": "Which statement about buying options vs buying stocks is TRUE?",
+          "answers": [
+            {
+              "text": "Options have a defined maximum loss equal to the premium; stocks can lose their full value",
+              "correct": true
+            },
+            {
+              "text": "Options always outperform stocks",
+              "correct": false
+            },
+            {
+              "text": "Stocks have lower risk than options in all scenarios",
+              "correct": false
+            },
+            {
+              "text": "Options pay dividends like stocks",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 13,
+      "title": "Premium = Intrinsic Value + Time Value",
+      "questions": [
+        {
+          "id": "a98995f9-fc21-48b5-a322-bf8e9fbadaab",
+          "text": "An option's premium is composed of...",
+          "answers": [
+            {
+              "text": "Intrinsic value plus time value",
+              "correct": true
+            },
+            {
+              "text": "Delta plus Vega",
+              "correct": false
+            },
+            {
+              "text": "Strike price minus market price",
+              "correct": false
+            },
+            {
+              "text": "Premium only (no further decomposition)",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "470e4aae-854b-40c5-b5e9-8b46b8a8ab90",
+          "text": "Intrinsic value is defined as...",
+          "answers": [
+            {
+              "text": "The payoff the option would generate if exercised right now (floor of zero)",
+              "correct": true
+            },
+            {
+              "text": "The total premium paid",
+              "correct": false
+            },
+            {
+              "text": "The time value component",
+              "correct": false
+            },
+            {
+              "text": "The premium minus the strike price",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "18fd9917-194b-406a-802c-ac293a34831d",
+          "text": "Apple at $200. Call with strike $180. Intrinsic value?",
+          "answers": [
+            {
+              "text": "$20 ($200 market price − $180 strike)",
+              "correct": true
+            },
+            {
+              "text": "$180",
+              "correct": false
+            },
+            {
+              "text": "$200",
+              "correct": false
+            },
+            {
+              "text": "$0",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "c8e75d58-9bd6-47ff-b843-b7b8004d4c88",
+          "text": "An OTM option has intrinsic value of...",
+          "answers": [
+            {
+              "text": "Zero — OTM options have no intrinsic value",
+              "correct": true
+            },
+            {
+              "text": "Equal to the premium",
+              "correct": false
+            },
+            {
+              "text": "The difference between strike and market",
+              "correct": false
+            },
+            {
+              "text": "A negative intrinsic value",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "d24be2ae-e958-4424-883b-a91975463fbf",
+          "text": "Time value represents...",
+          "answers": [
+            {
+              "text": "The price of uncertainty and remaining potential — what the market pays for time left",
+              "correct": true
+            },
+            {
+              "text": "The daily Theta decay",
+              "correct": false
+            },
+            {
+              "text": "The interest rate component of the premium",
+              "correct": false
+            },
+            {
+              "text": "The dividends foregone by not owning stock",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "7459af28-505f-4aa5-b8f8-9e64d90729bd",
+          "text": "Apple at $200. OTM call with strike $220 has...",
+          "answers": [
+            {
+              "text": "Zero intrinsic value — all premium is time value",
+              "correct": true
+            },
+            {
+              "text": "Intrinsic value of $20",
+              "correct": false
+            },
+            {
+              "text": "Time value of zero",
+              "correct": false
+            },
+            {
+              "text": "Negative intrinsic value",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "66df76f3-0913-4c02-909b-70389f0c78e0",
+          "text": "Which option has the maximum time value?",
+          "answers": [
+            {
+              "text": "An ATM option — strike equals current market price",
+              "correct": true
+            },
+            {
+              "text": "A deep ITM option",
+              "correct": false
+            },
+            {
+              "text": "A far OTM option",
+              "correct": false
+            },
+            {
+              "text": "An expired option",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "fb6fa203-ac5c-4f98-acd9-610c36de4869",
+          "text": "As an option moves deeper in-the-money, its intrinsic value...",
+          "answers": [
+            {
+              "text": "Increases and becomes a larger proportion of the total premium",
+              "correct": true
+            },
+            {
+              "text": "Decreases",
+              "correct": false
+            },
+            {
+              "text": "Stays constant",
+              "correct": false
+            },
+            {
+              "text": "Equals zero",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "39f55287-c069-40ab-abd5-aff50337a9bd",
+          "text": "When you buy an option, you are paying for...",
+          "answers": [
+            {
+              "text": "Both intrinsic value (if ITM) and time value (always present until expiration)",
+              "correct": true
+            },
+            {
+              "text": "Only the intrinsic value",
+              "correct": false
+            },
+            {
+              "text": "Only the time value",
+              "correct": false
+            },
+            {
+              "text": "The strike price plus interest",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "7bed40c4-87b8-47cf-ae72-5f8d3174a22e",
+          "text": "Option premium = $15. Intrinsic value = $10. Time value = ?",
+          "answers": [
+            {
+              "text": "$5 ($15 − $10)",
+              "correct": true
+            },
+            {
+              "text": "$25",
+              "correct": false
+            },
+            {
+              "text": "$10",
+              "correct": false
+            },
+            {
+              "text": "$150",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 14,
+      "title": "Moneyness: ITM, ATM, OTM",
+      "questions": [
+        {
+          "id": "02fb0823-5831-45de-bc9f-f37ec0ea843a",
+          "text": "A call option is 'In the Money' (ITM) when...",
+          "answers": [
+            {
+              "text": "The underlying price is above the strike price",
+              "correct": true
+            },
+            {
+              "text": "The underlying price is below the strike price",
+              "correct": false
+            },
+            {
+              "text": "The underlying price equals the strike price",
+              "correct": false
+            },
+            {
+              "text": "The option has more than 30 DTE",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "06b1ba21-3739-44a5-87f3-74503c1a7450",
+          "text": "A call option is 'Out of the Money' (OTM) when...",
+          "answers": [
+            {
+              "text": "The underlying price is below the strike price",
+              "correct": true
+            },
+            {
+              "text": "The underlying price is above the strike price",
+              "correct": false
+            },
+            {
+              "text": "The premium is greater than the strike",
+              "correct": false
+            },
+            {
+              "text": "The Delta exceeds 0.50",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "3c93d3de-a207-4fe2-85f2-3fac9a2dfe61",
+          "text": "Stock at $100. Call with strike $90 is...",
+          "answers": [
+            {
+              "text": "ITM — the stock is above the strike",
+              "correct": true
+            },
+            {
+              "text": "OTM",
+              "correct": false
+            },
+            {
+              "text": "ATM",
+              "correct": false
+            },
+            {
+              "text": "LEAPS only",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "44ae348b-9456-4e66-a830-95fd63ea4221",
+          "text": "Stock at $100. Call with strike $115 is...",
+          "answers": [
+            {
+              "text": "OTM — the stock must rise $15 before the call has intrinsic value",
+              "correct": true
+            },
+            {
+              "text": "ITM",
+              "correct": false
+            },
+            {
+              "text": "ATM",
+              "correct": false
+            },
+            {
+              "text": "Deep ITM",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "06343841-4482-4f3a-b455-e4db05a92f1a",
+          "text": "ATM (At the Money) options have...",
+          "answers": [
+            {
+              "text": "Zero intrinsic value and maximum time value",
+              "correct": true
+            },
+            {
+              "text": "Maximum intrinsic value and zero time value",
+              "correct": false
+            },
+            {
+              "text": "Equal intrinsic and time values",
+              "correct": false
+            },
+            {
+              "text": "No premium at all",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "b033e5c7-d378-4b77-92b6-00dded4e19f5",
+          "text": "For a PUT option: with stock at $100, which strike is ITM?",
+          "answers": [
+            {
+              "text": "Strike $110 — the right to sell at $110 when stock is at $100 has intrinsic value",
+              "correct": true
+            },
+            {
+              "text": "Strike $90",
+              "correct": false
+            },
+            {
+              "text": "Strike $100",
+              "correct": false
+            },
+            {
+              "text": "Strike $115",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "176d8903-aef7-4555-baf7-43ebcfe39a85",
+          "text": "As a call moves deeper OTM, its premium...",
+          "answers": [
+            {
+              "text": "Decreases — lower probability of expiring ITM means lower value",
+              "correct": true
+            },
+            {
+              "text": "Increases",
+              "correct": false
+            },
+            {
+              "text": "Stays constant",
+              "correct": false
+            },
+            {
+              "text": "Becomes negative",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "eb6ee210-c009-4ed3-aabc-b4c862ae50e1",
+          "text": "Which option has the highest time value?",
+          "answers": [
+            {
+              "text": "The ATM option",
+              "correct": true
+            },
+            {
+              "text": "A deep ITM option",
+              "correct": false
+            },
+            {
+              "text": "A far OTM option",
+              "correct": false
+            },
+            {
+              "text": "An option with 1 DTE",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "d0185fe4-a19b-4f73-9f79-63b7c17e86e4",
+          "text": "Delta is approximately equal to...",
+          "answers": [
+            {
+              "text": "The probability of the option expiring ITM",
+              "correct": true
+            },
+            {
+              "text": "The premium divided by the strike",
+              "correct": false
+            },
+            {
+              "text": "The time value component",
+              "correct": false
+            },
+            {
+              "text": "The Gamma divided by time",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "4c98f37b-257b-4ed1-ad83-47d226f07441",
+          "text": "An OTM call option has...",
+          "answers": [
+            {
+              "text": "Zero intrinsic value — all premium is time value",
+              "correct": true
+            },
+            {
+              "text": "Zero time value",
+              "correct": false
+            },
+            {
+              "text": "Equal intrinsic and time value",
+              "correct": false
+            },
+            {
+              "text": "Negative intrinsic value",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 15,
+      "title": "Time Decay: Non-Linear Erosion",
+      "questions": [
+        {
+          "id": "b32deec7-b546-4584-b644-ef11d50bc5ab",
+          "text": "Time decay refers to...",
+          "answers": [
+            {
+              "text": "The daily reduction in an option's time value as expiration approaches",
+              "correct": true
+            },
+            {
+              "text": "The increase in option value over time",
+              "correct": false
+            },
+            {
+              "text": "The annual depreciation of the underlying",
+              "correct": false
+            },
+            {
+              "text": "The daily cost of holding stock",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "e9958893-70d4-41e7-88f8-17b64eff1c80",
+          "text": "Time decay is measured by which Greek?",
+          "answers": [
+            {
+              "text": "Theta (Θ)",
+              "correct": true
+            },
+            {
+              "text": "Delta (Δ)",
+              "correct": false
+            },
+            {
+              "text": "Vega (ν)",
+              "correct": false
+            },
+            {
+              "text": "Gamma (Γ)",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "c5f47f7f-0f0a-49a2-b1e7-33c4cd99a079",
+          "text": "Time decay is called 'non-linear' because...",
+          "answers": [
+            {
+              "text": "It accelerates sharply in the final 30 days before expiration",
+              "correct": true
+            },
+            {
+              "text": "It occurs at the same rate every day",
+              "correct": false
+            },
+            {
+              "text": "It only affects OTM options",
+              "correct": false
+            },
+            {
+              "text": "It is faster at the beginning of the option's life",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "10c28c0d-5f01-4775-9401-76ae64d114c8",
+          "text": "Which options experience the fastest time decay?",
+          "answers": [
+            {
+              "text": "Short-dated ATM options close to expiration",
+              "correct": true
+            },
+            {
+              "text": "Long-dated LEAPS",
+              "correct": false
+            },
+            {
+              "text": "Deep ITM options with high intrinsic value",
+              "correct": false
+            },
+            {
+              "text": "OTM options with 1 year to expiration",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "ca8ebbac-525d-41ae-b780-dea997de6495",
+          "text": "LEAPS benefit from slow time decay because...",
+          "answers": [
+            {
+              "text": "With 12+ months of DTE, the decay curve is in its gradual early phase",
+              "correct": true
+            },
+            {
+              "text": "LEAPS are exempt from Theta",
+              "correct": false
+            },
+            {
+              "text": "LEAPS have no time value",
+              "correct": false
+            },
+            {
+              "text": "Long-dated options always gain value",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "6d9a33be-fa95-4ec2-bd2a-7b96c13eb2fe",
+          "text": "Theta = −$0.05 per share, 2 contracts (200 shares). Daily time decay cost?",
+          "answers": [
+            {
+              "text": "$10 per day (0.05 × 200)",
+              "correct": true
+            },
+            {
+              "text": "$5",
+              "correct": false
+            },
+            {
+              "text": "$50",
+              "correct": false
+            },
+            {
+              "text": "$0.10",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "3c72e15b-de21-47ac-ac11-744a768037ee",
+          "text": "The time decay curve over an option's life is shaped like...",
+          "answers": [
+            {
+              "text": "An exponential curve that steepens dramatically as expiration nears",
+              "correct": true
+            },
+            {
+              "text": "A straight diagonal line",
+              "correct": false
+            },
+            {
+              "text": "A bell curve peaking at 45 DTE",
+              "correct": false
+            },
+            {
+              "text": "A flat line until 7 DTE then vertical drop",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "a188758e-4ce3-41ec-b624-66067be8b395",
+          "text": "After a weekend (3 calendar days, Theta = −$0.04, 1 contract): Monday P&L impact from time decay?",
+          "answers": [
+            {
+              "text": "−$12 (0.04 × 3 × 100)",
+              "correct": true
+            },
+            {
+              "text": "−$4",
+              "correct": false
+            },
+            {
+              "text": "−$40",
+              "correct": false
+            },
+            {
+              "text": "−$0.12",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "749fc84d-c574-4aa3-9127-e902ce5c7dbd",
+          "text": "OTM options very close to expiration...",
+          "answers": [
+            {
+              "text": "Lose time value extremely rapidly — can go to near-zero very quickly",
+              "correct": true
+            },
+            {
+              "text": "Retain all their value until expiration",
+              "correct": false
+            },
+            {
+              "text": "Gain value from time passing",
+              "correct": false
+            },
+            {
+              "text": "Are immune to time decay",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "fa81e3bb-e476-4aee-85f3-f5a67699f553",
+          "text": "For a BUYER, time decay is...",
+          "answers": [
+            {
+              "text": "A cost — it erodes the option's value every day regardless of price movement",
+              "correct": true
+            },
+            {
+              "text": "A benefit — time increases option value",
+              "correct": false
+            },
+            {
+              "text": "Neutral — it does not affect buyers",
+              "correct": false
+            },
+            {
+              "text": "Only relevant for in-the-money options",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 16,
+      "title": "LEAPS: Options That Give You Time",
+      "questions": [
+        {
+          "id": "abf36019-ace7-4c1c-9b30-e2f280e42c4d",
+          "text": "LEAPS are options with expiration...",
+          "answers": [
+            {
+              "text": "12 months or more from the current date",
+              "correct": true
+            },
+            {
+              "text": "Less than 30 days",
+              "correct": false
+            },
+            {
+              "text": "Exactly 6 months",
+              "correct": false
+            },
+            {
+              "text": "Between 30 and 90 days",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "e1eb73e5-6cce-4d64-89d5-ffa55db4bcf5",
+          "text": "The main structural advantage of LEAPS is...",
+          "answers": [
+            {
+              "text": "Slow, gradual time decay gives the investment thesis more time to play out",
+              "correct": true
+            },
+            {
+              "text": "Higher Delta than short-dated options",
+              "correct": false
+            },
+            {
+              "text": "No premium is required",
+              "correct": false
+            },
+            {
+              "text": "They always expire in the money",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "12abd111-3ab8-4c06-8c13-51eac82aee17",
+          "text": "LEAPS typically have lower Theta, meaning...",
+          "answers": [
+            {
+              "text": "The daily time cost is lower — cheaper to hold per day",
+              "correct": true
+            },
+            {
+              "text": "LEAPS are always more profitable",
+              "correct": false
+            },
+            {
+              "text": "LEAPS have no time value",
+              "correct": false
+            },
+            {
+              "text": "LEAPS expire faster",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "47a716d5-d455-4fc1-8e6a-20ed881341ab",
+          "text": "Compared to a 30-DTE option, a 400-DTE LEAPS has...",
+          "answers": [
+            {
+              "text": "Lower daily Theta — slower time decay rate",
+              "correct": true
+            },
+            {
+              "text": "Higher daily Theta",
+              "correct": false
+            },
+            {
+              "text": "The same Theta",
+              "correct": false
+            },
+            {
+              "text": "No Theta at all",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "1ee56bf9-bae0-4573-8fa3-e88fae8d7936",
+          "text": "LEAPS are particularly useful for...",
+          "answers": [
+            {
+              "text": "Long-term directional theses that need months to develop",
+              "correct": true
+            },
+            {
+              "text": "Day trading and short-term speculation",
+              "correct": false
+            },
+            {
+              "text": "Options with earnings in 2 days",
+              "correct": false
+            },
+            {
+              "text": "Weekly income strategies",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "9f6cc7e8-b8d4-427b-9a28-31b2a86f59e5",
+          "text": "Compared to weekly options, LEAPS have...",
+          "answers": [
+            {
+              "text": "Higher total premium but significantly lower daily time cost",
+              "correct": true
+            },
+            {
+              "text": "Lower total premium and lower daily cost",
+              "correct": false
+            },
+            {
+              "text": "The same total premium",
+              "correct": false
+            },
+            {
+              "text": "No time value at all",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "206a580a-edd7-47df-aae7-66f7b51de366",
+          "text": "LEAPS buyers pay a higher upfront premium because...",
+          "answers": [
+            {
+              "text": "The option contains more time value — more time for the thesis to work",
+              "correct": true
+            },
+            {
+              "text": "LEAPS have higher commissions",
+              "correct": false
+            },
+            {
+              "text": "Long-dated options have no intrinsic value",
+              "correct": false
+            },
+            {
+              "text": "IV is always higher for LEAPS",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "94550534-b705-4e79-99d0-139d67f3f6e1",
+          "text": "Which Greek is most favorable (high) for LEAPS buyers?",
+          "answers": [
+            {
+              "text": "Vega — LEAPS carry high Vega, benefiting from IV expansion",
+              "correct": true
+            },
+            {
+              "text": "Theta — LEAPS have high positive Theta",
+              "correct": false
+            },
+            {
+              "text": "Gamma — LEAPS have maximum Gamma",
+              "correct": false
+            },
+            {
+              "text": "Delta — LEAPS always have Delta near 1.0",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "349c98fc-94fa-4437-9282-87068aa54be0",
+          "text": "LEAPS with 18+ months of expiry are most sensitive to changes in...",
+          "answers": [
+            {
+              "text": "Implied volatility (high Vega exposure)",
+              "correct": true
+            },
+            {
+              "text": "Daily stock price moves (high Gamma)",
+              "correct": false
+            },
+            {
+              "text": "Interest rate changes (Rho only)",
+              "correct": false
+            },
+            {
+              "text": "Dividend changes",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "8d7af50c-6036-4b0d-ac1f-690f51649882",
+          "text": "If your thesis needs 12+ months to develop, the most appropriate option type is...",
+          "answers": [
+            {
+              "text": "LEAPS — long-dated options with slow time decay",
+              "correct": true
+            },
+            {
+              "text": "Weekly options for flexibility",
+              "correct": false
+            },
+            {
+              "text": "Monthly options with 30 DTE",
+              "correct": false
+            },
+            {
+              "text": "ATM options with 7 DTE",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 17,
+      "title": "DTE & Expiration Cycles",
+      "questions": [
+        {
+          "id": "14841e40-2418-4dfd-9df4-06debb670d2a",
+          "text": "DTE stands for...",
+          "answers": [
+            {
+              "text": "Days To Expiration",
+              "correct": true
+            },
+            {
+              "text": "Daily Theta Erosion",
+              "correct": false
+            },
+            {
+              "text": "Delta Trading Equivalent",
+              "correct": false
+            },
+            {
+              "text": "Derivative Time Extension",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "a8524411-1248-45bb-88d1-05462f8a2142",
+          "text": "Standard monthly options typically expire on...",
+          "answers": [
+            {
+              "text": "The third Friday of each month",
+              "correct": true
+            },
+            {
+              "text": "The last trading day of the month",
+              "correct": false
+            },
+            {
+              "text": "The first Monday of each month",
+              "correct": false
+            },
+            {
+              "text": "Every other Friday",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "2fbb2248-0500-452e-bf8f-81f352b4aa22",
+          "text": "Weekly options (weeklies) expire...",
+          "answers": [
+            {
+              "text": "Every Friday",
+              "correct": true
+            },
+            {
+              "text": "Every Monday",
+              "correct": false
+            },
+            {
+              "text": "The third Friday only",
+              "correct": false
+            },
+            {
+              "text": "Once per month",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "5de5378e-343c-4193-9db3-592fcb967342",
+          "text": "Which expiration type is most suitable for long-term directional investors?",
+          "answers": [
+            {
+              "text": "LEAPS — 12+ months expiration",
+              "correct": true
+            },
+            {
+              "text": "Weekly options",
+              "correct": false
+            },
+            {
+              "text": "Monthly options (30 DTE)",
+              "correct": false
+            },
+            {
+              "text": "Daily options",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "fc31ed88-b388-452a-b7d7-f54273a68d5f",
+          "text": "Quarterly LEAPS options typically expire in...",
+          "answers": [
+            {
+              "text": "March, June, September, and December",
+              "correct": true
+            },
+            {
+              "text": "January, April, July, October",
+              "correct": false
+            },
+            {
+              "text": "February, May, August, November",
+              "correct": false
+            },
+            {
+              "text": "Only January and July",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "fdf38837-b09c-417c-b683-897fd07ff5fe",
+          "text": "As DTE decreases toward zero, time value...",
+          "answers": [
+            {
+              "text": "Approaches zero — time decay accelerates to maximum",
+              "correct": true
+            },
+            {
+              "text": "Increases — options become more valuable",
+              "correct": false
+            },
+            {
+              "text": "Remains constant",
+              "correct": false
+            },
+            {
+              "text": "Converts to intrinsic value",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "42415dbe-e1fc-4e92-b5dd-e47167725190",
+          "text": "A trader selling options to collect premium benefits from...",
+          "answers": [
+            {
+              "text": "Shorter DTE — premium decays faster, allowing quicker profit",
+              "correct": true
+            },
+            {
+              "text": "Longer DTE — more time for premium to grow",
+              "correct": false
+            },
+            {
+              "text": "DTE has no effect on seller P&L",
+              "correct": false
+            },
+            {
+              "text": "Only LEAPS for maximum premium",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "bf92c4e4-8c02-44a8-b6a6-cf4119f0c436",
+          "text": "A 7-DTE option vs a 180-DTE option: which has faster daily Theta decay?",
+          "answers": [
+            {
+              "text": "The 7-DTE option — decay is in its steepest phase",
+              "correct": true
+            },
+            {
+              "text": "The 180-DTE option",
+              "correct": false
+            },
+            {
+              "text": "Both decay at the same daily rate",
+              "correct": false
+            },
+            {
+              "text": "Theta is identical regardless of DTE",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "cdceeab4-53d0-4127-a24a-fe2daab6daee",
+          "text": "On 'Expiration Friday', options settle to...",
+          "answers": [
+            {
+              "text": "Their intrinsic value — time value is zero at expiration",
+              "correct": true
+            },
+            {
+              "text": "Their full premium value",
+              "correct": false
+            },
+            {
+              "text": "A price set by the exchange",
+              "correct": false
+            },
+            {
+              "text": "Zero regardless of moneyness",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "ad2f6588-dc25-48ab-aedd-d248ee8051f3",
+          "text": "For a long bullish position, choosing 365 DTE vs 30 DTE means...",
+          "answers": [
+            {
+              "text": "Less time pressure — more days for the trade to develop",
+              "correct": true
+            },
+            {
+              "text": "More time pressure",
+              "correct": false
+            },
+            {
+              "text": "Higher daily Theta",
+              "correct": false
+            },
+            {
+              "text": "Lower total premium",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 18,
+      "title": "Options Are Non-Linear Instruments",
+      "questions": [
+        {
+          "id": "1af25598-b70d-46fa-a716-d1f83410f942",
+          "text": "A 'linear' instrument (like stock) means...",
+          "answers": [
+            {
+              "text": "Its value changes roughly 1:1 with the underlying price",
+              "correct": true
+            },
+            {
+              "text": "Its value never changes",
+              "correct": false
+            },
+            {
+              "text": "Its value is determined by linear equations only",
+              "correct": false
+            },
+            {
+              "text": "Its value moves opposite to the underlying",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "5fcbae5d-2080-48f4-9746-4df88d921397",
+          "text": "Options are 'non-linear' because their value depends on...",
+          "answers": [
+            {
+              "text": "Multiple variables simultaneously: price, time, volatility, and rates",
+              "correct": true
+            },
+            {
+              "text": "Only the underlying price",
+              "correct": false
+            },
+            {
+              "text": "Only time until expiration",
+              "correct": false
+            },
+            {
+              "text": "Only the premium paid",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "1fcabd36-9299-434c-a9e2-dad41df0dcae",
+          "text": "Which of the following is a LINEAR instrument?",
+          "answers": [
+            {
+              "text": "A futures contract — value moves 1:1 with the underlying",
+              "correct": true
+            },
+            {
+              "text": "A call option",
+              "correct": false
+            },
+            {
+              "text": "A put option",
+              "correct": false
+            },
+            {
+              "text": "A LEAPS contract",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "d0a0f2cc-dbec-43f3-a63b-e21329a7f253",
+          "text": "For an option with Delta 0.40, a $1 rise in the underlying causes the option to gain approximately...",
+          "answers": [
+            {
+              "text": "$0.40 — not $1 (Delta is less than 1 for most options)",
+              "correct": true
+            },
+            {
+              "text": "$1.00 exactly",
+              "correct": false
+            },
+            {
+              "text": "$4.00",
+              "correct": false
+            },
+            {
+              "text": "$0.04",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "f3eb2e3e-c4a6-44d2-84be-535a16536b84",
+          "text": "The Greeks are used to...",
+          "answers": [
+            {
+              "text": "Quantify each variable's individual impact on the option's price",
+              "correct": true
+            },
+            {
+              "text": "Calculate the strike price",
+              "correct": false
+            },
+            {
+              "text": "Predict future stock prices",
+              "correct": false
+            },
+            {
+              "text": "Determine margin requirements",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "93c6fa42-451f-4a89-a3f9-2d52c5520d5d",
+          "text": "Option with Delta 0.40, a $1 rise in the underlying = +$0.40. Then IV drops 2% (Vega 0.25). Net change?",
+          "answers": [
+            {
+              "text": "+$0.40 − $0.50 = −$0.10 (stock up but IV hurt more)",
+              "correct": true
+            },
+            {
+              "text": "+$0.40",
+              "correct": false
+            },
+            {
+              "text": "−$0.50",
+              "correct": false
+            },
+            {
+              "text": "0",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "b3e1c247-3896-4953-888b-2975625f0e65",
+          "text": "Non-linearity in options is beneficial for buyers because...",
+          "answers": [
+            {
+              "text": "It allows asymmetric payoffs — losses are capped, gains can be amplified",
+              "correct": true
+            },
+            {
+              "text": "It guarantees a profit",
+              "correct": false
+            },
+            {
+              "text": "It eliminates all Greeks",
+              "correct": false
+            },
+            {
+              "text": "It means options never expire",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "bfe49eda-d095-4c55-a76f-60d5165e8725",
+          "text": "Which factor does NOT directly affect an option's value?",
+          "answers": [
+            {
+              "text": "The option buyer's original cost basis (what they paid)",
+              "correct": true
+            },
+            {
+              "text": "The underlying price",
+              "correct": false
+            },
+            {
+              "text": "Time to expiration",
+              "correct": false
+            },
+            {
+              "text": "Implied volatility",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "2c0f83d2-4e45-4441-ae84-fcf2cff52240",
+          "text": "'All Greeks move simultaneously' means...",
+          "answers": [
+            {
+              "text": "A position can gain from Delta but lose from Theta and Vega at the same time",
+              "correct": true
+            },
+            {
+              "text": "All Greeks always increase together",
+              "correct": false
+            },
+            {
+              "text": "Greeks offset each other perfectly",
+              "correct": false
+            },
+            {
+              "text": "You only need to monitor one Greek",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "40ee62e0-4aef-4926-8840-9d850254610a",
+          "text": "Understanding the Greeks is important because...",
+          "answers": [
+            {
+              "text": "They explain exactly how and why an option's value changes in different market scenarios",
+              "correct": true
+            },
+            {
+              "text": "They predict with certainty which options will be profitable",
+              "correct": false
+            },
+            {
+              "text": "They eliminate the need for risk management",
+              "correct": false
+            },
+            {
+              "text": "They are required by law to be disclosed",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 19,
+      "title": "The Five Greeks",
+      "questions": [
+        {
+          "id": "48af87ce-7529-478c-9a72-12d343337b06",
+          "text": "Which Greek measures the option's sensitivity to the underlying price?",
+          "answers": [
+            {
+              "text": "Delta (Δ)",
+              "correct": true
+            },
+            {
+              "text": "Vega (ν)",
+              "correct": false
+            },
+            {
+              "text": "Theta (Θ)",
+              "correct": false
+            },
+            {
+              "text": "Rho (ρ)",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "3c97ac5f-c33d-41bd-888c-256003de8262",
+          "text": "Which Greek measures the rate of change of Delta?",
+          "answers": [
+            {
+              "text": "Gamma (Γ)",
+              "correct": true
+            },
+            {
+              "text": "Vega (ν)",
+              "correct": false
+            },
+            {
+              "text": "Rho (ρ)",
+              "correct": false
+            },
+            {
+              "text": "Theta (Θ)",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "32062501-4f2b-4472-b842-485388b698c5",
+          "text": "Which Greek measures daily time decay?",
+          "answers": [
+            {
+              "text": "Theta (Θ)",
+              "correct": true
+            },
+            {
+              "text": "Delta (Δ)",
+              "correct": false
+            },
+            {
+              "text": "Gamma (Γ)",
+              "correct": false
+            },
+            {
+              "text": "Vega (ν)",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "2ef4a731-224c-4579-bfe0-7eff7ca96031",
+          "text": "Which Greek measures sensitivity to changes in implied volatility?",
+          "answers": [
+            {
+              "text": "Vega (ν)",
+              "correct": true
+            },
+            {
+              "text": "Gamma (Γ)",
+              "correct": false
+            },
+            {
+              "text": "Rho (ρ)",
+              "correct": false
+            },
+            {
+              "text": "Theta (Θ)",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "6876b9a5-9237-4a3c-87b8-f9f1c6d9ef4c",
+          "text": "Which Greek measures sensitivity to interest rate changes?",
+          "answers": [
+            {
+              "text": "Rho (ρ)",
+              "correct": true
+            },
+            {
+              "text": "Vega (ν)",
+              "correct": false
+            },
+            {
+              "text": "Delta (Δ)",
+              "correct": false
+            },
+            {
+              "text": "Theta (Θ)",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "1dc9aa7e-fb79-4b4f-8f06-8c9278f4f375",
+          "text": "Call Delta 0.35, Theta −$0.05/day, Vega 0.30. Stock rises $2, IV drops 3%. Net daily P&L impact?",
+          "answers": [
+            {
+              "text": "+$0.70 − $0.90 − $0.05 = −$0.25 (approximate)",
+              "correct": true
+            },
+            {
+              "text": "+$0.70",
+              "correct": false
+            },
+            {
+              "text": "−$0.95",
+              "correct": false
+            },
+            {
+              "text": "+$0.25",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "b55f5e22-7a85-4629-bac2-eb7bbadd24c0",
+          "text": "Greeks are described as 'dynamic' because...",
+          "answers": [
+            {
+              "text": "They change daily as market conditions (price, time, IV) evolve",
+              "correct": true
+            },
+            {
+              "text": "They are different for each underlying",
+              "correct": false
+            },
+            {
+              "text": "They change only at expiration",
+              "correct": false
+            },
+            {
+              "text": "They are fixed at the time of purchase",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "0d0d0e92-a98b-434b-b5c5-3ece7576f9a8",
+          "text": "For a LEAPS buyer, which two Greeks are most important to monitor daily?",
+          "answers": [
+            {
+              "text": "Delta (directional exposure) and Vega (IV sensitivity)",
+              "correct": true
+            },
+            {
+              "text": "Rho and Gamma",
+              "correct": false
+            },
+            {
+              "text": "Theta and Rho",
+              "correct": false
+            },
+            {
+              "text": "Only Theta",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "c92c6c8c-3a1c-4a6e-8cdc-b816df774211",
+          "text": "Which Greek is typically LEAST important for a 7-day option?",
+          "answers": [
+            {
+              "text": "Rho — interest rate sensitivity is negligible for short-dated options",
+              "correct": true
+            },
+            {
+              "text": "Theta — time decay doesn't matter for short-dated options",
+              "correct": false
+            },
+            {
+              "text": "Delta",
+              "correct": false
+            },
+            {
+              "text": "Gamma",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "40897372-9adc-4b19-8ffd-2a2ba73726de",
+          "text": "All five Greeks together provide...",
+          "answers": [
+            {
+              "text": "A complete picture of the option position's risk profile across all market variables",
+              "correct": true
+            },
+            {
+              "text": "A guarantee of profitability",
+              "correct": false
+            },
+            {
+              "text": "Only the direction of the trade",
+              "correct": false
+            },
+            {
+              "text": "The exact future price of the option",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 20,
+      "title": "Delta: Directional Exposure",
+      "questions": [
+        {
+          "id": "32a7b9a3-b40d-4e5f-9134-93a6779abda8",
+          "text": "Delta is defined as...",
+          "answers": [
+            {
+              "text": "The dollar change in option value per $1 rise in the underlying price",
+              "correct": true
+            },
+            {
+              "text": "The daily change in time value",
+              "correct": false
+            },
+            {
+              "text": "The probability of the option being exercised",
+              "correct": false
+            },
+            {
+              "text": "The change in Gamma per $1 move",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "030ec1e5-1b74-47af-9a7f-d788902653e1",
+          "text": "A call option's Delta ranges from...",
+          "answers": [
+            {
+              "text": "0 to +1",
+              "correct": true
+            },
+            {
+              "text": "−1 to 0",
+              "correct": false
+            },
+            {
+              "text": "0 to 10",
+              "correct": false
+            },
+            {
+              "text": "−1 to +1",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "2211c48c-bfc9-4c3a-bb97-a2c6fcc8062a",
+          "text": "A put option's Delta ranges from...",
+          "answers": [
+            {
+              "text": "−1 to 0",
+              "correct": true
+            },
+            {
+              "text": "0 to +1",
+              "correct": false
+            },
+            {
+              "text": "0 to −10",
+              "correct": false
+            },
+            {
+              "text": "−0.5 to 0",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "9583e1c2-e68f-417b-8baf-5a15bbae16c2",
+          "text": "An ATM call option has a Delta of approximately...",
+          "answers": [
+            {
+              "text": "0.50",
+              "correct": true
+            },
+            {
+              "text": "1.0",
+              "correct": false
+            },
+            {
+              "text": "0.0",
+              "correct": false
+            },
+            {
+              "text": "0.25",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "3a9e2446-d7b1-4d47-ab61-7a8b229a2d76",
+          "text": "A deep ITM call option has a Delta approaching...",
+          "answers": [
+            {
+              "text": "1.0 — behaves almost like owning the stock",
+              "correct": true
+            },
+            {
+              "text": "0.0",
+              "correct": false
+            },
+            {
+              "text": "0.5",
+              "correct": false
+            },
+            {
+              "text": "−1.0",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "f47999e0-3191-4e89-a3fa-a9d7affd4b58",
+          "text": "2 contracts (200 shares), Delta 0.25, stock rises $5. Gain?",
+          "answers": [
+            {
+              "text": "$250 (0.25 × $5 × 200)",
+              "correct": true
+            },
+            {
+              "text": "$500",
+              "correct": false
+            },
+            {
+              "text": "$125",
+              "correct": false
+            },
+            {
+              "text": "$50",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "afb25ee1-8a6e-4760-89d4-39144b12cae0",
+          "text": "Delta is roughly equivalent to...",
+          "answers": [
+            {
+              "text": "The approximate probability that the option will expire in the money",
+              "correct": true
+            },
+            {
+              "text": "The daily Theta cost",
+              "correct": false
+            },
+            {
+              "text": "The percentage of time value remaining",
+              "correct": false
+            },
+            {
+              "text": "The annual volatility of the underlying",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "9593b2ca-0fa5-45b5-82a3-d8c68b7abe00",
+          "text": "A far OTM call option (probability of expiring ITM ≈ 10%) has Delta of approximately...",
+          "answers": [
+            {
+              "text": "0.10",
+              "correct": true
+            },
+            {
+              "text": "0.90",
+              "correct": false
+            },
+            {
+              "text": "0.50",
+              "correct": false
+            },
+            {
+              "text": "1.00",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "f0f32fd0-141a-46f0-ab1d-f44388291468",
+          "text": "Long call, Delta 0.30, 1 contract (100 shares). Stock rises $10. Contract P&L?",
+          "answers": [
+            {
+              "text": "$300 (0.30 × $10 × 100)",
+              "correct": true
+            },
+            {
+              "text": "$30",
+              "correct": false
+            },
+            {
+              "text": "$3,000",
+              "correct": false
+            },
+            {
+              "text": "$10",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "3760e0a0-849d-4888-b447-5c896b88e568",
+          "text": "Delta 0.40 means your option behaves like owning approximately...",
+          "answers": [
+            {
+              "text": "40 shares of the underlying",
+              "correct": true
+            },
+            {
+              "text": "40% of one share",
+              "correct": false
+            },
+            {
+              "text": "4 shares",
+              "correct": false
+            },
+            {
+              "text": "400 shares",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 21,
+      "title": "Gamma: The Acceleration of Delta",
+      "questions": [
+        {
+          "id": "27d1c81c-1648-4dae-8619-eceae127d896",
+          "text": "Gamma is defined as...",
+          "answers": [
+            {
+              "text": "The change in Delta per $1 move in the underlying",
+              "correct": true
+            },
+            {
+              "text": "The change in Theta per $1 move",
+              "correct": false
+            },
+            {
+              "text": "The rate of time decay",
+              "correct": false
+            },
+            {
+              "text": "The change in premium per 1% IV change",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "5ddfbdf4-fc46-4964-a712-74a1c4997c05",
+          "text": "Call: Delta 0.40, Gamma 0.03. Stock rises $5. New Delta approximately?",
+          "answers": [
+            {
+              "text": "0.55 (0.40 + 0.03×5)",
+              "correct": true
+            },
+            {
+              "text": "0.43",
+              "correct": false
+            },
+            {
+              "text": "0.70",
+              "correct": false
+            },
+            {
+              "text": "0.40",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "1d196b64-f382-41e9-adb4-eac5aaa08122",
+          "text": "Gamma is highest for options that are...",
+          "answers": [
+            {
+              "text": "ATM and close to expiration",
+              "correct": true
+            },
+            {
+              "text": "Deep ITM and far from expiration",
+              "correct": false
+            },
+            {
+              "text": "Far OTM with 1 year to expiry",
+              "correct": false
+            },
+            {
+              "text": "Deep ITM LEAPS",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "7294cffd-70e6-4a3b-9bdc-f2986500557a",
+          "text": "LEAPS options have...",
+          "answers": [
+            {
+              "text": "Low Gamma — Delta changes slowly and predictably day to day",
+              "correct": true
+            },
+            {
+              "text": "High Gamma — Delta changes rapidly",
+              "correct": false
+            },
+            {
+              "text": "Zero Gamma by definition",
+              "correct": false
+            },
+            {
+              "text": "Gamma equal to Delta",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "44ddc21d-633c-433a-93f7-a37699b71bce",
+          "text": "Positive Gamma (for option buyers) means...",
+          "answers": [
+            {
+              "text": "Large moves in the underlying accelerate the position's gains",
+              "correct": true
+            },
+            {
+              "text": "The position loses value when the stock moves",
+              "correct": false
+            },
+            {
+              "text": "Gamma is always positive regardless of position",
+              "correct": false
+            },
+            {
+              "text": "Delta stays constant",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "b358a491-4c57-40ca-8df0-189f7426caf7",
+          "text": "Starting Delta 0.40, Gamma 0.03. After two consecutive $5 rises in stock, new Delta?",
+          "answers": [
+            {
+              "text": "0.70 (0.40 + 0.03×5 + 0.03×5)",
+              "correct": true
+            },
+            {
+              "text": "0.55",
+              "correct": false
+            },
+            {
+              "text": "0.85",
+              "correct": false
+            },
+            {
+              "text": "0.65",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "962f3d5e-4e0a-4d06-a271-0db04cdbbd42",
+          "text": "High Gamma near expiration means...",
+          "answers": [
+            {
+              "text": "Delta changes rapidly — the position becomes very sensitive to small price moves",
+              "correct": true
+            },
+            {
+              "text": "The position is stable and predictable",
+              "correct": false
+            },
+            {
+              "text": "Time decay slows down",
+              "correct": false
+            },
+            {
+              "text": "IV becomes less important",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "1c4e2bd0-e1de-4017-92f9-5479a5ee8753",
+          "text": "A long option buyer always has...",
+          "answers": [
+            {
+              "text": "Positive Gamma — large moves benefit the position",
+              "correct": true
+            },
+            {
+              "text": "Negative Gamma",
+              "correct": false
+            },
+            {
+              "text": "Zero Gamma",
+              "correct": false
+            },
+            {
+              "text": "Gamma equal to −Delta",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "33de929d-c212-4ac1-b3cf-0a52afc24524",
+          "text": "Gamma is sometimes called 'convexity' because...",
+          "answers": [
+            {
+              "text": "The position accelerates in your favor as it moves deeper into the money",
+              "correct": true
+            },
+            {
+              "text": "It makes options more complex",
+              "correct": false
+            },
+            {
+              "text": "It measures the curvature of the yield curve",
+              "correct": false
+            },
+            {
+              "text": "It is always positive for sellers",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "d4979cd8-af25-4058-8467-31632b64cd6d",
+          "text": "Which position has the HIGHEST Gamma?",
+          "answers": [
+            {
+              "text": "An ATM option with 7 days to expiration",
+              "correct": true
+            },
+            {
+              "text": "A deep ITM LEAPS",
+              "correct": false
+            },
+            {
+              "text": "A far OTM option with 6 months to expiry",
+              "correct": false
+            },
+            {
+              "text": "A short put with 180 DTE",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 22,
+      "title": "The Gamma-Theta Trade-off",
+      "questions": [
+        {
+          "id": "3f9186e2-ad63-4c8a-ba55-6fe2583fee3e",
+          "text": "Long options (buyers) have...",
+          "answers": [
+            {
+              "text": "Positive Gamma and negative Theta",
+              "correct": true
+            },
+            {
+              "text": "Negative Gamma and positive Theta",
+              "correct": false
+            },
+            {
+              "text": "Positive Gamma and positive Theta",
+              "correct": false
+            },
+            {
+              "text": "Zero Gamma and zero Theta",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "cc99ba88-e1af-4b6d-a74e-8a3f9782175b",
+          "text": "Short options (sellers) have...",
+          "answers": [
+            {
+              "text": "Negative Gamma and positive Theta",
+              "correct": true
+            },
+            {
+              "text": "Positive Gamma and negative Theta",
+              "correct": false
+            },
+            {
+              "text": "Zero Gamma and positive Theta",
+              "correct": false
+            },
+            {
+              "text": "Negative Gamma and negative Theta",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "2ffd4ff5-bd6f-49d8-b4b0-941f6979f78a",
+          "text": "The Gamma-Theta trade-off means...",
+          "answers": [
+            {
+              "text": "You always pay for convexity (Gamma) through daily time cost (Theta)",
+              "correct": true
+            },
+            {
+              "text": "Gamma and Theta cancel each other out",
+              "correct": false
+            },
+            {
+              "text": "You can maximize both Gamma and Theta simultaneously",
+              "correct": false
+            },
+            {
+              "text": "Theta only applies to sellers",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "038f60f1-f053-4d1b-b9d2-c845411a3309",
+          "text": "A LEAPS buyer has favorable Gamma-Theta because...",
+          "answers": [
+            {
+              "text": "Low Gamma (stable Delta) combined with low Theta (cheap daily holding cost)",
+              "correct": true
+            },
+            {
+              "text": "High Gamma (aggressive) with low Theta (free)",
+              "correct": false
+            },
+            {
+              "text": "Low Gamma with high positive Theta",
+              "correct": false
+            },
+            {
+              "text": "Maximum Gamma at all times",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "e7cf7c8f-3f22-4bc0-bc19-9f4babfbec29",
+          "text": "Weekly option sellers earn Theta but face...",
+          "answers": [
+            {
+              "text": "Large Gamma risk — one gap move can wipe out weeks of premium income",
+              "correct": true
+            },
+            {
+              "text": "No additional risk beyond the premium received",
+              "correct": false
+            },
+            {
+              "text": "Delta risk only",
+              "correct": false
+            },
+            {
+              "text": "Low Theta that doesn't compensate for risk",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "1f2522de-b86c-4671-9e8d-c08f50313f52",
+          "text": "For a LEAPS buyer, the Gamma-Theta profile is...",
+          "answers": [
+            {
+              "text": "Low Gamma + Low Theta — stable and affordable",
+              "correct": true
+            },
+            {
+              "text": "High Gamma + High Theta",
+              "correct": false
+            },
+            {
+              "text": "Low Gamma + High Theta",
+              "correct": false
+            },
+            {
+              "text": "High Gamma + Low Theta",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "6dcde2d3-94ef-413c-b7e0-2be79a1aa94d",
+          "text": "Why is weekly option speculation risky for buyers?",
+          "answers": [
+            {
+              "text": "Massive daily Theta cost can overwhelm gains from small underlying moves",
+              "correct": true
+            },
+            {
+              "text": "Weekly options have no leverage",
+              "correct": false
+            },
+            {
+              "text": "Weekly options cannot be sold before expiry",
+              "correct": false
+            },
+            {
+              "text": "The Gamma is always negative for weekly options",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "0c0ccf72-1ff4-4643-8810-7823d4e02c09",
+          "text": "'Not a free lunch' in the context of Gamma-Theta means...",
+          "answers": [
+            {
+              "text": "High convexity always comes with a high daily time cost — you cannot have one without the other",
+              "correct": true
+            },
+            {
+              "text": "Options are never profitable",
+              "correct": false
+            },
+            {
+              "text": "Gamma is always zero for sellers",
+              "correct": false
+            },
+            {
+              "text": "Theta and Gamma are unrelated",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "afe813d8-c058-421a-bf4c-d424f7da13b8",
+          "text": "A weekly seller earns $80/day in Theta but faces risk because...",
+          "answers": [
+            {
+              "text": "One large gap move can change Delta by 0.10+ and erase multiple days of Theta income",
+              "correct": true
+            },
+            {
+              "text": "Weekly options always expire in the money",
+              "correct": false
+            },
+            {
+              "text": "The exchange charges extra fees for weekly sellers",
+              "correct": false
+            },
+            {
+              "text": "Gamma is always favorable for sellers",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "07c29c4e-032c-411f-80a0-113d0980c3d9",
+          "text": "Which best describes a LEAPS buyer's Greek profile?",
+          "answers": [
+            {
+              "text": "Stable daily behavior (low Gamma) and manageable holding cost (low Theta)",
+              "correct": true
+            },
+            {
+              "text": "High daily Gamma swings and high Theta cost",
+              "correct": false
+            },
+            {
+              "text": "Zero Greeks — LEAPS are not affected by Greeks",
+              "correct": false
+            },
+            {
+              "text": "High positive Theta with negative Gamma",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 23,
+      "title": "Theta: The Daily Cost of Time",
+      "questions": [
+        {
+          "id": "5162bffe-eeab-48a1-a887-56e5390e436c",
+          "text": "Theta is defined as...",
+          "answers": [
+            {
+              "text": "The daily dollar loss in option value from time passing, all else equal",
+              "correct": true
+            },
+            {
+              "text": "The daily gain in intrinsic value",
+              "correct": false
+            },
+            {
+              "text": "The change in Delta per day",
+              "correct": false
+            },
+            {
+              "text": "The sensitivity to IV changes",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "26fdc279-207f-41d3-9853-09b24a3a0ff7",
+          "text": "For a buyer, Theta is...",
+          "answers": [
+            {
+              "text": "Negative — a daily cost that erodes the option's value",
+              "correct": true
+            },
+            {
+              "text": "Positive — a daily income",
+              "correct": false
+            },
+            {
+              "text": "Zero — buyers are exempt from time decay",
+              "correct": false
+            },
+            {
+              "text": "Positive only for LEAPS buyers",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "c69a87b8-55a3-4c4c-a241-2f4e5d7e3391",
+          "text": "For a seller, Theta is...",
+          "answers": [
+            {
+              "text": "Positive — a daily income earned as the option decays",
+              "correct": true
+            },
+            {
+              "text": "Negative — a daily cost",
+              "correct": false
+            },
+            {
+              "text": "Zero — sellers have no time decay",
+              "correct": false
+            },
+            {
+              "text": "Negative only near expiration",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "22dfa73e-160b-473e-9157-206989ddaf4d",
+          "text": "Theta = −$0.06/share, 5 contracts (500 shares). Daily Theta cost?",
+          "answers": [
+            {
+              "text": "$30 per day (0.06 × 500)",
+              "correct": true
+            },
+            {
+              "text": "$3",
+              "correct": false
+            },
+            {
+              "text": "$300",
+              "correct": false
+            },
+            {
+              "text": "$0.30",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "1aaf18a3-242b-4c9b-9f1d-3e4db750d16a",
+          "text": "Weekend (3 calendar days), Theta = −$0.06, 1 contract. Monday P&L from time alone?",
+          "answers": [
+            {
+              "text": "−$18 (0.06 × 3 × 100)",
+              "correct": true
+            },
+            {
+              "text": "−$6",
+              "correct": false
+            },
+            {
+              "text": "−$60",
+              "correct": false
+            },
+            {
+              "text": "−$18,000",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "9c59b8df-b8c2-4222-be4f-b4dc07f54bc7",
+          "text": "LEAPS (Theta −$0.02) vs weeklies (Theta −$0.08). LEAPS daily cost advantage?",
+          "answers": [
+            {
+              "text": "4x cheaper per day to hold",
+              "correct": true
+            },
+            {
+              "text": "2x cheaper",
+              "correct": false
+            },
+            {
+              "text": "8x cheaper",
+              "correct": false
+            },
+            {
+              "text": "Same cost per day",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "1adcd78b-43c3-4d80-9402-e30692e2d9a7",
+          "text": "Theta accelerates most dramatically...",
+          "answers": [
+            {
+              "text": "In the final 30 days before expiration",
+              "correct": true
+            },
+            {
+              "text": "In the first 30 days after purchase",
+              "correct": false
+            },
+            {
+              "text": "When the option is deep ITM",
+              "correct": false
+            },
+            {
+              "text": "When IV is very high",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "5acbdbef-4b52-4ba2-b9ad-76384c5e87d3",
+          "text": "An ATM option has the highest Theta because...",
+          "answers": [
+            {
+              "text": "ATM options have the most time value, giving Theta the most to erode",
+              "correct": true
+            },
+            {
+              "text": "ATM options have the most intrinsic value",
+              "correct": false
+            },
+            {
+              "text": "Theta is the same for all options",
+              "correct": false
+            },
+            {
+              "text": "Theta is highest for far OTM options",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "fddf46cc-9a7f-4757-9bf6-1de224cff8af",
+          "text": "Theta −$0.04/share, 2 contracts (200 shares). 5 trading-day week. Weekly Theta cost?",
+          "answers": [
+            {
+              "text": "$40 (0.04 × 200 × 5)",
+              "correct": true
+            },
+            {
+              "text": "$4",
+              "correct": false
+            },
+            {
+              "text": "$400",
+              "correct": false
+            },
+            {
+              "text": "$8",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "cf2d1924-81a9-4f52-8c29-008f9019dacc",
+          "text": "A position with Theta −$0.03 and 3 contracts (300 shares): if stock does nothing for 10 days, loss from Theta?",
+          "answers": [
+            {
+              "text": "$90 (0.03 × 300 × 10)",
+              "correct": true
+            },
+            {
+              "text": "$9",
+              "correct": false
+            },
+            {
+              "text": "$900",
+              "correct": false
+            },
+            {
+              "text": "$3",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 24,
+      "title": "Vega: Sensitivity to Implied Volatility",
+      "questions": [
+        {
+          "id": "cfa9bdf5-a102-40ae-ac41-fec9c1301857",
+          "text": "Vega is defined as...",
+          "answers": [
+            {
+              "text": "The dollar change in option value per 1% change in implied volatility",
+              "correct": true
+            },
+            {
+              "text": "The change in Delta per 1% IV move",
+              "correct": false
+            },
+            {
+              "text": "The daily time decay rate",
+              "correct": false
+            },
+            {
+              "text": "The sensitivity to interest rate changes",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "0885171b-9034-4979-a636-a6d7cf575478",
+          "text": "LEAPS options have higher Vega than short-dated options because...",
+          "answers": [
+            {
+              "text": "More time means more uncertainty priced in, resulting in higher IV sensitivity",
+              "correct": true
+            },
+            {
+              "text": "LEAPS are always more expensive",
+              "correct": false
+            },
+            {
+              "text": "LEAPS have lower Delta",
+              "correct": false
+            },
+            {
+              "text": "Short-dated options are not affected by IV",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "882abf73-1590-4ec1-a109-88fc0e928354",
+          "text": "Vega = 0.28/share, IV rises 8 points. Gain per contract (100 shares)?",
+          "answers": [
+            {
+              "text": "$224 (0.28 × 8 × 100)",
+              "correct": true
+            },
+            {
+              "text": "$22.40",
+              "correct": false
+            },
+            {
+              "text": "$2,240",
+              "correct": false
+            },
+            {
+              "text": "$2.24",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "0eafc8f1-56bf-4d59-901d-9acceb495346",
+          "text": "Buying options when IV is LOW is advantageous because...",
+          "answers": [
+            {
+              "text": "You buy cheap Vega — if IV expands, Vega amplifies gains even without stock moving",
+              "correct": true
+            },
+            {
+              "text": "Low IV means options always expire ITM",
+              "correct": false
+            },
+            {
+              "text": "Low IV reduces Theta costs to zero",
+              "correct": false
+            },
+            {
+              "text": "Low IV increases Delta dramatically",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "13ea8903-b405-4b1f-9371-4712de7206d2",
+          "text": "'IV crush' refers to...",
+          "answers": [
+            {
+              "text": "A sharp drop in implied volatility after an anticipated event (earnings, Fed announcement)",
+              "correct": true
+            },
+            {
+              "text": "A rise in IV after a large stock move",
+              "correct": false
+            },
+            {
+              "text": "The daily erosion of time value",
+              "correct": false
+            },
+            {
+              "text": "IV reaching its 12-month high",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "99357510-0a6c-4532-a680-34132a3683b8",
+          "text": "If IV falls sharply after you buy an option (Vega = 0.30, IV drops 5 points), per-contract impact?",
+          "answers": [
+            {
+              "text": "−$150 (0.30 × 5 × 100) — the option loses value even if the stock moves favorably",
+              "correct": true
+            },
+            {
+              "text": "+$150",
+              "correct": false
+            },
+            {
+              "text": "−$1.50",
+              "correct": false
+            },
+            {
+              "text": "−$15",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "d60436f5-6c86-45ff-9fcb-dc569994db49",
+          "text": "Which options have the highest Vega exposure?",
+          "answers": [
+            {
+              "text": "Long-dated options (LEAPS) — more time = more IV sensitivity",
+              "correct": true
+            },
+            {
+              "text": "Weekly options with 7 DTE",
+              "correct": false
+            },
+            {
+              "text": "ATM options with 30 DTE",
+              "correct": false
+            },
+            {
+              "text": "Deep OTM options near expiration",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "c1de98f5-c126-438f-a2e2-34ca8e7f34ce",
+          "text": "Vega = 0.28, IV rises from 22% to 30% (+8 points), 1 contract. Gain from Vega alone?",
+          "answers": [
+            {
+              "text": "$224 (0.28 × 8 × 100)",
+              "correct": true
+            },
+            {
+              "text": "$28",
+              "correct": false
+            },
+            {
+              "text": "$22.40",
+              "correct": false
+            },
+            {
+              "text": "$280",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "02c9c382-3a2b-4491-8525-9e2dbbd2a20f",
+          "text": "Vega is always POSITIVE for...",
+          "answers": [
+            {
+              "text": "Long options (both calls and puts) — buyers always benefit from rising IV",
+              "correct": true
+            },
+            {
+              "text": "Short options only",
+              "correct": false
+            },
+            {
+              "text": "Call options only",
+              "correct": false
+            },
+            {
+              "text": "LEAPS only",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "fabe971c-0cfb-4c7d-a1d3-96099ae93900",
+          "text": "Selling options when IV is HIGH is favorable because...",
+          "answers": [
+            {
+              "text": "You sell expensive Vega — if IV drops (mean reversion), the option loses value profiting the seller",
+              "correct": true
+            },
+            {
+              "text": "High IV means options always expire OTM",
+              "correct": false
+            },
+            {
+              "text": "High IV guarantees the seller profit",
+              "correct": false
+            },
+            {
+              "text": "Sellers never have Vega exposure",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 25,
+      "title": "IV Rank: Context for Implied Volatility",
+      "questions": [
+        {
+          "id": "fce991ee-85f8-4c2c-bf0b-2291a8effa56",
+          "text": "IV Rank of 20 means...",
+          "answers": [
+            {
+              "text": "Current IV is near the low end of its 12-month range — options are relatively cheap",
+              "correct": true
+            },
+            {
+              "text": "Current IV is 20%",
+              "correct": false
+            },
+            {
+              "text": "IV has fallen 20% today",
+              "correct": false
+            },
+            {
+              "text": "Options are expensive",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "4a583b44-531b-4b6e-b06a-7684fd3a8d51",
+          "text": "Which IV Rank indicates options are historically expensive?",
+          "answers": [
+            {
+              "text": "IV Rank of 85",
+              "correct": true
+            },
+            {
+              "text": "IV Rank of 10",
+              "correct": false
+            },
+            {
+              "text": "IV Rank of 0",
+              "correct": false
+            },
+            {
+              "text": "IV Rank of 30",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "33a2b9ae-b6ac-45b2-8048-0a0d81856a46",
+          "text": "Stock A (IV=30%, IV Rank=15) vs Stock B (IV=30%, IV Rank=80). Which is cheaper to buy options on?",
+          "answers": [
+            {
+              "text": "Stock A — lower IV Rank means IV is compressed relative to history",
+              "correct": true
+            },
+            {
+              "text": "Stock B — higher IV Rank means more opportunity",
+              "correct": false
+            },
+            {
+              "text": "Both are equally cheap",
+              "correct": false
+            },
+            {
+              "text": "Neither — IV Rank doesn't affect pricing",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "bd581224-7708-4bf7-88bd-61e4f4fc1d55",
+          "text": "IV Rank is measured on a scale of...",
+          "answers": [
+            {
+              "text": "0 to 100",
+              "correct": true
+            },
+            {
+              "text": "0 to 10",
+              "correct": false
+            },
+            {
+              "text": "0 to 1",
+              "correct": false
+            },
+            {
+              "text": "−100 to +100",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "de2e29f6-5d7a-4c1d-a62c-ea048c05b513",
+          "text": "IV Rank below 30 is favorable for option buyers because...",
+          "answers": [
+            {
+              "text": "IV is historically compressed — options are cheaper and Vega is bought efficiently",
+              "correct": true
+            },
+            {
+              "text": "Low IV Rank means the stock will definitely rise",
+              "correct": false
+            },
+            {
+              "text": "IV Rank below 30 eliminates Theta",
+              "correct": false
+            },
+            {
+              "text": "Low IV Rank guarantees profit",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "6aea3ee8-0259-47af-80ca-fb5c9c0b966b",
+          "text": "If IV Rank = 0, current IV is...",
+          "answers": [
+            {
+              "text": "At its lowest point seen in the past 12 months",
+              "correct": true
+            },
+            {
+              "text": "At its highest point",
+              "correct": false
+            },
+            {
+              "text": "At exactly 0%",
+              "correct": false
+            },
+            {
+              "text": "Equal to the historical average",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "fb15ec1b-24b1-4387-b0e4-a191d4457fa8",
+          "text": "After an earnings release where the stock barely moves, IV Rank typically...",
+          "answers": [
+            {
+              "text": "Falls sharply — IV crush compresses implied volatility rapidly post-event",
+              "correct": true
+            },
+            {
+              "text": "Rises sharply",
+              "correct": false
+            },
+            {
+              "text": "Stays unchanged",
+              "correct": false
+            },
+            {
+              "text": "Doubles",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "42e243a4-801d-43a2-83e6-9041adea409d",
+          "text": "Same stock: IV Rank 10 vs IV Rank 90. Which scenario is better for a buyer?",
+          "answers": [
+            {
+              "text": "IV Rank 10 — IV is historically cheap, Vega is purchased at a discount",
+              "correct": true
+            },
+            {
+              "text": "IV Rank 90 — higher IV means more movement",
+              "correct": false
+            },
+            {
+              "text": "Both are identical for buyers",
+              "correct": false
+            },
+            {
+              "text": "IV Rank 90 — it means higher intrinsic value",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "bfa54269-8f53-4805-b55c-f5bd01a10d1a",
+          "text": "IV Rank is calculated based on...",
+          "answers": [
+            {
+              "text": "Where current IV sits relative to the highest and lowest IV of the past 12 months",
+              "correct": true
+            },
+            {
+              "text": "The average IV of the past 30 days",
+              "correct": false
+            },
+            {
+              "text": "The difference between call and put IV",
+              "correct": false
+            },
+            {
+              "text": "The number of days until expiration",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "2678bff9-76f5-417b-bb3c-db2ef3899ab7",
+          "text": "IV Rank above 70 suggests...",
+          "answers": [
+            {
+              "text": "Options are historically expensive — buying Vega is inefficient at this level",
+              "correct": true
+            },
+            {
+              "text": "Options are cheap and worth buying",
+              "correct": false
+            },
+            {
+              "text": "IV will continue to rise",
+              "correct": false
+            },
+            {
+              "text": "Time decay is zero",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 26,
+      "title": "Rho: Interest Rates & LEAPS",
+      "questions": [
+        {
+          "id": "45f19912-e4c1-4c1e-97ba-f18fc84b9931",
+          "text": "Rho is defined as...",
+          "answers": [
+            {
+              "text": "The dollar change in option value per 1% change in the risk-free interest rate",
+              "correct": true
+            },
+            {
+              "text": "The change in Delta per 1% interest rate move",
+              "correct": false
+            },
+            {
+              "text": "The annual time decay rate",
+              "correct": false
+            },
+            {
+              "text": "The sensitivity to dividend changes",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "aaba678d-38ab-408c-adfb-af8c1e9c8d92",
+          "text": "Rising interest rates affect calls and puts how?",
+          "answers": [
+            {
+              "text": "Calls gain value slightly; puts lose value slightly",
+              "correct": true
+            },
+            {
+              "text": "Both calls and puts gain value",
+              "correct": false
+            },
+            {
+              "text": "Both calls and puts lose value",
+              "correct": false
+            },
+            {
+              "text": "Calls lose value; puts gain value",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "6475efa7-0b1e-4d18-8810-cd2807cd5021",
+          "text": "For which options does Rho have the greatest impact?",
+          "answers": [
+            {
+              "text": "Long-dated options (LEAPS) with 18–24 months of rate exposure",
+              "correct": true
+            },
+            {
+              "text": "Weekly options with 7 DTE",
+              "correct": false
+            },
+            {
+              "text": "ATM options with 30 DTE",
+              "correct": false
+            },
+            {
+              "text": "Far OTM options near expiration",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "cda5fa79-ad3a-4eb9-ae76-ccbe5b61792e",
+          "text": "LEAPS Call with Rho = 0.12. Fed hikes rates +1%. Gain per contract?",
+          "answers": [
+            {
+              "text": "$12 per contract (0.12 × 100)",
+              "correct": true
+            },
+            {
+              "text": "$1.20",
+              "correct": false
+            },
+            {
+              "text": "$120",
+              "correct": false
+            },
+            {
+              "text": "$0.12",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "5d78f620-99d1-4f39-8acf-03bb7e2f42a8",
+          "text": "Full +4% hiking cycle, Rho = 0.12. Total Rho contribution per contract?",
+          "answers": [
+            {
+              "text": "$48 (0.12 × 4 × 100)",
+              "correct": true
+            },
+            {
+              "text": "$4.80",
+              "correct": false
+            },
+            {
+              "text": "$480",
+              "correct": false
+            },
+            {
+              "text": "$12",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "9c969d4d-712e-485f-a7af-63d31213c5b9",
+          "text": "During 2022–2023, the Federal Reserve raised rates from approximately 0% to...",
+          "answers": [
+            {
+              "text": "5.5%",
+              "correct": true
+            },
+            {
+              "text": "2.5%",
+              "correct": false
+            },
+            {
+              "text": "8%",
+              "correct": false
+            },
+            {
+              "text": "1%",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "000f032b-d01d-443a-99e0-59fd7b44ec82",
+          "text": "Rho is typically the LEAST important Greek for...",
+          "answers": [
+            {
+              "text": "Short-dated options (weekly or monthly) where rate exposure is minimal",
+              "correct": true
+            },
+            {
+              "text": "LEAPS with 24 months to expiry",
+              "correct": false
+            },
+            {
+              "text": "Options on rate-sensitive assets",
+              "correct": false
+            },
+            {
+              "text": "Deep ITM long-term options",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "b60a05bd-80f7-4f41-a63e-6c6405e3c3d9",
+          "text": "For a long-dated PUT option, rising interest rates...",
+          "answers": [
+            {
+              "text": "Hurt the position — puts lose value as rates rise (Rho is negative for long puts)",
+              "correct": true
+            },
+            {
+              "text": "Help the position — puts gain from rising rates",
+              "correct": false
+            },
+            {
+              "text": "Have no effect on puts",
+              "correct": false
+            },
+            {
+              "text": "Double the Theta cost",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "84f04b42-b6c9-4ac0-939e-ef175f4e94f5",
+          "text": "Rho is called 'invisible day to day' because...",
+          "answers": [
+            {
+              "text": "The effect per small rate move accumulates slowly and is negligible in short periods",
+              "correct": true
+            },
+            {
+              "text": "It cannot be measured",
+              "correct": false
+            },
+            {
+              "text": "It only affects sellers",
+              "correct": false
+            },
+            {
+              "text": "Rate changes happen only once per decade",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "e58c6903-0f26-4586-bc91-dafd8e3e8226",
+          "text": "Which position benefits most from rising interest rates via Rho?",
+          "answers": [
+            {
+              "text": "Long Call, especially LEAPS — positive Rho amplified by long time exposure",
+              "correct": true
+            },
+            {
+              "text": "Long Put LEAPS",
+              "correct": false
+            },
+            {
+              "text": "Short Call weekly options",
+              "correct": false
+            },
+            {
+              "text": "Short Put near expiration",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slide_num": 27,
+      "title": "What You've Learned — Module 1",
+      "questions": [
+        {
+          "id": "7f065e98-5ef5-487d-9927-ca61967864bd",
+          "text": "The five Greeks covered in Module 1 are...",
+          "answers": [
+            {
+              "text": "Delta, Gamma, Theta, Vega, and Rho",
+              "correct": true
+            },
+            {
+              "text": "Alpha, Beta, Gamma, Delta, Epsilon",
+              "correct": false
+            },
+            {
+              "text": "Delta, Theta, Sigma, Pi, Rho",
+              "correct": false
+            },
+            {
+              "text": "Vega, Omega, Rho, Nu, Kappa",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "231189e9-b7fa-4998-b9f4-e65747109001",
+          "text": "Which Greek measures how fast an option's directional exposure (Delta) changes?",
+          "answers": [
+            {
+              "text": "Gamma — the acceleration of Delta",
+              "correct": true
+            },
+            {
+              "text": "Theta",
+              "correct": false
+            },
+            {
+              "text": "Vega",
+              "correct": false
+            },
+            {
+              "text": "Rho",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "da13d663-019e-475b-a6b0-0cbaeb85b9cd",
+          "text": "Which Greek is most relevant for long-dated options during an interest rate cycle?",
+          "answers": [
+            {
+              "text": "Rho — material for LEAPS with 18–24 months of rate exposure",
+              "correct": true
+            },
+            {
+              "text": "Theta",
+              "correct": false
+            },
+            {
+              "text": "Gamma",
+              "correct": false
+            },
+            {
+              "text": "Vega",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "6528ed1b-8161-486a-9354-8f1a6471a48c",
+          "text": "LEAPS are preferred for long-term positions primarily because...",
+          "answers": [
+            {
+              "text": "Slow Theta decay gives the investment thesis time to develop without excessive daily cost",
+              "correct": true
+            },
+            {
+              "text": "They have higher Gamma than short-dated options",
+              "correct": false
+            },
+            {
+              "text": "They are always cheaper than monthly options",
+              "correct": false
+            },
+            {
+              "text": "LEAPS are exempt from IV changes",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "a49ef238-dc06-4e45-9423-2317b6986863",
+          "text": "The Gamma-Theta trade-off states...",
+          "answers": [
+            {
+              "text": "Positive Gamma (convexity) always comes at the cost of negative Theta (daily time decay)",
+              "correct": true
+            },
+            {
+              "text": "Gamma and Theta are always equal in magnitude",
+              "correct": false
+            },
+            {
+              "text": "You can maximize both simultaneously",
+              "correct": false
+            },
+            {
+              "text": "Theta is irrelevant for buyers",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "fcfc11f5-56e3-4de5-a0d3-1ee5f0e5e926",
+          "text": "IV Rank below 30 indicates...",
+          "answers": [
+            {
+              "text": "Options are historically compressed — favorable for buyers seeking cheap Vega",
+              "correct": true
+            },
+            {
+              "text": "Options are overpriced",
+              "correct": false
+            },
+            {
+              "text": "The stock will definitely rise",
+              "correct": false
+            },
+            {
+              "text": "IV is about to collapse further",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "db007173-8da8-4130-bd27-afb09c189220",
+          "text": "An option buyer's maximum loss is always...",
+          "answers": [
+            {
+              "text": "The premium paid — regardless of how far the underlying moves against the position",
+              "correct": true
+            },
+            {
+              "text": "The full underlying value",
+              "correct": false
+            },
+            {
+              "text": "The strike price",
+              "correct": false
+            },
+            {
+              "text": "Unlimited",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "13c64562-941e-40e7-8c96-7a67df10acc1",
+          "text": "Moneyness describes...",
+          "answers": [
+            {
+              "text": "Whether an option has intrinsic value (ITM) or consists only of time value (OTM/ATM)",
+              "correct": true
+            },
+            {
+              "text": "The quality of the underlying company",
+              "correct": false
+            },
+            {
+              "text": "The option's daily trading volume",
+              "correct": false
+            },
+            {
+              "text": "Whether the option has been exercised",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "ba0a94ec-a30f-4cf5-9cad-f582f34cf602",
+          "text": "The fundamental equation for option premium is...",
+          "answers": [
+            {
+              "text": "Premium = Intrinsic Value + Time Value",
+              "correct": true
+            },
+            {
+              "text": "Premium = Delta × Strike",
+              "correct": false
+            },
+            {
+              "text": "Premium = Theta × DTE",
+              "correct": false
+            },
+            {
+              "text": "Premium = Vega × IV",
+              "correct": false
+            }
+          ]
+        },
+        {
+          "id": "eb964ba5-b246-4061-bc11-d1f493af9eab",
+          "text": "What makes options fundamentally different from linear instruments like stocks?",
+          "answers": [
+            {
+              "text": "Non-linearity — options respond to multiple variables simultaneously with asymmetric payoffs",
+              "correct": true
+            },
+            {
+              "text": "Options pay dividends",
+              "correct": false
+            },
+            {
+              "text": "Options can only be traded on Fridays",
+              "correct": false
+            },
+            {
+              "text": "Options require physical delivery",
+              "correct": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
