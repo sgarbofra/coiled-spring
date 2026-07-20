@@ -66,8 +66,8 @@ function presignGetUrl({
   const credentialScope = `${dateStamp}/${region}/${service}/aws4_request`
   const credential = `${accessKeyId}/${credentialScope}`
 
-  // Canonical URI: oggetti R2 con bucket implicito nell'endpoint
-  const canonicalUri = `/${key}`
+  // Canonical URI path-style: /<bucket>/<key> — deve corrispondere esattamente all'URL finale
+  const canonicalUri = `/${bucket}/${key}`
 
   // Query string parametri ordinati alfabeticamente
   const qp: [string, string][] = [
