@@ -743,53 +743,68 @@ export default function AcademyPage() {
             ) : null}
           </div>
 
-          {/* Bottone QUESTION + chat inline */}
+          {/* Bottone ASK + chat inline */}
           <div style={{ marginBottom: '20px' }}>
 
-            {/* Trigger */}
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: chatOpen ? '0' : '0' }}>
+            {/* Trigger — visibile solo quando la chat è chiusa */}
+            {!chatOpen && (
               <button
-                onClick={chatOpen ? () => setChatOpen(false) : openChat}
+                onClick={openChat}
                 style={{
                   width: '100%',
-                  background: chatOpen ? 'rgba(232,119,34,0.06)' : 'transparent',
-                  color: chatOpen ? css.orange : css.text2,
-                  border: `1px solid ${chatOpen ? css.orange : css.border}`,
-                  borderBottom: chatOpen ? 'none' : `1px solid ${chatOpen ? css.orange : css.border}`,
-                  padding: '9px 20px', cursor: 'pointer',
-                  fontFamily: css.mono, fontSize: '11px', fontWeight: 700, letterSpacing: '1px',
+                  background: 'transparent',
+                  color: css.text2,
+                  border: `1px solid ${css.border}`,
+                  padding: '11px 20px', cursor: 'pointer',
+                  fontFamily: css.mono, fontSize: '11px', letterSpacing: '1px',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
-                  transition: 'border-color 0.15s, color 0.15s, background 0.15s',
+                  transition: 'border-color 0.15s, color 0.15s',
                 }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = css.orange; e.currentTarget.style.color = css.orange }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = css.border; e.currentTarget.style.color = css.text2 }}
               >
-                <span>{chatOpen ? '✕ CLOSE' : '? ASK'}</span>
+                ✋ Any doubts? Raise your hand and ask a question
               </button>
-            </div>
+            )}
 
             {/* Pannello chat */}
             {chatOpen && (
               <div style={{
                 border: `1px solid ${css.orange}`,
-                display: 'flex', flexDirection: 'column', height: '340px',
+                display: 'flex', flexDirection: 'column', height: '380px',
                 background: css.surface,
               }}>
 
-                {/* Intestazione */}
+                {/* Intestazione con RESUME LESSON */}
                 <div style={{
-                  padding: '8px 16px',
+                  padding: '8px 12px 8px 16px',
                   borderBottom: `1px solid ${css.border}`,
-                  display: 'flex', alignItems: 'center', gap: '8px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                 }}>
                   <span style={{ color: css.text2, fontFamily: css.mono, fontSize: '10px', letterSpacing: '1px' }}>
-                    ASK A QUESTION — MODULE {activeModule}
+                    ✋ ASK A QUESTION — MODULE {activeModule}
                   </span>
+                  <button
+                    onClick={() => {
+                      videoRef.current?.play()
+                      setChatOpen(false)
+                    }}
+                    style={{
+                      background: css.orange, color: '#000', border: 'none',
+                      padding: '5px 14px', cursor: 'pointer',
+                      fontFamily: css.mono, fontSize: '10px', fontWeight: 700, letterSpacing: '1px',
+                      flexShrink: 0,
+                    }}
+                  >
+                    ▶ RESUME LESSON
+                  </button>
                 </div>
 
                 {/* Messaggi */}
                 <div style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
                   {chatMessages.length === 0 && (
                     <div style={{ color: css.text2, fontSize: '13px', fontStyle: 'italic', textAlign: 'center', marginTop: '20px' }}>
-                      Hai una domanda sul modulo? Scrivi qui sotto.
+                      Something wasn't clear? Write your question below.
                     </div>
                   )}
                   {chatMessages.map((m, i) => (
@@ -827,7 +842,7 @@ export default function AcademyPage() {
                         sendQuestion()
                       }
                     }}
-                    placeholder="Ask about this module... (Enter to send)"
+                    placeholder="Type your question... (Enter to send, Shift+Enter for new line)"
                     rows={2}
                     style={{
                       flex: 1,
