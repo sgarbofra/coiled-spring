@@ -399,3 +399,22 @@ class QuizResult(Base):
     total: Mapped[int] = mapped_column(Integer, nullable=False)
     passed: Mapped[bool] = mapped_column(Boolean, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class VideoProgress(Base):
+    """Ultima posizione di riproduzione dell'utente in un video modulo.
+
+    Una riga per (user_id, module_id, language) — upsert ad ogni checkpoint.
+    position_seconds: secondi dall'inizio del video all'ultimo salvataggio.
+    """
+    __tablename__ = "video_progress"
+    __table_args__ = (
+        UniqueConstraint("user_id", "module_id", "language", name="uq_video_progress_user_module_lang"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    module_id: Mapped[int] = mapped_column(Integer, nullable=False)
+    language: Mapped[str] = mapped_column(Text, nullable=False)          # 'en' | 'it'
+    position_seconds: Mapped[float] = mapped_column(nullable=False, default=0.0)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

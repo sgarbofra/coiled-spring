@@ -41,6 +41,12 @@ class AnswerIn(BaseModel):
     is_correct: bool      # calcolato server-side da Next.js
 
 
+class SaveProgressIn(BaseModel):
+    module_id: int
+    language: str           # 'en' | 'it'
+    position_seconds: float
+
+
 class AttemptOut(BaseModel):
     id: int
     module_id: int
@@ -241,3 +247,64 @@ def get_module_results(
         .order_by(models.QuizResult.created_at.desc())
         .all()
     )
+
+
+# ── Video progress ───────────────────────────────────────────────────────────────
+
+@router.get("/progress/{module_id}")
+def get_video_progress(
+    module_id: int,
+    language: str = "en",
+    db: Session = Depends(get_db),
+    user: models.User = Depends(get_current_user),
+):
+    """Restituisce l'ultima posizione salvata per (user, module, language).
+    Ritorna 0.0 se non esiste alcun record — mai 404.
+    """
+    progress = (
+        db.query(models.VideoProgress)
+        .filter(
+            models.VideoProgress.user_id == user.id,
+            models.VideoProgress.module_id == module_id,
+            models.VideoProgress.language == language,
+        )
+        .first()
+    )
+    return {"position_seconds": progress.position_seconds if progress else 0.0}
+
+
+@router.post("/progress")
+def save_video_progress(
+    body: SaveProgressIn,
+    db: Session = Depends(get_db),
+    user: models.User = Depends(get_current_user),
+):
+    """Upsert posizione video per (user, module, language).
+    Operazione idempotente: se esiste già un record lo aggiorna, altrimenti lo crea.
+    """
+    if body.position_seconds < 0:
+        raise HTTPException(status_code=400, detail="position_seconds must be >= 0")
+
+    progress = (
+        db.query(models.VideoProgress)
+        .filter(
+            models.VideoProgress.user_id == user.id,
+            models.VideoProgress.module_id == body.module_id,
+            models.VideoProgress.language == body.language,
+        )
+        .first()
+    )
+
+    if progress:
+        progress.position_seconds = body.position_seconds
+    else:
+        progress = models.VideoProgress(
+            user_id=user.id,
+            module_id=body.module_id,
+            language=body.language,
+            position_seconds=body.position_seconds,
+        )
+        db.add(progress)
+
+    db.commit()
+    return {"ok": True}

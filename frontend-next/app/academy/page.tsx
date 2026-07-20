@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useUser } from '@/contexts/UserContext'
 
@@ -118,6 +118,11 @@ export default function AcademyPage() {
   const [videoLoading, setVideoLoading] = useState(false)
   const [videoUnavailable, setVideoUnavailable] = useState(false)
 
+  // Video progress / resume
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [initialPosition, setInitialPosition] = useState<number>(0)
+  const [resumeLabel, setResumeLabel] = useState<string | null>(null)
+
   // Redirect se non autenticato
   useEffect(() => {
     if (!userLoading && !user) router.push('/login')
@@ -134,11 +139,84 @@ export default function AcademyPage() {
 
   useEffect(() => { fetchResults() }, [fetchResults])
 
+  // Salva posizione video — fire-and-forget, fail silently.
+  // keepalive: true consente l'invio anche su chiusura tab.
+  const saveProgress = useCallback((moduleId: number, lang: string, posSeconds: number) => {
+    fetch('/api/academy/progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ module_id: moduleId, language: lang, position_seconds: posSeconds }),
+      keepalive: true,
+    }).catch(() => {})
+  }, [])
+
+  // Recupera l'ultima posizione salvata e aggiorna initialPosition + resumeLabel.
+  // Non lancia mai eccezioni verso il chiamante.
+  const fetchInitialPosition = useCallback(async (moduleId: number, lang: string) => {
+    try {
+      const res = await fetch(`/api/academy/progress?module_id=${moduleId}&language=${lang}`)
+      const data = await res.json()
+      const pos: number = typeof data.position_seconds === 'number' ? data.position_seconds : 0
+      setInitialPosition(pos)
+      if (pos > 30) {
+        const m = Math.floor(pos / 60)
+        const s = Math.floor(pos % 60)
+        setResumeLabel(`${m}:${s.toString().padStart(2, '0')}`)
+      } else {
+        setResumeLabel(null)
+      }
+    } catch {
+      setInitialPosition(0)
+      setResumeLabel(null)
+    }
+  }, [])
+
   // Ripristina preferenza lingua da localStorage
   useEffect(() => {
     const saved = localStorage.getItem('academy_language') as 'en' | 'it' | null
     if (saved === 'en' || saved === 'it') setLanguage(saved)
   }, [])
+
+  // Gestisce: seek alla posizione salvata + salvataggio periodico durante la riproduzione
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video || !videoUrl) return
+
+    // Seek non appena i metadata sono disponibili (duration nota)
+    const onLoadedMetadata = () => {
+      if (initialPosition > 0 && video.duration > 0 && initialPosition < video.duration - 3) {
+        video.currentTime = initialPosition
+      }
+      setResumeLabel(null) // nasconde il badge una volta applicato il seek
+    }
+    video.addEventListener('loadedmetadata', onLoadedMetadata)
+
+    // Salva al pause (include fine video: ended → paused)
+    const onPause = () => saveProgress(activeModule, language, video.currentTime)
+    video.addEventListener('pause', onPause)
+
+    // Checkpoint ogni 10 secondi mentre è in play
+    const interval = setInterval(() => {
+      if (!video.paused && video.currentTime > 0) {
+        saveProgress(activeModule, language, video.currentTime)
+      }
+    }, 10_000)
+
+    // Salva quando la tab viene nascosta (cambio tab / chiusura finestra)
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        saveProgress(activeModule, language, video.currentTime)
+      }
+    }
+    document.addEventListener('visibilitychange', onVisibilityChange)
+
+    return () => {
+      video.removeEventListener('loadedmetadata', onLoadedMetadata)
+      video.removeEventListener('pause', onPause)
+      clearInterval(interval)
+      document.removeEventListener('visibilitychange', onVisibilityChange)
+    }
+  }, [videoUrl, initialPosition, activeModule, language, saveProgress])
 
   // Fetch signed URL per il video (chiama /api/academy/video)
   const fetchVideoUrl = useCallback(async (moduleId: number, lang: string) => {
@@ -158,13 +236,18 @@ export default function AcademyPage() {
     }
   }, [])
 
-  // Apre la view video per un modulo
+  // Apre la view video per un modulo, fetchando URL e posizione salvata in parallelo
   const openModule = useCallback(async (moduleId: number) => {
     setActiveModule(moduleId)
     setError(null)
+    setResumeLabel(null)
+    setInitialPosition(0)
     setView('video')
-    await fetchVideoUrl(moduleId, language)
-  }, [language, fetchVideoUrl])
+    await Promise.all([
+      fetchVideoUrl(moduleId, language),
+      fetchInitialPosition(moduleId, language),
+    ])
+  }, [language, fetchVideoUrl, fetchInitialPosition])
 
   // Helper: un modulo è bloccato se non è il primo e il precedente non è stato superato
   const isModuleLocked = (moduleId: number) =>
@@ -496,7 +579,7 @@ export default function AcademyPage() {
           </div>
 
           {/* Language toggle */}
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', alignItems: 'center' }}>
             <span style={{ fontSize: '11px', color: css.text2, fontFamily: css.mono, letterSpacing: '1px' }}>LANGUAGE:</span>
             {(['en', 'it'] as const).map(lang => (
               <button
@@ -504,7 +587,10 @@ export default function AcademyPage() {
                 onClick={() => {
                   setLanguage(lang)
                   localStorage.setItem('academy_language', lang)
+                  setResumeLabel(null)
+                  setInitialPosition(0)
                   fetchVideoUrl(activeModule, lang)
+                  fetchInitialPosition(activeModule, lang)
                 }}
                 style={{
                   background: language === lang ? css.orange : 'transparent',
@@ -519,6 +605,18 @@ export default function AcademyPage() {
               </button>
             ))}
           </div>
+
+          {/* Resume badge — visibile finché il seek non è applicato */}
+          {resumeLabel && (
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: '6px',
+              background: 'rgba(232,119,34,0.08)', border: `1px solid rgba(232,119,34,0.3)`,
+              color: css.orange, fontFamily: css.mono, fontSize: '11px', letterSpacing: '1px',
+              padding: '5px 12px', marginBottom: '12px',
+            }}>
+              ▶ RIPRENDENDO DA {resumeLabel}
+            </div>
+          )}
 
           {/* Video player */}
           <div style={{
@@ -543,6 +641,7 @@ export default function AcademyPage() {
             ) : videoUrl ? (
               <video
                 key={videoUrl}
+                ref={videoRef}
                 controls
                 preload="metadata"
                 style={{ width: '100%', height: '100%', display: 'block' }}
