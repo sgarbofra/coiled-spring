@@ -123,6 +123,15 @@ export default function AcademyPage() {
   const [initialPosition, setInitialPosition] = useState<number>(0)
   const [resumeLabel, setResumeLabel] = useState<string | null>(null)
 
+  // Academy inline chat
+  type ChatMessage = { role: 'user' | 'assistant'; content: string }
+  const [chatOpen, setChatOpen] = useState(false)
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
+  const [chatInput, setChatInput] = useState('')
+  const [chatStreaming, setChatStreaming] = useState(false)
+  const chatInputRef = useRef<HTMLTextAreaElement>(null)
+  const chatBottomRef = useRef<HTMLDivElement>(null)
+
   // Redirect se non autenticato
   useEffect(() => {
     if (!userLoading && !user) router.push('/login')
@@ -218,6 +227,86 @@ export default function AcademyPage() {
     }
   }, [videoUrl, initialPosition, activeModule, language, saveProgress])
 
+  // Auto-scroll chat al fondo quando arrivano nuovi messaggi
+  useEffect(() => {
+    chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [chatMessages])
+
+  // Apre la chat e mette in pausa il video
+  const openChat = useCallback(() => {
+    if (videoRef.current && !videoRef.current.paused) {
+      videoRef.current.pause()
+    }
+    setChatOpen(true)
+    setTimeout(() => chatInputRef.current?.focus(), 100)
+  }, [])
+
+  // Invia domanda a CoiledAI (SSE streaming)
+  const sendQuestion = useCallback(async () => {
+    const msg = chatInput.trim()
+    if (!msg || chatStreaming) return
+    setChatInput('')
+
+    const updatedMessages: ChatMessage[] = [...chatMessages, { role: 'user', content: msg }]
+    setChatMessages([...updatedMessages, { role: 'assistant', content: '' }])
+    setChatStreaming(true)
+
+    const modTitle = MODULES.find(m => m.id === activeModule)?.title ?? `Module ${activeModule}`
+
+    try {
+      const res = await fetch('/api/academy/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: updatedMessages,
+          module_id: activeModule,
+          module_title: modTitle,
+          language,
+        }),
+        credentials: 'include',
+      })
+      if (!res.body) throw new Error('No stream')
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        const chunk = decoder.decode(value)
+        const lines = chunk.split('\n').filter(l => l.trim().startsWith('data:'))
+        for (const line of lines) {
+          const payload = line.slice(line.indexOf('data:') + 5).trim()
+          if (payload === '[DONE]') break
+          if (!payload) continue
+          try {
+            const parsed = JSON.parse(payload)
+            if (parsed.type === 'text') {
+              setChatMessages(prev => {
+                const updated = [...prev]
+                const last = updated[updated.length - 1]
+                if (last && last.role === 'assistant') {
+                  updated[updated.length - 1] = { ...last, content: last.content + parsed.text }
+                }
+                return updated
+              })
+            }
+          } catch { /* skip malformed SSE chunk */ }
+        }
+      }
+    } catch {
+      setChatMessages(prev => {
+        const updated = [...prev]
+        const last = updated[updated.length - 1]
+        if (last && last.role === 'assistant' && !last.content) {
+          updated[updated.length - 1] = { ...last, content: 'Errore di connessione a CoiledAI.' }
+        }
+        return updated
+      })
+    } finally {
+      setChatStreaming(false)
+    }
+  }, [chatInput, chatMessages, chatStreaming, activeModule, language])
+
   // Fetch signed URL per il video (chiama /api/academy/video)
   const fetchVideoUrl = useCallback(async (moduleId: number, lang: string) => {
     setVideoLoading(true)
@@ -242,6 +331,9 @@ export default function AcademyPage() {
     setError(null)
     setResumeLabel(null)
     setInitialPosition(0)
+    setChatOpen(false)
+    setChatMessages([])
+    setChatInput('')
     setView('video')
     await Promise.all([
       fetchVideoUrl(moduleId, language),
@@ -567,7 +659,7 @@ export default function AcademyPage() {
               </div>
             </div>
             <button
-              onClick={() => { setView('modules'); setVideoUrl(null) }}
+              onClick={() => { setView('modules'); setVideoUrl(null); setChatOpen(false); setChatMessages([]) }}
               style={{
                 background: 'transparent', border: `1px solid ${css.border}`,
                 color: css.text2, padding: '6px 14px', cursor: 'pointer',
@@ -649,6 +741,126 @@ export default function AcademyPage() {
                 <source src={videoUrl} type="video/mp4" />
               </video>
             ) : null}
+          </div>
+
+          {/* Bottone QUESTION + chat inline */}
+          <div style={{ marginBottom: '20px' }}>
+
+            {/* Trigger */}
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: chatOpen ? '0' : '0' }}>
+              <button
+                onClick={chatOpen ? () => setChatOpen(false) : openChat}
+                style={{
+                  width: '100%',
+                  background: chatOpen ? 'rgba(232,119,34,0.06)' : 'transparent',
+                  color: chatOpen ? css.orange : css.text2,
+                  border: `1px solid ${chatOpen ? css.orange : css.border}`,
+                  borderBottom: chatOpen ? 'none' : `1px solid ${chatOpen ? css.orange : css.border}`,
+                  padding: '9px 20px', cursor: 'pointer',
+                  fontFamily: css.mono, fontSize: '11px', fontWeight: 700, letterSpacing: '1px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                  transition: 'border-color 0.15s, color 0.15s, background 0.15s',
+                }}
+              >
+                <span>{chatOpen ? '✕ CLOSE' : '? ASK'}</span>
+              </button>
+            </div>
+
+            {/* Pannello chat */}
+            {chatOpen && (
+              <div style={{
+                border: `1px solid ${css.orange}`,
+                display: 'flex', flexDirection: 'column', height: '340px',
+                background: css.surface,
+              }}>
+
+                {/* Intestazione */}
+                <div style={{
+                  padding: '8px 16px',
+                  borderBottom: `1px solid ${css.border}`,
+                  display: 'flex', alignItems: 'center', gap: '8px',
+                }}>
+                  <span style={{ color: css.text2, fontFamily: css.mono, fontSize: '10px', letterSpacing: '1px' }}>
+                    ASK A QUESTION — MODULE {activeModule}
+                  </span>
+                </div>
+
+                {/* Messaggi */}
+                <div style={{ flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  {chatMessages.length === 0 && (
+                    <div style={{ color: css.text2, fontSize: '13px', fontStyle: 'italic', textAlign: 'center', marginTop: '20px' }}>
+                      Hai una domanda sul modulo? Scrivi qui sotto.
+                    </div>
+                  )}
+                  {chatMessages.map((m, i) => (
+                    <div key={i}>
+                      <div style={{ fontSize: '10px', fontFamily: css.mono, letterSpacing: '1px', marginBottom: '4px',
+                        color: m.role === 'user' ? css.text2 : css.orange }}>
+                        {m.role === 'user' ? 'YOU' : 'COILED AI'}
+                      </div>
+                      <div style={{
+                        fontSize: '13px', lineHeight: 1.65, whiteSpace: 'pre-wrap',
+                        color: m.role === 'user' ? css.text2 : css.text,
+                      }}>
+                        {m.content || (chatStreaming && i === chatMessages.length - 1
+                          ? <span style={{ opacity: 0.6 }}>▌</span>
+                          : null)}
+                      </div>
+                    </div>
+                  ))}
+                  <div ref={chatBottomRef} />
+                </div>
+
+                {/* Input */}
+                <div style={{
+                  borderTop: `1px solid ${css.border}`,
+                  padding: '10px 16px',
+                  display: 'flex', gap: '8px', alignItems: 'flex-end',
+                }}>
+                  <textarea
+                    ref={chatInputRef}
+                    value={chatInput}
+                    onChange={e => setChatInput(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault()
+                        sendQuestion()
+                      }
+                    }}
+                    placeholder="Ask about this module... (Enter to send)"
+                    rows={2}
+                    style={{
+                      flex: 1,
+                      background: css.surface2,
+                      border: `1px solid ${css.border}`,
+                      color: css.text,
+                      padding: '8px 12px',
+                      fontFamily: css.sans,
+                      fontSize: '13px',
+                      resize: 'none',
+                      outline: 'none',
+                      lineHeight: 1.5,
+                    }}
+                    onFocus={e => { e.currentTarget.style.borderColor = css.orange }}
+                    onBlur={e => { e.currentTarget.style.borderColor = css.border }}
+                  />
+                  <button
+                    onClick={sendQuestion}
+                    disabled={chatStreaming || !chatInput.trim()}
+                    style={{
+                      background: chatStreaming || !chatInput.trim() ? css.surface2 : css.orange,
+                      color: chatStreaming || !chatInput.trim() ? css.text2 : '#000',
+                      border: `1px solid ${chatStreaming || !chatInput.trim() ? css.border : css.orange}`,
+                      padding: '10px 16px', cursor: chatStreaming ? 'wait' : 'pointer',
+                      fontFamily: css.mono, fontSize: '11px', fontWeight: 700, letterSpacing: '1px',
+                      flexShrink: 0, transition: 'background 0.15s',
+                    }}
+                  >
+                    {chatStreaming ? '...' : 'SEND'}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Module info */}
