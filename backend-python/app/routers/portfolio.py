@@ -475,16 +475,11 @@ def list_open_positions(
             current_ask          = price_data.ask if price_data.ask > 0 else None
             current_last         = price_data.last_price if price_data.last_price > 0 else None
             current_iv           = price_data.iv
-            current_delta        = price_data.delta           # già con segno (neg per put)
+            current_delta        = price_data.delta
             current_vega         = price_data.vega
             current_open_interest = price_data.open_interest if price_data.open_interest else None
             last_refreshed       = price_data.fetched_at
 
-            # Priorità prezzo per PNL:
-            # 1. mid = (bid+ask)/2 se bid > 0 E ask > 0  → quotazione corrente, aggiornata dai MM
-            # 2. last                                     → solo se bid=ask=0 (già gestito in current_mid)
-            # NOTA: current_mid già incorpora il fallback su lastPrice quando bid=ask=0
-            # Non usare last come priorità: per LEAPS può essere di 1-3 giorni fa
             pnl_price = current_mid
 
             if pnl_price is not None and entry > 0:

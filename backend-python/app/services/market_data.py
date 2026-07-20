@@ -572,6 +572,7 @@ def get_option_current_price(symbol_key: str) -> Optional[OptionPrice]:
 
     underlying, expiry, is_call, strike = _parse_symbol_key(symbol_key)
     if not underlying:
+        print(f"[OPTPRICE] {symbol_key}: impossibile parsare symbol_key")
         return None
 
     try:
@@ -579,29 +580,38 @@ def get_option_current_price(symbol_key: str) -> Optional[OptionPrice]:
         from datetime import date as _date_p
         ticker = yf.Ticker(underlying)
 
-        # ── Scadenza: cerca corrispondenza esatta, poi nearest se non trovata ────
-        # Yahoo Finance non sempre ha la data esatta salvata nel DB
-        # (i LEAPS standard scadono il 3° venerdì; il DB può avere ±1-3 giorni di scarto).
-        available = ticker.options  # tuple di stringhe "YYYY-MM-DD"
-        if not available:
-            print(f"[OPTPRICE] {symbol_key}: nessuna scadenza disponibile su yfinance")
+        # ── Step 1: recupera le scadenze disponibili ──────────────────────────────
+        try:
+            available = ticker.options  # tuple di stringhe "YYYY-MM-DD"
+        except Exception as e_opts:
+            print(f"[OPTPRICE] {symbol_key}: ticker.options FALLITO → {type(e_opts).__name__}: {e_opts}")
             return None
 
+        if not available:
+            print(f"[OPTPRICE] {symbol_key}: ticker.options vuoto (yfinance bloccato o nessun dato)")
+            return None
+
+        # ── Step 2: trova la scadenza più vicina se quella esatta non esiste ──────
         if expiry not in available:
             target_dt = _date_p.fromisoformat(expiry)
             nearest = min(available, key=lambda e: abs((_date_p.fromisoformat(e) - target_dt).days))
             gap = abs((_date_p.fromisoformat(nearest) - target_dt).days)
             if gap > 14:
-                # Scostamento > 2 settimane: probabilmente contratto non quotato
-                print(f"[OPTPRICE] {symbol_key}: scadenza {expiry} non trovata (nearest={nearest}, gap={gap}d)")
+                print(f"[OPTPRICE] {symbol_key}: scadenza {expiry} non trovata, nearest={nearest} (gap={gap}d > 14)")
                 return None
-            print(f"[OPTPRICE] {symbol_key}: scadenza {expiry} → usando nearest {nearest} (gap={gap}d)")
+            print(f"[OPTPRICE] {symbol_key}: scadenza {expiry} → nearest {nearest} (gap={gap}d)")
             expiry = nearest
 
-        chain = ticker.option_chain(expiry)
+        # ── Step 3: scarica la option chain ──────────────────────────────────────
+        try:
+            chain = ticker.option_chain(expiry)
+        except Exception as e_chain:
+            print(f"[OPTPRICE] {symbol_key}: option_chain({expiry}) FALLITO → {type(e_chain).__name__}: {e_chain}")
+            return None
+
         df = chain.calls if is_call else chain.puts
 
-        # Trova lo strike esatto o il più vicino
+        # ── Step 4: trova lo strike ───────────────────────────────────────────────
         matches = df[abs(df['strike'] - strike) < 0.01]
         if matches.empty:
             matches = df.iloc[(df['strike'] - strike).abs().argsort()[:1]]
@@ -617,10 +627,12 @@ def get_option_current_price(symbol_key: str) -> Optional[OptionPrice]:
         volume = int(row.get('volume', 0) or 0)
         oi = int(row.get('openInterest', 0) or 0)
 
+        print(f"[OPTPRICE] {symbol_key}: bid={bid} ask={ask} last={last_price} iv={iv_raw:.3f} vol={volume} oi={oi}")
+
         # ── Calcolo mid: 3 livelli di fallback ───────────────────────────────────
-        # Livello 1: bid/ask — quotazione corrente dai market maker (più fresca)
-        # Livello 2: lastPrice — ultimo trade eseguito (può essere stale per LEAPS illiquide)
-        # Livello 3: prezzo teorico B-S — ultimo resort quando mercato non ha prezzi
+        # Livello 1: bid/ask — quotazione corrente dai market maker
+        # Livello 2: lastPrice — ultimo trade eseguito
+        # Livello 3: prezzo teorico B-S — solo se i prezzi di mercato sono tutti 0
         mid = 0.0
         price_source = "none"
 
@@ -637,8 +649,9 @@ def get_option_current_price(symbol_key: str) -> Optional[OptionPrice]:
             mid = round(last_price, 2)
             price_source = "last"
 
-        # Livello 3: B-S teorico — quando non ci sono prezzi di mercato
-        if mid == 0 and SCIPY_AVAILABLE:
+        # Livello 3: B-S teorico — bs_greeks usa solo math, non scipy
+        # (SCIPY_AVAILABLE serve solo per implied_volatility_bs, non per il pricing)
+        if mid == 0:
             try:
                 underlying_price_bs = _yf_current_price(underlying)
                 from datetime import date as _date_bs
@@ -646,16 +659,21 @@ def get_option_current_price(symbol_key: str) -> Optional[OptionPrice]:
                 dte_bs = (exp_date_bs - _date_bs.today()).days
                 if underlying_price_bs and dte_bs > 0:
                     T_bs = dte_bs / 365.0
-                    # Usa iv_raw di Yahoo se disponibile (anche se bassa), altrimenti sigma di default 25%
                     sigma_bs = iv_raw if iv_raw > 0.01 else 0.25
                     bs_price, _, _, _, _ = bs_greeks(underlying_price_bs, strike, T_bs, 0.045, sigma_bs, is_call)
                     if bs_price > 0:
                         mid = round(bs_price, 2)
                         price_source = "bs_theoretical"
-            except Exception:
-                pass
+                        print(f"[OPTPRICE] {symbol_key}: prezzi mercato=0, uso B-S teorico={mid} (S={underlying_price_bs} σ={sigma_bs:.2f})")
+                    else:
+                        print(f"[OPTPRICE] {symbol_key}: B-S teorico=0 (S={underlying_price_bs} K={strike} T={T_bs:.3f} σ={sigma_bs:.2f})")
+                else:
+                    print(f"[OPTPRICE] {symbol_key}: B-S impossibile — underlying_price={underlying_price_bs} dte={dte_bs}")
+            except Exception as e_bs:
+                print(f"[OPTPRICE] {symbol_key}: B-S fallback FALLITO → {type(e_bs).__name__}: {e_bs}")
 
         if mid == 0:
+            print(f"[OPTPRICE] {symbol_key}: mid=0 dopo tutti i fallback → return None")
             return None  # nessun prezzo disponibile in nessuna forma
 
         iv_rank = _yf_iv_rank(underlying)
