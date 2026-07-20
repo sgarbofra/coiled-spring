@@ -105,11 +105,18 @@ export default function AcademyPage() {
   const router = useRouter()
   const { user, loading: userLoading } = useUser()
 
-  const [view, setView] = useState<'modules' | 'quiz'>('modules')
+  const [view, setView] = useState<'modules' | 'video' | 'quiz'>('modules')
   const [quiz, setQuiz] = useState<QuizState | null>(null)
   const [results, setResults] = useState<Array<{ module_id: number; score: number; total: number; passed: boolean; created_at: string }>>([])
   const [loadingQuiz, setLoadingQuiz] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // Video state
+  const [language, setLanguage] = useState<'en' | 'it'>('en')
+  const [activeModule, setActiveModule] = useState<number>(1)
+  const [videoUrl, setVideoUrl] = useState<string | null>(null)
+  const [videoLoading, setVideoLoading] = useState(false)
+  const [videoUnavailable, setVideoUnavailable] = useState(false)
 
   // Redirect se non autenticato
   useEffect(() => {
@@ -126,6 +133,42 @@ export default function AcademyPage() {
   }, [])
 
   useEffect(() => { fetchResults() }, [fetchResults])
+
+  // Ripristina preferenza lingua da localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('academy_language') as 'en' | 'it' | null
+    if (saved === 'en' || saved === 'it') setLanguage(saved)
+  }, [])
+
+  // Fetch signed URL per il video (chiama /api/academy/video)
+  const fetchVideoUrl = useCallback(async (moduleId: number, lang: string) => {
+    setVideoLoading(true)
+    setVideoUrl(null)
+    setVideoUnavailable(false)
+    try {
+      const res = await fetch(`/api/academy/video?module_id=${moduleId}&language=${lang}`)
+      const data = await res.json()
+      if (data.unavailable) { setVideoUnavailable(true); return }
+      if (!res.ok || !data.url) throw new Error(data.error ?? 'Video non disponibile')
+      setVideoUrl(data.url)
+    } catch {
+      setVideoUnavailable(true)
+    } finally {
+      setVideoLoading(false)
+    }
+  }, [])
+
+  // Apre la view video per un modulo
+  const openModule = useCallback(async (moduleId: number) => {
+    setActiveModule(moduleId)
+    setError(null)
+    setView('video')
+    await fetchVideoUrl(moduleId, language)
+  }, [language, fetchVideoUrl])
+
+  // Helper: un modulo è bloccato se non è il primo e il precedente non è stato superato
+  const isModuleLocked = (moduleId: number) =>
+    moduleId > 1 && !results.some(r => r.module_id === moduleId - 1 && r.passed)
 
   // Controlla se modulo 1 è già stato superato
   const module1Passed = results.some(r => r.module_id === 1 && r.passed)
@@ -420,6 +463,133 @@ export default function AcademyPage() {
     )
   }
 
+  // ── Render: video view ───────────────────────────────────────────────────
+
+  if (view === 'video') {
+    const mod = MODULES.find(m => m.id === activeModule)!
+    const modPassed = results.some(r => r.module_id === activeModule && r.passed)
+
+    return (
+      <div style={{ background: css.bg, minHeight: '100vh', fontFamily: css.sans, padding: '24px 16px', color: css.text }}>
+        <div style={{ maxWidth: '960px', margin: '0 auto' }}>
+
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+            <div>
+              <div style={{ color: css.orange, fontFamily: css.mono, fontSize: '11px', letterSpacing: '1px', marginBottom: '4px' }}>
+                COILED SPRING ACADEMY
+              </div>
+              <div style={{ fontFamily: css.mono, fontSize: '13px', color: css.text2 }}>
+                {mod.title}
+              </div>
+            </div>
+            <button
+              onClick={() => { setView('modules'); setVideoUrl(null) }}
+              style={{
+                background: 'transparent', border: `1px solid ${css.border}`,
+                color: css.text2, padding: '6px 14px', cursor: 'pointer',
+                fontFamily: css.mono, fontSize: '11px', letterSpacing: '0.5px',
+              }}
+            >
+              ← BACK
+            </button>
+          </div>
+
+          {/* Language toggle */}
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', alignItems: 'center' }}>
+            <span style={{ fontSize: '11px', color: css.text2, fontFamily: css.mono, letterSpacing: '1px' }}>LANGUAGE:</span>
+            {(['en', 'it'] as const).map(lang => (
+              <button
+                key={lang}
+                onClick={() => {
+                  setLanguage(lang)
+                  localStorage.setItem('academy_language', lang)
+                  fetchVideoUrl(activeModule, lang)
+                }}
+                style={{
+                  background: language === lang ? css.orange : 'transparent',
+                  color: language === lang ? '#000' : css.text2,
+                  border: `1px solid ${language === lang ? css.orange : css.border}`,
+                  padding: '4px 14px', cursor: 'pointer',
+                  fontFamily: css.mono, fontSize: '11px', fontWeight: 700, letterSpacing: '1px',
+                  transition: 'background 0.15s, color 0.15s',
+                }}
+              >
+                {lang.toUpperCase()}
+              </button>
+            ))}
+          </div>
+
+          {/* Video player */}
+          <div style={{
+            background: '#000', border: `1px solid ${css.border}`, marginBottom: '20px',
+            aspectRatio: '16/9', display: 'flex', alignItems: 'center',
+            justifyContent: 'center', overflow: 'hidden', position: 'relative',
+          }}>
+            {videoLoading ? (
+              <div style={{ color: css.text2, fontFamily: css.mono, fontSize: '12px', letterSpacing: '1px' }}>
+                LOADING VIDEO...
+              </div>
+            ) : videoUnavailable ? (
+              <div style={{ textAlign: 'center', padding: '32px' }}>
+                <div style={{ fontSize: '40px', marginBottom: '16px', opacity: 0.4 }}>▶</div>
+                <div style={{ color: css.text2, fontFamily: css.mono, fontSize: '12px', letterSpacing: '1px', marginBottom: '8px' }}>
+                  VIDEO COMING SOON
+                </div>
+                <div style={{ color: css.text2, fontSize: '13px' }}>
+                  The video for this module will be available shortly.
+                </div>
+              </div>
+            ) : videoUrl ? (
+              <video
+                key={videoUrl}
+                controls
+                preload="metadata"
+                style={{ width: '100%', height: '100%', display: 'block' }}
+              >
+                <source src={videoUrl} type="video/mp4" />
+              </video>
+            ) : null}
+          </div>
+
+          {/* Module info */}
+          <div style={{ fontSize: '13px', color: css.text2, marginBottom: '24px' }}>
+            {mod.subtitle}
+          </div>
+
+          {/* CTA quiz */}
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+            {modPassed && (
+              <button
+                onClick={() => { setView('modules'); setVideoUrl(null) }}
+                style={{
+                  background: 'transparent', color: css.text2,
+                  border: `1px solid ${css.border}`,
+                  padding: '12px 24px', cursor: 'pointer',
+                  fontFamily: css.mono, fontSize: '12px', fontWeight: 700, letterSpacing: '1px',
+                }}
+              >
+                BACK TO MODULES
+              </button>
+            )}
+            <button
+              onClick={() => startQuiz(activeModule)}
+              disabled={loadingQuiz}
+              style={{
+                background: css.orange, color: '#000', border: 'none',
+                padding: '12px 28px', cursor: loadingQuiz ? 'wait' : 'pointer',
+                fontFamily: css.mono, fontSize: '12px', fontWeight: 700, letterSpacing: '1px',
+              }}
+            >
+              {loadingQuiz ? 'LOADING...' : modPassed ? 'RETAKE QUIZ' : 'PROCEED TO QUIZ →'}
+            </button>
+          </div>
+
+        </div>
+      </div>
+    )
+  }
+
   // ── Render: module list ───────────────────────────────────────────────────
 
   return (
@@ -478,6 +648,7 @@ export default function AcademyPage() {
         {/* Module cards */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {MODULES.map(mod => {
+            const locked = isModuleLocked(mod.id)
             const bestResult = results
               .filter(r => r.module_id === mod.id)
               .sort((a, b) => b.score - a.score)[0]
@@ -487,10 +658,10 @@ export default function AcademyPage() {
               <div
                 key={mod.id}
                 style={{
-                  background: mod.locked ? 'rgba(22,27,34,0.5)' : css.surface,
-                  border: `1px solid ${passed ? css.green : mod.locked ? css.border : css.border}`,
+                  background: locked ? 'rgba(22,27,34,0.5)' : css.surface,
+                  border: `1px solid ${passed ? css.green : css.border}`,
                   padding: '20px 24px',
-                  opacity: mod.locked ? 0.6 : 1,
+                  opacity: locked ? 0.6 : 1,
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px',
                 }}
               >
@@ -501,7 +672,7 @@ export default function AcademyPage() {
                       width: '8px', height: '8px', borderRadius: '50%', flexShrink: 0,
                       background: passed ? css.green : mod.locked ? css.border : css.orange,
                     }} />
-                    <span style={{ fontWeight: 600, fontSize: '15px', color: mod.locked ? css.text2 : css.text }}>
+                    <span style={{ fontWeight: 600, fontSize: '15px', color: locked ? css.text2 : css.text }}>
                       {mod.title}
                     </span>
                     {passed && (
@@ -513,7 +684,7 @@ export default function AcademyPage() {
                         PASSED
                       </span>
                     )}
-                    {mod.locked && (
+                    {locked && (
                       <span style={{
                         color: css.text2, fontFamily: css.mono, fontSize: '10px', letterSpacing: '0.5px',
                       }}>
@@ -535,20 +706,20 @@ export default function AcademyPage() {
                   </div>
                 </div>
 
-                {!mod.locked && (
+                {!locked && (
                   <button
-                    onClick={() => startQuiz(mod.id)}
-                    disabled={loadingQuiz}
+                    onClick={() => openModule(mod.id)}
+                    disabled={videoLoading && activeModule === mod.id}
                     style={{
-                      background: passed ? css.surface2 : css.orange,
-                      color: passed ? css.text : '#000',
-                      border: `1px solid ${passed ? css.border : css.orange}`,
-                      padding: '10px 20px', cursor: loadingQuiz ? 'wait' : 'pointer',
+                      background: css.orange,
+                      color: '#000',
+                      border: 'none',
+                      padding: '10px 20px', cursor: (videoLoading && activeModule === mod.id) ? 'wait' : 'pointer',
                       fontFamily: css.mono, fontSize: '11px', fontWeight: 700, letterSpacing: '1px',
                       flexShrink: 0, whiteSpace: 'nowrap',
                     }}
                   >
-                    {loadingQuiz ? 'LOADING...' : passed ? 'RETAKE QUIZ' : 'START QUIZ'}
+                    {videoLoading && activeModule === mod.id ? 'LOADING...' : passed ? 'WATCH AGAIN' : 'WATCH MODULE'}
                   </button>
                 )}
               </div>
