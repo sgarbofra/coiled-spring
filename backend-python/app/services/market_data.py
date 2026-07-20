@@ -576,7 +576,28 @@ def get_option_current_price(symbol_key: str) -> Optional[OptionPrice]:
 
     try:
         import yfinance as yf
+        from datetime import date as _date_p
         ticker = yf.Ticker(underlying)
+
+        # ── Scadenza: cerca corrispondenza esatta, poi nearest se non trovata ────
+        # Yahoo Finance non sempre ha la data esatta salvata nel DB
+        # (i LEAPS standard scadono il 3° venerdì; il DB può avere ±1-3 giorni di scarto).
+        available = ticker.options  # tuple di stringhe "YYYY-MM-DD"
+        if not available:
+            print(f"[OPTPRICE] {symbol_key}: nessuna scadenza disponibile su yfinance")
+            return None
+
+        if expiry not in available:
+            target_dt = _date_p.fromisoformat(expiry)
+            nearest = min(available, key=lambda e: abs((_date_p.fromisoformat(e) - target_dt).days))
+            gap = abs((_date_p.fromisoformat(nearest) - target_dt).days)
+            if gap > 14:
+                # Scostamento > 2 settimane: probabilmente contratto non quotato
+                print(f"[OPTPRICE] {symbol_key}: scadenza {expiry} non trovata (nearest={nearest}, gap={gap}d)")
+                return None
+            print(f"[OPTPRICE] {symbol_key}: scadenza {expiry} → usando nearest {nearest} (gap={gap}d)")
+            expiry = nearest
+
         chain = ticker.option_chain(expiry)
         df = chain.calls if is_call else chain.puts
 
@@ -585,6 +606,7 @@ def get_option_current_price(symbol_key: str) -> Optional[OptionPrice]:
         if matches.empty:
             matches = df.iloc[(df['strike'] - strike).abs().argsort()[:1]]
         if matches.empty:
+            print(f"[OPTPRICE] {symbol_key}: strike {strike} non trovato nella chain {expiry}")
             return None
 
         row = matches.iloc[0]
