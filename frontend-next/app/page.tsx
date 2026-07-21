@@ -1014,7 +1014,7 @@ export default function LandingPage() {
                 <p style={{ color: '#555', fontSize: '0.85rem', margin: 0 }}>Antifragile Options Trading</p>
               </div>
               <div style={{ display: 'flex', gap: '3rem', flexWrap: 'wrap' }}>
-                {[{ label: 'Login', href: '/login' }, { label: 'Register', href: '/register' }].map((link) => (
+                {[{ label: 'Changelog', href: '/changelog' }, { label: 'Login', href: '/login' }, { label: 'Register', href: '/register' }].map((link) => (
                   <a key={link.href} href={link.href} style={{ color: '#555', textDecoration: 'none', fontSize: '0.875rem', transition: 'color 0.2s ease' }}
                     onMouseEnter={(e) => (e.currentTarget as HTMLAnchorElement).style.color = colors.orange}
                     onMouseLeave={(e) => (e.currentTarget as HTMLAnchorElement).style.color = '#555'}>
