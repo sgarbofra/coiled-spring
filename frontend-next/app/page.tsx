@@ -265,6 +265,7 @@ export default function LandingPage() {
                 <span style={{ background: colors.orange, color: colors.bg, fontSize: '0.58rem', fontWeight: '700', letterSpacing: '0.5px', padding: '0.1rem 0.35rem', borderRadius: '2px', fontFamily: mono }}>NEW</span>
               </button>
               <button className="nav-link" onClick={() => scrollToSection('faq')}>FAQ</button>
+              <button className="nav-link" onClick={() => router.push('/changelog')}>Changelog</button>
               <button
                 onClick={() => router.push('/login')}
                 style={{ background: 'transparent', border: `1px solid ${colors.orange}`, color: colors.orange, padding: '0.45rem 1.1rem', fontSize: '0.85rem', fontWeight: '600', cursor: 'pointer', fontFamily: sans, borderRadius: '3px', transition: 'all 0.2s ease', letterSpacing: '0.3px' }}
