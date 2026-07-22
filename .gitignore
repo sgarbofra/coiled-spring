@@ -35,6 +35,7 @@ BS/
 *.docx
 *.xlsx
 *.pdf
+!frontend-next/public/user-manual-v3.pdf
 *.svg
 cover_*.svg
 git-commit-*.bat

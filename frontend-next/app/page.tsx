@@ -956,6 +956,59 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ── USER MANUAL ──────────────────────────────────────────── */}
+        <section id="user-manual" style={{ borderBottom: `1px solid ${colors.border}`, padding: '6rem 2rem', background: colors.bg }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+            {/* Header */}
+            <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+              <div style={{ display: 'inline-block', border: `1px solid ${colors.border2}`, padding: '0.28rem 1rem', marginBottom: '1.5rem', fontSize: '0.68rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono }}>◈ USER GUIDE</div>
+              <h2 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: '700', color: colors.white, fontFamily: mono, marginBottom: '1rem' }}>Terminal User Guide v3.0</h2>
+              <p style={{ color: '#8b94a3', fontSize: '0.95rem', maxWidth: '580px', margin: '0 auto 2rem' }}>
+                Il manuale completo del terminale. Workflow, moduli, CS Score, Volatility Surface, Portfolio e What-If — tutto in un documento.
+              </p>
+              {/* Action buttons */}
+              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <a
+                  href="/user-manual-v3.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: colors.orange, color: colors.bg, padding: '0.75rem 1.75rem', fontSize: '0.875rem', fontWeight: '700', letterSpacing: '0.5px', textDecoration: 'none', fontFamily: sans, borderRadius: '3px', transition: 'all 0.2s ease', boxShadow: '0 0 20px rgba(232,119,34,0.25)' }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = colors.orangeHover; (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-1px)' }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = colors.orange; (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(0)' }}
+                >
+                  ↗ Apri nel browser
+                </a>
+                <a
+                  href="/user-manual-v3.pdf"
+                  download="Coiled_Spring_UserGuide_v3.pdf"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'transparent', color: colors.white, padding: '0.75rem 1.75rem', fontSize: '0.875rem', fontWeight: '700', letterSpacing: '0.5px', textDecoration: 'none', fontFamily: sans, borderRadius: '3px', border: `1px solid ${colors.border2}`, transition: 'all 0.2s ease' }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.borderColor = colors.orange; (e.currentTarget as HTMLAnchorElement).style.color = colors.orange }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.borderColor = colors.border2; (e.currentTarget as HTMLAnchorElement).style.color = colors.white }}
+                >
+                  ↓ Scarica PDF
+                </a>
+              </div>
+            </div>
+
+            {/* PDF inline viewer */}
+            <div style={{ border: `1px solid ${colors.border2}`, borderRadius: '6px', overflow: 'hidden', boxShadow: '0 0 40px rgba(232,119,34,0.08)' }}>
+              {/* Terminal header bar */}
+              <div style={{ background: '#080a0e', padding: '0.6rem 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem', borderBottom: `1px solid ${colors.border}` }}>
+                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#f87171', display: 'inline-block' }} />
+                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: colors.orange, display: 'inline-block' }} />
+                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#4ade80', display: 'inline-block' }} />
+                <span style={{ marginLeft: '0.75rem', fontSize: '0.72rem', color: colors.darkGray, fontFamily: mono, letterSpacing: '1px' }}>COILED SPRING — USER GUIDE v3.0</span>
+              </div>
+              {/* iframe */}
+              <iframe
+                src="/user-manual-v3.pdf"
+                style={{ width: '100%', height: '780px', border: 'none', display: 'block', background: '#0D1117' }}
+                title="Coiled Spring Terminal User Guide v3.0"
+              />
+            </div>
+          </div>
+        </section>
+
         {/* ── TUTORIALS ────────────────────────────────────────────── */}
         <section id="tutorial-section" style={{ borderBottom: `1px solid ${colors.border}`, padding: '6rem 2rem', background: colors.surface }}>
           <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
