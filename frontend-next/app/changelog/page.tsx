@@ -169,6 +169,17 @@ const ENTRIES: Entry[] = [
   },
   {
     date: 'July 22, 2026',
+    version: 'v2.7',
+    headline: 'The surface now fills the whole screen. And the landing page finally shows what this thing actually does.',
+    tag: 'feature',
+    body: [
+      "Someone pointed out that the volatility surface in the scanner is beautiful but you can't really see it — because it lives in a panel that's maybe 40% of the viewport, and when you zoom in to inspect the skew you lose half the chart to the edges. The fix was a single fullscreen button. Click ⛶ FULLSCREEN and the surface takes over the entire screen. Click ✕ EXIT and you're back. The IV shift slider, the click-to-watchlist, everything still works in fullscreen. The modal opens above the overlay. Obvious feature in retrospect.",
+      "The landing page got a proper showcase. It used to have three icon cards that said something vague about 'advanced tools' and did nothing. Now there are six feature blocks with real screenshots and real descriptions — the LEAPS scanner table, the actual QQQ vol surface (that 3D Plotly chart), the WHY Panel scoring breakdown, the portfolio tracker, the HV screener with compression bars, and the What-If payoff diagram with the multi-curve Black-Scholes plot. If you land on the site and wonder what you're signing up for, now you can just scroll down and see it.",
+      "Also fixed a CSS build error that was breaking Vercel deploys. The Google Fonts @import had to come before @import 'tailwindcss' — Tailwind expands inline and pushes everything after it into invalid territory per the CSS spec. One line swap, build is clean.",
+    ],
+  },
+  {
+    date: 'July 22, 2026',
     version: 'v2.6',
     headline: 'I wanted to paste the scanner into Excel. Now I don\'t have to.',
     tag: 'feature',
