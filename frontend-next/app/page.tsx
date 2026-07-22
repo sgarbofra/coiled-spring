@@ -657,76 +657,46 @@ export default function LandingPage() {
 
             {/* ── F2: VOL SURFACE — mockup left, text right ── */}
             <div className="feature-showcase-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center', padding: '4rem 0', borderTop: `1px solid ${colors.border}` }}>
-              {/* Mockup */}
-              <div style={{ background: '#080a0e', border: `1px solid ${colors.border2}`, borderRadius: '6px', overflow: 'hidden', boxShadow: '0 0 40px rgba(232,119,34,0.12)' }}>
-                <div style={{ background: '#0f1117', borderBottom: `1px solid ${colors.border}`, padding: '0.55rem 1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ display: 'flex', gap: '0.35rem' }}>{[0,1,2].map(i => <div key={i} style={{ width:'8px', height:'8px', borderRadius:'50%', background:'#2a2a2a' }} />)}</div>
-                  <span style={{ fontFamily: mono, fontSize: '0.62rem', color: '#444', letterSpacing: '1px' }}>VOL SURFACE — AAPL</span>
-                  <span style={{ fontFamily: mono, fontSize: '0.58rem', color: '#333' }}>IV %</span>
+              {/* Mockup — real surface screenshot */}
+              <div style={{ border: `1px solid ${colors.border2}`, borderRadius: '8px', overflow: 'hidden', boxShadow: '0 0 60px rgba(232,119,34,0.15), 0 0 0 1px rgba(232,119,34,0.08)' }}>
+                {/* Terminal header bar */}
+                <div style={{ background: '#0a0c10', borderBottom: `1px solid ${colors.border}`, padding: '0.6rem 1rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <div style={{ display: 'flex', gap: '5px' }}>
+                    {[colors.orange, '#333', '#333'].map((c, i) => <div key={i} style={{ width: '7px', height: '7px', borderRadius: '50%', background: c, opacity: i === 0 ? 0.7 : 1 }} />)}
+                  </div>
+                  <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ fontFamily: mono, fontSize: '0.6rem', color: colors.orange, fontWeight: '700', letterSpacing: '2px' }}>VOLATILITY SURFACE</span>
+                    <span style={{ fontFamily: mono, fontSize: '0.6rem', color: '#555' }}>—</span>
+                    <span style={{ fontFamily: mono, fontSize: '0.6rem', color: '#8b94a3', letterSpacing: '1px' }}>QQQ · PUT IV (ITM) + CALL IV (OTM)</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                    <span style={{ fontFamily: mono, fontSize: '0.55rem', background: colors.orange, color: '#000', padding: '2px 7px', fontWeight: '700', letterSpacing: '1px' }}>IV %</span>
+                    <span style={{ fontFamily: mono, fontSize: '0.55rem', color: '#555', padding: '2px 7px', border: `1px solid #222`, letterSpacing: '1px' }}>CS SCORE</span>
+                  </div>
                 </div>
-                <div style={{ padding: '0.5rem 0 0', overflow: 'hidden' }}>
-                  {(() => {
-                    const ivD = [
-                      [28, 24, 20, 18, 20, 24],
-                      [26, 22, 18, 16, 18, 22],
-                      [24, 20, 17, 15, 17, 20],
-                      [22, 19, 16, 14, 16, 19],
-                      [21, 18, 15, 13, 15, 18],
-                    ]
-                    const pt = (xi: number, yi: number, iv: number) => ({
-                      x: 130 + xi * 38 - yi * 24,
-                      y: 238 - xi * 8 - yi * 16 - (iv - 13) * 5.5,
-                    })
-                    const vc = (iv: number) =>
-                      iv <= 14 ? '#22c55e' : iv <= 16 ? '#86efac' : iv <= 18 ? '#e87722' : iv <= 22 ? '#fb923c' : '#f87171'
-                    return (
-                      <svg viewBox="0 0 430 262" style={{ width: '100%', display: 'block' }}>
-                        <text x="16" y="15" fontFamily="JetBrains Mono,monospace" fontSize="8" fill="#444" letterSpacing="1">AAPL — IMPLIED VOLATILITY SURFACE</text>
-                        {/* Surface polygons — painter algo: back (yi=3) → front (yi=0) */}
-                        {[3,2,1,0].flatMap(yi =>
-                          [0,1,2,3,4].map(xi => {
-                            const a=pt(xi,yi,ivD[yi][xi]), b=pt(xi+1,yi,ivD[yi][xi+1])
-                            const cc=pt(xi+1,yi+1,ivD[yi+1][xi+1]), d=pt(xi,yi+1,ivD[yi+1][xi])
-                            const avg=(ivD[yi][xi]+ivD[yi][xi+1]+ivD[yi+1][xi+1]+ivD[yi+1][xi])/4
-                            return <polygon key={`p${yi}${xi}`} points={`${a.x.toFixed(1)},${a.y.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)} ${cc.x.toFixed(1)},${cc.y.toFixed(1)} ${d.x.toFixed(1)},${d.y.toFixed(1)}`} fill={vc(avg)} stroke="#080a0e" strokeWidth="1" opacity="0.85"/>
-                          })
-                        )}
-                        {/* Horizontal grid lines (strike direction) */}
-                        {[0,1,2,3,4].flatMap(yi =>
-                          [0,1,2,3,4].map(xi => {
-                            const a=pt(xi,yi,ivD[yi][xi]), b=pt(xi+1,yi,ivD[yi][xi+1])
-                            return <line key={`h${yi}${xi}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#090b0f" strokeWidth="0.8" opacity="0.9"/>
-                          })
-                        )}
-                        {/* Vertical grid lines (expiry direction) */}
-                        {[0,1,2,3,4,5].flatMap(xi =>
-                          [0,1,2,3].map(yi => {
-                            const a=pt(xi,yi,ivD[yi][xi]), b=pt(xi,yi+1,ivD[yi+1][xi])
-                            return <line key={`v${xi}${yi}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#090b0f" strokeWidth="0.8" opacity="0.9"/>
-                          })
-                        )}
-                        {/* Strike labels */}
-                        {['175','185','195','205','215','225'].map((s,xi) => {
-                          const p=pt(xi,0,13)
-                          return <text key={s} x={p.x+4} y={p.y+16} fontFamily="JetBrains Mono,monospace" fontSize="7.5" fill="#555" textAnchor="middle">{s}</text>
-                        })}
-                        {/* Expiry labels */}
-                        {['30d','60d','90d','180d','360d'].map((e,yi) => {
-                          const p=pt(0,yi,13)
-                          return <text key={e} x={p.x-4} y={p.y+3} fontFamily="JetBrains Mono,monospace" fontSize="7.5" fill="#555" textAnchor="end">{e}</text>
-                        })}
-                        {/* Axis label */}
-                        <text x="195" y="256" fontFamily="JetBrains Mono,monospace" fontSize="7.5" fill="#444" textAnchor="middle">STRIKE</text>
-                        {/* Legend */}
-                        {[['#22c55e','LOW IV'],['#e87722','MID IV'],['#f87171','HIGH IV']].map((pair,i) => (
-                          <g key={pair[1]} transform={`translate(${283+i*50},7)`}>
-                            <rect width="8" height="7" rx="1" fill={pair[0]} opacity="0.85"/>
-                            <text x="11" y="7" fontFamily="JetBrains Mono,monospace" fontSize="7" fill="#555">{pair[1]}</text>
-                          </g>
-                        ))}
-                      </svg>
-                    )
-                  })()}
+                {/* Screenshot */}
+                <div style={{ position: 'relative', background: '#080a0e', lineHeight: 0 }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/surface.png"
+                    alt="QQQ Volatility Surface — Strike × DTE 3D view"
+                    style={{ width: '100%', display: 'block', opacity: 0.95 }}
+                  />
+                  {/* Bottom fade + legend bar */}
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0.5rem 0.85rem', background: 'linear-gradient(to top, rgba(8,10,14,0.96) 60%, transparent)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                    <span style={{ fontFamily: mono, fontSize: '0.55rem', color: '#4a90d9', letterSpacing: '1px' }}>BLUE = COMPRESSED IV</span>
+                    <span style={{ fontFamily: mono, fontSize: '0.55rem', color: '#f87171', letterSpacing: '1px' }}>RED = HIGH IV (OTM SHORT-DATED)</span>
+                  </div>
+                </div>
+                {/* Footer stat bar */}
+                <div style={{ background: '#0a0c10', borderTop: `1px solid ${colors.border}`, padding: '0.45rem 1rem', display: 'flex', gap: '1.5rem' }}>
+                  {[['IV MIN', '12.2%', '#4a90d9'], ['IV AVG', '31.9%', '#8b94a3'], ['IV MAX', '123.4%', '#f87171']].map(([lbl, val, col]) => (
+                    <div key={lbl} style={{ display: 'flex', gap: '0.4rem', alignItems: 'baseline' }}>
+                      <span style={{ fontFamily: mono, fontSize: '0.55rem', color: '#555', letterSpacing: '1px' }}>{lbl}</span>
+                      <span style={{ fontFamily: mono, fontSize: '0.65rem', color: col, fontWeight: '700' }}>{val}</span>
+                    </div>
+                  ))}
+                  <span style={{ marginLeft: 'auto', fontFamily: mono, fontSize: '0.55rem', color: colors.orange, letterSpacing: '1px' }}>CLICK SURFACE TO ADD TO WATCHLIST →</span>
                 </div>
               </div>
               {/* Text */}
@@ -902,6 +872,71 @@ export default function LandingPage() {
                 <div style={{ padding: '0.4rem 0.875rem', borderTop: `1px solid ${colors.border}` }}>
                   <span style={{ fontFamily: mono, fontSize: '0.52rem', color: '#333' }}>1,136 TICKERS · UPDATED DAILY</span>
                 </div>
+              </div>
+            </div>
+
+            {/* ── F6: PORTFOLIO + WHAT-IF — mockup left, text right ── */}
+            <div className="feature-showcase-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center', padding: '4rem 0', borderTop: `1px solid ${colors.border}` }}>
+              {/* Mockup — whatif screenshot */}
+              <div style={{ border: `1px solid ${colors.border2}`, borderRadius: '8px', overflow: 'hidden', boxShadow: '0 0 60px rgba(232,119,34,0.12), 0 0 0 1px rgba(232,119,34,0.06)' }}>
+                {/* Terminal header */}
+                <div style={{ background: '#0a0c10', borderBottom: `1px solid ${colors.border}`, padding: '0.6rem 1rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <div style={{ display: 'flex', gap: '5px' }}>
+                    {[colors.orange, '#333', '#333'].map((c, i) => <div key={i} style={{ width: '7px', height: '7px', borderRadius: '50%', background: c, opacity: i === 0 ? 0.7 : 1 }} />)}
+                  </div>
+                  <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ fontFamily: mono, fontSize: '0.6rem', color: colors.orange, fontWeight: '700', letterSpacing: '2px' }}>PORTFOLIO</span>
+                    <span style={{ fontFamily: mono, fontSize: '0.6rem', color: '#555' }}>—</span>
+                    <span style={{ fontFamily: mono, fontSize: '0.6rem', color: '#8b94a3', letterSpacing: '1px' }}>CS Spread Strategy · 2 open positions</span>
+                  </div>
+                  <div style={{ display: 'flex', gap: '6px' }}>
+                    {['POSITIONS', 'GREEKS', 'WHAT-IF'].map((tab, i) => (
+                      <span key={tab} style={{ fontFamily: mono, fontSize: '0.52rem', padding: '2px 7px', letterSpacing: '1px', ...(i === 2 ? { color: '#000', background: colors.orange, fontWeight: '700' } : { color: '#555', border: `1px solid #222` }) }}>{tab}</span>
+                    ))}
+                  </div>
+                </div>
+                {/* Screenshot */}
+                <div style={{ position: 'relative', background: '#080a0e', lineHeight: 0 }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/whatif.png"
+                    alt="Portfolio Payoff Diagram — What-If Simulator"
+                    style={{ width: '100%', display: 'block', opacity: 0.95 }}
+                  />
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '0.5rem 0.85rem', background: 'linear-gradient(to top, rgba(8,10,14,0.96) 60%, transparent)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                    <span style={{ fontFamily: mono, fontSize: '0.55rem', color: '#8b94a3', letterSpacing: '1px' }}>BLACK-SCHOLES · LIVE IV</span>
+                    <span style={{ fontFamily: mono, fontSize: '0.55rem', color: colors.orange, letterSpacing: '1px' }}>TODAY → +365d P&amp;L CURVES</span>
+                  </div>
+                </div>
+                {/* Position pills */}
+                <div style={{ background: '#0a0c10', borderTop: `1px solid ${colors.border}`, padding: '0.45rem 1rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                  <span style={{ fontFamily: mono, fontSize: '0.55rem', color: colors.orange, letterSpacing: '1px' }}>QQQ CALL 815 LONG · IV 22.9%</span>
+                  <span style={{ color: '#333', fontFamily: mono, fontSize: '0.55rem' }}>|</span>
+                  <span style={{ fontFamily: mono, fontSize: '0.55rem', color: colors.orange, letterSpacing: '1px' }}>QQQ PUT 750 LONG · IV 30.0%</span>
+                  <span style={{ marginLeft: 'auto', fontFamily: mono, fontSize: '0.55rem', color: '#555', letterSpacing: '1px' }}>IV SHIFT: ±50% SLIDER</span>
+                </div>
+              </div>
+              {/* Text */}
+              <div>
+                <div style={{ fontSize: '0.62rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono, marginBottom: '1rem' }}>06 — PORTFOLIO & WHAT-IF</div>
+                <h3 style={{ fontSize: 'clamp(1.2rem, 2.5vw, 1.65rem)', fontWeight: '700', color: colors.white, fontFamily: mono, lineHeight: '1.3', marginBottom: '1rem' }}>
+                  Track positions.<br />Stress-test scenarios.
+                </h3>
+                <p style={{ color: '#8b94a3', lineHeight: '1.85', fontSize: '0.93rem', marginBottom: '1.5rem' }}>
+                  Paper-trade any options strategy and run What-If analysis before committing real capital. The Payoff Diagram shows your full P&amp;L curve across strike moves and time horizons — powered by live Black-Scholes with real implied volatility.
+                </p>
+                {[
+                  'Paper trading: test any strategy with no real money at risk',
+                  'Payoff Diagram: Today / +7d / +30d / +90d / +365d P&L curves',
+                  'IV Shift slider: stress-test vol collapse or vol spike scenarios',
+                  'Greeks dashboard: portfolio-level Delta, Gamma, Vega, Theta',
+                  'Position history: track entries, exits, and realized P&L over time',
+                ].map((b, i) => (
+                  <div key={i} style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-start', marginBottom: '0.45rem' }}>
+                    <span style={{ color: colors.orange, fontFamily: mono, fontSize: '0.8rem', flexShrink: 0 }}>→</span>
+                    <span style={{ color: '#8b94a3', fontSize: '0.88rem', lineHeight: '1.6' }}>{b}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
