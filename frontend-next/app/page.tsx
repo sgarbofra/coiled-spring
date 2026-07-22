@@ -266,6 +266,7 @@ export default function LandingPage() {
                 <span style={{ background: colors.orange, color: colors.bg, fontSize: '0.58rem', fontWeight: '700', letterSpacing: '0.5px', padding: '0.1rem 0.35rem', borderRadius: '2px', fontFamily: mono }}>NEW</span>
               </button>
               <button className="nav-link" onClick={() => scrollToSection('faq')}>FAQ</button>
+              <button className="nav-link" onClick={() => scrollToSection('user-manual')}>User Guide</button>
               <button className="nav-link" onClick={() => router.push('/glossary')}>Glossary</button>
               <button className="nav-link" onClick={() => router.push('/changelog')}>Ship Log</button>
               <button
@@ -1391,7 +1392,7 @@ export default function LandingPage() {
                 <p style={{ color: '#555', fontSize: '0.85rem', margin: 0 }}>Antifragile Options Trading</p>
               </div>
               <div style={{ display: 'flex', gap: '3rem', flexWrap: 'wrap' }}>
-                {[{ label: 'Glossary', href: '/glossary' }, { label: 'Ship Log', href: '/changelog' }, { label: 'Login', href: '/login' }, { label: 'Register', href: '/register' }].map((link) => (
+                {[{ label: 'User Guide', href: '/user-manual-v3.pdf' }, { label: 'Glossary', href: '/glossary' }, { label: 'Ship Log', href: '/changelog' }, { label: 'Login', href: '/login' }, { label: 'Register', href: '/register' }].map((link) => (
                   <a key={link.href} href={link.href} style={{ color: '#555', textDecoration: 'none', fontSize: '0.875rem', transition: 'color 0.2s ease' }}
                     onMouseEnter={(e) => (e.currentTarget as HTMLAnchorElement).style.color = colors.orange}
                     onMouseLeave={(e) => (e.currentTarget as HTMLAnchorElement).style.color = '#555'}>
