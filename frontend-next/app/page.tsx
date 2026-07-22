@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Search, TrendingDown, Bot, BarChart2, Bookmark, Shield } from 'lucide-react'
+import { Search, BarChart2, Bookmark } from 'lucide-react'
 import VixChart from '@/components/landing/VixChart'
 import MarketMovers from '@/components/landing/MarketMovers'
 
@@ -200,6 +200,7 @@ export default function LandingPage() {
           .widgets-grid { grid-template-columns: 1fr !important; }
           .thesis-grid { grid-template-columns: 1fr !important; }
           .features-grid { grid-template-columns: 1fr !important; }
+          .feature-showcase-row { grid-template-columns: 1fr !important; }
           .book-grid { grid-template-columns: 1fr !important; }
           .cs-score-grid { grid-template-columns: 1fr !important; }
           .hero-tags { display: none !important; }
@@ -582,55 +583,341 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ── ADDITIONAL TOOLS ─────────────────────────────────────── */}
-        <section style={{ borderBottom: `1px solid ${colors.border}`, padding: '6rem 2rem', background: colors.bg }}>
-          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-            <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-              <div style={{ display: 'inline-block', border: `1px solid ${colors.border2}`, padding: '0.28rem 1rem', marginBottom: '1.5rem', fontSize: '0.68rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono }}>◈ PLATFORM</div>
-              <h2 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: '700', color: colors.white, fontFamily: mono }}>
-                Everything in one terminal
+        {/* ── FEATURE SHOWCASE ─────────────────────────────────────── */}
+        <section id="features" style={{ borderBottom: `1px solid ${colors.border}`, background: colors.bg }}>
+          <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 2rem' }}>
+
+            {/* Header */}
+            <div style={{ textAlign: 'center', padding: '6rem 0 3rem' }}>
+              <div style={{ display: 'inline-block', border: `1px solid ${colors.border2}`, padding: '0.28rem 1rem', marginBottom: '1.5rem', fontSize: '0.68rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono }}>◈ INSIDE THE TERMINAL</div>
+              <h2 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: '700', color: colors.white, fontFamily: mono, marginBottom: '1rem' }}>
+                What&apos;s waiting on the other side.
               </h2>
+              <p style={{ color: '#8b94a3', fontSize: '1rem', maxWidth: '580px', margin: '0 auto', lineHeight: '1.8' }}>
+                Five tools, one workflow. Here&apos;s exactly what you&apos;ll find the moment you log in.
+              </p>
             </div>
 
-            <div className="features-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.25rem' }}>
-              {[
-                {
-                  icon: <TrendingDown size={26} color={colors.orange} strokeWidth={1.5} />,
-                  title: '3D Volatility Surface',
-                  body: 'Interactive vol surface for any US underlying. Spot term structure compression, skew shifts, and strike-level anomalies before they expand.',
-                  badge: null,
-                },
-                {
-                  icon: <Bot size={26} color={colors.orange} strokeWidth={1.5} />,
-                  title: 'Coiled AI Assistant',
-                  body: 'Claude-powered assistant trained on options theory, Greeks, and position management. Ask anything about a specific contract in plain language.',
-                  badge: 'PRO',
-                },
-                {
-                  icon: <Shield size={26} color={colors.orange} strokeWidth={1.5} />,
-                  title: 'Portfolio Risk View',
-                  body: 'Aggregate Greeks across all open positions. What-If payoff simulator with Black-Scholes pricing. CAPM beta per underlying. Tail exposure at a glance.',
-                  badge: 'COMING SOON',
-                },
-              ].map((feat, i) => (
-                <div
-                  key={i}
-                  className="feature-card"
-                  style={{ position: 'relative', background: '#111318', border: `1px solid ${colors.border}`, borderTop: `2px solid ${colors.orange}`, padding: '2rem', borderRadius: '10px' }}
-                >
-                  {feat.badge && (
-                    <div style={{ position: 'absolute', top: '1rem', right: '1rem', background: feat.badge === 'PRO' ? colors.orange : '#1a1a1a', color: feat.badge === 'PRO' ? colors.bg : '#666', fontSize: '0.6rem', fontWeight: '700', padding: '0.2rem 0.5rem', borderRadius: '2px', fontFamily: mono, letterSpacing: '1px' }}>
-                      {feat.badge}
-                    </div>
-                  )}
-                  <div style={{ background: 'rgba(232,119,34,0.08)', border: '1px solid rgba(232,119,34,0.18)', padding: '0.65rem', borderRadius: '5px', width: 'fit-content', marginBottom: '1.1rem' }}>
-                    {feat.icon}
+            {/* ── F1: SCANNER — text left, mockup right ── */}
+            <div className="feature-showcase-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center', padding: '4rem 0', borderTop: `1px solid ${colors.border}` }}>
+              <div>
+                <div style={{ fontSize: '0.62rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono, marginBottom: '1rem' }}>01 — LEAPS SCANNER</div>
+                <h3 style={{ fontSize: 'clamp(1.2rem, 2.5vw, 1.65rem)', fontWeight: '700', color: colors.white, fontFamily: mono, lineHeight: '1.3', marginBottom: '1rem' }}>
+                  3,500+ underlyings.<br />Filtered to your edge.
+                </h3>
+                <p style={{ color: '#8b94a3', lineHeight: '1.85', fontSize: '0.93rem', marginBottom: '1.5rem' }}>
+                  Set your IV Rank ceiling, delta range, and DTE window. The scanner surfaces every candidate sorted by CS Score — highest structural quality first, noise last.
+                </p>
+                {['Filter by IVR, Delta, DTE, Spread%, Open Interest', 'CS Score 0–100: structural quality per contract', 'Full Greeks for every result: Δ Γ Θ V', 'One click → full Opportunity Analysis'].map((b, i) => (
+                  <div key={i} style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-start', marginBottom: '0.45rem' }}>
+                    <span style={{ color: colors.orange, fontFamily: mono, fontSize: '0.8rem', flexShrink: 0 }}>→</span>
+                    <span style={{ color: '#8b94a3', fontSize: '0.88rem', lineHeight: '1.6' }}>{b}</span>
                   </div>
-                  <h3 style={{ fontSize: '1.05rem', fontWeight: '700', color: colors.white, marginBottom: '0.7rem', fontFamily: mono, lineHeight: '1.3' }}>{feat.title}</h3>
-                  <p style={{ color: '#8b94a3', lineHeight: '1.8', fontSize: '0.9rem' }}>{feat.body}</p>
+                ))}
+              </div>
+              {/* Mockup */}
+              <div style={{ background: '#080a0e', border: `1px solid ${colors.border2}`, borderRadius: '6px', overflow: 'hidden', boxShadow: '0 0 40px rgba(232,119,34,0.15)' }}>
+                <div style={{ background: '#0f1117', borderBottom: `1px solid ${colors.border}`, padding: '0.55rem 1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', gap: '0.35rem' }}>{[0,1,2].map(i => <div key={i} style={{ width:'8px', height:'8px', borderRadius:'50%', background:'#2a2a2a' }} />)}</div>
+                  <span style={{ fontFamily: mono, fontSize: '0.62rem', color: '#444', letterSpacing: '1px' }}>CS SCANNER — LEAPS MODE</span>
+                  <span style={{ fontFamily: mono, fontSize: '0.58rem', color: '#333' }}>5 results</span>
                 </div>
-              ))}
+                <div style={{ padding: '0.5rem 1rem', borderBottom: `1px solid ${colors.border}`, display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+                  {['IVR < 25', 'Δ 0.25–0.40', 'DTE 300–750', 'OI > 200'].map((f,i) => (
+                    <span key={i} style={{ fontFamily: mono, fontSize: '0.57rem', color: colors.orange, border: `1px solid rgba(232,119,34,0.3)`, background: 'rgba(232,119,34,0.06)', padding: '0.12rem 0.4rem' }}>{f}</span>
+                  ))}
+                </div>
+                <div style={{ padding: '0.4rem 1rem', display: 'grid', gridTemplateColumns: '52px 60px 44px 44px 44px 56px', borderBottom: `1px solid ${colors.border}` }}>
+                  {['TICKER','STRIKE','DTE','IVR','DELTA','SCORE'].map(h => (
+                    <span key={h} style={{ fontFamily: mono, fontSize: '0.54rem', color: '#444', letterSpacing: '0.8px', fontWeight: '700' }}>{h}</span>
+                  ))}
+                </div>
+                {[
+                  { ticker:'SPY',  strike:'540C', dte:'421', ivr:'12', delta:'0.28', cs:'91', col:'#4ade80' },
+                  { ticker:'AAPL', strike:'195C', dte:'389', ivr:'18', delta:'0.32', cs:'87', col:'#4ade80' },
+                  { ticker:'TSLA', strike:'260C', dte:'350', ivr:'22', delta:'0.25', cs:'83', col:'#4ade80' },
+                  { ticker:'NVDA', strike:'900C', dte:'421', ivr:'09', delta:'0.30', cs:'79', col:colors.orange },
+                  { ticker:'QQQ',  strike:'475C', dte:'389', ivr:'15', delta:'0.35', cs:'76', col:colors.orange },
+                ].map((row, i) => (
+                  <div key={i} style={{ display: 'grid', gridTemplateColumns: '52px 60px 44px 44px 44px 56px', padding: '0.4rem 1rem', borderBottom: i < 4 ? `1px solid rgba(30,35,48,0.4)` : 'none' }}>
+                    <span style={{ fontFamily: mono, fontSize: '0.72rem', color: colors.orange, fontWeight: '700' }}>{row.ticker}</span>
+                    <span style={{ fontFamily: mono, fontSize: '0.72rem', color: '#8b94a3' }}>{row.strike}</span>
+                    <span style={{ fontFamily: mono, fontSize: '0.72rem', color: colors.white }}>{row.dte}</span>
+                    <span style={{ fontFamily: mono, fontSize: '0.72rem', color: Number(row.ivr) < 15 ? colors.green : colors.orange }}>{row.ivr}</span>
+                    <span style={{ fontFamily: mono, fontSize: '0.72rem', color: '#8b94a3' }}>{row.delta}</span>
+                    <span style={{ fontFamily: mono, fontSize: '0.78rem', color: row.col, fontWeight: '700' }}>{row.cs}</span>
+                  </div>
+                ))}
+                <div style={{ padding: '0.4rem 1rem', display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ fontFamily: mono, fontSize: '0.54rem', color: '#333' }}>3,521 SCANNED</span>
+                  <span style={{ fontFamily: mono, fontSize: '0.54rem', color: '#333' }}>SORTED BY CS SCORE ↓</span>
+                </div>
+              </div>
             </div>
+
+            {/* ── F2: VOL SURFACE — mockup left, text right ── */}
+            <div className="feature-showcase-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center', padding: '4rem 0', borderTop: `1px solid ${colors.border}` }}>
+              {/* Mockup */}
+              <div style={{ background: '#080a0e', border: `1px solid ${colors.border2}`, borderRadius: '6px', overflow: 'hidden', boxShadow: '0 0 40px rgba(232,119,34,0.12)' }}>
+                <div style={{ background: '#0f1117', borderBottom: `1px solid ${colors.border}`, padding: '0.55rem 1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', gap: '0.35rem' }}>{[0,1,2].map(i => <div key={i} style={{ width:'8px', height:'8px', borderRadius:'50%', background:'#2a2a2a' }} />)}</div>
+                  <span style={{ fontFamily: mono, fontSize: '0.62rem', color: '#444', letterSpacing: '1px' }}>VOL SURFACE — AAPL</span>
+                  <span style={{ fontFamily: mono, fontSize: '0.58rem', color: '#333' }}>IV %</span>
+                </div>
+                <div style={{ padding: '0.5rem 0 0', overflow: 'hidden' }}>
+                  {(() => {
+                    const ivD = [
+                      [28, 24, 20, 18, 20, 24],
+                      [26, 22, 18, 16, 18, 22],
+                      [24, 20, 17, 15, 17, 20],
+                      [22, 19, 16, 14, 16, 19],
+                      [21, 18, 15, 13, 15, 18],
+                    ]
+                    const pt = (xi: number, yi: number, iv: number) => ({
+                      x: 130 + xi * 38 - yi * 24,
+                      y: 238 - xi * 8 - yi * 16 - (iv - 13) * 5.5,
+                    })
+                    const vc = (iv: number) =>
+                      iv <= 14 ? '#22c55e' : iv <= 16 ? '#86efac' : iv <= 18 ? '#e87722' : iv <= 22 ? '#fb923c' : '#f87171'
+                    return (
+                      <svg viewBox="0 0 430 262" style={{ width: '100%', display: 'block' }}>
+                        <text x="16" y="15" fontFamily="JetBrains Mono,monospace" fontSize="8" fill="#444" letterSpacing="1">AAPL — IMPLIED VOLATILITY SURFACE</text>
+                        {/* Surface polygons — painter algo: back (yi=3) → front (yi=0) */}
+                        {[3,2,1,0].flatMap(yi =>
+                          [0,1,2,3,4].map(xi => {
+                            const a=pt(xi,yi,ivD[yi][xi]), b=pt(xi+1,yi,ivD[yi][xi+1])
+                            const cc=pt(xi+1,yi+1,ivD[yi+1][xi+1]), d=pt(xi,yi+1,ivD[yi+1][xi])
+                            const avg=(ivD[yi][xi]+ivD[yi][xi+1]+ivD[yi+1][xi+1]+ivD[yi+1][xi])/4
+                            return <polygon key={`p${yi}${xi}`} points={`${a.x.toFixed(1)},${a.y.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)} ${cc.x.toFixed(1)},${cc.y.toFixed(1)} ${d.x.toFixed(1)},${d.y.toFixed(1)}`} fill={vc(avg)} stroke="#080a0e" strokeWidth="1" opacity="0.85"/>
+                          })
+                        )}
+                        {/* Horizontal grid lines (strike direction) */}
+                        {[0,1,2,3,4].flatMap(yi =>
+                          [0,1,2,3,4].map(xi => {
+                            const a=pt(xi,yi,ivD[yi][xi]), b=pt(xi+1,yi,ivD[yi][xi+1])
+                            return <line key={`h${yi}${xi}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#090b0f" strokeWidth="0.8" opacity="0.9"/>
+                          })
+                        )}
+                        {/* Vertical grid lines (expiry direction) */}
+                        {[0,1,2,3,4,5].flatMap(xi =>
+                          [0,1,2,3].map(yi => {
+                            const a=pt(xi,yi,ivD[yi][xi]), b=pt(xi,yi+1,ivD[yi+1][xi])
+                            return <line key={`v${xi}${yi}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#090b0f" strokeWidth="0.8" opacity="0.9"/>
+                          })
+                        )}
+                        {/* Strike labels */}
+                        {['175','185','195','205','215','225'].map((s,xi) => {
+                          const p=pt(xi,0,13)
+                          return <text key={s} x={p.x+4} y={p.y+16} fontFamily="JetBrains Mono,monospace" fontSize="7.5" fill="#555" textAnchor="middle">{s}</text>
+                        })}
+                        {/* Expiry labels */}
+                        {['30d','60d','90d','180d','360d'].map((e,yi) => {
+                          const p=pt(0,yi,13)
+                          return <text key={e} x={p.x-4} y={p.y+3} fontFamily="JetBrains Mono,monospace" fontSize="7.5" fill="#555" textAnchor="end">{e}</text>
+                        })}
+                        {/* Axis label */}
+                        <text x="195" y="256" fontFamily="JetBrains Mono,monospace" fontSize="7.5" fill="#444" textAnchor="middle">STRIKE</text>
+                        {/* Legend */}
+                        {[['#22c55e','LOW IV'],['#e87722','MID IV'],['#f87171','HIGH IV']].map((pair,i) => (
+                          <g key={pair[1]} transform={`translate(${283+i*50},7)`}>
+                            <rect width="8" height="7" rx="1" fill={pair[0]} opacity="0.85"/>
+                            <text x="11" y="7" fontFamily="JetBrains Mono,monospace" fontSize="7" fill="#555">{pair[1]}</text>
+                          </g>
+                        ))}
+                      </svg>
+                    )
+                  })()}
+                </div>
+              </div>
+              {/* Text */}
+              <div>
+                <div style={{ fontSize: '0.62rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono, marginBottom: '1rem' }}>02 — VOLATILITY SURFACE</div>
+                <h3 style={{ fontSize: 'clamp(1.2rem, 2.5vw, 1.65rem)', fontWeight: '700', color: colors.white, fontFamily: mono, lineHeight: '1.3', marginBottom: '1rem' }}>
+                  See where the market<br />prices fear.
+                </h3>
+                <p style={{ color: '#8b94a3', lineHeight: '1.85', fontSize: '0.93rem', marginBottom: '1.5rem' }}>
+                  An interactive volatility surface for any US underlying. Spot term structure compression, skew shifts, and strike-level anomalies before they expand into your P&L.
+                </p>
+                {['Full strike × expiry matrix for any ticker', 'Color-coded: green = cheap IV, red = expensive', 'Skew visible at a glance — no spreadsheet needed', 'Identify the cheapest expiration for your thesis'].map((b, i) => (
+                  <div key={i} style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-start', marginBottom: '0.45rem' }}>
+                    <span style={{ color: colors.orange, fontFamily: mono, fontSize: '0.8rem', flexShrink: 0 }}>→</span>
+                    <span style={{ color: '#8b94a3', fontSize: '0.88rem', lineHeight: '1.6' }}>{b}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ── F3: WHY PANEL — text left, mockup right ── */}
+            <div className="feature-showcase-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center', padding: '4rem 0', borderTop: `1px solid ${colors.border}` }}>
+              <div>
+                <div style={{ fontSize: '0.62rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono, marginBottom: '1rem' }}>03 — OPPORTUNITY ANALYSIS</div>
+                <h3 style={{ fontSize: 'clamp(1.2rem, 2.5vw, 1.65rem)', fontWeight: '700', color: colors.white, fontFamily: mono, lineHeight: '1.3', marginBottom: '1rem' }}>
+                  CS Score + WHY Panel.<br />A number and its reason.
+                </h3>
+                <p style={{ color: '#8b94a3', lineHeight: '1.85', fontSize: '0.93rem', marginBottom: '1.5rem' }}>
+                  Every contract scores 0–100. The WHY Panel explains each dimension so you understand why a setup qualifies — not just that it does.
+                </p>
+                {['Delta Rating: proximity to 0.30 optimal range', 'Liquidity Rating: spread% and open interest quality', 'DTE Rating: time buffer and gamma risk assessment', 'Vega Rating: vol sensitivity relative to cost', 'Coiled AI answers your questions in plain language'].map((b, i) => (
+                  <div key={i} style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-start', marginBottom: '0.45rem' }}>
+                    <span style={{ color: colors.orange, fontFamily: mono, fontSize: '0.8rem', flexShrink: 0 }}>→</span>
+                    <span style={{ color: '#8b94a3', fontSize: '0.88rem', lineHeight: '1.6' }}>{b}</span>
+                  </div>
+                ))}
+              </div>
+              {/* Mockup */}
+              <div style={{ background: '#080a0e', border: `1px solid ${colors.border2}`, borderRadius: '6px', overflow: 'hidden', boxShadow: '0 0 40px rgba(232,119,34,0.12)' }}>
+                <div style={{ background: '#0f1117', borderBottom: `1px solid ${colors.border}`, padding: '0.55rem 1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', gap: '0.35rem' }}>{[0,1,2].map(i => <div key={i} style={{ width:'8px', height:'8px', borderRadius:'50%', background:'#2a2a2a' }} />)}</div>
+                  <span style={{ fontFamily: mono, fontSize: '0.6rem', color: '#444', letterSpacing: '1px' }}>OPPORTUNITY ANALYSIS — SPY 540C</span>
+                </div>
+                <div style={{ padding: '1rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', marginBottom: '0.875rem', padding: '0.75rem', background: '#0f1117', border: `1px solid ${colors.border}`, borderRadius: '4px' }}>
+                    <div style={{ textAlign: 'center', flexShrink: 0 }}>
+                      <div style={{ fontFamily: mono, fontSize: '2.2rem', fontWeight: '700', color: colors.orange, lineHeight: 1 }}>91</div>
+                      <div style={{ fontFamily: mono, fontSize: '0.5rem', color: '#555', letterSpacing: '1px' }}>/100</div>
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: mono, fontSize: '0.58rem', color: '#4ade80', fontWeight: '700', letterSpacing: '1.5px', marginBottom: '0.2rem' }}>STRUCTURAL EDGE</div>
+                      <div style={{ fontFamily: mono, fontSize: '0.7rem', color: colors.white }}>SPY Jan 2027 540C</div>
+                      <div style={{ fontFamily: mono, fontSize: '0.62rem', color: '#555' }}>DTE 421 · Δ 0.28 · IVR 12</div>
+                    </div>
+                  </div>
+                  {[
+                    { label:'DELTA RATING',   value:'Excellent', detail:'Δ 0.28 — ideal proximity to 0.30 target', color:'#4ade80' },
+                    { label:'LIQUIDITY',      value:'Good',      detail:'Spread 1.8% · OI 4,820 contracts',       color:'#4ade80' },
+                    { label:'DTE RATING',     value:'Excellent', detail:'421 days — long runway, low gamma risk',   color:'#4ade80' },
+                    { label:'VEGA RATING',    value:'Strong',    detail:'Vega 0.42 · premium $8.70 per share',    color:colors.orange },
+                  ].map((row, i) => (
+                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '0.45rem 0', borderBottom: i < 3 ? `1px solid rgba(30,35,48,0.6)` : 'none' }}>
+                      <div>
+                        <div style={{ fontFamily: mono, fontSize: '0.52rem', color: '#444', letterSpacing: '1.5px', fontWeight: '700', marginBottom: '0.15rem' }}>{row.label}</div>
+                        <div style={{ fontFamily: mono, fontSize: '0.62rem', color: '#606870' }}>{row.detail}</div>
+                      </div>
+                      <span style={{ fontFamily: mono, fontSize: '0.63rem', color: row.color, fontWeight: '700', flexShrink: 0, marginLeft: '0.5rem' }}>{row.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* ── F4: PORTFOLIO — mockup left, text right ── */}
+            <div className="feature-showcase-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center', padding: '4rem 0', borderTop: `1px solid ${colors.border}` }}>
+              {/* Mockup */}
+              <div style={{ background: '#080a0e', border: `1px solid ${colors.border2}`, borderRadius: '6px', overflow: 'hidden', boxShadow: '0 0 40px rgba(232,119,34,0.12)' }}>
+                <div style={{ background: '#0f1117', borderBottom: `1px solid ${colors.border}`, padding: '0.55rem 1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', gap: '0.35rem' }}>{[0,1,2].map(i => <div key={i} style={{ width:'8px', height:'8px', borderRadius:'50%', background:'#2a2a2a' }} />)}</div>
+                  <span style={{ fontFamily: mono, fontSize: '0.62rem', color: '#444', letterSpacing: '1px' }}>PORTFOLIO TRACKER</span>
+                  <span style={{ fontFamily: mono, fontSize: '0.58rem', color: colors.green }}>4 POSITIONS</span>
+                </div>
+                <div style={{ padding: '0.4rem 0.875rem', display: 'grid', gridTemplateColumns: '50px 54px 58px 64px 50px', borderBottom: `1px solid ${colors.border}` }}>
+                  {['TICKER','STRIKE','ENTRY','P&L','Θ BURN'].map(h => (
+                    <span key={h} style={{ fontFamily: mono, fontSize: '0.52rem', color: '#444', letterSpacing: '0.8px', fontWeight: '700' }}>{h}</span>
+                  ))}
+                </div>
+                {[
+                  { ticker:'SPY',  strike:'540C', entry:'$8.70',  pnl:'+$2,340', pos:true,  burn:'34%' },
+                  { ticker:'AAPL', strike:'195C', entry:'$5.20',  pnl:'+$890',   pos:true,  burn:'18%' },
+                  { ticker:'TSLA', strike:'260C', entry:'$9.40',  pnl:'-$1,150', pos:false, burn:'8%'  },
+                  { ticker:'NVDA', strike:'900C', entry:'$12.30', pnl:'+$4,680', pos:true,  burn:'52%' },
+                ].map((row, i) => (
+                  <div key={i} style={{ display: 'grid', gridTemplateColumns: '50px 54px 58px 64px 50px', padding: '0.42rem 0.875rem', borderBottom: i < 3 ? `1px solid rgba(30,35,48,0.5)` : 'none' }}>
+                    <span style={{ fontFamily: mono, fontSize: '0.7rem', color: colors.orange, fontWeight: '700' }}>{row.ticker}</span>
+                    <span style={{ fontFamily: mono, fontSize: '0.7rem', color: '#8b94a3' }}>{row.strike}</span>
+                    <span style={{ fontFamily: mono, fontSize: '0.7rem', color: '#555' }}>{row.entry}</span>
+                    <span style={{ fontFamily: mono, fontSize: '0.7rem', color: row.pos ? colors.green : '#f87171', fontWeight: '600' }}>{row.pnl}</span>
+                    <span style={{ fontFamily: mono, fontSize: '0.7rem', color: '#555' }}>{row.burn}</span>
+                  </div>
+                ))}
+                <div style={{ padding: '0.45rem 0.875rem', borderTop: `1px solid ${colors.border}`, display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ fontFamily: mono, fontSize: '0.58rem', color: '#555' }}>TOTAL P&L</span>
+                  <span style={{ fontFamily: mono, fontSize: '0.62rem', color: colors.green, fontWeight: '700' }}>+$6,760</span>
+                </div>
+              </div>
+              {/* Text */}
+              <div>
+                <div style={{ fontSize: '0.62rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono, marginBottom: '1rem' }}>04 — PORTFOLIO TRACKER</div>
+                <h3 style={{ fontSize: 'clamp(1.2rem, 2.5vw, 1.65rem)', fontWeight: '700', color: colors.white, fontFamily: mono, lineHeight: '1.3', marginBottom: '1rem' }}>
+                  Open it. Track it.<br />Know when to close.
+                </h3>
+                <p style={{ color: '#8b94a3', lineHeight: '1.85', fontSize: '0.93rem', marginBottom: '1.5rem' }}>
+                  Every open position tracked in real time. P&L, Greeks, theta burned percentage — the data to decide whether to hold, roll, or close, without opening a spreadsheet.
+                </p>
+                {['Unrealized P&L per contract and aggregate total', 'Theta Burned % — how much time value has decayed', 'Live Delta and Vega per position', 'Payoff diagram at expiration for each contract', 'What-If simulator: P&L at any underlying price'].map((b, i) => (
+                  <div key={i} style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-start', marginBottom: '0.45rem' }}>
+                    <span style={{ color: colors.orange, fontFamily: mono, fontSize: '0.8rem', flexShrink: 0 }}>→</span>
+                    <span style={{ color: '#8b94a3', fontSize: '0.88rem', lineHeight: '1.6' }}>{b}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ── F5: HV SCREENER — text left, mockup right ── */}
+            <div className="feature-showcase-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center', padding: '4rem 0', borderTop: `1px solid ${colors.border}` }}>
+              <div>
+                <div style={{ fontSize: '0.62rem', color: colors.orange, fontWeight: '700', letterSpacing: '3px', fontFamily: mono, marginBottom: '1rem' }}>05 — HV SCREENER</div>
+                <h3 style={{ fontSize: 'clamp(1.2rem, 2.5vw, 1.65rem)', fontWeight: '700', color: colors.white, fontFamily: mono, lineHeight: '1.3', marginBottom: '1rem' }}>
+                  1,136 tickers.<br />Sorted by compression.
+                </h3>
+                <p style={{ color: '#8b94a3', lineHeight: '1.85', fontSize: '0.93rem', marginBottom: '1.5rem' }}>
+                  Historical volatility screener across the full universe. Find tickers where realized vol is at multi-month lows — the setup that precedes the most asymmetric LEAPS entries.
+                </p>
+                {['1,136 US underlyings updated daily', '20-day and 60-day HV vs. 52-week range', 'HV Rank: where today sits in its annual band', 'Sort by compression to surface the coiled springs', 'Complements IV Rank for the full volatility picture'].map((b, i) => (
+                  <div key={i} style={{ display: 'flex', gap: '0.6rem', alignItems: 'flex-start', marginBottom: '0.45rem' }}>
+                    <span style={{ color: colors.orange, fontFamily: mono, fontSize: '0.8rem', flexShrink: 0 }}>→</span>
+                    <span style={{ color: '#8b94a3', fontSize: '0.88rem', lineHeight: '1.6' }}>{b}</span>
+                  </div>
+                ))}
+              </div>
+              {/* Mockup */}
+              <div style={{ background: '#080a0e', border: `1px solid ${colors.border2}`, borderRadius: '6px', overflow: 'hidden', boxShadow: '0 0 40px rgba(232,119,34,0.12)' }}>
+                <div style={{ background: '#0f1117', borderBottom: `1px solid ${colors.border}`, padding: '0.55rem 1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', gap: '0.35rem' }}>{[0,1,2].map(i => <div key={i} style={{ width:'8px', height:'8px', borderRadius:'50%', background:'#2a2a2a' }} />)}</div>
+                  <span style={{ fontFamily: mono, fontSize: '0.6rem', color: '#444', letterSpacing: '1px' }}>HV SCREENER — HV RANK ↑</span>
+                </div>
+                <div style={{ padding: '0.4rem 0.875rem', display: 'grid', gridTemplateColumns: '52px 44px 44px 96px 48px', borderBottom: `1px solid ${colors.border}` }}>
+                  {['TICKER','20D HV','60D HV','HV RANK','COMP'].map(h => (
+                    <span key={h} style={{ fontFamily: mono, fontSize: '0.52rem', color: '#444', letterSpacing: '0.8px', fontWeight: '700' }}>{h}</span>
+                  ))}
+                </div>
+                {[
+                  { ticker:'MSFT', hv20:'11.2', hv60:'14.8', rank:4,  comp:'-24%' },
+                  { ticker:'AMZN', hv20:'15.4', hv60:'19.1', rank:7,  comp:'-19%' },
+                  { ticker:'GOOG', hv20:'13.8', hv60:'17.2', rank:9,  comp:'-18%' },
+                  { ticker:'META', hv20:'18.1', hv60:'22.4', rank:11, comp:'-15%' },
+                  { ticker:'NFLX', hv20:'22.5', hv60:'26.1', rank:14, comp:'-12%' },
+                ].map((row, i) => (
+                  <div key={i} style={{ display: 'grid', gridTemplateColumns: '52px 44px 44px 96px 48px', padding: '0.42rem 0.875rem', borderBottom: i < 4 ? `1px solid rgba(30,35,48,0.5)` : 'none' }}>
+                    <span style={{ fontFamily: mono, fontSize: '0.7rem', color: colors.orange, fontWeight: '700' }}>{row.ticker}</span>
+                    <span style={{ fontFamily: mono, fontSize: '0.7rem', color: colors.green }}>{row.hv20}</span>
+                    <span style={{ fontFamily: mono, fontSize: '0.7rem', color: '#555' }}>{row.hv60}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <div style={{ flex: 1, height: '4px', background: '#1a1a1a', borderRadius: '2px' }}>
+                        <div style={{ width: `${row.rank * 7}%`, height: '100%', background: colors.green, borderRadius: '2px' }} />
+                      </div>
+                      <span style={{ fontFamily: mono, fontSize: '0.6rem', color: colors.green, flexShrink: 0 }}>{row.rank}%</span>
+                    </div>
+                    <span style={{ fontFamily: mono, fontSize: '0.7rem', color: colors.green, fontWeight: '600' }}>{row.comp}</span>
+                  </div>
+                ))}
+                <div style={{ padding: '0.4rem 0.875rem', borderTop: `1px solid ${colors.border}` }}>
+                  <span style={{ fontFamily: mono, fontSize: '0.52rem', color: '#333' }}>1,136 TICKERS · UPDATED DAILY</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Section CTA */}
+            <div style={{ textAlign: 'center', padding: '3rem 0 5rem', borderTop: `1px solid ${colors.border}` }}>
+              <p style={{ color: '#8b94a3', marginBottom: '1.5rem', fontSize: '0.95rem' }}>All of this. Free tier. No credit card required.</p>
+              <button
+                onClick={() => router.push('/register')}
+                style={{ background: colors.orange, color: colors.bg, border: 'none', padding: '0.95rem 2.5rem', fontSize: '0.95rem', fontWeight: '700', letterSpacing: '0.5px', cursor: 'pointer', fontFamily: sans, borderRadius: '3px', transition: 'all 0.2s ease', boxShadow: '0 0 25px rgba(232,119,34,0.3)' }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = colors.orangeHover; e.currentTarget.style.transform = 'translateY(-2px)' }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = colors.orange; e.currentTarget.style.transform = 'translateY(0)' }}
+              >
+                Explore the terminal free →
+              </button>
+            </div>
+
           </div>
         </section>
 

@@ -78,6 +78,7 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
   const plt = isDayMode ? LIGHT_PLOT : DARK_PLOT
 
   const [colorMode, setColorMode] = useState<'iv' | 'cs'>(defaultColorMode)
+  const [isFullscreen, setIsFullscreen] = useState(false)
   const [watchlists, setWatchlists] = useState<Watchlist[]>([])
   const [selectedWatchlist, setSelectedWatchlist] = useState<string>('')
   const [addingToWatchlist, setAddingToWatchlist] = useState(false)
@@ -261,9 +262,29 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
     [1.0,  '#00C853'],   // Lime green — CS 100   (ottimo)
   ]
 
+  const plotHeight = isFullscreen
+    ? (typeof window !== 'undefined' ? window.innerHeight - 145 : 650)
+    : 520
+
+  const containerStyle: React.CSSProperties = isFullscreen
+    ? {
+        position: 'fixed',
+        inset: 0,
+        zIndex: 200,
+        backgroundColor: 'var(--bg-primary)',
+        display: 'flex',
+        flexDirection: 'column',
+        fontFamily: 'var(--font-mono)',
+      }
+    : {
+        border: `1px solid ${bb.border2}`,
+        backgroundColor: bb.surface,
+        fontFamily: 'var(--font-mono)',
+      }
+
   return (
     <>
-      <div style={{ border: `1px solid ${bb.border2}`, backgroundColor: bb.surface, fontFamily: 'var(--font-mono)' }}>
+      <div style={containerStyle}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: `1px solid ${bb.orange}`, padding: '12px 16px', flexWrap: 'wrap', gap: 8 }}>
           <div>
@@ -320,11 +341,35 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
                 <Stat label="ROSSO" value="0–50" color={bb.red} />
               </div>
             )}
+            {/* Fullscreen toggle */}
+            <button
+              onClick={() => setIsFullscreen(fs => !fs)}
+              title={isFullscreen ? 'Exit fullscreen' : 'Expand to fullscreen'}
+              style={{
+                background: 'transparent',
+                border: `1px solid ${bb.border2}`,
+                color: bb.gray,
+                cursor: 'pointer',
+                fontFamily: 'var(--font-mono)',
+                fontSize: '11px',
+                letterSpacing: 1,
+                padding: '5px 10px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                transition: 'color 0.15s, border-color 0.15s',
+                flexShrink: 0,
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = bb.orange; (e.currentTarget as HTMLButtonElement).style.borderColor = bb.orange }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = bb.gray; (e.currentTarget as HTMLButtonElement).style.borderColor = bb.border2 }}
+            >
+              {isFullscreen ? '✕ EXIT' : '⛶ FULLSCREEN'}
+            </button>
           </div>
         </div>
 
         {/* 3D Chart */}
-        <div style={{ padding: '8px' }}>
+        <div style={{ padding: '8px', flex: isFullscreen ? 1 : undefined, display: isFullscreen ? 'flex' : undefined, flexDirection: isFullscreen ? 'column' : undefined }}>
           <Plot
             data={[
               {
@@ -378,7 +423,7 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
             ]}
             layout={{
               width: undefined,
-              height: 520,
+              height: plotHeight,
               autosize: true,
               paper_bgcolor: plt.bg,
               plot_bgcolor: plt.bg,
@@ -475,7 +520,7 @@ export default function VolSurface({ symbol, optionType = 'call', defaultColorMo
 
       {/* Option Details Modal */}
       {selectedOption && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.8)', fontFamily: 'var(--font-mono)' }}
+        <div style={{ position: 'fixed', inset: 0, zIndex: 300, display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.8)', fontFamily: 'var(--font-mono)' }}
           onClick={() => setSelectedOption(null)}>
           <div style={{ width: '100%', maxWidth: '500px', border: `2px solid ${bb.orange}`, backgroundColor: bb.bg, color: bb.white }}
             onClick={e => e.stopPropagation()}>
