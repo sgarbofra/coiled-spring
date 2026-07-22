@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import { scannerStore } from '@/lib/scanner-store'
 import { computeCandidateScore as _computeScore, computeWhyPanel as _computeWhy, scoreColor } from '@/lib/cs-score'
-import { RiskTooltip } from '@/components/RiskPanel'
+import { RiskTooltip, computeFlags } from '@/components/RiskPanel'
 
 const VolSurface = dynamic(() => import('@/components/VolSurface'), { ssr: false })
 
@@ -163,6 +163,41 @@ export function computeCandidateScore(r: ScanResult): number {
 
 export function computeWhyPanel(r: ScanResult): string[] {
   return _computeWhy({ delta: r.delta, vega: r.vega, dte: r.dte, spread_pct: r.spread_pct, open_interest: r.open_interest })
+}
+
+function exportToCSV(results: ScanResult[]) {
+  const headers = [
+    'Ticker', 'Type', 'Strike', 'Expiration', 'DTE', 'Delta',
+    'Gamma', 'Vega', 'Theta', 'Mid', 'Spread%', 'OI', 'CS Candidate Score',
+    'Delta Rating', 'Liquidity Rating', 'DTE Rating', 'Vega Rating', 'Risk Flags',
+  ]
+  const rows = results.map(r => {
+    const score = computeCandidateScore(r)
+    const why = computeWhyPanel(r)
+    const risks = computeFlags({
+      spread_pct: r.spread_pct,
+      open_interest: r.open_interest,
+      dte: r.dte,
+    }).map(f => f.label).join(' | ')
+    // Escape cells that may contain commas
+    const esc = (v: unknown) => {
+      const s = String(v ?? '')
+      return s.includes(',') || s.includes('"') ? `"${s.replace(/"/g, '""')}"` : s
+    }
+    return [
+      r.underlying, r.option_type, r.strike, r.expiration,
+      r.dte, r.delta, r.gamma, r.vega, r.theta, r.mid,
+      (r.spread_pct * 100).toFixed(1) + '%', r.open_interest,
+      score.toFixed(0), ...why, risks,
+    ].map(esc)
+  })
+  const csv = [headers, ...rows].map(r => r.join(',')).join('\n')
+  const blob = new Blob([csv], { type: 'text/csv' })
+  const a = document.createElement('a')
+  a.href = URL.createObjectURL(blob)
+  a.download = `coiledspring_${new Date().toISOString().slice(0, 10)}.csv`
+  a.click()
+  URL.revokeObjectURL(a.href)
 }
 
 export default function ScannerPage() {
@@ -970,6 +1005,30 @@ export default function ScannerPage() {
               </div>
             )
           })}
+        </div>
+      )}
+
+      {view === 'scanner' && results.length > 0 && (
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
+          <button
+            onClick={() => exportToCSV(results)}
+            style={{
+              background: 'transparent',
+              border: `1px solid ${bb.orange}`,
+              color: bb.orange,
+              fontFamily: 'var(--font-mono)',
+              fontSize: '11px',
+              fontWeight: 700,
+              letterSpacing: '1px',
+              padding: '5px 14px',
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = bb.orange; e.currentTarget.style.color = bb.bg }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = bb.orange }}
+          >
+            ↓ EXPORT CSV
+          </button>
         </div>
       )}
 
