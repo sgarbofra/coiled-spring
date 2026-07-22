@@ -81,7 +81,7 @@ const ENTRIES: Entry[] = [
   {
     date: 'July 7, 2026',
     version: 'v1.8',
-    headline: 'I give the terminal a voice. It's more useful than I expected and slightly uncanny.',
+    headline: 'I give the terminal a voice. It\'s more useful than I expected and slightly uncanny.',
     tag: 'feature',
     body: [
       "I've been staring at the Opportunity Analysis page and thinking: what would a good mentor say about this contract right now? Not a buy or sell recommendation — I'm not looking for that, and nobody should trust an API for that anyway. Just a bit of context. Why this strike. Why this DTE. What the Greeks are telling me.",
@@ -92,7 +92,7 @@ const ENTRIES: Entry[] = [
   {
     date: 'July 10, 2026',
     version: 'v1.9',
-    headline: 'IV Rank. The feature that needs time to become useful. I'm planting a tree.',
+    headline: 'IV Rank. The feature that needs time to become useful. I\'m planting a tree.',
     tag: 'feature',
     body: [
       "IV Rank is one of those things every options trader talks about and almost nobody has clean data for — at least not for free, at least not in real time, at least not neatly integrated into the thing you're already using.",
@@ -170,7 +170,7 @@ const ENTRIES: Entry[] = [
   {
     date: 'July 22, 2026',
     version: 'v2.6',
-    headline: 'I wanted to paste the scanner into Excel. Now I don't have to.',
+    headline: 'I wanted to paste the scanner into Excel. Now I don\'t have to.',
     tag: 'feature',
     body: [
       "This one started, as most of my features do, with a specific moment of low-grade annoyance. I'd just run a scan on high-IV biotech names before an FDA catalyst, found six or seven interesting contracts, and wanted to pull them into a spreadsheet to do some position sizing math. My solution was to manually type the numbers into Excel like it was 1987.",
