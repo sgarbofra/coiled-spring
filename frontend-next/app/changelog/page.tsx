@@ -274,11 +274,12 @@ export default function ChangelogPage() {
               <div style={{ paddingTop: '0.15rem' }}>
                 <div style={{
                   fontFamily: mono,
-                  fontSize: '0.7rem',
-                  color: colors.darkGray,
-                  letterSpacing: '1px',
+                  fontSize: '0.85rem',
+                  color: colors.white,
+                  letterSpacing: '0.5px',
                   marginBottom: '0.6rem',
                   lineHeight: 1.5,
+                  fontWeight: 600,
                 }}>
                   {entry.date}
                 </div>

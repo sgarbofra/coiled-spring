@@ -56,7 +56,7 @@ export default function NavBar() {
     { href: '/portfolio',   label: 'PORTFOLIO' },
     { href: '/academy',     label: 'ACADEMY' },
     { href: '/settings',    label: 'SETTINGS' },
-    { href: '/changelog',   label: 'CHANGELOG' },
+    { href: '/changelog',   label: 'SHIP LOG' },
   ]
 
   const handleLogout = async () => {
