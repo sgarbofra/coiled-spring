@@ -459,7 +459,6 @@ def get_iv_ranks(
 def get_iv_history(
     ticker: str,
     db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
 ):
     """Ritorna tutto lo storico IV ATM salvato per un ticker, tutti i DTE bucket.
 

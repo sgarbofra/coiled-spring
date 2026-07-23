@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { pythonFetch } from '@/lib/python-api'
 
 export async function GET(
-  req: NextRequest,
+  _req: Request,
   { params }: { params: Promise<{ ticker: string }> }
 ) {
   try {
@@ -12,9 +12,7 @@ export async function GET(
       return NextResponse.json({ error: 'Missing ticker' }, { status: 400 })
     }
 
-    const res = await pythonFetch(`/api/scanner/iv-history/${ticker}`, {
-      headers: { Cookie: req.headers.get('cookie') ?? '' },
-    })
+    const res = await pythonFetch(`/api/scanner/iv-history/${ticker}`)
 
     if (!res.ok) {
       const err = await res.json().catch(() => ({}))
