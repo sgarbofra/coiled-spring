@@ -30,7 +30,7 @@ const colors = {
 }
 
 const mono = "'JetBrains Mono', 'Courier New', monospace"
-const sans = "'Inter', -apple-system, BlinkMacSystemFont, sans-serif"
+const sans = "'Figtree', -apple-system, BlinkMacSystemFont, sans-serif"
 
 type TickerItem = { label: string; value: string; change?: string; positive?: boolean; dim?: boolean }
 const TICKER_STATIC: TickerItem[] = [
@@ -111,7 +111,7 @@ export default function LandingPage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
         * { box-sizing: border-box; }
         img { max-width: 100%; }
