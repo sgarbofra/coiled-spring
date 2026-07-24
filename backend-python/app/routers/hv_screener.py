@@ -34,6 +34,7 @@ class HVRow(BaseModel):
     ticker: str
     company_name: Optional[str] = None
     hv30: Optional[float] = None
+    hv30_parkinson: Optional[float] = None   # Parkinson estimator (High/Low range)
     hv_rank: Optional[float] = None
     hv_percentile: Optional[float] = None
     hv_52w_high: Optional[float] = None
@@ -76,6 +77,7 @@ def _run_hv_refresh(db_url: str) -> None:
             existing = db.query(models.HVSnapshot).filter_by(ticker=ticker).first()
             if existing:
                 existing.hv30 = row["hv30"]
+                existing.hv30_parkinson = row.get("hv30_parkinson")
                 existing.hv_rank = row["hv_rank"]
                 existing.hv_percentile = row["hv_percentile"]
                 existing.hv_52w_high = row["hv_52w_high"]
@@ -85,6 +87,7 @@ def _run_hv_refresh(db_url: str) -> None:
                 db.add(models.HVSnapshot(
                     ticker=ticker,
                     hv30=row["hv30"],
+                    hv30_parkinson=row.get("hv30_parkinson"),
                     hv_rank=row["hv_rank"],
                     hv_percentile=row["hv_percentile"],
                     hv_52w_high=row["hv_52w_high"],
@@ -166,6 +169,7 @@ def get_hv_screener(
                 ticker=r.ticker,
                 company_name=r.company_name,
                 hv30=r.hv30,
+                hv30_parkinson=r.hv30_parkinson,
                 hv_rank=r.hv_rank,
                 hv_percentile=r.hv_percentile,
                 hv_52w_high=r.hv_52w_high,

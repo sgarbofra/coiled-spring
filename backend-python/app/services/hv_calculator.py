@@ -71,12 +71,48 @@ def _compute_hv_for_series(prices: pd.Series) -> Optional[dict]:
     }
 
 
-def _download_batch(tickers: list[str]) -> pd.DataFrame:
-    """Scarica prezzi di chiusura per un batch di ticker.
+def _compute_parkinson_hv(highs: pd.Series, lows: pd.Series, window: int = 30) -> Optional[float]:
+    """Calcola la Parkinson Historical Volatility su una finestra rolling.
 
-    Ritorna DataFrame con righe=date, colonne=ticker.
-    Gestisce MultiIndex e single-ticker edge-case.
+    Usa il range intraday (High/Low) invece dei rendimenti close-to-close.
+    Statisticamente 5.6x più efficiente del metodo classico.
+
+    Formula (Parkinson 1980):
+        σ²_P = 1/(4n·ln2) · Σ ln(High_i / Low_i)²
+        HV_P = √(σ²_P · 252) × 100  (annualizzata, in %)
+
+    Ritorna None se dati insufficienti o se High/Low contengono NaN/zero.
     """
+    highs = highs.dropna()
+    lows = lows.dropna()
+
+    # Allinea gli indici
+    common = highs.index.intersection(lows.index)
+    if len(common) < window + 5:
+        return None
+
+    h = highs.loc[common]
+    l = lows.loc[common]
+
+    # Sanity check: evita divisione per zero su lows = 0
+    if (l <= 0).any():
+        return None
+
+    log_hl = np.log(h / l)
+    parkinson_var = log_hl.tail(window).pow(2).mean() / (4 * np.log(2))
+    hv_parkinson = float(np.sqrt(parkinson_var * 252) * 100)
+
+    return round(hv_parkinson, 1) if hv_parkinson > 0 else None
+
+
+def _download_batch(tickers: list[str]) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Scarica Close, High e Low per un batch di ticker.
+
+    Ritorna tuple (close_df, high_df, low_df) — DataFrame con righe=date, colonne=ticker.
+    Gestisce MultiIndex e single-ticker edge-case.
+    In caso di errore ritorna tre DataFrame vuoti.
+    """
+    empty = pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
     try:
         raw = yf.download(
             tickers,
@@ -87,23 +123,24 @@ def _download_batch(tickers: list[str]) -> pd.DataFrame:
             threads=True,
         )
         if raw.empty:
-            return pd.DataFrame()
+            return empty
 
-        # Estrai la colonna Close — può essere MultiIndex con (metric, ticker)
-        if isinstance(raw.columns, pd.MultiIndex):
-            close = raw["Close"]
-        else:
-            close = raw[["Close"]] if "Close" in raw.columns else raw
+        def _extract(metric: str) -> pd.DataFrame:
+            if isinstance(raw.columns, pd.MultiIndex):
+                df = raw[metric] if metric in raw.columns.get_level_values(0) else pd.DataFrame()
+            else:
+                df = raw[[metric]] if metric in raw.columns else pd.DataFrame()
 
-        # Single ticker: yfinance ritorna Series, non DataFrame
-        if isinstance(close, pd.Series):
-            close = close.to_frame(name=tickers[0])
+            # Single ticker: yfinance ritorna Series
+            if isinstance(df, pd.Series):
+                df = df.to_frame(name=tickers[0])
+            return df
 
-        return close
+        return _extract("Close"), _extract("High"), _extract("Low")
 
     except Exception as exc:
         logger.error(f"[HV] Batch download error: {exc}")
-        return pd.DataFrame()
+        return empty
 
 
 # ── Public API ────────────────────────────────────────────────────────────────
@@ -124,7 +161,7 @@ def compute_hv_batch(tickers: list[str]) -> list[dict]:
 
     for batch_idx, batch in enumerate(batches):
         logger.info(f"[HV] Batch {batch_idx + 1}/{len(batches)}: {len(batch)} tickers")
-        close_df = _download_batch(batch)
+        close_df, high_df, low_df = _download_batch(batch)
 
         if close_df.empty:
             logger.warning(f"[HV] Batch {batch_idx + 1} returned empty DataFrame")
@@ -140,9 +177,16 @@ def compute_hv_batch(tickers: list[str]) -> list[dict]:
                 if metrics is None:
                     errors += 1
                     continue
+
+                # Parkinson HV — richiede High e Low
+                hv30_parkinson = None
+                if ticker in high_df.columns and ticker in low_df.columns:
+                    hv30_parkinson = _compute_parkinson_hv(high_df[ticker], low_df[ticker], window=HV_WINDOW)
+
                 results.append({
                     "ticker": ticker,
                     "computed_at": now,
+                    "hv30_parkinson": hv30_parkinson,
                     **metrics,
                 })
             except Exception as exc:

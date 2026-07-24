@@ -346,6 +346,7 @@ class HVSnapshot(Base):
     ticker: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
     company_name: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     hv30: Mapped[Optional[float]] = mapped_column(nullable=True)
+    hv30_parkinson: Mapped[Optional[float]] = mapped_column(nullable=True)   # Parkinson estimator (High/Low)
     hv_rank: Mapped[Optional[float]] = mapped_column(nullable=True)
     hv_percentile: Mapped[Optional[float]] = mapped_column(nullable=True)
     hv_52w_high: Mapped[Optional[float]] = mapped_column(nullable=True)

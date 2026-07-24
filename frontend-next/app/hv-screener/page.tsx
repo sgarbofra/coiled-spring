@@ -20,6 +20,7 @@ type HVRow = {
   ticker: string
   company_name: string | null
   hv30: number | null
+  hv30_parkinson: number | null
   hv_rank: number | null
   hv_percentile: number | null
   hv_52w_high: number | null
@@ -27,7 +28,7 @@ type HVRow = {
   computed_at: string | null
 }
 
-type SortKey = 'ticker' | 'hv30' | 'hv_rank' | 'hv_percentile' | 'hv_52w_high' | 'hv_52w_low'
+type SortKey = 'ticker' | 'hv30' | 'hv30_parkinson' | 'hv_rank' | 'hv_percentile' | 'hv_52w_high' | 'hv_52w_low'
 type SortDir = 'asc' | 'desc'
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -361,6 +362,10 @@ function HVScreenerContent() {
                 <th style={thStyle('hv30')} onClick={() => handleSort('hv30')}>
                   HV 30D %{sortIcon('hv30')}
                 </th>
+                <th style={thStyle('hv30_parkinson')} onClick={() => handleSort('hv30_parkinson')}
+                  title="Parkinson HV — usa range intraday High/Low. Più sensibile ai movimenti intraday rispetto alla HV close-to-close.">
+                  HV PARK %{sortIcon('hv30_parkinson')}
+                </th>
                 <th style={thStyle('hv_rank')} onClick={() => handleSort('hv_rank')}>
                   HV RANK{sortIcon('hv_rank')}
                 </th>
@@ -426,9 +431,14 @@ function HVScreenerContent() {
                     <td style={{ padding: '6px 10px', color: 'var(--text-secondary)', fontSize: '11px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {row.company_name ?? ''}
                     </td>
-                    {/* HV30 */}
+                    {/* HV30 close-to-close */}
                     <td style={{ padding: '6px 10px', textAlign: 'right', color: 'var(--text-primary)' }}>
                       {fmt(row.hv30)}%
+                    </td>
+                    {/* HV Parkinson */}
+                    <td style={{ padding: '6px 10px', textAlign: 'right', color: 'var(--text-secondary)' }}
+                      title="Parkinson HV — stima dal range High/Low, 5.6x più efficiente della HV close-to-close">
+                      {row.hv30_parkinson != null ? <>{fmt(row.hv30_parkinson)}%</> : <span style={{ opacity: 0.3 }}>—</span>}
                     </td>
                     {/* HV Rank */}
                     <td style={{ padding: '4px 10px', textAlign: 'right' }}>
