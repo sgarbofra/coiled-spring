@@ -455,6 +455,58 @@ def get_iv_ranks(
     return result
 
 
+@router.get("/validate-ticker/{ticker}")
+def validate_ticker(ticker: str):
+    """Verifica se un ticker esiste su Yahoo Finance e ha opzioni disponibili.
+
+    Usato dal frontend per la validazione in tempo reale (debounced).
+    Nessuna autenticazione richiesta — market data pubblico.
+
+    Risposta: { ticker, valid, has_options, price, reason }
+    """
+    import yfinance as yf
+    from app.services.market_data import _yf_current_price
+
+    symbol = ticker.upper().strip()
+
+    # Sanity check: ticker deve essere 1-6 caratteri alfanumerici + punto
+    import re
+    if not re.match(r'^[A-Z0-9.]{1,6}$', symbol):
+        return {
+            "ticker": symbol,
+            "valid": False,
+            "has_options": False,
+            "price": None,
+            "reason": "Formato ticker non valido",
+        }
+
+    try:
+        t = yf.Ticker(symbol)
+        options = t.options  # tupla di date di scadenza — vuota se nessuna opzione
+        has_options = bool(options)
+        price = _yf_current_price(symbol)
+
+        return {
+            "ticker": symbol,
+            "valid": has_options and price is not None,
+            "has_options": has_options,
+            "price": price,
+            "reason": (
+                None if (has_options and price is not None)
+                else "Nessuna opzione disponibile su Yahoo Finance" if not has_options
+                else "Prezzo non disponibile — ticker potrebbe non essere un'azione US"
+            ),
+        }
+    except Exception as e:
+        return {
+            "ticker": symbol,
+            "valid": False,
+            "has_options": False,
+            "price": None,
+            "reason": f"Ticker non trovato ({type(e).__name__})",
+        }
+
+
 @router.get("/iv-history/{ticker}")
 def get_iv_history(
     ticker: str,

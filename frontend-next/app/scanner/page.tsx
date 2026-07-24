@@ -238,6 +238,16 @@ export default function ScannerPage() {
 
   const searchRef = useRef<HTMLInputElement>(null)
   const [dropdownOpen, setDropdownOpen] = useState(false)
+
+  // Validazione ticker custom (non in universe)
+  type TickerValidation = {
+    status: 'idle' | 'loading' | 'valid' | 'invalid'
+    ticker?: string
+    price?: number | null
+    reason?: string
+  }
+  const [tickerValidation, setTickerValidation] = useState<TickerValidation>({ status: 'idle' })
+  const validationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [scannedTickers, setScannedTickers] = useState<string[]>([])
   const [view, setView] = useState<'scanner' | 'surface'>('scanner')
   const [surfaceTicker, setSurfaceTicker] = useState<string>('')
@@ -396,6 +406,49 @@ export default function ScannerPage() {
   useEffect(() => {
     console.log('[SCANNER] selectedTickers changed:', selectedTickers)
   }, [selectedTickers])
+
+  // Validazione ticker custom — si attiva quando l'utente digita un ticker non in universe
+  useEffect(() => {
+    const query = tickerSearch.trim().toUpperCase()
+
+    // Reset se vuoto, troppo lungo, o già nella universe
+    if (!query || query.length > 6 || allTickersArray.includes(query)) {
+      setTickerValidation({ status: 'idle' })
+      if (validationTimerRef.current) clearTimeout(validationTimerRef.current)
+      return
+    }
+
+    // Non validare se il dropdown mostra già un match esatto
+    const exactInPool = pool.includes(query)
+    if (exactInPool) {
+      setTickerValidation({ status: 'idle' })
+      return
+    }
+
+    // Debounce 600ms
+    if (validationTimerRef.current) clearTimeout(validationTimerRef.current)
+    setTickerValidation({ status: 'loading', ticker: query })
+
+    validationTimerRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/scanner/validate-ticker/${query}`)
+        const data = await res.json()
+        setTickerValidation({
+          status: data.valid ? 'valid' : 'invalid',
+          ticker: query,
+          price: data.price,
+          reason: data.reason,
+        })
+      } catch {
+        setTickerValidation({ status: 'invalid', ticker: query, reason: 'Network error' })
+      }
+    }, 600)
+
+    return () => {
+      if (validationTimerRef.current) clearTimeout(validationTimerRef.current)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tickerSearch])
 
   // Save filters AND results to localStorage whenever they change
   useEffect(() => {
@@ -808,22 +861,70 @@ export default function ScannerPage() {
                   style={{ flex: '1 1 120px', minWidth: '120px', backgroundColor: 'transparent', border: 'none', color: bb.orange, fontSize: '13.2px', fontFamily: 'inherit', outline: 'none' }}
                 />
               </div>
-              {dropdownOpen && filteredTickers.length > 0 && (
-                <div style={{ position: 'absolute', left: 0, top: '100%', zIndex: 20, marginTop: '4px', width: '100%', maxHeight: '200px', overflowY: 'auto', border: `1px solid ${bb.border2}`, backgroundColor: bb.surface }}>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', padding: '8px' }}>
-                    {filteredTickers.slice(0, 40).map(t => {
-                      const displayName = ETF_INFO[t]?.name || TICKER_NAMES[t]
-                      return (
-                        <button key={t} onMouseDown={(e) => { e.preventDefault(); addTicker(t) }}
-                          style={{ display: 'flex', alignItems: 'center', gap: '6px', backgroundColor: bb.panel, border: `1px solid ${bb.border}`, color: bb.white, padding: '4px 8px', fontSize: '12px', fontFamily: 'inherit', cursor: 'pointer' }}
-                          onMouseEnter={e => (e.currentTarget.style.backgroundColor = bb.orange, e.currentTarget.style.color = '#000')}
-                          onMouseLeave={e => (e.currentTarget.style.backgroundColor = bb.panel, e.currentTarget.style.color = bb.white)}>
-                          <span style={{ fontWeight: 'bold' }}>{t}</span>
-                          {displayName && <span style={{ color: bb.gray, fontSize: '13px' }}>— {displayName}</span>}
+              {dropdownOpen && (filteredTickers.length > 0 || (tickerSearch.trim().length >= 1 && tickerValidation.status !== 'idle')) && (
+                <div style={{ position: 'absolute', left: 0, top: '100%', zIndex: 20, marginTop: '4px', width: '100%', maxHeight: '260px', overflowY: 'auto', border: `1px solid ${bb.border2}`, backgroundColor: bb.surface }}>
+                  {/* Ticker dalla universe */}
+                  {filteredTickers.length > 0 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', padding: '8px' }}>
+                      {filteredTickers.slice(0, 40).map(t => {
+                        const displayName = ETF_INFO[t]?.name || TICKER_NAMES[t]
+                        return (
+                          <button key={t} onMouseDown={(e) => { e.preventDefault(); addTicker(t) }}
+                            style={{ display: 'flex', alignItems: 'center', gap: '6px', backgroundColor: bb.panel, border: `1px solid ${bb.border}`, color: bb.white, padding: '4px 8px', fontSize: '12px', fontFamily: 'inherit', cursor: 'pointer' }}
+                            onMouseEnter={e => (e.currentTarget.style.backgroundColor = bb.orange, e.currentTarget.style.color = '#000')}
+                            onMouseLeave={e => (e.currentTarget.style.backgroundColor = bb.panel, e.currentTarget.style.color = bb.white)}>
+                            <span style={{ fontWeight: 'bold' }}>{t}</span>
+                            {displayName && <span style={{ color: bb.gray, fontSize: '13px' }}>— {displayName}</span>}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  )}
+
+                  {/* Pannello validazione ticker custom */}
+                  {tickerSearch.trim().length >= 1 && !allTickersArray.includes(tickerSearch.trim().toUpperCase()) && tickerValidation.status !== 'idle' && (
+                    <div style={{
+                      borderTop: filteredTickers.length > 0 ? `1px solid ${bb.border}` : 'none',
+                      padding: '8px 12px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      fontSize: '12px',
+                      fontFamily: 'inherit',
+                    }}>
+                      {tickerValidation.status === 'loading' && (
+                        <span style={{ color: bb.gray, letterSpacing: '0.5px' }}>
+                          ⟳ Verifico <strong style={{ color: bb.white }}>{tickerValidation.ticker}</strong> su Yahoo Finance...
+                        </span>
+                      )}
+                      {tickerValidation.status === 'valid' && tickerValidation.ticker === tickerSearch.trim().toUpperCase() && (
+                        <button
+                          onMouseDown={e => { e.preventDefault(); addTicker(tickerValidation.ticker!) }}
+                          style={{
+                            display: 'flex', alignItems: 'center', gap: '8px',
+                            backgroundColor: 'transparent',
+                            border: `1px solid ${bb.green}`,
+                            color: bb.green,
+                            padding: '5px 12px', fontSize: '12px', fontFamily: 'inherit',
+                            cursor: 'pointer', letterSpacing: '0.5px', fontWeight: 'bold',
+                          }}
+                          onMouseEnter={e => { e.currentTarget.style.backgroundColor = bb.green; e.currentTarget.style.color = '#000' }}
+                          onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = bb.green }}>
+                          ✓ ADD {tickerValidation.ticker}
+                          {tickerValidation.price != null && (
+                            <span style={{ fontWeight: 'normal', opacity: 0.8 }}>
+                              — ${tickerValidation.price.toFixed(2)}
+                            </span>
+                          )}
                         </button>
-                      )
-                    })}
-                  </div>
+                      )}
+                      {tickerValidation.status === 'invalid' && tickerValidation.ticker === tickerSearch.trim().toUpperCase() && (
+                        <span style={{ color: bb.red, letterSpacing: '0.5px' }}>
+                          ✗ <strong>{tickerValidation.ticker}</strong>: {tickerValidation.reason}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
