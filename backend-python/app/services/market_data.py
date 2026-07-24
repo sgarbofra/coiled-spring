@@ -193,6 +193,19 @@ def _yf_current_price(symbol: str) -> Optional[float]:
             except Exception:
                 pass
 
+        # 4) yf.download — endpoint diverso, più robusto (ultimo fallback)
+        if not price or price <= 0:
+            try:
+                hist = yf.download(symbol, period="5d", progress=False, auto_adjust=True)
+                if not hist.empty:
+                    close_col = hist.get("Close") if "Close" in hist else None
+                    if close_col is not None:
+                        last_val = close_col.dropna().iloc[-1] if len(close_col.dropna()) > 0 else None
+                        if last_val is not None:
+                            price = float(last_val)
+            except Exception as dl_err:
+                print(f"[PRICE] yf.download fallback failed for {symbol}: {dl_err}")
+
         if price and price > 0:
             _cache.set(f"price:{symbol}", float(price))
             return float(price)
