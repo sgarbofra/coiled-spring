@@ -173,12 +173,17 @@ def _yf_current_price(symbol: str) -> Optional[float]:
     try:
         import yfinance as yf
         t = yf.Ticker(symbol)
+        # Primary: fast_info (no API call overhead)
         price = t.fast_info.last_price
+        # Fallback: info dict (more reliable, slightly slower)
+        if not price or price <= 0:
+            info = t.info
+            price = info.get("regularMarketPrice") or info.get("currentPrice") or info.get("previousClose")
         if price and price > 0:
-            _cache.set(f"price:{symbol}", price)
+            _cache.set(f"price:{symbol}", float(price))
             return float(price)
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"[PRICE] Failed to fetch price for {symbol}: {e}")
     return None
 
 
@@ -217,7 +222,7 @@ def _yf_options_for_symbol(
 
         price = _yf_current_price(symbol)
         if not price:
-            return []
+            raise ValueError(f"Cannot fetch current price for {symbol} — ticker may be invalid or market data unavailable")
 
         iv_rank = _yf_iv_rank(symbol)
 
