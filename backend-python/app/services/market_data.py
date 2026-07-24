@@ -173,12 +173,26 @@ def _yf_current_price(symbol: str) -> Optional[float]:
     try:
         import yfinance as yf
         t = yf.Ticker(symbol)
-        # Primary: fast_info (no API call overhead)
-        price = t.fast_info.last_price
-        # Fallback: info dict (more reliable, slightly slower)
+        fi = t.fast_info
+
+        # 1) last traded price (live)
+        price = fi.last_price
+        # 2) previous close — sempre disponibile, nessuna API call extra
         if not price or price <= 0:
-            info = t.info
-            price = info.get("regularMarketPrice") or info.get("currentPrice") or info.get("previousClose")
+            price = getattr(fi, "previous_close", None)
+        # 3) info dict — fallback lento ma robusto
+        if not price or price <= 0:
+            try:
+                info = t.info
+                price = (
+                    info.get("regularMarketPrice")
+                    or info.get("currentPrice")
+                    or info.get("previousClose")
+                    or info.get("regularMarketPreviousClose")
+                )
+            except Exception:
+                pass
+
         if price and price > 0:
             _cache.set(f"price:{symbol}", float(price))
             return float(price)
