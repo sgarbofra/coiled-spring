@@ -122,6 +122,18 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         print(f"[MIGRATION] newsletter_log skip: {e}")
 
+    # Migration: aggiungi hv30_parkinson a hv_snapshots se non esiste
+    try:
+        from sqlalchemy import text
+        with engine.connect() as conn:
+            conn.execute(text(
+                "ALTER TABLE hv_snapshots ADD COLUMN IF NOT EXISTS hv30_parkinson REAL"
+            ))
+            conn.commit()
+            print("[MIGRATION] hv_snapshots.hv30_parkinson OK")
+    except Exception as e:
+        print(f"[MIGRATION] hv30_parkinson skip: {e}")
+
     # APScheduler: daily IV snapshot alle 16:30 UTC
     from apscheduler.schedulers.asyncio import AsyncIOScheduler
     scheduler = AsyncIOScheduler(timezone="UTC")
