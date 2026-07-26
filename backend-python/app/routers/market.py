@@ -240,22 +240,34 @@ def get_price_history(
         if raw.empty:
             raise HTTPException(status_code=404, detail=f"No price data for {ticker_upper}")
 
-        hist = raw[["Close"]].reset_index()
+        # Estrai serie Close in modo robusto — yfinance può restituire:
+        # 1) DataFrame con colonne semplici: "Close"
+        # 2) DataFrame con MultiIndex colonne: ("Close", "T") — yfinance >= 0.2.54
+        import pandas as pd
+        if isinstance(raw.columns, pd.MultiIndex):
+            level0 = raw.columns.get_level_values(0)
+            if "Close" in level0:
+                close_series = raw["Close"]
+                if isinstance(close_series, pd.DataFrame):
+                    close_series = close_series.iloc[:, 0]
+            else:
+                raise HTTPException(status_code=404, detail=f"No Close column for {ticker_upper}")
+        else:
+            if "Close" not in raw.columns:
+                raise HTTPException(status_code=404, detail=f"No Close column for {ticker_upper}")
+            close_series = raw["Close"]
 
-        # yfinance >= 0.2.x può rinominare l'indice in "Datetime" invece di "Date"
-        date_col = next(
-            (c for c in hist.columns if c.lower() in ("date", "datetime")),
-            hist.columns[0]  # fallback: prima colonna
-        )
-
-        prices = [
-            PricePoint(
-                date=str(row[date_col])[:10],   # YYYY-MM-DD (tronca timezone se presente)
-                close=round(float(row["Close"]), 2),
-            )
-            for _, row in hist.iterrows()
-            if row["Close"] is not None and float(row["Close"]) > 0
-        ]
+        prices = []
+        for date_idx, close_val in close_series.items():
+            try:
+                if close_val is None or (hasattr(close_val, '__float__') and float(close_val) <= 0):
+                    continue
+                prices.append(PricePoint(
+                    date=str(date_idx)[:10],   # YYYY-MM-DD — tronca timezone/time se presente
+                    close=round(float(close_val), 2),
+                ))
+            except (ValueError, TypeError):
+                continue
 
         # 1-year % change
         change_1y_pct: float | None = None
