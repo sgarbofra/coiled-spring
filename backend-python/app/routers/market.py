@@ -235,17 +235,26 @@ def get_price_history(
     """
     try:
         ticker_upper = ticker.upper().strip()
-        hist = yf.Ticker(ticker_upper).history(period=period)[["Close"]].reset_index()
+        raw = yf.Ticker(ticker_upper).history(period=period)
 
-        if hist.empty:
+        if raw.empty:
             raise HTTPException(status_code=404, detail=f"No price data for {ticker_upper}")
+
+        hist = raw[["Close"]].reset_index()
+
+        # yfinance >= 0.2.x può rinominare l'indice in "Datetime" invece di "Date"
+        date_col = next(
+            (c for c in hist.columns if c.lower() in ("date", "datetime")),
+            hist.columns[0]  # fallback: prima colonna
+        )
 
         prices = [
             PricePoint(
-                date=str(row["Date"])[:10],   # YYYY-MM-DD
+                date=str(row[date_col])[:10],   # YYYY-MM-DD (tronca timezone se presente)
                 close=round(float(row["Close"]), 2),
             )
             for _, row in hist.iterrows()
+            if row["Close"] is not None and float(row["Close"]) > 0
         ]
 
         # 1-year % change
