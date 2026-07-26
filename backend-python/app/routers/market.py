@@ -257,14 +257,17 @@ def get_price_history(
                 raise HTTPException(status_code=404, detail=f"No Close column for {ticker_upper}")
             close_series = raw["Close"]
 
+        import math
         prices = []
         for date_idx, close_val in close_series.items():
             try:
-                if close_val is None or (hasattr(close_val, '__float__') and float(close_val) <= 0):
+                v = float(close_val)
+                # Filtra NaN (yfinance restituisce nan per gg mancanti — nan<=0 è False in Python!)
+                if math.isnan(v) or v <= 0:
                     continue
                 prices.append(PricePoint(
                     date=str(date_idx)[:10],   # YYYY-MM-DD — tronca timezone/time se presente
-                    close=round(float(close_val), 2),
+                    close=round(v, 2),
                 ))
             except (ValueError, TypeError):
                 continue

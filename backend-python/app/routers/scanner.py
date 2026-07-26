@@ -539,6 +539,60 @@ def get_iv_history(
     }
 
 
+@router.post("/iv-refresh/{ticker}")
+def iv_refresh_single(
+    ticker: str,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    """Fetch ATM IV on-demand per un singolo ticker su tutti i DTE bucket.
+
+    Salva i record in iv_history (upsert per oggi).
+    Utile quando lo storico è ancora vuoto (prima del primo cron giornaliero).
+
+    Returns: { ticker, records: [{dte_bucket, iv_pct}], saved }
+    """
+    from app.services.market_data import _get_all_dte_ivs
+    import math as _math
+
+    symbol = ticker.upper().strip()
+    DTE_BUCKETS = [30, 60, 90, 180]
+
+    # Fetch IV da yfinance (1 chiamata, 4 bucket)
+    bucket_ivs = _get_all_dte_ivs(symbol, DTE_BUCKETS)
+
+    now = datetime.now(timezone.utc)
+    today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    saved = 0
+    records = []
+
+    for dte_bucket, iv in bucket_ivs.items():
+        if iv is None or _math.isnan(iv):
+            continue
+
+        # Upsert: evita duplicati per (ticker, dte_bucket, today)
+        existing = (
+            db.query(models.IVHistory)
+            .filter(
+                models.IVHistory.ticker == symbol,
+                models.IVHistory.dte_bucket == dte_bucket,
+                models.IVHistory.recorded_at >= today_start,
+            )
+            .first()
+        )
+        if existing:
+            existing.iv = (existing.iv + iv) / 2.0  # media mobile
+        else:
+            db.add(models.IVHistory(ticker=symbol, iv=iv, dte_bucket=dte_bucket, recorded_at=now))
+        saved += 1
+        records.append({"dte_bucket": dte_bucket, "iv_pct": round(iv * 100, 2)})
+
+    db.commit()
+    print(f"[IV_REFRESH] {symbol}: {saved} bucket(s) saved")
+
+    return {"ticker": symbol, "records": records, "saved": saved}
+
+
 @router.post("/iv-snapshot", include_in_schema=False)
 def iv_snapshot(
     background_tasks: BackgroundTasks,

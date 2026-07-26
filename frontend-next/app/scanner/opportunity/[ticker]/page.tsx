@@ -432,7 +432,30 @@ function OpportunityContent() {
         setIvHistory([])
         return
       }
-      setIvHistory(data.records ?? [])
+      const records: IVRecord[] = data.records ?? []
+
+      // Se non ci sono record per oggi, triggera un fetch on-demand e ricarica
+      const today = new Date().toISOString().slice(0, 10)
+      const hasToday = records.some((r) => r.date === today)
+      if (!hasToday) {
+        try {
+          await fetch(`/api/scanner/iv-refresh/${ticker}`, {
+            method: 'POST',
+            credentials: 'include',
+          })
+          // Ricarica la storia aggiornata
+          const res2 = await fetch(`/api/scanner/iv-history/${ticker}`, { credentials: 'include' })
+          if (res2.ok) {
+            const data2 = await res2.json()
+            setIvHistory(data2.records ?? records)
+            return
+          }
+        } catch {
+          // refresh fallito — mostra comunque i dati esistenti
+        }
+      }
+
+      setIvHistory(records)
     } catch (e) {
       setIvHistoryError(`Network error: ${e instanceof Error ? e.message : String(e)}`)
       setIvHistory([])
