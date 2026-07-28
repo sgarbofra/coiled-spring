@@ -66,7 +66,7 @@ _SP500 = [
 
 # ── S&P MidCap 400 (most liquid/optionable subset ~350) ───────────────────────
 _SP400 = [
-    "AAN","AB","ABCB","ABG","ABM","ACC","ACHC","ACI","ACM","AEO",
+    "AB","ABCB","ABG","ABM","ACC","ACHC","ACI","ACM","AEO",
     "AFG","AGCO","AGO","AIN","AIT","AL","ALK","ALEX","AM","AMC",
     "AMCX","AME","AMED","AMRC","AN","ANDE","ANF","AOS","APAM","APG",
     "APOG","ARW","ASB","ASH","ASGN","ASO","ATI","ATO","AVT","AWR",
@@ -187,17 +187,42 @@ UNIVERSE_BY_CATEGORY: dict[str, list[str]] = {
 _SP500_CACHE: list = []
 
 
+_LEVERAGED_SET = {
+    "UVXY","SVXY","TVIX","VXX","VIXY",
+    "TQQQ","SQQQ","UPRO","SPXS","SPXU",
+    "SOXL","SOXS","TECL","TECS","FNGU","FNGD",
+    "LABU","LABD","TNA","TZA","UDOW","SDOW",
+    "BOIL","KOLD","UCO","SCO","TMV","TMF",
+    "TBT","TBF",
+}
+
+
 def get_iv_snapshot_universe() -> list[str]:
     """
     Universo completo per daily IV snapshot (APScheduler).
 
-    Usa la lista statica (~1100 ticker) come base.
-    Se Wikipedia è raggiungibile, integra con S&P 500 aggiornato.
-    Esclude ETF con leva/inversi (IV rumorosa).
+    Priorità:
+    1. Tabella ticker_universe in DB (is_valid=True, senza leveraged)
+    2. Fallback: lista statica + Wikipedia S&P 500 live
     """
     global _SP500_CACHE
 
-    # Fetch S&P 500 da Wikipedia (run once, poi cache)
+    # 1. Prova a leggere dal DB (universo dinamico)
+    try:
+        from app.database import SessionLocal
+        from app.services.ticker_validator import get_valid_tickers
+        _db = SessionLocal()
+        try:
+            tickers = get_valid_tickers(_db, exclude_leveraged=True)
+            if tickers:
+                print(f"[UNIVERSE] DB universe: {len(tickers)} ticker validi")
+                return sorted(tickers)
+        finally:
+            _db.close()
+    except Exception as e:
+        print(f"[UNIVERSE] DB read fallito ({e}), uso lista statica")
+
+    # 2. Fallback: lista statica + Wikipedia
     if not _SP500_CACHE:
         try:
             import pandas as pd
@@ -206,25 +231,14 @@ def get_iv_snapshot_universe() -> list[str]:
                 timeout=15,
             )
             raw = tables[0]["Symbol"].tolist()
-            # Wikipedia usa "." (BRK.B), yfinance vuole "-" (BRK-B)
             _SP500_CACHE = [t.replace(".", "-") for t in raw]
-            print(f"[UNIVERSE] Wikipedia S&P 500: {len(_SP500_CACHE)} tickers")
+            print(f"[UNIVERSE] Wikipedia S&P 500: {len(_SP500_CACHE)} ticker")
         except Exception as exc:
-            print(f"[UNIVERSE] Wikipedia fetch failed ({exc}), using static list")
+            print(f"[UNIVERSE] Wikipedia fetch failed ({exc}), uso lista statica")
             _SP500_CACHE = []
 
-    # Escludi ETF con leva/inversi (IV molto rumorosa)
-    _LEVERAGED_PREFIXES = (
-        "UVXY","SVXY","TVIX","VXX","VIXY",
-        "TQQQ","SQQQ","UPRO","SPXS","SPXU",
-        "SOXL","SOXS","TECL","TECS","FNGU","FNGD",
-        "LABU","LABD","TNA","TZA","UDOW","SDOW",
-        "BOIL","KOLD","UCO","SCO","TMV","TMF",
-        "TBT","TBF",
-    )
-
     universe = sorted(set(US_OPTIONABLE_TICKERS) | set(_SP500_CACHE))
-    universe = [t for t in universe if not any(t.startswith(p) for p in _LEVERAGED_PREFIXES)]
+    universe = [t for t in universe if t not in _LEVERAGED_SET]
 
-    print(f"[UNIVERSE] Snapshot universe: {len(universe)} tickers")
+    print(f"[UNIVERSE] Static universe: {len(universe)} ticker")
     return universe

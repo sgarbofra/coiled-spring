@@ -350,7 +350,44 @@ def add_result_to_watchlist(
 
 
 @router.get("/universe")
-def get_universe(current_user: models.User = Depends(get_current_user)):
+def get_universe(
+    current_user: models.User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    Ritorna l'universo ticker optionabili.
+    Sorgente: DB ticker_universe (is_valid=True) se popolato, altrimenti lista statica.
+    """
+    try:
+        from app.services.ticker_validator import get_valid_tickers
+
+        all_rows = (
+            db.query(models.TickerUniverse)
+            .filter(models.TickerUniverse.is_valid == True)  # noqa: E712
+            .all()
+        )
+
+        if all_rows:
+            stock_list  = sorted({r.ticker for r in all_rows if r.category in ("sp500", "sp400")})
+            etf_list    = sorted({r.ticker for r in all_rows if r.category == "etf"})
+            special_list = sorted({r.ticker for r in all_rows if r.category == "special"})
+            other_list  = sorted({r.ticker for r in all_rows if r.category == "other"})
+            all_list    = sorted({r.ticker for r in all_rows})
+
+            by_category = {
+                "STOCKS":   stock_list,
+                "ETF":      etf_list,
+                "SPECIALI": special_list,
+                "ALL":      all_list,
+            }
+            if other_list:
+                by_category["OTHER"] = other_list
+
+            return {"symbols": all_list, "by_category": by_category}
+    except Exception as e:
+        print(f"[UNIVERSE] DB read failed in /universe endpoint ({e}), using static")
+
+    # Fallback statico
     all_symbols = sorted({s for syms in UNIVERSE_BY_CATEGORY.values() for s in syms})
     return {"symbols": all_symbols, "by_category": UNIVERSE_BY_CATEGORY}
 

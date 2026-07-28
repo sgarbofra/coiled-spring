@@ -122,6 +122,94 @@ async def trigger_newsletter(
     }
 
 
+# ── Ticker Universe endpoints ─────────────────────────────────────────────────
+
+@router.post("/ticker-universe-validate")
+def trigger_ticker_universe_validate(
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+    _: None = Depends(_verify_token),
+):
+    """
+    Avvia la validazione settimanale dell'universo ticker via yfinance.
+    Marca come delisted i ticker senza dati negli ultimi 5 giorni.
+
+    Schedulato ogni domenica alle 02:00 UTC.
+    Eseguito anche manualmente via:
+      POST /api/internal/ticker-universe-validate
+      X-Internal-Token: <INTERNAL_SECRET>
+    """
+    from app.database import SessionLocal
+    from app.services.ticker_validator import seed_db_from_static, validate_universe
+
+    # Assicura che il DB sia seedato (no-op se già popolato)
+    count = db.query(models.TickerUniverse).count()
+    if count == 0:
+        seed_db_from_static(db)
+
+    async def _run() -> None:
+        bg_db = SessionLocal()
+        try:
+            result = validate_universe(bg_db)
+            print(f"[INTERNAL] Ticker universe validate done: {result}")
+        except Exception as e:
+            print(f"[INTERNAL] Ticker universe validate error: {e}")
+        finally:
+            bg_db.close()
+
+    background_tasks.add_task(_run)
+    total = db.query(models.TickerUniverse).count()
+    print("[INTERNAL] Ticker universe validation started in background")
+    return {"ok": True, "status": "started", "total_tickers": total}
+
+
+@router.post("/ticker-universe-refresh")
+def trigger_ticker_universe_refresh(
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+    _: None = Depends(_verify_token),
+):
+    """
+    Refresh mensile: aggiunge nuovi ticker da Wikipedia S&P 500 / S&P 400.
+    Riattiva ticker precedentemente marcati delisted se ancora in S&P.
+    Dopo il refresh, esegue anche la validazione yfinance.
+
+    Schedulato il 1° di ogni mese alle 01:00 UTC.
+    Eseguito anche manualmente via:
+      POST /api/internal/ticker-universe-refresh
+      X-Internal-Token: <INTERNAL_SECRET>
+    """
+    from app.database import SessionLocal
+    from app.services.ticker_validator import (
+        seed_db_from_static,
+        refresh_from_wikipedia,
+        validate_universe,
+    )
+
+    # Assicura seed iniziale
+    count = db.query(models.TickerUniverse).count()
+    if count == 0:
+        seed_db_from_static(db)
+
+    async def _run() -> None:
+        bg_db = SessionLocal()
+        try:
+            refresh_result = refresh_from_wikipedia(bg_db)
+            print(f"[INTERNAL] Wikipedia refresh done: {refresh_result}")
+            # Dopo il refresh Wikipedia, valida l'intero universo
+            val_result = validate_universe(bg_db)
+            print(f"[INTERNAL] Post-refresh validation done: {val_result}")
+        except Exception as e:
+            print(f"[INTERNAL] Ticker universe refresh error: {e}")
+        finally:
+            bg_db.close()
+
+    background_tasks.add_task(_run)
+    total = db.query(models.TickerUniverse).count()
+    print("[INTERNAL] Ticker universe refresh+validate started in background")
+    return {"ok": True, "status": "started", "total_tickers": total}
+
+
 @router.get("/newsletter/{run_id}")
 async def get_newsletter_status(
     run_id: int,

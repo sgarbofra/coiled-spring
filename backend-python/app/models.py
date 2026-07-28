@@ -419,3 +419,34 @@ class VideoProgress(Base):
     language: Mapped[str] = mapped_column(Text, nullable=False)          # 'en' | 'it'
     position_seconds: Mapped[float] = mapped_column(nullable=False, default=0.0)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
+class TickerUniverse(Base):
+    """Universo dinamico di ticker optionabili US.
+
+    Alimentato da:
+    - Seed iniziale dalla lista statica (us_optionable_tickers.py) al primo avvio
+    - Refresh mensile da Wikipedia S&P 500 / S&P 400
+    - Validazione settimanale via yfinance (marca delisted)
+
+    category: 'sp500' | 'sp400' | 'etf' | 'special' | 'other'
+    source:   'static' | 'wikipedia' | 'manual'
+    is_valid: True se il ticker è ancora quotato e optionable
+    last_checked: ultima data di validazione yfinance
+    delisted_at:  data in cui è stato marcato delisted (None = attivo)
+    added_at:     data di inserimento nel DB
+    """
+    __tablename__ = "ticker_universe"
+    __table_args__ = (
+        Index("ticker_universe_valid_idx", "is_valid", "category"),
+        Index("ticker_universe_checked_idx", "last_checked"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    ticker: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
+    category: Mapped[str] = mapped_column(Text, nullable=False, default="other")  # sp500|sp400|etf|special|other
+    source: Mapped[str] = mapped_column(Text, nullable=False, default="static")   # static|wikipedia|manual
+    is_valid: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    last_checked: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    delisted_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    added_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

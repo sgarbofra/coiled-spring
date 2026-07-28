@@ -69,6 +69,46 @@ def _run_daily_hv_snapshot():
         print(f"[CRON] Failed to trigger HV snapshot: {e}")
 
 
+def _run_weekly_ticker_validate():
+    """Job APScheduler — ogni domenica alle 02:00 UTC.
+
+    Valida via yfinance tutti i ticker is_valid=True,
+    marcando come delisted quelli senza dati recenti.
+    """
+    import os, requests as _requests
+    port = os.environ.get("PORT", "8080")
+    try:
+        key = settings.cron_internal_key
+        resp = _requests.post(
+            f"http://localhost:{port}/api/internal/ticker-universe-validate",
+            headers={"X-Internal-Token": key},
+            timeout=15,
+        )
+        print(f"[CRON] Ticker universe validate triggered: {resp.status_code} {resp.text[:100]}")
+    except Exception as e:
+        print(f"[CRON] Failed to trigger ticker universe validate: {e}")
+
+
+def _run_monthly_ticker_refresh():
+    """Job APScheduler — il 1° di ogni mese alle 01:00 UTC.
+
+    Fetch Wikipedia S&P 500 + S&P 400, aggiunge nuovi ticker,
+    riattiva eventuali re-listing, poi valida l'intero universo.
+    """
+    import os, requests as _requests
+    port = os.environ.get("PORT", "8080")
+    try:
+        key = settings.cron_internal_key
+        resp = _requests.post(
+            f"http://localhost:{port}/api/internal/ticker-universe-refresh",
+            headers={"X-Internal-Token": key},
+            timeout=15,
+        )
+        print(f"[CRON] Ticker universe refresh triggered: {resp.status_code} {resp.text[:100]}")
+    except Exception as e:
+        print(f"[CRON] Failed to trigger ticker universe refresh: {e}")
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Crea tabelle nuove (non tocca quelle esistenti)
@@ -134,6 +174,51 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         print(f"[MIGRATION] hv30_parkinson skip: {e}")
 
+    # Migration: crea ticker_universe se non esiste
+    try:
+        from sqlalchemy import text
+        with engine.connect() as conn:
+            conn.execute(text("""
+                CREATE TABLE IF NOT EXISTS ticker_universe (
+                    id           SERIAL PRIMARY KEY,
+                    ticker       TEXT NOT NULL UNIQUE,
+                    category     TEXT NOT NULL DEFAULT 'other',
+                    source       TEXT NOT NULL DEFAULT 'static',
+                    is_valid     BOOLEAN NOT NULL DEFAULT TRUE,
+                    last_checked TIMESTAMPTZ,
+                    delisted_at  TIMESTAMPTZ,
+                    added_at     TIMESTAMPTZ DEFAULT now()
+                )
+            """))
+            conn.execute(text(
+                "CREATE INDEX IF NOT EXISTS ticker_universe_valid_idx ON ticker_universe(is_valid, category)"
+            ))
+            conn.execute(text(
+                "CREATE INDEX IF NOT EXISTS ticker_universe_checked_idx ON ticker_universe(last_checked)"
+            ))
+            conn.commit()
+            print("[MIGRATION] ticker_universe OK")
+    except Exception as e:
+        print(f"[MIGRATION] ticker_universe skip: {e}")
+
+    # Seed ticker_universe al primo avvio (no-op se già popolato)
+    try:
+        from app.database import SessionLocal as _SessionLocal
+        from app.services.ticker_validator import seed_db_from_static as _seed
+        _seed_db = _SessionLocal()
+        try:
+            from app import models as _models
+            count = _seed_db.query(_models.TickerUniverse).count()
+            if count == 0:
+                inserted = _seed(_seed_db)
+                print(f"[STARTUP] ticker_universe seedato: {inserted} ticker")
+            else:
+                print(f"[STARTUP] ticker_universe già popolato: {count} ticker")
+        finally:
+            _seed_db.close()
+    except Exception as e:
+        print(f"[STARTUP] ticker_universe seed fallito (non bloccante): {e}")
+
     # APScheduler: daily IV snapshot alle 16:30 UTC
     from apscheduler.schedulers.asyncio import AsyncIOScheduler
     scheduler = AsyncIOScheduler(timezone="UTC")
@@ -153,9 +238,31 @@ async def lifespan(app: FastAPI):
         id="daily_hv_snapshot",
         replace_existing=True,
     )
+    # Validazione settimanale ticker universe — domenica alle 02:00 UTC
+    scheduler.add_job(
+        _run_weekly_ticker_validate,
+        trigger="cron",
+        day_of_week="sun",
+        hour=2,
+        minute=0,
+        id="weekly_ticker_validate",
+        replace_existing=True,
+    )
+    # Refresh mensile ticker universe — 1° del mese alle 01:00 UTC
+    scheduler.add_job(
+        _run_monthly_ticker_refresh,
+        trigger="cron",
+        day=1,
+        hour=1,
+        minute=0,
+        id="monthly_ticker_refresh",
+        replace_existing=True,
+    )
     scheduler.start()
     print("[SCHEDULER] Daily IV snapshot scheduled at 16:30 UTC")
     print("[SCHEDULER] Daily HV snapshot scheduled at 17:00 UTC")
+    print("[SCHEDULER] Weekly ticker universe validate scheduled Sunday 02:00 UTC")
+    print("[SCHEDULER] Monthly ticker universe refresh scheduled 1st-of-month 01:00 UTC")
 
     # Pre-carica la lista S&P500 in cache al startup (evita lazy load al primo cron)
     try:
