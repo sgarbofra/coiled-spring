@@ -46,6 +46,18 @@ const TAG_LABELS: Record<string, string> = {
 
 const ENTRIES: Entry[] = [
   {
+    date: 'July 28, 2026',
+    version: 'v2.8',
+    headline: 'One delisted stock breaks everything. I fix it properly. Then at 2 AM an idea wakes me up.',
+    tag: 'infra',
+    body: [
+      "AAN. Aaron's Holdings. A company that got split up, reorganized, and eventually delisted — a quiet corporate death that nobody in my codebase noticed because my codebase wasn't looking. The name was still sitting in my static list of 1,136 underlyings, politely waiting for a price that would never come. Every time the scanner touched it, it returned 'Cannot fetch current price for AAN'. I kept dismissing it as a minor glitch. It was a structural problem.",
+      "So I replaced the static list with a database table. `ticker_universe` — every name with a validity flag, a last-checked timestamp, and a source. A cron job now runs every Sunday at 2:00 AM UTC and validates the entire universe against yfinance in batches: any ticker without price data in the previous five sessions gets flagged as delisted and silently dropped from future scans. On the first of every month, a second job hits Wikipedia's S&P 500 and S&P 400 pages and adds whatever names have entered the indices since last time. New member joins the S&P 400 on a rebalancing? It's in the universe by the next morning. Name gets delisted? Gone by Sunday. The list is no longer a file I edit by hand. It's a living thing. AAN will not come back.",
+      "While I was in there untangling ticker data, I also fixed a less obvious bug in the Historical Volatility calculations. yfinance sometimes returns `float('nan')` for missing trading days, which would be fine if Python handled NaN the way you'd expect. It doesn't. `nan <= 0` evaluates to `False` — so NaN values were passing right through my price filter and flowing into the HV rolling window. The result was HV20, HV60, and HV Rank all rendering as `NaN%` on the Opportunity Analysis page. A two-character fix: `math.isnan(v)` before the `<= 0` check. I'd been staring at this for longer than I'm comfortable admitting.",
+      "And then, somewhere around 2 in the morning — after the commits were pushed and the deploys were green and I should have been asleep — I had an idea I'm not ready to talk about yet. Something about the structure of implied volatility across time horizons. The way the term structure behaves in specific conditions. A strategy. I've been turning it over in my head for weeks, but I needed data to test it — specifically, I needed a long series of ATM IV at one year and two years out, captured daily, for hundreds of names. So the last thing I shipped before closing the laptop was an extension to the daily IV snapshot cron: it now captures six DTE buckets instead of four. Thirty, sixty, ninety, one-eighty — and now three-sixty-five and seven-thirty. One year and two years. Starting tomorrow, the terminal will accumulate that history every single day at 16:30 UTC. Give it six months. Then I'll tell you what I was building towards.",
+    ],
+  },
+  {
     date: 'February 3, 2026',
     version: 'v1.0',
     headline: 'I press deploy and immediately regret it.',
