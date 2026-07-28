@@ -805,7 +805,11 @@ def _get_all_dte_ivs(symbol: str, dte_buckets: List[int]) -> Dict[int, Optional[
 
     One yf.Ticker per symbol → one options list fetch → option chains cached
     per expiry so the same chain is never downloaded twice.
-    Returns {30: iv_or_None, 60: iv_or_None, 90: iv_or_None, 180: iv_or_None}.
+    Returns {30: iv_or_None, 60: iv_or_None, ..., 365: iv_or_None, 730: iv_or_None}.
+
+    Tolerance per bucket: max(60, target_dte // 4) giorni.
+    Es. 30d→60gg, 180d→60gg, 365d→91gg, 730d→182gg.
+    Garantisce copertura anche su LEAPS con scadenze annuali (gennaio).
     """
     import yfinance as yf
     from datetime import date as _date
@@ -839,7 +843,8 @@ def _get_all_dte_ivs(symbol: str, dte_buckets: List[int]) -> Dict[int, Optional[
                 key=lambda e: abs((_date.fromisoformat(e) - today).days - target_dte),
             )
             actual_dte = (_date.fromisoformat(best_exp) - today).days
-            if abs(actual_dte - target_dte) > 60:
+            tolerance = max(60, target_dte // 4)  # 365d→91gg, 730d→182gg
+            if abs(actual_dte - target_dte) > tolerance:
                 continue  # nessuna scadenza abbastanza vicina al target
 
             # Usa chain cachata se già scaricata per questa expiry
@@ -884,7 +889,7 @@ def get_atm_iv_snapshot(
     import time as _time, random as _random
 
     if dte_buckets is None:
-        dte_buckets = [30, 60, 90, 180]
+        dte_buckets = [30, 60, 90, 180, 365, 730]
 
     results: Dict[str, Dict[int, Optional[float]]] = {}
     TICKER_SLEEP = 1.5   # secondi tra ticker (base) — senza parallelismo è sufficiente

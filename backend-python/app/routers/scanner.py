@@ -593,9 +593,9 @@ def iv_refresh_single(
     import math as _math
 
     symbol = ticker.upper().strip()
-    DTE_BUCKETS = [30, 60, 90, 180]
+    DTE_BUCKETS = [30, 60, 90, 180, 365, 730]
 
-    # Fetch IV da yfinance (1 chiamata, 4 bucket)
+    # Fetch IV da yfinance (1 chiamata, 6 bucket)
     bucket_ivs = _get_all_dte_ivs(symbol, DTE_BUCKETS)
 
     now = datetime.now(timezone.utc)
@@ -638,7 +638,8 @@ def iv_snapshot(
 ):
     """Endpoint interno — chiamato dal cron giornaliero (APScheduler o Railway Cron).
 
-    Esegue snapshot ATM IV per tutti i ticker della universe su 4 DTE bucket.
+    Esegue snapshot ATM IV per tutti i ticker della universe su 6 DTE bucket:
+    30, 60, 90, 180, 365 (1Y LEAPS), 730 (2Y LEAPS).
     Protetto da header X-Internal-Key (settings.cron_internal_key).
     Non esposto nella documentazione OpenAPI (include_in_schema=False).
     """
@@ -647,8 +648,8 @@ def iv_snapshot(
     if x_internal_key != settings.cron_internal_key:
         raise HTTPException(status_code=403, detail="Forbidden")
 
-    DTE_BUCKETS = [30, 60, 90, 180]
-    tickers = get_iv_snapshot_universe()  # 277 curati + S&P 500 ≈ 500-550 ticker unici
+    DTE_BUCKETS = [30, 60, 90, 180, 365, 730]
+    tickers = get_iv_snapshot_universe()
 
     def _run_snapshot():
         """Eseguito in background — non blocca la risposta HTTP."""
