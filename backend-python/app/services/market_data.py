@@ -835,36 +835,84 @@ def _get_all_dte_ivs(symbol: str, dte_buckets: List[int]) -> Dict[int, Optional[
             return result
 
         today = _date.today()
+
+        # Pre-filtro: escludi scadenze con DTE < 7 giorni.
+        # Le weeklies in scadenza questa settimana hanno spesso bid=0 e IV=NaN
+        # e, essendo più vicine al target 30d rispetto a scadenze più lontane
+        # con liquidità reale, venivano selezionate per prime causando il bucket
+        # 30d vuoto su ticker illiquidi (es. ICFI, small-cap).
+        MIN_DTE_FILTER = 7
+        valid_exps = [
+            e for e in expirations
+            if (_date.fromisoformat(e) - today).days >= MIN_DTE_FILTER
+        ]
+        if not valid_exps:
+            return result
+
         chain_cache: Dict[str, Any] = {}  # cache: exp_str → option_chain
 
         for target_dte in dte_buckets:
-            best_exp = min(
-                expirations,
+            tolerance = max(60, target_dte // 4)  # 365d→91gg, 730d→182gg
+
+            # Ordina le scadenze valide per distanza dal target; prova le prime 3
+            # in ordine crescente di distanza. Se la prima ha IV=0/NaN (liquidità
+            # assente sulla scadenza più vicina), si tenta la successiva entro
+            # lo stesso tolerance window prima di abbandonare il bucket.
+            candidates = sorted(
+                valid_exps,
                 key=lambda e: abs((_date.fromisoformat(e) - today).days - target_dte),
             )
-            actual_dte = (_date.fromisoformat(best_exp) - today).days
-            tolerance = max(60, target_dte // 4)  # 365d→91gg, 730d→182gg
-            if abs(actual_dte - target_dte) > tolerance:
-                continue  # nessuna scadenza abbastanza vicina al target
 
-            # Usa chain cachata se già scaricata per questa expiry
-            if best_exp not in chain_cache:
-                chain_cache[best_exp] = ticker_obj.option_chain(best_exp)
+            iv_found: Optional[float] = None
+            for best_exp in candidates[:3]:
+                actual_dte = (_date.fromisoformat(best_exp) - today).days
+                if abs(actual_dte - target_dte) > tolerance:
+                    break  # tutti i restanti candidati sono ancora più lontani
 
-            calls = chain_cache[best_exp].calls
-            if calls.empty:
-                continue
+                # Usa chain cachata se già scaricata per questa expiry
+                if best_exp not in chain_cache:
+                    chain_cache[best_exp] = ticker_obj.option_chain(best_exp)
 
-            calls = calls.copy()
-            calls["_dist"] = (calls["strike"] - spot).abs()
-            atm_row = calls.loc[calls["_dist"].idxmin()]
+                calls = chain_cache[best_exp].calls
+                if calls.empty:
+                    continue
 
-            iv = atm_row.get("impliedVolatility")
-            if iv is None or (hasattr(iv, '__float__') and math.isnan(float(iv))):
-                continue
-            iv_f = float(iv)
-            if 0.01 < iv_f < 5.0:  # sanity: 1% < IV < 500%
-                result[target_dte] = iv_f
+                calls = calls.copy()
+                calls["_dist"] = (calls["strike"] - spot).abs()
+                atm_row = calls.loc[calls["_dist"].idxmin()]
+
+                # --- Tentativo 1: IV fornita da yfinance ---
+                iv = atm_row.get("impliedVolatility")
+                if iv is not None and not (hasattr(iv, '__float__') and math.isnan(float(iv))):
+                    iv_f = float(iv)
+                    if 0.01 < iv_f < 5.0:  # sanity: 1% < IV < 500%
+                        iv_found = iv_f
+                        break
+
+                # --- Tentativo 2: BS inverse da bid/ask mid ---
+                # yfinance restituisce IV=0 su opzioni illiquide anche se esiste
+                # un bid/ask valido. Lo calcoliamo noi via Black-Scholes inverso.
+                if SCIPY_AVAILABLE:
+                    try:
+                        bid_v  = float(atm_row.get("bid", 0) or 0)
+                        ask_v  = float(atm_row.get("ask", 0) or 0)
+                        last_v = float(atm_row.get("lastPrice", 0) or 0)
+                        K      = float(atm_row.get("strike", 0))
+                        T      = actual_dte / 365.0
+                        mid_v  = (bid_v + ask_v) / 2 if bid_v > 0 and ask_v > 0 \
+                                 else (bid_v or ask_v or last_v)
+                        if mid_v > 0 and K > 0 and T > 0:
+                            calc_iv = implied_volatility_bs(mid_v, spot, K, T, 0.045, is_call=True)
+                            if calc_iv and 0.01 < calc_iv < 5.0:
+                                iv_found = calc_iv
+                                print(f"[IV_SNAPSHOT] {symbol} {target_dte}d: yf IV=0, "
+                                      f"BS fallback={calc_iv:.3f} (exp={best_exp})")
+                                break
+                    except Exception:
+                        pass
+
+            if iv_found is not None:
+                result[target_dte] = iv_found
 
     except Exception as e:
         print(f"[IV_SNAPSHOT] {symbol}: {type(e).__name__}: {e}")
