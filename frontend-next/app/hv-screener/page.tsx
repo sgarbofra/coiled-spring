@@ -246,19 +246,67 @@ function HVScreenerContent() {
         </button>
       </div>
 
-      {/* Legenda colori */}
+      {/* Legenda calcoli volatilità */}
       <div style={{
-        padding: '6px 16px', backgroundColor: bb.panel,
+        padding: '10px 16px', backgroundColor: bb.panel,
         borderBottom: `1px solid ${bb.border}`,
-        display: 'flex', gap: '16px', fontSize: '10px', flexWrap: 'wrap',
       }}>
-        <span style={{ color: bb.gray }}>HV RANK:</span>
-        <span style={{ color: bb.red }}>● ≥ 80 HIGH</span>
-        <span style={{ color: bb.amber }}>● 50–79 MED</span>
-        <span style={{ color: bb.green }}>● &lt; 50 LOW</span>
-        <span style={{ color: bb.gray, marginLeft: '16px', fontSize: '9px' }}>
-          HV Rank = where current volatility sits within the 52-week range (0=historical low, 100=historical high)
-        </span>
+        <div style={{ color: bb.orange, fontSize: '10px', letterSpacing: '2px', marginBottom: '8px', fontWeight: 700 }}>
+          ◈ VOLATILITY METRICS EXPLAINED
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '6px 32px' }}>
+          {[
+            {
+              label: 'HV 30D',
+              desc: 'Close-to-close 30-day Historical Volatility. Annualized std. deviation of daily log returns over the last 30 sessions.',
+              formula: 'σ(ln Pₜ/Pₜ₋₁) × √252',
+            },
+            {
+              label: 'HV PARK',
+              desc: 'Parkinson HV. Uses the intraday High/Low range — 5.6× more statistically efficient than close-to-close. Better at capturing intraday moves.',
+              formula: '√[ (1/4ln2) × Σ ln(H/L)² / n ] × √252',
+            },
+            {
+              label: 'HV RANK',
+              desc: 'Position of today\'s HV30 within its 52-week range. 0 = at the annual low, 100 = at the annual high. Key signal: compressed vol below 20 is a potential setup.',
+              formula: '(HV_today − HV_52w_low) / (HV_52w_high − HV_52w_low) × 100',
+            },
+            {
+              label: 'HV PCT',
+              desc: 'Percentile of today\'s HV30 vs. the past 252 sessions. Percentage of trading days on which HV was lower than the current reading.',
+              formula: 'count(HV_past < HV_today) / 252 × 100',
+            },
+            {
+              label: '52W MAX / MIN',
+              desc: 'Highest and lowest HV30 readings recorded over the past 52 weeks. Define the boundaries used by HV Rank.',
+              formula: 'max(HV_30d) and min(HV_30d) over rolling 252 sessions',
+            },
+          ].map(({ label, desc, formula }) => (
+            <div key={label} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+              <span style={{
+                color: bb.orange, fontWeight: 700, fontSize: '10px',
+                minWidth: '68px', letterSpacing: '0.5px', paddingTop: '1px',
+              }}>
+                {label}
+              </span>
+              <div>
+                <span style={{ color: 'var(--text-secondary)', fontSize: '10px', lineHeight: 1.5 }}>
+                  {desc}
+                </span>
+                <div style={{ color: bb.gray, fontSize: '9px', fontFamily: 'var(--font-mono)', marginTop: '2px', opacity: 0.7 }}>
+                  {formula}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        {/* Color scale */}
+        <div style={{ display: 'flex', gap: '16px', marginTop: '10px', paddingTop: '8px', borderTop: `1px solid ${bb.border}`, fontSize: '10px', alignItems: 'center' }}>
+          <span style={{ color: bb.gray, letterSpacing: '1px' }}>HV RANK COLOR SCALE:</span>
+          <span style={{ color: bb.green }}>● &lt; 50 — LOW (compressed vol, potential setup)</span>
+          <span style={{ color: bb.amber }}>● 50–79 — MEDIUM</span>
+          <span style={{ color: bb.red }}>● ≥ 80 — HIGH (expensive premium)</span>
+        </div>
       </div>
 
       {/* Filtri */}
@@ -362,8 +410,7 @@ function HVScreenerContent() {
                 <th style={thStyle('hv30')} onClick={() => handleSort('hv30')}>
                   HV 30D %{sortIcon('hv30')}
                 </th>
-                <th style={thStyle('hv30_parkinson')} onClick={() => handleSort('hv30_parkinson')}
-                  title="Parkinson HV — usa range intraday High/Low. Più sensibile ai movimenti intraday rispetto alla HV close-to-close.">
+                <th style={thStyle('hv30_parkinson')} onClick={() => handleSort('hv30_parkinson')}>
                   HV PARK %{sortIcon('hv30_parkinson')}
                 </th>
                 <th style={thStyle('hv_rank')} onClick={() => handleSort('hv_rank')}>
@@ -436,8 +483,7 @@ function HVScreenerContent() {
                       {fmt(row.hv30)}%
                     </td>
                     {/* HV Parkinson */}
-                    <td style={{ padding: '6px 10px', textAlign: 'right', color: 'var(--text-secondary)' }}
-                      title="Parkinson HV — stima dal range High/Low, 5.6x più efficiente della HV close-to-close">
+                    <td style={{ padding: '6px 10px', textAlign: 'right', color: 'var(--text-secondary)' }}>
                       {row.hv30_parkinson != null ? <>{fmt(row.hv30_parkinson)}%</> : <span style={{ opacity: 0.3 }}>—</span>}
                     </td>
                     {/* HV Rank */}
