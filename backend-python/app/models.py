@@ -512,6 +512,49 @@ class ETFCalendarSnapshot(Base):
     computed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
+# ── S&P 500 Calendar Monitor ──────────────────────────────────────────────────
+
+class SP500CalendarSnapshot(Base):
+    """Snapshot giornaliero del calendar spread ATM per i singoli titoli S&P 500.
+
+    Una riga per (ticker, snap_date) — upsert giornaliero via SP500 Calendar Scanner.
+    Universo: tutti i ticker ticker_universe.category='sp500' con is_valid=True.
+
+    Schema identico a ETFCalendarSnapshot — tabella separata per:
+    - Scala differente (500 vs 15 righe/giorno)
+    - Ownership logica distinta (indici vs singoli titoli)
+    - Query indipendenti (nessuna JOIN cross-asset necessaria)
+    """
+    __tablename__ = "sp500_calendar_snapshots"
+    __table_args__ = (
+        UniqueConstraint("ticker", "snap_date", name="sp500_cal_ticker_date_unique"),
+        Index("sp500_cal_ticker_date_idx", "ticker", "snap_date"),
+        Index("sp500_cal_signal_idx", "signal_30v60", "snap_date"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    ticker: Mapped[str] = mapped_column(Text, nullable=False)
+    snap_date: Mapped[date] = mapped_column(nullable=False)
+
+    spot_price: Mapped[Optional[float]] = mapped_column(nullable=True)
+
+    iv_30d: Mapped[Optional[float]] = mapped_column(nullable=True)
+    iv_60d: Mapped[Optional[float]] = mapped_column(nullable=True)
+    iv_90d: Mapped[Optional[float]] = mapped_column(nullable=True)
+
+    credit_30v60_pct: Mapped[Optional[float]] = mapped_column(nullable=True)
+    credit_30v90_pct: Mapped[Optional[float]] = mapped_column(nullable=True)
+    credit_60v90_pct: Mapped[Optional[float]] = mapped_column(nullable=True)
+
+    z_score_30v60: Mapped[Optional[float]] = mapped_column(nullable=True)
+    z_score_30v90: Mapped[Optional[float]] = mapped_column(nullable=True)
+    z_score_60v90: Mapped[Optional[float]] = mapped_column(nullable=True)
+
+    signal_30v60: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    history_days: Mapped[Optional[int]] = mapped_column(Integer, nullable=True, default=0)
+    computed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
 # ── Paper Trading ─────────────────────────────────────────────────────────────
 
 class PaperTradingPosition(Base):

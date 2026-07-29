@@ -54,7 +54,8 @@ export default function NavBar() {
     { href: '/hv-screener',  label: isMobile ? 'HV' : 'HV SCREENER' },
     { href: '/watchlists',   label: 'WATCHLIST' },
     { href: '/portfolio',    label: 'PORTFOLIO' },
-    { href: '/etf-calendar', label: isMobile ? 'CAL' : 'CALENDAR' },
+    { href: '/etf-calendar',  label: isMobile ? 'ETF' : 'ETF CAL' },
+    { href: '/sp500-calendar', label: isMobile ? 'S&P' : 'S&P CAL' },
     { href: '/academy',      label: 'ACADEMY' },
     { href: '/settings',     label: 'SETTINGS' },
   ]

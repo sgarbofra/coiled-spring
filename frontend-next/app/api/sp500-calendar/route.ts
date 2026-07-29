@@ -1,0 +1,25 @@
+import { NextResponse } from 'next/server'
+import { pythonFetch } from '@/lib/python-api'
+
+// GET /api/sp500-calendar?sort_by=...&sort_dir=...&signal_filter=...&search=...&page=...&page_size=...
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url)
+    const qs = searchParams.toString()
+    const res = await pythonFetch(`/api/sp500-calendar/dashboard${qs ? `?${qs}` : ''}`)
+
+    if (!res.ok) {
+      let errMsg = `Backend ${res.status}`
+      try {
+        const err = await res.json()
+        errMsg = typeof err.detail === 'string' ? err.detail : JSON.stringify(err.detail)
+      } catch { /* non-JSON */ }
+      return NextResponse.json({ ok: false, error: errMsg }, { status: res.status })
+    }
+
+    return NextResponse.json(await res.json())
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : 'Server error'
+    return NextResponse.json({ ok: false, error: msg }, { status: 500 })
+  }
+}

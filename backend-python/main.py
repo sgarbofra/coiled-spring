@@ -22,7 +22,7 @@ import yfinance as yf
 from app.config import settings
 from app.database import Base, engine
 from app.dependencies import get_db
-from app.routers import academy, admin, ai_chat, auth, auth_google, broker, etf_calendar, hv_screener, internal, market, notes, paper_trading, portfolio, scanner, stripe, watchlist_items, watchlists
+from app.routers import academy, admin, ai_chat, auth, auth_google, broker, etf_calendar, hv_screener, internal, market, notes, paper_trading, portfolio, scanner, sp500_calendar, stripe, watchlist_items, watchlists
 from sqlalchemy.orm import Session
 
 import app.models  # noqa: F401 — registers all models with Base
@@ -127,6 +127,28 @@ def _run_etf_calendar_scan():
         print(f"[CRON] ETF calendar scan triggered: {resp.status_code} {resp.text[:200]}")
     except Exception as e:
         print(f"[CRON] Failed to trigger ETF calendar scan: {e}")
+
+
+def _run_sp500_calendar_scan():
+    """Job APScheduler — ogni giorno alle 18:00 Europe/Rome.
+
+    Esegue lo scan S&P 500 Calendar Monitor: fetcha option chain per ~503 titoli
+    in batch da 50, calcola credit% normalizzato e z-score 52w, salva in DB.
+    Timeout 600s: 503 ticker × ~1.5s/ticker (incluso sleep) ≈ 750s worst case,
+    ma con skip rapidi su titoli senza opzioni il reale è ~400-500s.
+    """
+    import os, requests as _requests
+    port = os.environ.get("PORT", "8080")
+    try:
+        key = settings.cron_internal_key
+        resp = _requests.post(
+            f"http://localhost:{port}/api/sp500-calendar/refresh",
+            headers={"x-internal-key": key},
+            timeout=600,  # ~500 titoli × ~1.2s avg = ~600s
+        )
+        print(f"[CRON] S&P500 calendar scan triggered: {resp.status_code} {resp.text[:200]}")
+    except Exception as e:
+        print(f"[CRON] Failed to trigger S&P500 calendar scan: {e}")
 
 
 def _run_monthly_ticker_refresh():
@@ -309,6 +331,44 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         print(f"[MIGRATION] etf_calendar_snapshots skip: {e}")
 
+    # Migration: crea sp500_calendar_snapshots se non esiste
+    try:
+        from sqlalchemy import text
+        with engine.connect() as conn:
+            conn.execute(text("""
+                CREATE TABLE IF NOT EXISTS sp500_calendar_snapshots (
+                    id                SERIAL PRIMARY KEY,
+                    ticker            TEXT NOT NULL,
+                    snap_date         DATE NOT NULL,
+                    spot_price        DOUBLE PRECISION,
+                    iv_30d            DOUBLE PRECISION,
+                    iv_60d            DOUBLE PRECISION,
+                    iv_90d            DOUBLE PRECISION,
+                    credit_30v60_pct  DOUBLE PRECISION,
+                    credit_30v90_pct  DOUBLE PRECISION,
+                    credit_60v90_pct  DOUBLE PRECISION,
+                    z_score_30v60     DOUBLE PRECISION,
+                    z_score_30v90     DOUBLE PRECISION,
+                    z_score_60v90     DOUBLE PRECISION,
+                    signal_30v60      TEXT,
+                    history_days      INTEGER DEFAULT 0,
+                    computed_at       TIMESTAMPTZ,
+                    CONSTRAINT sp500_cal_ticker_date_unique UNIQUE (ticker, snap_date)
+                )
+            """))
+            conn.execute(text(
+                "CREATE INDEX IF NOT EXISTS sp500_cal_ticker_date_idx "
+                "ON sp500_calendar_snapshots(ticker, snap_date)"
+            ))
+            conn.execute(text(
+                "CREATE INDEX IF NOT EXISTS sp500_cal_signal_idx "
+                "ON sp500_calendar_snapshots(signal_30v60, snap_date)"
+            ))
+            conn.commit()
+            print("[MIGRATION] sp500_calendar_snapshots OK")
+    except Exception as e:
+        print(f"[MIGRATION] sp500_calendar_snapshots skip: {e}")
+
     # Migration: crea ticker_universe se non esiste
     try:
         from sqlalchemy import text
@@ -392,6 +452,16 @@ async def lifespan(app: FastAPI):
         minute=30,
         timezone="Europe/Rome",
         id="daily_etf_calendar_scan",
+        replace_existing=True,
+    )
+    # S&P 500 Calendar scan — ogni giorno alle 18:00 Europe/Rome (30min dopo ETF scan)
+    scheduler.add_job(
+        _run_sp500_calendar_scan,
+        trigger="cron",
+        hour=18,
+        minute=0,
+        timezone="Europe/Rome",
+        id="daily_sp500_calendar_scan",
         replace_existing=True,
     )
     # Validazione settimanale ticker universe — domenica alle 02:00 UTC
@@ -499,6 +569,7 @@ app.include_router(notes.router, prefix="/api/notes", tags=["notes"])
 app.include_router(hv_screener.router, prefix="/api/hv-screener", tags=["hv-screener"])
 app.include_router(paper_trading.router, prefix="/api/paper-trading", tags=["paper-trading"])
 app.include_router(etf_calendar.router, prefix="/api/etf-calendar", tags=["etf-calendar"])
+app.include_router(sp500_calendar.router, prefix="/api/sp500-calendar", tags=["sp500-calendar"])
 app.include_router(internal.router, prefix="/api/internal", tags=["internal"])
 
 

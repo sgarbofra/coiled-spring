@@ -48,3 +48,7 @@ frontend-next/public/*.mp4
 *.db-shm
 *.db-wal
 BS
+
+.~lock.*
+_test.txt
+font-comparison.html
