@@ -472,6 +472,15 @@ function OpportunityContent() {
   const [noteSaving, setNoteSaving] = useState(false)
   const [noteLastSaved, setNoteLastSaved] = useState<Date | null>(null)
 
+  // ── Mobile ────────────────────────────────────────────────────────────────
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
   useEffect(() => {
     if (!ticker) return
     setLoadingChart(true)
@@ -630,8 +639,9 @@ function OpportunityContent() {
           style={{
             flex: '1 1 60%',
             minWidth: 300,
-            padding: '20px 24px',
-            borderRight: `1px solid ${bb.border}`,
+            padding: isMobile ? '14px 16px' : '20px 24px',
+            borderRight: isMobile ? 'none' : `1px solid ${bb.border}`,
+            borderBottom: isMobile ? `1px solid ${bb.border}` : 'none',
             boxSizing: 'border-box',
           }}
         >
@@ -797,7 +807,7 @@ function OpportunityContent() {
           style={{
             flex: '1 1 320px',
             minWidth: 280,
-            padding: '20px 24px',
+            padding: isMobile ? '14px 16px' : '20px 24px',
             boxSizing: 'border-box',
           }}
         >

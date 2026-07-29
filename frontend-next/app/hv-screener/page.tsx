@@ -60,7 +60,7 @@ function fmt(v: number | null, decimals = 1): string {
 function fmtDate(iso: string | null): string {
   if (!iso) return '—'
   try {
-    return new Date(iso).toLocaleString('it-IT', {
+    return new Date(iso).toLocaleString('en-US', {
       day: '2-digit', month: '2-digit', year: 'numeric',
       hour: '2-digit', minute: '2-digit',
     })
@@ -94,6 +94,20 @@ function HVScreenerContent() {
 
   // Paginazione
   const [page, setPage] = useState(1)
+
+  // Mobile
+  const [isMobile, setIsMobile] = useState(false)
+  const [legendOpen, setLegendOpen] = useState(true)
+  useEffect(() => {
+    const check = () => {
+      const m = window.innerWidth < 768
+      setIsMobile(m)
+      if (m) setLegendOpen(false)
+    }
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   // ── Fetch dati ──────────────────────────────────────────────────────────────
   const fetchData = useCallback(async () => {
@@ -251,10 +265,14 @@ function HVScreenerContent() {
         padding: '10px 16px', backgroundColor: bb.panel,
         borderBottom: `1px solid ${bb.border}`,
       }}>
-        <div style={{ color: bb.orange, fontSize: '10px', letterSpacing: '2px', marginBottom: '8px', fontWeight: 700 }}>
+        <div
+          onClick={() => setLegendOpen(o => !o)}
+          style={{ color: bb.orange, fontSize: '10px', letterSpacing: '2px', marginBottom: legendOpen ? '8px' : '0', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', userSelect: 'none' }}
+        >
           ◈ VOLATILITY METRICS EXPLAINED
+          <span style={{ fontSize: '9px', color: bb.gray }}>{legendOpen ? '▲ HIDE' : '▼ SHOW'}</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '6px 32px' }}>
+        {legendOpen && <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '6px 32px' }}>
           {[
             {
               label: 'HV 30D',
@@ -299,14 +317,15 @@ function HVScreenerContent() {
               </div>
             </div>
           ))}
-        </div>
-        {/* Color scale */}
-        <div style={{ display: 'flex', gap: '16px', marginTop: '10px', paddingTop: '8px', borderTop: `1px solid ${bb.border}`, fontSize: '10px', alignItems: 'center' }}>
-          <span style={{ color: bb.gray, letterSpacing: '1px' }}>HV RANK COLOR SCALE:</span>
-          <span style={{ color: bb.green }}>● &lt; 50 — LOW (compressed vol, potential setup)</span>
-          <span style={{ color: bb.amber }}>● 50–79 — MEDIUM</span>
-          <span style={{ color: bb.red }}>● ≥ 80 — HIGH (expensive premium)</span>
-        </div>
+        </div>}
+        {legendOpen && (
+          <div style={{ display: 'flex', gap: '16px', marginTop: '10px', paddingTop: '8px', borderTop: `1px solid ${bb.border}`, fontSize: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <span style={{ color: bb.gray, letterSpacing: '1px' }}>HV RANK COLOR SCALE:</span>
+            <span style={{ color: bb.green }}>● &lt; 50 — LOW (compressed vol, potential setup)</span>
+            <span style={{ color: bb.amber }}>● 50–79 — MEDIUM</span>
+            <span style={{ color: bb.red }}>● ≥ 80 — HIGH (expensive premium)</span>
+          </div>
+        )}
       </div>
 
       {/* Filtri */}
@@ -405,7 +424,7 @@ function HVScreenerContent() {
                   TICKER{sortIcon('ticker')}
                 </th>
                 <th style={{ ...thStyle('ticker'), textAlign: 'left', cursor: 'default', color: bb.gray }}>
-                  NOME
+                  NAME
                 </th>
                 <th style={thStyle('hv30')} onClick={() => handleSort('hv30')}>
                   HV 30D %{sortIcon('hv30')}

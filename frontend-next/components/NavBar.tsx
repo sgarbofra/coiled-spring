@@ -22,7 +22,7 @@ export default function NavBar() {
 
   // Clock
   useEffect(() => {
-    const tick = () => setTime(new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', second: '2-digit' }))
+    const tick = () => setTime(new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }))
     tick()
     const id = setInterval(tick, 1000)
     return () => clearInterval(id)
@@ -85,7 +85,7 @@ export default function NavBar() {
       </div>
 
       {/* Nav tabs — underline style */}
-      <div className="flex items-stretch gap-0" style={{ alignSelf: 'stretch' }}>
+      <div className="flex items-stretch gap-0" style={{ alignSelf: 'stretch', overflowX: 'auto', flexShrink: 1 }}>
         {links.map(l => {
           const active = path.startsWith(l.href)
           return (
@@ -93,7 +93,7 @@ export default function NavBar() {
               key={l.href}
               href={l.href}
               className={`nav-tab${active ? ' active' : ''}`}
-              style={{ fontSize: isMobile ? '10px' : undefined, padding: isMobile ? '8px 8px' : undefined }}
+              style={{ fontSize: isMobile ? '10px' : undefined, padding: isMobile ? '8px 8px' : undefined, whiteSpace: 'nowrap' }}
             >
               {l.label}
             </Link>

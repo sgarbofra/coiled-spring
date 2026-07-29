@@ -9,13 +9,13 @@ const BROKERS: { key: BrokerKey; name: string; description: string; badge: strin
   {
     key: 'ibkr',
     name: 'Interactive Brokers',
-    description: 'Connessione locale via TWS o IB Gateway. Richiede TWS / IB Gateway aperto sul tuo computer.',
+    description: 'Local connection via TWS or IB Gateway. Requires TWS / IB Gateway running on your computer.',
     badge: 'IBKR',
   },
   {
     key: 'tastytrade',
     name: 'tastytrade',
-    description: 'Connessione via API REST ufficiale tastytrade. Accesso diretto con le tue credenziali.',
+    description: 'Connection via tastytrade official REST API. Direct access with your credentials.',
     badge: 'TT',
   },
 ]
@@ -117,9 +117,9 @@ export default function OnboardingPage() {
         {/* Config form */}
         {selected === 'ibkr' && (
           <div className="mb-6 rounded-2xl border border-slate-700 bg-slate-900 p-6">
-            <h2 className="mb-1 font-semibold">Connessione TWS / IB Gateway</h2>
+            <h2 className="mb-1 font-semibold">TWS / IB Gateway Connection</h2>
             <p className="mb-5 text-sm text-slate-400">
-              Assicurati che TWS o IB Gateway sia aperto e che le API socket siano abilitate
+              Make sure TWS or IB Gateway is running and socket APIs are enabled
               (Configure → API → Settings → Enable ActiveX and Socket Clients).
             </p>
             <div className="grid grid-cols-2 gap-4">
@@ -129,7 +129,7 @@ export default function OnboardingPage() {
                   className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 focus:border-indigo-500 focus:outline-none" />
               </label>
               <label className="flex flex-col gap-1 text-sm">
-                <span className="text-slate-400">Porta</span>
+                <span className="text-slate-400">Port</span>
                 <input value={ibkrPort} onChange={e => setIbkrPort(e.target.value)}
                   className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 focus:border-indigo-500 focus:outline-none" />
                 <span className="text-xs text-slate-500">TWS paper: 7497 · TWS live: 7496 · Gateway: 4001</span>
@@ -140,7 +140,7 @@ export default function OnboardingPage() {
                   className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 focus:border-indigo-500 focus:outline-none" />
               </label>
               <label className="flex flex-col gap-1 text-sm">
-                <span className="text-slate-400">Account (opzionale)</span>
+                <span className="text-slate-400">Account (optional)</span>
                 <input value={ibkrAccount} onChange={e => setIbkrAccount(e.target.value)}
                   placeholder="DU123456"
                   className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 placeholder-slate-600 focus:border-indigo-500 focus:outline-none" />
@@ -177,14 +177,14 @@ export default function OnboardingPage() {
             onClick={() => router.push('/watchlists')}
             className="text-sm text-slate-500 hover:text-slate-300"
           >
-            Salta per ora →
+            Skip for now →
           </button>
           <button
             onClick={submit}
             disabled={!canSubmit() || saving}
             className="rounded-xl bg-indigo-600 px-8 py-3 font-medium hover:bg-indigo-500 disabled:opacity-40"
           >
-            {saving ? 'Connessione…' : 'Connetti broker'}
+            {saving ? 'Connecting…' : 'Connect broker'}
           </button>
         </div>
 

@@ -702,6 +702,7 @@ function GreeksTab({ portfolioId }: { portfolioId: number }) {
 
       {/* Per-underlying breakdown */}
       <Label>EXPOSURE BY UNDERLYING</Label>
+      <div style={{ overflowX: 'auto' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px', fontFamily: 'var(--font-mono)' }}>
         <thead>
           <tr>
@@ -729,6 +730,7 @@ function GreeksTab({ portfolioId }: { portfolioId: number }) {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   )
 }
@@ -848,6 +850,15 @@ export default function PortfolioPage() {
   const [newName, setNewName] = useState('')
   const [creating, setCreating] = useState(false)
   const [deleting, setDeleting] = useState<number | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   const loadPortfolios = useCallback(async () => {
     setLoading(true)
@@ -924,12 +935,40 @@ export default function PortfolioPage() {
 
   return (
     <ProtectedRoute>
-      <div style={{ display: 'flex', height: '100%', backgroundColor: bb.bg, fontFamily: 'var(--font-mono)', color: bb.white, overflow: 'hidden' }}>
+      <div style={{ display: 'flex', height: '100%', backgroundColor: bb.bg, fontFamily: 'var(--font-mono)', color: bb.white, overflow: 'hidden', position: 'relative' }}>
+
+        {/* ── Mobile backdrop ── */}
+        {isMobile && sidebarOpen && (
+          <div
+            onClick={() => setSidebarOpen(false)}
+            style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 199 }}
+          />
+        )}
 
         {/* ── Sidebar ── */}
-        <div style={{ width: '220px', minWidth: '220px', borderRight: `1px solid ${bb.border2}`, display: 'flex', flexDirection: 'column', padding: '12px', gap: '4px', overflowY: 'auto' }}>
-          <div style={{ fontSize: '11px', letterSpacing: '1.5px', color: bb.amber, fontWeight: 'bold', marginBottom: '8px' }}>
-            PORTFOLIOS
+        <div style={{
+          width: '220px', minWidth: '220px',
+          borderRight: `1px solid ${bb.border2}`,
+          display: 'flex', flexDirection: 'column',
+          padding: '12px', gap: '4px', overflowY: 'auto',
+          ...(isMobile ? {
+            position: 'fixed', top: 0, left: 0, height: '100%',
+            zIndex: 200, background: bb.bg,
+            transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
+            transition: 'transform 0.22s ease',
+            boxShadow: sidebarOpen ? '4px 0 16px rgba(0,0,0,0.5)' : 'none',
+          } : {}),
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+            <span style={{ fontSize: '11px', letterSpacing: '1.5px', color: bb.amber, fontWeight: 'bold' }}>
+              PORTFOLIOS
+            </span>
+            {isMobile && (
+              <button onClick={() => setSidebarOpen(false)} style={{
+                background: 'transparent', border: 'none', color: bb.gray,
+                fontSize: '16px', cursor: 'pointer', lineHeight: 1, padding: '2px 4px',
+              }}>✕</button>
+            )}
           </div>
 
           {loading ? (
@@ -941,7 +980,7 @@ export default function PortfolioPage() {
           ) : (
             portfolios.map(p => (
               <div key={p.id} style={{ display: 'flex', alignItems: 'stretch', gap: '2px' }}>
-                <button onClick={() => { setSelectedId(p.id); setTab('positions') }}
+                <button onClick={() => { setSelectedId(p.id); setTab('positions'); if (isMobile) setSidebarOpen(false) }}
                   style={{
                     flex: 1, border: `1px solid ${selectedId === p.id ? bb.orange : bb.border}`,
                     backgroundColor: selectedId === p.id ? 'rgba(255,102,0,0.12)' : 'transparent',
@@ -982,7 +1021,7 @@ export default function PortfolioPage() {
               <input
                 value={newName} onChange={e => setNewName(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter') createPortfolio() }}
-                placeholder="NOME..."
+                placeholder="NAME..."
                 style={{ width: '100%', backgroundColor: bb.panel, border: `1px solid ${bb.border2}`, color: bb.orange, padding: '4px 6px', fontSize: '12px', fontFamily: 'inherit', letterSpacing: '0.5px', boxSizing: 'border-box' }}
               />
               <button onClick={createPortfolio} disabled={creating || !newName.trim()}
@@ -1000,18 +1039,37 @@ export default function PortfolioPage() {
         </div>
 
         {/* ── Main area ── */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
+          {/* Mobile top bar */}
+          {isMobile && (
+            <div style={{ borderBottom: `1px solid ${bb.border2}`, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <button onClick={() => setSidebarOpen(true)} style={{
+                background: 'transparent', border: `1px solid ${bb.border2}`,
+                color: bb.amber, fontFamily: 'var(--font-mono)', fontSize: '11px',
+                padding: '4px 10px', cursor: 'pointer', letterSpacing: '1px',
+              }}>
+                ☰ PORTFOLIOS
+              </button>
+              {selected && (
+                <span style={{ fontSize: '13px', fontWeight: 'bold', color: bb.orange, letterSpacing: '1px' }}>
+                  {selected.name}
+                </span>
+              )}
+            </div>
+          )}
           {!selected ? (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: bb.gray, fontSize: '13px', letterSpacing: '1px' }}>
-              SELECT OR CREATE A PORTFOLIO
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: bb.gray, fontSize: '13px', letterSpacing: '1px', textAlign: 'center', padding: '20px' }}>
+              {isMobile ? 'TAP ☰ PORTFOLIOS TO START' : 'SELECT OR CREATE A PORTFOLIO'}
             </div>
           ) : (
             <>
               {/* Header */}
-              <div style={{ borderBottom: `1px solid ${bb.border2}`, padding: '10px 20px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <div style={{ fontSize: '18px', fontWeight: 'bold', color: bb.orange, letterSpacing: '1px' }}>
-                  {selected.name}
-                </div>
+              <div style={{ borderBottom: `1px solid ${bb.border2}`, padding: isMobile ? '8px 12px' : '10px 20px', display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                {!isMobile && (
+                  <div style={{ fontSize: '18px', fontWeight: 'bold', color: bb.orange, letterSpacing: '1px' }}>
+                    {selected.name}
+                  </div>
+                )}
                 <div style={{ fontSize: '12px', color: bb.gray }}>
                   {selected.open_positions} open positions
                 </div>
