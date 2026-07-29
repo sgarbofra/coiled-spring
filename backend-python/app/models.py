@@ -458,6 +458,60 @@ class TickerUniverse(Base):
     added_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
+# ── ETF Calendar Monitor ──────────────────────────────────────────────────────
+
+class ETFCalendarSnapshot(Base):
+    """Snapshot giornaliero del calendar spread ATM per ogni ETF dell'universo.
+
+    Una riga per (ticker, snap_date) — upsert giornaliero via ETF Calendar Scanner.
+    Universo fisso: SPY, QQQ, IWM, DIA, XLF, XLE, XLK, XLV, XLU,
+                    GLD, TLT, SLV, EEM, EFA, HYG (15 ETF).
+
+    credit_NxM_pct: (price_M - price_N) / spot × 100
+                    Positivo = far-term vale più di near-term (struttura normale).
+                    Alto = il calendar spread è storicamente caro.
+    z_score_NxM:    (credit_oggi - media_52w) / std_52w
+                    > +1.5 → RICH, > +0.5 → WATCH, < -1.5 → CHEAP
+    signal_30v60:   RICH | WATCH | FAIR | CHEAP | INSUFFICIENT_DATA
+    history_days:   giorni di storia disponibili al momento del calcolo
+    """
+    __tablename__ = "etf_calendar_snapshots"
+    __table_args__ = (
+        UniqueConstraint("ticker", "snap_date", name="etf_cal_ticker_date_unique"),
+        Index("etf_cal_ticker_date_idx", "ticker", "snap_date"),
+        Index("etf_cal_signal_idx", "signal_30v60", "snap_date"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    ticker: Mapped[str] = mapped_column(Text, nullable=False)
+    snap_date: Mapped[date] = mapped_column(nullable=False)
+
+    spot_price: Mapped[Optional[float]] = mapped_column(nullable=True)
+
+    # IV sintetiche a maturità costante (% annualizzata, interpolazione VIX-style)
+    iv_30d: Mapped[Optional[float]] = mapped_column(nullable=True)
+    iv_60d: Mapped[Optional[float]] = mapped_column(nullable=True)
+    iv_90d: Mapped[Optional[float]] = mapped_column(nullable=True)
+
+    # Credit% normalizzato su spot: (price_far - price_near) / spot × 100
+    credit_30v60_pct: Mapped[Optional[float]] = mapped_column(nullable=True)
+    credit_30v90_pct: Mapped[Optional[float]] = mapped_column(nullable=True)
+    credit_60v90_pct: Mapped[Optional[float]] = mapped_column(nullable=True)
+
+    # Z-score rispetto alla storia 52 settimane
+    z_score_30v60: Mapped[Optional[float]] = mapped_column(nullable=True)
+    z_score_30v90: Mapped[Optional[float]] = mapped_column(nullable=True)
+    z_score_60v90: Mapped[Optional[float]] = mapped_column(nullable=True)
+
+    # Segnale operativo (basato su z_score_30v60)
+    signal_30v60: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+
+    # Giorni di storia disponibili al momento del calcolo (0 → INSUFFICIENT_DATA)
+    history_days: Mapped[Optional[int]] = mapped_column(Integer, nullable=True, default=0)
+
+    computed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
 # ── Paper Trading ─────────────────────────────────────────────────────────────
 
 class PaperTradingPosition(Base):
