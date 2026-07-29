@@ -56,8 +56,26 @@ _SORTABLE = {
 }
 
 
+def _sniper_conditions_met(hv20, hv60, hv252, hv_rank) -> bool:
+    """Controlla se le condizioni base del filtro sniper sono soddisfatte.
+
+    Usato per calcolare compression_streak durante il refresh giornaliero.
+    NON include il filtro durata (streak ≥ 5) — quello è applicato dallo scanner.
+    """
+    if any(v is None for v in [hv20, hv60, hv252, hv_rank]):
+        return False
+    triple = hv20 < hv60 < hv252
+    rank_ok = hv_rank < 20
+    depth_ok = hv20 <= hv252 * 0.65
+    return triple and rank_ok and depth_ok
+
+
 def _run_hv_refresh(db_url: str) -> None:
-    """Eseguito in background — ricalcola e fa upsert di tutti i ticker."""
+    """Eseguito in background — ricalcola e fa upsert di tutti i ticker.
+
+    Calcola HV20/HV30/HV60/HV252, Parkinson, Rank, Percentile.
+    Aggiorna compression_streak: +1 se condizioni sniper sono soddisfatte, 0 altrimenti.
+    """
     from sqlalchemy import create_engine
     from sqlalchemy.orm import sessionmaker
     from app.data.us_optionable_tickers import get_iv_snapshot_universe
@@ -74,24 +92,44 @@ def _run_hv_refresh(db_url: str) -> None:
 
         for row in results:
             ticker = row["ticker"]
+            hv20  = row.get("hv20")
+            hv30  = row.get("hv30")
+            hv60  = row.get("hv60")
+            hv252 = row.get("hv252")
+            hv_rank = row.get("hv_rank")
+
             existing = db.query(models.HVSnapshot).filter_by(ticker=ticker).first()
+
+            # Compression streak: conserva il valore precedente e incrementa o azzera
+            prev_streak = existing.compression_streak if existing else 0
+            conditions_ok = _sniper_conditions_met(hv20, hv60, hv252, hv_rank)
+            new_streak = (prev_streak or 0) + 1 if conditions_ok else 0
+
             if existing:
-                existing.hv30 = row["hv30"]
+                existing.hv20 = hv20
+                existing.hv30 = hv30
+                existing.hv60 = hv60
+                existing.hv252 = hv252
                 existing.hv30_parkinson = row.get("hv30_parkinson")
-                existing.hv_rank = row["hv_rank"]
-                existing.hv_percentile = row["hv_percentile"]
-                existing.hv_52w_high = row["hv_52w_high"]
-                existing.hv_52w_low = row["hv_52w_low"]
+                existing.hv_rank = hv_rank
+                existing.hv_percentile = row.get("hv_percentile")
+                existing.hv_52w_high = row.get("hv_52w_high")
+                existing.hv_52w_low = row.get("hv_52w_low")
+                existing.compression_streak = new_streak
                 existing.computed_at = row["computed_at"]
             else:
                 db.add(models.HVSnapshot(
                     ticker=ticker,
-                    hv30=row["hv30"],
+                    hv20=hv20,
+                    hv30=hv30,
+                    hv60=hv60,
+                    hv252=hv252,
                     hv30_parkinson=row.get("hv30_parkinson"),
-                    hv_rank=row["hv_rank"],
-                    hv_percentile=row["hv_percentile"],
-                    hv_52w_high=row["hv_52w_high"],
-                    hv_52w_low=row["hv_52w_low"],
+                    hv_rank=hv_rank,
+                    hv_percentile=row.get("hv_percentile"),
+                    hv_52w_high=row.get("hv_52w_high"),
+                    hv_52w_low=row.get("hv_52w_low"),
+                    compression_streak=new_streak,
                     computed_at=row["computed_at"],
                 ))
 

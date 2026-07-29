@@ -32,15 +32,29 @@ BATCH_SIZE = 200     # ticker per batch download — yfinance si instabilizza ol
 # ── Core computation ──────────────────────────────────────────────────────────
 
 def _compute_hv_for_series(prices: pd.Series) -> Optional[dict]:
-    """Calcola HV30, Rank e Percentile da una serie di prezzi di chiusura.
+    """Calcola HV su finestre multiple (20, 30, 60, 252), Rank e Percentile.
 
     Ritorna None se i dati sono insufficienti.
+    Le finestre HV20/HV60/HV252 sono calcolate una sola volta dalla stessa serie
+    di log-return per efficienza.
     """
     prices = prices.dropna()
     if len(prices) < MIN_PRICES:
         return None
 
     log_ret = np.log(prices / prices.shift(1)).dropna()
+
+    # ── Multi-window HV ─────────────────────────────────────────────────────
+    multi_hv: dict = {}
+    for w in [20, 30, 60, 252]:
+        if len(log_ret) < w:
+            multi_hv[f"hv{w}"] = None
+            continue
+        s = log_ret.rolling(w).std() * np.sqrt(252) * 100
+        s = s.dropna()
+        multi_hv[f"hv{w}"] = round(float(s.iloc[-1]), 1) if len(s) > 0 else None
+
+    # HV30 is used for Rank/Percentile (unchanged behaviour)
     hv_series = log_ret.rolling(HV_WINDOW).std() * np.sqrt(252) * 100
     hv_series = hv_series.dropna()
 
@@ -63,7 +77,7 @@ def _compute_hv_for_series(prices: pd.Series) -> Optional[dict]:
     hv_pct = round(float((past < current_hv).sum()) / len(past) * 100, 1) if len(past) > 0 else 0.0
 
     return {
-        "hv30": round(current_hv, 1),
+        **multi_hv,                           # hv20, hv30, hv60, hv252
         "hv_rank": hv_rank,
         "hv_percentile": hv_pct,
         "hv_52w_high": round(hv_max, 1),
@@ -187,7 +201,7 @@ def compute_hv_batch(tickers: list[str]) -> list[dict]:
                     "ticker": ticker,
                     "computed_at": now,
                     "hv30_parkinson": hv30_parkinson,
-                    **metrics,
+                    **metrics,   # includes hv20, hv30, hv60, hv252, hv_rank, ...
                 })
             except Exception as exc:
                 logger.warning(f"[HV] {ticker}: {exc}")

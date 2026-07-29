@@ -22,7 +22,7 @@ import yfinance as yf
 from app.config import settings
 from app.database import Base, engine
 from app.dependencies import get_db
-from app.routers import academy, admin, ai_chat, auth, auth_google, broker, hv_screener, internal, market, notes, portfolio, scanner, stripe, watchlist_items, watchlists
+from app.routers import academy, admin, ai_chat, auth, auth_google, broker, hv_screener, internal, market, notes, paper_trading, portfolio, scanner, stripe, watchlist_items, watchlists
 from sqlalchemy.orm import Session
 
 import app.models  # noqa: F401 — registers all models with Base
@@ -87,6 +87,26 @@ def _run_weekly_ticker_validate():
         print(f"[CRON] Ticker universe validate triggered: {resp.status_code} {resp.text[:100]}")
     except Exception as e:
         print(f"[CRON] Failed to trigger ticker universe validate: {e}")
+
+
+def _run_paper_trading_scan():
+    """Job APScheduler — ogni giorno alle 16:30 Europe/Rome (≈1h dopo apertura mercato US).
+
+    Esegue lo scanner paper trading HV Long PUT LEAPS:
+    manutenzione posizioni aperte + scan nuovi ingressi + diary.
+    """
+    import os, requests as _requests
+    port = os.environ.get("PORT", "8080")
+    try:
+        key = settings.cron_internal_key
+        resp = _requests.post(
+            f"http://localhost:{port}/api/paper-trading/run",
+            headers={"x-internal-key": key},
+            timeout=300,  # 5 minuti: scan di centinaia di ticker richiede tempo
+        )
+        print(f"[CRON] Paper trading scan triggered: {resp.status_code} {resp.text[:200]}")
+    except Exception as e:
+        print(f"[CRON] Failed to trigger paper trading scan: {e}")
 
 
 def _run_monthly_ticker_refresh():
@@ -174,6 +194,63 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         print(f"[MIGRATION] hv30_parkinson skip: {e}")
 
+    # Migration: aggiungi HV multi-window e compression_streak a hv_snapshots
+    try:
+        from sqlalchemy import text
+        with engine.connect() as conn:
+            for col in ["hv20", "hv60", "hv252"]:
+                conn.execute(text(
+                    f"ALTER TABLE hv_snapshots ADD COLUMN IF NOT EXISTS {col} REAL"
+                ))
+            conn.execute(text(
+                "ALTER TABLE hv_snapshots ADD COLUMN IF NOT EXISTS compression_streak INTEGER DEFAULT 0"
+            ))
+            conn.commit()
+            print("[MIGRATION] hv_snapshots multi-window + compression_streak OK")
+    except Exception as e:
+        print(f"[MIGRATION] hv_snapshots multi-window skip: {e}")
+
+    # Migration: crea tabelle paper trading (pt_positions, pt_diary)
+    try:
+        from sqlalchemy import text
+        with engine.connect() as conn:
+            conn.execute(text("""
+                CREATE TABLE IF NOT EXISTS pt_positions (
+                    id           SERIAL PRIMARY KEY,
+                    portfolio_id INTEGER NOT NULL REFERENCES portfolios(id) ON DELETE CASCADE,
+                    ticker       TEXT NOT NULL,
+                    trade_id     INTEGER REFERENCES portfolio_trades(id) ON DELETE SET NULL,
+                    roll_count   INTEGER NOT NULL DEFAULT 0,
+                    pause_until  DATE,
+                    signal_details JSONB NOT NULL DEFAULT '{}',
+                    created_at   TIMESTAMPTZ DEFAULT now(),
+                    updated_at   TIMESTAMPTZ DEFAULT now(),
+                    CONSTRAINT pt_positions_portfolio_ticker_unique UNIQUE (portfolio_id, ticker)
+                )
+            """))
+            conn.execute(text("""
+                CREATE TABLE IF NOT EXISTS pt_diary (
+                    id                  SERIAL PRIMARY KEY,
+                    portfolio_id        INTEGER NOT NULL REFERENCES portfolios(id) ON DELETE CASCADE,
+                    diary_date          DATE NOT NULL,
+                    tickers_scanned     INTEGER NOT NULL DEFAULT 0,
+                    tickers_eligible    INTEGER NOT NULL DEFAULT 0,
+                    filter_level_used   INTEGER NOT NULL DEFAULT 0,
+                    trades_opened       INTEGER NOT NULL DEFAULT 0,
+                    trades_closed_sl    INTEGER NOT NULL DEFAULT 0,
+                    trades_closed_tp    INTEGER NOT NULL DEFAULT 0,
+                    trades_rolled       INTEGER NOT NULL DEFAULT 0,
+                    scan_details        JSONB NOT NULL DEFAULT '{}',
+                    report_md           TEXT NOT NULL DEFAULT '',
+                    created_at          TIMESTAMPTZ DEFAULT now(),
+                    CONSTRAINT pt_diary_portfolio_date_unique UNIQUE (portfolio_id, diary_date)
+                )
+            """))
+            conn.commit()
+            print("[MIGRATION] pt_positions + pt_diary OK")
+    except Exception as e:
+        print(f"[MIGRATION] paper trading tables skip: {e}")
+
     # Migration: crea ticker_universe se non esiste
     try:
         from sqlalchemy import text
@@ -238,6 +315,17 @@ async def lifespan(app: FastAPI):
         id="daily_hv_snapshot",
         replace_existing=True,
     )
+    # Paper trading scan — ogni giorno alle 16:30 Europe/Rome
+    # (≈10:30-11:30 ET, 1-2h dopo apertura mercato US — prezzi opzioni stabili)
+    scheduler.add_job(
+        _run_paper_trading_scan,
+        trigger="cron",
+        hour=16,
+        minute=30,
+        timezone="Europe/Rome",
+        id="daily_pt_scan",
+        replace_existing=True,
+    )
     # Validazione settimanale ticker universe — domenica alle 02:00 UTC
     scheduler.add_job(
         _run_weekly_ticker_validate,
@@ -261,6 +349,7 @@ async def lifespan(app: FastAPI):
     scheduler.start()
     print("[SCHEDULER] Daily IV snapshot scheduled at 16:30 UTC")
     print("[SCHEDULER] Daily HV snapshot scheduled at 17:00 UTC")
+    print("[SCHEDULER] Paper trading scan scheduled at 16:30 Europe/Rome")
     print("[SCHEDULER] Weekly ticker universe validate scheduled Sunday 02:00 UTC")
     print("[SCHEDULER] Monthly ticker universe refresh scheduled 1st-of-month 01:00 UTC")
 
@@ -339,6 +428,7 @@ app.include_router(market.router, prefix="/api/market", tags=["market"])
 app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
 app.include_router(notes.router, prefix="/api/notes", tags=["notes"])
 app.include_router(hv_screener.router, prefix="/api/hv-screener", tags=["hv-screener"])
+app.include_router(paper_trading.router, prefix="/api/paper-trading", tags=["paper-trading"])
 app.include_router(internal.router, prefix="/api/internal", tags=["internal"])
 
 

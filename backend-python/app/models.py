@@ -332,9 +332,11 @@ class HVSnapshot(Base):
     Alimentato dal job APScheduler (dopo chiusura mercato US).
     Una riga per ticker \u2014 upsert giornaliero.
 
-    hv30:           HV 30-day annualizzata (%), es. 28.5 = 28.5%
-    hv_rank:        (HV_today - HV_min_52w) / (HV_max_52w - HV_min_52w) * 100
-    hv_percentile:  % di giorni nelle ultime 252 sessioni con HV < HV_today
+    hv20/hv30/hv60/hv252: HV annualizzata (%) su finestre multiple
+    hv_rank:               (HV_today - HV_min_52w) / (HV_max_52w - HV_min_52w) * 100
+    hv_percentile:         % di giorni nelle ultime 252 sessioni con HV < HV_today
+    compression_streak:    giorni consecutivi in cui le condizioni sniper sono soddisfatte
+                           (reset a 0 se le condizioni non sono pi\u00f9 soddisfatte)
     """
     __tablename__ = "hv_snapshots"
     __table_args__ = (
@@ -345,12 +347,16 @@ class HVSnapshot(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     ticker: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
     company_name: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    hv30: Mapped[Optional[float]] = mapped_column(nullable=True)
+    hv20: Mapped[Optional[float]] = mapped_column(nullable=True)             # 20-day HV (%)
+    hv30: Mapped[Optional[float]] = mapped_column(nullable=True)             # 30-day HV (%)
+    hv60: Mapped[Optional[float]] = mapped_column(nullable=True)             # 60-day HV (%)
+    hv252: Mapped[Optional[float]] = mapped_column(nullable=True)            # 252-day HV (%)
     hv30_parkinson: Mapped[Optional[float]] = mapped_column(nullable=True)   # Parkinson estimator (High/Low)
     hv_rank: Mapped[Optional[float]] = mapped_column(nullable=True)
     hv_percentile: Mapped[Optional[float]] = mapped_column(nullable=True)
     hv_52w_high: Mapped[Optional[float]] = mapped_column(nullable=True)
     hv_52w_low: Mapped[Optional[float]] = mapped_column(nullable=True)
+    compression_streak: Mapped[Optional[int]] = mapped_column(Integer, nullable=True, default=0)
     computed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
@@ -450,3 +456,66 @@ class TickerUniverse(Base):
     last_checked: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
     delisted_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
     added_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+# ── Paper Trading ─────────────────────────────────────────────────────────────
+
+class PaperTradingPosition(Base):
+    """Stato per-ticker del paper trading HV Long PUT LEAPS.
+
+    Una riga per ticker attivo nel portafoglio. Traccia:
+    - trade_id:          PortfolioTrade attualmente aperto (NULL = nessuna posizione aperta)
+    - roll_count:        numero di roll eseguiti (0-2)
+    - pause_until:       data fino a cui il ticker è in pausa (NULL = non in pausa)
+    - signal_details:    JSON con i valori HV e i flag segnale al momento dell'ingresso
+    """
+    __tablename__ = "pt_positions"
+    __table_args__ = (
+        UniqueConstraint("portfolio_id", "ticker", name="pt_positions_portfolio_ticker_unique"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    portfolio_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("portfolios.id", ondelete="CASCADE"), nullable=False
+    )
+    ticker: Mapped[str] = mapped_column(Text, nullable=False)
+    trade_id: Mapped[Optional[int]] = mapped_column(
+        Integer, ForeignKey("portfolio_trades.id", ondelete="SET NULL"), nullable=True
+    )
+    roll_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    pause_until: Mapped[Optional[date]] = mapped_column(nullable=True)
+    signal_details: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
+
+
+class PaperTradingDiary(Base):
+    """Diario giornaliero del paper trading HV Long PUT LEAPS.
+
+    Una riga per giorno di trading, contiene:
+    - stats aggregate della sessione
+    - dettagli JSON (ticker scansionati, eleggibili, opzioni valutate)
+    - report_md: testo Markdown human-readable da mostrare nel frontend
+    """
+    __tablename__ = "pt_diary"
+    __table_args__ = (
+        UniqueConstraint("portfolio_id", "diary_date", name="pt_diary_portfolio_date_unique"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    portfolio_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("portfolios.id", ondelete="CASCADE"), nullable=False
+    )
+    diary_date: Mapped[date] = mapped_column(nullable=False)
+    tickers_scanned: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    tickers_eligible: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    filter_level_used: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    trades_opened: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    trades_closed_sl: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    trades_closed_tp: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    trades_rolled: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    scan_details: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict)
+    report_md: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
