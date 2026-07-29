@@ -76,9 +76,9 @@ export default function OnboardingPage() {
 
         {/* Header */}
         <div className="mb-10 text-center">
-          <h1 className="mb-2 text-3xl font-semibold">Collega il tuo broker</h1>
+          <h1 className="mb-2 text-3xl font-semibold">Connect your broker</h1>
           <p className="text-slate-400">
-            Scegli il broker con cui operi. Potrai cambiarlo in qualsiasi momento dalle impostazioni.
+            Choose the broker you trade with. You can change this at any time from Settings.
           </p>
         </div>
 
@@ -151,9 +151,9 @@ export default function OnboardingPage() {
 
         {selected === 'tastytrade' && (
           <div className="mb-6 rounded-2xl border border-slate-700 bg-slate-900 p-6">
-            <h2 className="mb-1 font-semibold">Credenziali tastytrade</h2>
+            <h2 className="mb-1 font-semibold">tastytrade credentials</h2>
             <p className="mb-5 text-sm text-slate-400">
-              Le credenziali vengono usate per ottenere un session token. La password non viene salvata.
+              Your credentials are used to obtain a session token. Your password is never stored.
             </p>
             <div className="grid grid-cols-2 gap-4">
               <label className="flex flex-col gap-1 text-sm">

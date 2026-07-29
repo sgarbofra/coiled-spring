@@ -11,9 +11,9 @@ export const viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'Coiled Spring | Scanner Opzioni LEAPS — Terminale Antifragile',
-  description: 'Scanner opzioni LEAPS con IV Rank, superficie di volatilità 3D e AI su 3.500+ titoli USA. Trova opzioni americane con volatilità compressa. LEAPS options scanner with IV Rank analysis for antifragile traders.',
-  keywords: 'opzioni LEAPS, scanner opzioni, scanner opzioni americane, opzioni americane, IV Rank, volatilità implicita, opzioni lunga scadenza, LEAPS options, options scanner, IV Rank analysis, volatility surface, options trading, antifragile trading, strategie opzioni, greche opzioni',
+  title: 'Coiled Spring | LEAPS Options Scanner — Antifragile Terminal',
+  description: 'LEAPS options scanner with IV Rank, 3D volatility surface and AI across 3,500+ US underlyings. Find options with historically compressed volatility. IV Rank analysis for antifragile traders.',
+  keywords: 'LEAPS options, options scanner, US options scanner, IV Rank, implied volatility, long-dated options, options scanner, IV Rank analysis, volatility surface, options trading, antifragile trading, options strategies, Greeks',
   alternates: {
     canonical: 'https://www.coiledspring.app',
   },
@@ -26,26 +26,25 @@ export const metadata: Metadata = {
     apple: '/logo.png',
   },
   openGraph: {
-    title: 'Coiled Spring | Scanner Opzioni LEAPS — Terminale Antifragile',
-    description: 'Scanner opzioni LEAPS con IV Rank, superficie di volatilità 3D e AI su 3.500+ titoli USA. Trova opzioni con volatilità compressa.',
+    title: 'Coiled Spring | LEAPS Options Scanner — Antifragile Terminal',
+    description: 'LEAPS options scanner with IV Rank, 3D volatility surface and AI across 3,500+ US underlyings. Find options with compressed volatility.',
     type: 'website',
     url: 'https://www.coiledspring.app',
     siteName: 'Coiled Spring',
-    locale: 'it_IT',
-    alternateLocale: 'en_US',
+    locale: 'en_US',
     images: [
       {
         url: 'https://coiledspring.app/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Coiled Spring — Scanner Opzioni LEAPS e Terminale Antifragile',
+        alt: 'Coiled Spring — LEAPS Options Scanner and Antifragile Terminal',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Coiled Spring | Scanner Opzioni LEAPS',
-    description: 'Scanner opzioni LEAPS con IV Rank, superficie di volatilità 3D e AI su 3.500+ titoli USA.',
+    title: 'Coiled Spring | LEAPS Options Scanner',
+    description: 'LEAPS options scanner with IV Rank, 3D volatility surface and AI across 3,500+ US underlyings.',
     images: ['https://coiledspring.app/og-image.png'],
   },
   robots: 'index, follow',
@@ -58,9 +57,9 @@ const jsonLd = {
   applicationCategory: 'FinanceApplication',
   operatingSystem: 'Web',
   url: 'https://coiledspring.app',
-  description: 'Scanner opzioni LEAPS con IV Rank, superficie di volatilità 3D e assistente AI. Analizza 3.500+ titoli USA per trovare opzioni americane con volatilità compressa.',
-  inLanguage: ['it', 'en'],
-  keywords: 'opzioni LEAPS, scanner opzioni, IV Rank, opzioni americane, LEAPS options, options scanner',
+  description: 'LEAPS options scanner with IV Rank, 3D volatility surface and AI assistant. Scan 3,500+ US underlyings to find options with historically compressed volatility.',
+  inLanguage: 'en',
+  keywords: 'LEAPS options, options scanner, IV Rank, US options, implied volatility, volatility surface',
   author: {
     '@type': 'Person',
     description: '20-year capital markets professional',
@@ -69,15 +68,15 @@ const jsonLd = {
     '@type': 'Offer',
     price: '0',
     priceCurrency: 'EUR',
-    description: 'Accesso Beta gratuito — Free Beta Access',
+    description: 'Free Beta Access',
   },
   featureList: [
-    'Scanner opzioni LEAPS su 3.500+ titoli USA',
-    'IV Rank e IV Percentile in tempo reale',
-    'Superficie di volatilità 3D interattiva',
-    'Greche: Delta, Vega, Theta, Gamma',
-    'Assistente AI per analisi opzioni',
-    'Portfolio tracker con P&L e Greeks',
+    'LEAPS options scanner across 3,500+ US underlyings',
+    'IV Rank and IV Percentile',
+    'Interactive 3D volatility surface',
+    'Greeks: Delta, Vega, Theta, Gamma',
+    'AI assistant for options analysis',
+    'Portfolio tracker with P&L and Greeks',
   ],
 }
 

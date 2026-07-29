@@ -411,7 +411,7 @@ function PositionDetailDrawer({
                 </div>
               </>
             ) : (
-              <div style={{ color: 'var(--text-tertiary)', fontSize: '13px' }}>— Greeks non disponibili (IV mancante)</div>
+              <div style={{ color: 'var(--text-tertiary)', fontSize: '13px' }}>— Greeks unavailable (IV missing)</div>
             )}
           </section>
 

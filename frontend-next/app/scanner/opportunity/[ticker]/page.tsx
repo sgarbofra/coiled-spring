@@ -217,7 +217,7 @@ function HVChart({ prices }: { prices: PricePoint[] }) {
   return (
     <div ref={containerRef} style={{ width: '100%', marginTop: 6 }}>
       <div style={{ padding: '0 0 2px 58px', fontSize: 10, fontFamily: 'var(--font-mono)', color: bb.gray, letterSpacing: 0.5 }}>
-        HV 20D (VOL. STORICA ANNUALIZZATA)
+        HV 20D (ANNUALIZED HISTORICAL VOL.)
       </div>
       <svg
         width={W}
@@ -305,7 +305,7 @@ function HVRankPanel({ prices }: { prices: PricePoint[] }) {
   const hvRank = Math.round((belowCount / allHV20.length) * 100)
 
   const rankColor = hvRank <= 30 ? 'var(--positive)' : hvRank <= 60 ? '#FFB300' : 'var(--negative)'
-  const rankLabel = hvRank <= 30 ? 'VOL COMPRESSA' : hvRank <= 60 ? 'VOL MEDIA' : 'VOL ELEVATA'
+  const rankLabel = hvRank <= 30 ? 'VOL COMPRESSED' : hvRank <= 60 ? 'VOL AVERAGE' : 'VOL ELEVATED'
 
   return (
     <div style={{
@@ -316,7 +316,7 @@ function HVRankPanel({ prices }: { prices: PricePoint[] }) {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
         <span style={{ fontSize: 10, color: bb.gray, letterSpacing: 1, fontFamily: 'var(--font-mono)' }}>
-          HV RANK — VOL. STORICA COMPRESSA?
+          HV RANK — IS VOLATILITY COMPRESSED?
         </span>
         <span style={{ fontSize: 11, fontWeight: 'bold', color: rankColor, letterSpacing: 1, fontFamily: 'var(--font-mono)' }}>
           {rankLabel}
@@ -810,7 +810,7 @@ function OpportunityContent() {
                 </div>
                 {(() => {
                   const rankColor = hvRankParam >= 80 ? bb.red : hvRankParam >= 50 ? bb.amber : bb.green
-                  const rankLabel = hvRankParam >= 80 ? 'VOLATILITÀ ELEVATA' : hvRankParam >= 50 ? 'VOLATILITÀ MEDIA' : 'VOL COMPRESSA'
+                  const rankLabel = hvRankParam >= 80 ? 'VOL ELEVATED' : hvRankParam >= 50 ? 'VOL AVERAGE' : 'VOL COMPRESSED'
                   return (
                     <>
                       <FieldRow label="HV 30D" value={hvHV30 > 0 ? `${hvHV30.toFixed(1)}%` : '—'} color={bb.white} />
@@ -849,8 +849,8 @@ function OpportunityContent() {
                 })()}
               </div>
               <div style={{ background: bb.panel, border: `1px solid ${bb.border2}`, padding: '12px 14px', fontSize: 11, color: bb.gray, lineHeight: 1.6 }}>
-                <div style={{ color: bb.amber, fontSize: 10, letterSpacing: 1, marginBottom: 6 }}>NOTA</div>
-                I grafici a sinistra mostrano Price History 1Y e HV 20D calcolata in tempo reale dai prezzi di chiusura. I valori HV Rank in questo pannello provengono dal daily snapshot dell&apos;HV Screener.
+                <div style={{ color: bb.amber, fontSize: 10, letterSpacing: 1, marginBottom: 6 }}>NOTE</div>
+                The charts on the left show 1Y Price History and HV 20D computed in real time from closing prices. The HV Rank values in this panel are sourced from the daily snapshot of the HV Screener.
               </div>
             </>
           ) : (

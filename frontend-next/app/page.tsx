@@ -986,7 +986,7 @@ export default function LandingPage() {
                   onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.borderColor = colors.orange; (e.currentTarget as HTMLAnchorElement).style.color = colors.orange }}
                   onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.borderColor = colors.border2; (e.currentTarget as HTMLAnchorElement).style.color = colors.white }}
                 >
-                  ↓ Scarica PDF
+                  ↓ Download PDF
                 </a>
               </div>
             </div>
