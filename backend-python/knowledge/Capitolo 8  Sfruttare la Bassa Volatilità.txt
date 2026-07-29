@@ -1,0 +1,459 @@
+8
+
+Sfruttare la Bassa Volatilità
+
+Quando abbiamo inizialmente deciso di scrivere questo libro, avevamo due obiettivi in mente. Il primo era insegnare ai trader il significato di volatilità. Dopo aver letto i primi sette capitoli di questo libro, ora dovresti avere una comprensione completa di, tra le altre cose, come funzionano i mercati azionari e delle opzioni, come utilizzare i modelli di pricing delle opzioni e, cosa più importante, i diversi modi di vedere e misurare la volatilità. Se è così, il primo obiettivo di questo libro è stato raggiunto. Il secondo scopo di questo libro è insegnare al lettore a usare la volatilità per fare trading come facciamo noi. Questo obiettivo è un po' più complesso del primo.
+
+Molti trader pensano che il tempismo sia tutto, o che la chiave per realizzare profitti sia comprare basso e vendere alto. Tuttavia, mentre il tempismo è forse il fattore più importante per il trader azionario, il trader di opzioni deve considerare una serie di altri fattori altrettanto importanti per avere successo. Ad esempio, in che modo il decadimento temporale influenzerà il valore della posizione? Inoltre, prima di avviare un'operazione su opzioni, è fondamentale pensare all'impatto che i cambiamenti della volatilità possono avere sul valore della posizione complessiva. Cosa succede se compriamo una call e la volatilità scende? E se si stabilisce un'operazione neutrale, come uno straddle, e la volatilità aumenta? Il resto di questo libro delinea strategie specifiche che insegneranno al lettore come realizzare profitti in qualsiasi ambiente di mercato. Armati di una comprensione della volatilità, dovresti essere in grado di finire gli ultimi quattro capitoli di questo libro e iniziare a far crescere il valore del tuo conto di intermediazione facendo trading sulla volatilità.
+
+Prima di spiegare come generare profitti facendo trading sulla volatilità, tuttavia, è importante che il lettore abbia una solida comprensione delle opzioni e dei rischi inerenti al trading di derivati. Ad esempio, se un'opzione appare costosa (la volatilità implicita è alta), ha senso vendere quell'opzione? La risposta è ovviamente sì. Tuttavia, semplicemente vendere un'opzione non è sempre saggio. Cioè, vendere opzioni scoperte o naked comporta un rischio estremamente elevato. Pertanto, prima di aprire un conto di intermediazione e investire denaro in opzioni, è imperativo comprendere le opzioni in modo pieno e completo. Si spera che i primi sette capitoli ti abbiano aiutato a costruire solide basi a questo riguardo.
+
+SFRUTTARE LA BASSA VOLATILITÀ
+
+Oltre a comprendere i rischi inerenti al trading di opzioni, è fondamentale capire i fattori che influenzano i prezzi delle opzioni per realizzare profitti in modo coerente. Come abbiamo imparato, la volatilità implicita è un importante determinante del premio di un'opzione. Ricorda che la volatilità implicita misura l'ammontare con cui si prevede che un'attività sottostante fluttui in un determinato periodo di tempo. Fornisce un indicatore del tipo di volatilità che i trader di opzioni si aspettano che un titolo mostri in futuro. La volatilità implicita misura anche la velocità del cambiamento relativo a un titolo o al mercato. Alcuni preferiscono pensarla come una misura della confusione del mercato. Più un mercato è confuso, maggiori sono le possibilità che un'opzione finisca in-the-money; un mercato violento si muove molto rapidamente, mentre un mercato stabile si muove lentamente. I prezzi delle opzioni riflettono la confusione o la volatilità associata a un titolo o al mercato. A parità di altre condizioni, più il mercato è violento e rapido, più costoso è il contratto di opzioni. La volatilità, la confusione e la velocità di un titolo sono fattori importanti nel determinare la valutazione dei premi delle opzioni.
+
+Come trader di volatilità, sei alla ricerca di estremi di mercato. Una volta trovati, diverse strategie sulle opzioni possono essere utilizzate per trarre vantaggio da entrambi gli scenari – che il titolo mostri livelli di volatilità bassi o alti. Questo capitolo esplorerà specificamente le strategie di trading che sono meglio posizionate per fare soldi quando la volatilità è bassa.
+
+Ci sono diversi modi per affrontare il trading di volatilità, e potresti avere le tue idee su ciò che è considerato bassa volatilità. Forse il tuo indicatore è un rapporto che confronta la volatilità implicita delle opzioni con la volatilità storica di un titolo. Questo è un modo comune per determinare cosa è alto o basso. O forse guardi le percentuali. Forse guardi semplicemente un grafico della volatilità per determinare quando le opzioni sono economiche o costose. Qualunque sia il caso, le strategie in questo capitolo funzionano meglio in un ambiente di bassa volatilità.
+
+Per comprendere e implementare le strategie per la bassa volatilità trattate in questo capitolo, è una buona idea rivedere la discussione nel Capitolo 4 riguardante il ritorno alla media (reversion to the mean). In poche parole, se la volatilità è stata insolitamente bassa per un periodo di tempo, ci aspettiamo che alla fine ritorni alla sua media e inizi a muoversi più in alto. Quindi, ti aspetti che la bassa volatilità implicita si muova più in alto nel tempo e viceversa.
+
+Quindi, iniziamo con alcune semplici operazioni che funzionano bene in situazioni di bassa volatilità e passiamo gradualmente a strategie più complesse. Parte di questo sarà una revisione delle informazioni trattate nel Capitolo 6. Ad esempio, la prima strategia – la long call – si basa sulla stessa premessa presentata in precedenza nella discussione della covered call. Allo stesso modo, la long put fa parte della strategia di protective put trattata nel Capitolo 6. Tuttavia, ogni esempio è diverso e apre la strada allo straddle – la nostra prima strategia complessa. Da lì, il lettore sarà introdotto agli spread a debito (debit spreads) e ai ratio backspread.
+
+Che Cos'è il Ritorno alla Media (Reversion to the Mean)?
+
+Come brevemente discusso nel Capitolo 4, il ritorno alla media è un concetto importante da comprendere quando si fa trading sulla volatilità. Fondamentalmente, sebbene la volatilità sia sempre in uno stato di cambiamento, alla volatilità dei titoli o degli indici può essere assegnato un valore "normale" o medio. È un valore intorno al quale la volatilità di un indice tende a concentrarsi per lunghi periodi di tempo. In statistica, la media è anche nota come "mean". Quando la volatilità si discosta notevolmente da quel range normale, c'è una tendenza a ritornare a quella media. Pertanto, se la volatilità di un titolo è bassa rispetto alla sua media su un lungo periodo di tempo, c'è una tendenza per la volatilità ad aumentare e a ritornare alla sua media. Quando la volatilità di un titolo o indice è alta rispetto alla sua media a lungo termine, è molto probabile che scenda verso la media.
+
+ACQUISTO DI OPZIONI CALL
+
+AMBIENTE RIALZISTA/BASSA VOLATILITÀ
+
+La long call è la strategia di opzioni più basilare e una delle più comunemente utilizzate. Lo scopo di questo esempio è evidenziare come i prezzi delle opzioni possono cambiare quando la volatilità sale da livelli bassi. Ricorda che le opzioni call danno all'acquirente il diritto, ma non l'obbligo, di acquistare un'attività sottostante a un prezzo predeterminato (strike price), per un periodo di tempo predeterminato. Le opzioni call sono disponibili a vari prezzi d'esercizio, che dipenderanno dal prezzo di mercato corrente dello strumento sottostante. Anche le date di scadenza variano: da un mese a più di un anno nel caso delle opzioni LEAPS (Long-Term Equity Anticipation Securities). A seconda delle prospettive del strategist per il mercato, si potrebbe scegliere di comprare (andare long) o vendere (andare short) un'opzione call.
+
+Scegliendo di comprare o andare long su un'opzione call, il strategist sta acquistando il diritto di comprare lo strumento sottostante a un prezzo d'esercizio specifico fino alla data di scadenza. Gli acquirenti di call hanno un potenziale di profitto illimitato su un rialzo del prezzo di un titolo sottostante; il rischio è limitato al premio pagato per l'opzione. Poiché il premio di una long call costa denaro, l'acquisto si traduce in una deduzione dai fondi in un conto di intermediazione pari al costo della call e appare come un debito (debit) nel tuo conto di trading. L'importo del premio, o il costo della call, rappresenta il rischio massimo che una strategia long call può sostenere. Pertanto, il rischio dell'acquisto di call è limitato al costo della call. Poiché le call possono essere acquistate a una frazione del prezzo di acquisto delle azioni, è un modo economico per sfruttare il capitale di trading al fine di partecipare a un movimento rialzista in un titolo o indice. Le opzioni call sono un'attività che si deprezza nel tempo (wasting asset), e il loro valore diminuisce man mano che si avvicinano alla scadenza.
+
+La long call è in-the-money quando il prezzo dell'attività sottostante supera il prezzo d'esercizio della call. Ad esempio, se IBM viene venduta a $85 e hai una call con strike $80, la call è in-the-money. La call $80 ti dà il diritto di acquistare IBM a $80 – un risparmio di $5 per azione. Quando una call è redditizia, il strategist può realizzare profitti in due modi: esercitando la call o chiudendo la posizione (offsetting). Esercitando una long call, il strategist diventa proprietario di 100 azioni per contratto di opzione al prezzo d'esercizio della call del titolo sottostante. Il strategist può poi vendere l'attività sottostante al prezzo di mercato corrente (più alto) per ottenere un profitto sulla differenza tra i due (prezzo corrente – strike price = profitto). Per chiudere una posizione long call mediante compensazione (offsetting), devi vendere una call con lo stesso prezzo d'esercizio e identica data di scadenza.
+
+Dopo aver acquistato un'opzione call, la maggior parte dei trader sceglie semplicemente di chiuderla (offset) a una data futura. Se prevedi un rialzo del prezzo dell'attività sottostante, non è necessario esercitare l'opzione call per lasciarti aperto a un potenziale di profitto illimitato. Il premio della call aumenterà di valore a seconda di quanto lo strumento sottostante sale oltre il prezzo d'esercizio della call. All'aumentare del prezzo dell'attività sottostante, la long call diventa più preziosa perché dà al proprietario della call il diritto di acquistare il titolo sottostante al prezzo d'esercizio più basso della call. Ecco perché vuoi andare long su un'opzione call quando ti aspetti che il prezzo del titolo salga. Teoricamente, il potenziale di profitto associato a una long call è illimitato perché non c'è limite a quanto possa salire il prezzo di un titolo.
+
+Capire che le opzioni call aumentano di valore all'aumentare del titolo o dell'indice sottostante non è sufficiente, tuttavia. Il trader di opzioni esperto deve anche capire come i cambiamenti della volatilità implicita possono influenzare la posizione. Nello specifico, acquistare opzioni call durante periodi di bassa volatilità offrirà il miglior rapporto rischio/rendimento. Diamo un'occhiata all'S&P 100 (OEX) durante diversi periodi per dimostrare questo concetto.
+
+La Figura 8.1 mostra le informazioni relative a un'opzione call OEX November 565.
+
+Riepilogo sulla Moneyness
+
+Un concetto importante da comprendere quando si negoziano opzioni è il concetto noto come moneyness. (Vedi Capitolo 5.) L'opzione call è:
+
+-   In-the-money (ITM) quando il prezzo di mercato corrente è superiore al prezzo d'esercizio.
+
+-   Out-of-the-money (OTM) quando il prezzo di mercato corrente è inferiore al prezzo d'esercizio.
+
+-   At-the-money (ATM) quando il prezzo di mercato corrente è uguale (o vicino) al prezzo d'esercizio.
+
+Generalmente, le opzioni che sono out-of-the-money non vengono mai esercitate. Inoltre, è possibile realizzare profitti anche se la call rimane OTM. Ad esempio, un trader acquista la call XYZ 55 per $250 a contratto con XYZ scambiata a $45 per azione. La settimana successiva, XYZ viene scambiata a $50 per azione e la call XYZ 55 vale $500. Il trader può chiudere la posizione (vendendo una call XYZ con lo stesso strike e la stessa scadenza) e ottenere i profitti. Realizzare un profitto sull'operazione non richiede l'esercizio dell'opzione.
+
+[PUNTO DI INSERIMENTO PER LA FIGURA 8.1 - Descrive la tabella dei dati e i grafici dell'opzione call OEX November 565, con prezzi, IV, e grafici Price & Risk. La figura mostra anche i dati della tabella: Posizione Acquistata, Num 1, OptSym OEBKM, Scadenza Nov. 01, Strike 565, Tipo Call, Entry 16.7, Bid/Ask 15.5/16.7, Model 16.2, IV 27.9%, Vol 45, OI 303, Giorni 25. Grafico con N=562.39, L=551.62, C=562.52 e data corrente 10-22-01]
+
+Posizione Num OptSym Scad. Strike Tipo Entry Bid/Ask Model IV Vol OI Giorni
+Acquistata 1 OEBKM Nov. 01 565 Call 16.7 15.5/16.7 16.2 27.9% 45 303 25
+
+Grafici Price & Risk
+
+N = 562.39, L = 551.62, C = 562.52
+
+Corrente: 10-22-01
+
+Figura 8.1 Tabella Dati e Grafici dell'Opzione Call OEX November 565 (Per gentile concessione di Optionetics.com)
+
+con 25 giorni alla scadenza. L'attività sottostante in questo esempio è un indice, non un titolo. L'informazione è stata catturata il 22 ottobre 2001. Poiché ottobre di solito non è economico durante questo periodo dell'anno. Questo era certamente il caso nel 2001. Come facciamo a saperlo? Notare dalla tabella sopra i grafici del prezzo e del rischio (a questo punto non siamo preoccupati dei grafici stessi) il costo del contratto di opzione call at-the-money era di $1,670 ($16.70 × 100 = $1,670) con 25 giorni alla scadenza. A quel prezzo, la volatilità implicita per l'opzione è del 27.9 percento. Questo non è indicativo di bassa volatilità, un fatto confermato dal grafico della volatilità nella Figura 8.2, che mostra quattro mesi di volatilità implicita per le opzioni OEX. Il break-even per una long call si calcola aggiungendo il premio al prezzo d'esercizio della call. In questo esempio, il break-even è $581.70 ($565 + $16.70), il che significa che l'operazione non inizierà a fare soldi finché l'OEX non salirà a $581.70.
+
+La Figura 8.2 mostra la volatilità implicita dell'opzione call OEX November 565. Il grafico mostra che al momento dell'acquisto della call – il 22 ottobre 2001 – la volatilità implicita di quella particolare opzione non era né all'estremo superiore né a quello inferiore.
+
+[PUNTO DI INSERIMENTO PER LA FIGURA 8.2 - Descrive il grafico della volatilità implicita OEX (IV Chart). Il grafico mostra l'andamento dell'IV per un periodo che va da luglio/agosto a ottobre 2001, con l'IV che scende da circa il 40% a circa il 28%. L'asse X mostra le date (es. 7/23, 08/13, 09/04, 10/01) e l'asse Y mostra la volatilità implicita (da 0% a 100%). Il titolo è "OEX IV Chart" e la fonte è Optionetics.com.]
+
+Figura 8.2. Grafico IV dell'OEX (Per gentile concessione di Optionetics.com)
+
+La volatilità implicita ha iniziato un graduale movimento verso il basso alla fine di settembre. Come abbiamo visto nel Capitolo 8, la volatilità implicita dell'OEX (misurata dal VIX) tende a salire quando gli investitori diventano nervosi o ansiosi riguardo allo stato del mercato.
+
+Alla fine di settembre, parte della paura e dell'incertezza causate dagli attacchi terroristici dell'11 settembre iniziò a diminuire e il mercato azionario iniziò a riprendersi. Come mostra la Figura 8.7, l'OEX fece un movimento graduale al rialzo da settembre 2001 fino a marzo 2002. Con il progredire di quella ripresa, la volatilità implicita si abbassò. Come abbiamo visto dai due esempi, dal 22 ottobre 2001 al 25 marzo 2002, la volatilità implicita scese dal 27.9 percento al 18.0 percento.
+
+Mentre l'OEX si riprendeva, il calo della volatilità implicita ha agito contro il valore delle opzioni call. Perché? Col passare del tempo, sebbene l'OEX abbia fatto un movimento graduale al rialzo, le opzioni call non si sono apprezzate tanto quanto ci si aspetterebbe. Infatti, abbiamo visto che due opzioni quasi identiche (la call OEX November 565 del 22 ottobre e la call April 570 del 25 marzo) avevano prezzi diversi a causa del forte calo della volatilità.
+
+[PUNTO DI INSERIMENTO PER LA FIGURA 8.7 - Descrive il grafico settimanale dell'OEX. Mostra l'andamento del prezzo dell'OEX da giugno 2001 ad aprile 2002. L'asse X mostra i mesi (Jun, Jul, Aug, Sep, Oct, Nov, Dec, Jan, Feb, Mar, Apr) e l'asse Y mostra il livello dell'indice (da 400 a 700). Si vede un calo a settembre 2001 seguito da una risalita graduale fino a marzo 2002. Il titolo è "S&P 100 Index" e la fonte è Stockpoint Inc./Optionetics.com.]
+
+Figura 8.7 Grafico Settimanale dell'OEX (Per gentile concessione di Optionetics.com)
+
+volatilità. Cioè, le opzioni call sull'OEX erano molto più economiche da acquistare nel marzo 2002 che nell'ottobre 2001.
+
+Lo scopo di questo esempio, quindi, è mostrare che il premio di un'opzione call è funzione della volatilità implicita in quel momento. Questo è vero per le opzioni OEX, così come per le opzioni su Microsoft, Coca-Cola, Krispy Kreme Doughnuts, e qualsiasi altro titolo o indice. Il fattore importante da considerare è che la volatilità implicita è sempre in uno stato di flusso. Acquistare una call quando la IV è bassa aumenta le probabilità che l'opzione call aumenti di valore. Quando la volatilità implicita di un'opzione call è alta, c'è una maggiore possibilità di un premio più alto.
+
+Long Call
+
+Strategia = Acquista un'opzione call.
+
+Opportunità di Mercato = Cerca un mercato rialzista in cui si prevede un rialzo al di sopra del punto di break-even.
+
+Rischio Massimo = Limitato all'importo pagato per la call.
+
+Profitto Massimo = Illimitato man mano che il prezzo dello strumento sottostante sale al di sopra del break-even.
+
+Break-even = Prezzo d'esercizio della call + premio dell'opzione call.
+
+Margine = Nessuno.
+
+ACQUISTO DI OPZIONI PUT
+
+AMBIENTE RIBASSISTA/BASSA VOLATILITÀ
+
+L'acquisto di opzioni put è simile all'acquisto di call quando si considera l'impatto della volatilità implicita sul valore delle opzioni. Ricorda che le opzioni put danno all'acquirente il diritto, ma non l'obbligo, di vendere un'attività sottostante al prezzo d'esercizio fino alla chiusura del mercato del venerdì precedente il terzo sabato del mese di scadenza. Proprio come le opzioni call, le opzioni put hanno vari prezzi d'esercizio a seconda del prezzo di mercato corrente dello strumento sottostante. Inoltre, le date di scadenza possono variare da un mese a più di un anno (opzioni LEAPS). Tuttavia, a differenza delle opzioni call, un strategist andrà long su un'opzione put in previsione che il titolo o l'indice scenda di prezzo.
+
+L'acquirente di put sta acquistando il diritto di vendere lo strumento sottostante a qualsiasi prezzo d'esercizio fino alla scadenza. Il premio dell'opzione long put apparirà come un debito (debit) nel tuo conto di trading. Il costo del premio è la perdita massima che rischi acquistando un'opzione put. A differenza della call che ha un potenziale di profitto illimitato, il profitto massimo è limitato al ribasso perché il titolo sottostante può scendere solo fino a zero.
+
+Una volta che il titolo sottostante si muove nella direzione prevista – verso il basso – il strategist può ottenere un profitto in uno dei due modi: esercitando l'opzione put o chiudendola tramite compensazione (offsetting). Se la put viene esercitata, il strategist diventerà short di 100 azioni del titolo sottostante. Se e quando il titolo sottostante scende al di sotto del prezzo d'esercizio della put, il strategist può esercitare la put per vendere allo scoperto le azioni a un prezzo più alto e poi acquistare il titolo sottostante a un prezzo più basso per coprire lo short e uscire dall'operazione (strike price – prezzo corrente = profitto).
+
+La seconda tecnica per trarre profitto da una put deriva dalla sua compensazione (offsetting). Questo è lo stesso concetto discusso in precedenza per la call. Se il prezzo del titolo sottostante scende, il corrispondente premio della put aumenta e la put può essere compensata con un profitto vendendo una put con lo stesso strike e scadenza. Teoricamente, un'opzione long put diminuirà di valore se il titolo (indice o azione) sottostante aumenta di prezzo.
+
+Le opzioni put danno al proprietario il diritto di vendere qualcosa a un prezzo specifico per un periodo di tempo fisso. Un'opzione put è:
+
+-   In-the-money (ITM) quando il prezzo d'esercizio è più alto del prezzo di mercato dell'attività sottostante.
+
+-   Out-of-the-money (OTM) quando il prezzo d'esercizio è più basso del prezzo del titolo sottostante.
+
+-   At-the-money (ATM) quando il prezzo del sottostante è uguale (o vicino) al prezzo d'esercizio.
+
+ACQUISTO DI OPZIONI PUT
+
+Proprio come abbiamo imparato con le opzioni call, acquistare put quando la volatilità implicita è bassa dà al trader un rischio complessivo minore fino alla scadenza. Quando la volatilità implicita è bassa, le opzioni put sono più economiche rispetto a quando la volatilità è alta. Ancora una volta, guardiamo una posizione sull'OEX, questa volta usando le put invece delle call per dimostrare la differenza nei rischi, nei rendimenti e nei break-even durante varie volatilità.
+
+Notare dalla Figura 8.8 che il 22 ottobre 2001, con l'S&P 100 scambiato a 562.52, la put OEX 565 ha chiuso a $19. La Figura 8.8 mostra il grafico del rischio del possesso di una di queste put. È limitato a $1,900 ($19 × 100), il costo di una put. Per calcolare il break-even, basta sottrarre il premio della put dal prezzo d'esercizio della put. In questo esempio, il break-even è $546 ($565 − $19). Inoltre, in quel momento c'erano 25 giorni alla scadenza e la volatilità implicita era al 30.7 percento. La Figura 8.9 rivela che una IV del 30.7 percento non è né alta né bassa, ma nella media dato il range recente.
+
+Ora passiamo a una posizione simile il 25 marzo 2002 (vedi Figura 8.10). In quel momento, la volatilità implicita era scesa dai livelli del 22 ottobre e, di fatto, era vicina ai minimi dell'anno. Un'opzione con caratteristiche pressoché identiche (cioè at-the-money) e tempo alla scadenza simile era molto più economica della put at-the-money di ottobre. Notare il prezzo della put ATM di marzo 02: poco più della metà della posizione del 22 ottobre.
+
+Perché l'opzione put era molto più economica nel marzo 2002 che nell'ottobre 2001? Beh, sebbene i giorni alla scadenza siano gli stessi, la volatilità implicita è scesa dal 30.7 percento al 18.9 percento. La Figura 8.11 descrive la volatilità implicita dell'OEX che scende al di sotto del 19 percento nel marzo 2002. Ecco perché queste opzioni sono diventate così economiche!
+
+[PUNTO DI INSERIMENTO PER LA FIGURA 8.8 - Descrive la tabella dei dati e i grafici per l'opzione put OEX November 565 del 22 ottobre 2001. Tabella: Posizione Acquistata, Num 1, OptSym OEBWN, Scadenza Nov 01, Strike 565, Tipo Put, Entry 19, Bid/Ask 17.7/19, Model 18.7, IV 30.7%, Vol 45, OI 181, Giorni 25. Grafici Price & Risk con annotazioni 1st day: left, 2nd day: left, 3rd day: left, 4th day: left, e il valore 562.52. Fonte: Optionetics.com.]
+
+S&P 100 Index (OEX) Option Trade
+
+  Posizione    Num   OptSym   Scad.    Strike   Tipo   Entry   Bid/Ask   Model   IV      Vol   OI    Giorni
+  ------------ ----- -------- -------- -------- ------ ------- --------- ------- ------- ----- ----- --------
+  Acquistata   1     OEBWN    Nov 01   565      Put    19      17.7/19   18.7    30.7%   45    181   25
+
+Grafici Price & Risk
+
+Figura 8.8 Tabella Dati e Grafici per l'opzione Put OEX November 565 del 22 ottobre 2001 (Per gentile concessione di Optionetics.com)
+
+[PUNTO DI INSERIMENTO PER LA FIGURA 8.9 - Descrive il grafico della volatilità implicita dell'OEX nei mesi precedenti al 22 ottobre 2001. Il grafico mostra l'andamento dell'IV da luglio a ottobre 2001, con l'IV che oscilla tra il 30% e il 40% circa. L'asse X mostra le date (es. 7/23, 08/13, 09/04, 10/01). Titolo: "Implied Volatility of OEX for Months Ending October 22, 2001". Fonte: Optionetics.com.]
+
+Figura 8.9 Volatilità Implicita dell'OEX per i Mesi che Terminano il 22 Ottobre 2001 (Per gentile concessione di Optionetics.com)
+
+Long Put
+
+Strategia = Acquista un'opzione put.
+
+Rischio Massimo = Cerca un mercato ribassista in cui si prevede un calo del prezzo dell'attività sottostante al di sotto del punto in cui potrebbe verificarsi la rottura.
+Profitto Massimo = Limitato al prezzo pagato per il premio dell'opzione put.
+Breakdown = Prezzo d'esercizio della put – premio dell'opzione put.
+Margine = Nessuno.
+
+TRADING DI BASSA VOLATILITÀ USANDO UNA STRATEGIA NON DIREZIONALE 143
+
+[PUNTO DI INSERIMENTO PER LA FIGURA 8.10 - Descrive la tabella dei dati e i grafici per l'opzione put OEX April 570. Tabella: Opzione OEBPN, Scadenza Apr 02, Strike 570, Tipo Put, Entry 9.9, Bid/Ask 9.2/9.9, Model 9.6, IV 18.9%, Vol 663, OI 3,234, Giorni 25. Grafici Price & Risk con asse X da 500 a 620 e data corrente 10:25-02. Fonte: Optionetics.com.]
+
+S&P 100 Index (OEX) Option Trade
+
+  Opzione   Num      Scad.   Strike   Tipo   Entry     Bid/Ask   Model   IV    Vol     OI   Giorni
+  --------- -------- ------- -------- ------ --------- --------- ------- ----- ------- ---- --------
+  OEBPN     Apr 02   570     Put      9.9    9.2/9.9   9.6       18.9%   663   3,234   25   
+
+Grafici Price & Risk
+
+Figura 8.10 Tabella Dati e Grafici per l'opzione Put OEX April 570 (Per gentile concessione di Optionetics.com)
+
+Osservate il calo della volatilità mentre queste opzioni scendevano al di sotto del livello del 20 percento – il livello più basso dell'anno. I prezzi delle opzioni riflettono il grafico della volatilità. Ancora una volta, questo è lo stesso concetto della call: la diminuzione della IV rende le opzioni più economiche.
+
+TRADING DI BASSA VOLATILITÀ USANDO UNA STRATEGIA NON DIREZIONALE
+
+Che si tratti di put o call long, il momento migliore per acquistare opzioni è quando sono economiche. Ad esempio, acquistare call durante periodi di bassa volatilità è un ottimo modo per essere rialzisti su un titolo a un prezzo premio basso, mentre acquistare put in bassa volatilità è anche un ottimo modo per giocare un titolo che probabilmente andrà al ribasso. Che dire di una situazione in cui il strategist si aspetta un grande movimento su un titolo, ma non è sicuro della direzione? Potresti voler andare in entrambe le direzioni acquistando ciò che viene chiamato uno straddle.
+
+Lo straddle è uno strumento popolare per creare una posizione su un titolo in cui la direzione futura è incerta. Consiste nell'acquisto simultaneo di una call e di una put allo stesso prezzo d'esercizio, con la stessa quantità di tempo alla scadenza. Se il titolo fa un grande movimento al rialzo, la call si apprezzerà e inizierà a produrre profitti. Se il titolo crolla, la put aumenterà di valore e il strategist guadagnerà sulle opzioni put. Un fattore importante da considerare, tuttavia, è la volatilità delle opzioni prima di avviare l'operazione. Diamo un'occhiata a un esempio che utilizza un titolo che era sia economico in termini di volatilità che tranquillo nei movimenti del titolo.
+
+Philip Morris (MO) è stato tra i componenti con le migliori performance del Dow Jones Industrial Average durante il 2000 e il 2001. Mentre il Dow ha subito una perdita del 12 percento in questi due anni, le azioni del colosso dei beni di consumo sono più che raddoppiate. I guadagni sono stati registrati principalmente nell'anno 2000. In effetti, il titolo ha iniziato a muoversi lateralmente dopo il grande rally e poi ha ricominciato a salire. La Figura 8.12 mostra l'andamento del prezzo di MO.
+
+Una cosa che accade comunemente quando un titolo fa un movimento graduale (non violento) al rialzo è che la volatilità implicita inizia a diminuire. La Figura 8.13 mostra il grafico della volatilità implicita per Philip Morris. Notare come, mentre questo titolo saliva, la volatilità delle opzioni scendeva. Questo apre un'opportunità per acquistare call, acquistare put o acquistare entrambe con un acquisto di straddle.
+
+Cos'è uno Straddle?
+
+Lo straddle è l'acquisto simultaneo di una put at-the-money e una call at-the-money con lo stesso prezzo d'esercizio e la stessa scadenza, sullo stesso titolo o indice. La posizione viene stabilita per un debito (debit) – una deduzione di fondi da un conto di trading – perché l'investitore sta acquistando sia una call che una put. Il rischio dell'investitore è pari al costo delle opzioni. I profitti si verificano quando il titolo o l'indice si muove al di sopra del break-even superiore o al di sotto del break-even inferiore. Pertanto, quando il titolo sottostante scende al di sotto del break-even, la put aumenta di valore a sufficienza per superare il costo della call, o viceversa. Ad esempio, se il titolo XYZ viene scambiato a un prezzo di $50 per azione e la put October 50 e la call October 50 possono essere acquistate per $2 ciascuna, il strategist può acquistare sia la put che la call per un costo (o debito) di $4. Il break-even inferiore dell'operazione si verifica se il prezzo delle azioni scende a $46 (prezzo d'esercizio meno premio netto o $50 – $4 = $46). Il break-even superiore si verifica se XYZ supera $54 (prezzo d'esercizio più premio netto o $50 + $4 = $54). A parità di altre condizioni, i profitti iniziano a realizzarsi quando il titolo si muove al di sotto di $46 o al di sopra di $54. Il strategist vuole che la call aumenti di valore abbastanza da compensare il costo della put o che la put aumenti abbastanza da coprire il costo della call. Non importa se il titolo o l'indice si muove al rialzo o al ribasso – purché si muova abbastanza in una direzione o nell'altra.
+
+Se la volatilità implicita di un titolo è bassa, quando ha senso acquistare uno straddle invece di una long put o long call? Lo straddle è appropriato quando il strategist si aspetta che il titolo faccia un grande movimento al rialzo o al ribasso, ma non è sicuro della direzione finale. La tabella dei dati e i grafici dello straddle MO sono forniti nel Long Straddle.
+
+[PUNTO DI INSERIMENTO PER LA FIGURA 8.12 - Descrive il grafico del prezzo delle azioni MO. Il grafico mostra l'andamento del prezzo di Philip Morris da metà 2000 a inizio 2002, con un netto trend rialzista e poi una fase laterale prima di riprendere a salire. Sono indicati split ed earnings. L'asse X mostra i mesi (da Apr 2000 a Apr 2002). L'asse Y mostra il prezzo. Titolo "Philip Morris Companies". Fonte: Optionetics.com.]
+
+Figura 8.12 Grafico del Prezzo delle Azioni MO (Per gentile concessione di Optionetics.com)
+
+Long Straddle
+
+Strategia = Acquista una call ATM e una put ATM con lo stesso prezzo d'esercizio e la stessa scadenza.
+
+Opportunità di Mercato = Cerca un mercato con opzioni a bassa volatilità implicita in cui si prevede un forte aumento della volatilità.
+
+Rischio Massimo = Limitato al debito netto pagato.
+
+Profitto Massimo = Illimitato al rialzo e limitato a zero al ribasso. Il profitto richiede un movimento di mercato sufficiente ma non dipende dalla direzione del mercato.
+
+Break-even Superiore = Prezzo d'esercizio ATM + debito netto pagato.
+
+Break-even Inferiore = Prezzo d'esercizio ATM – debito netto pagato.
+
+Margine = Nessuno.
+
+La Figura 8.14. Notare che il rischio si trova al centro del grafico o se Philip Morris si muove lateralmente per i prossimi 81 giorni. Se, tuttavia, Philip Morris dovesse uscire dal suo range al rialzo o al ribasso, si realizza un profitto se il trader chiude la posizione al di fuori delle due linee di break-even a $50.90 e $59.10 (il debito dell'operazione aggiunto o sottratto dai prezzi d'esercizio).
+
+Lo straddle ha maggiori probabilità di successo se acquistato quando la volatilità implicita è bassa. Ricordiamo che sia la long call che la long put traggono beneficio da livelli crescenti di volatilità implicita. Intuitivamente, quindi, ha senso che anche lo straddle tragga beneficio se la IV sale. Dopotutto, implica l'acquisto simultaneo di una put e una call. Per questo motivo, il momento migliore per acquistare uno straddle è quando la volatilità implicita è bassa perché è vero il contrario del ritorno alla media. È probabile che aumenti in futuro.
+
+[PUNTO DI INSERIMENTO PER LA FIGURA 8.13 - Descrive il grafico della volatilità implicita a 6 mesi ATM per MO. Il grafico mostra l'andamento dell'IV da novembre 2001 a marzo 2002, con una chiara tendenza al ribasso verso il 19-21%. L'asse X mostra le date (11/02, 12/03, 01/02, 01/31, 03/01). Titolo: "6 Month ATM Implied Volatility Chart". Fonte: Optionetics.com.]
+
+Figura 8.13 Grafico della Volatilità Implicita di MO (Per gentile concessione di Optionetics.com)
+
+[PUNTO DI INSERIMENTO PER LA FIGURA 8.14 - Descrive la tabella dei dati e i grafici per lo straddle MO. Tabella: Posizione Acquistata (due righe), OptSym MOFK (Call) e MORK (Put), Scadenza Jun 02, Strike 55, Entry 1.35 e 3, Bid/Ask 1.2/1.35 e 2.85/3, Model 1.2 e 2.9, IV 17.7% e 22.3%, Vol 78 e 48, OI 2,669 e 5,093, Giorni 81 per entrambi. Grafici Price & Risk con H=53.44, L=52.73, C=53.20 e annotazione "today 181 days left. Close = 53.20". Fonte: Optionetics.com.]
+
+Philip Morris Companies, Inc. (MO) Straddle
+
+  Posizione    Num   OptSym   Scad.    Strike   Tipo   Entry   Bid/Ask    Model   IV      Vol   OI      Giorni
+  ------------ ----- -------- -------- -------- ------ ------- ---------- ------- ------- ----- ------- --------
+  Acquistata   1     MOFK     Jun 02   55       Call   1.35    1.2/1.35   1.2     17.7%   78    2,669   81
+  Acquistata   1     MORK     Jun 02   55       Put    3       2.85/3     2.9     22.3%   48    5,093   81
+
+Grafici Price & Risk
+
+Figura 8.14 Tabella Dati e Grafici per lo Straddle MO (Per gentile concessione di Optionetics.com)
+
+SPREAD A DEBITO PER BASSA VOLATILITÀ
+
+Gli spread a debito sono strategie direzionali che possono anche beneficiare di un aumento della volatilità. I più comunemente utilizzati sono il bear put spread e il bull call spread. Per prima cosa, esploriamo il bear put spread utilizzando opzioni sull'iShares S&P 100 Fund. Un esempio di ETF discusso nel Capitolo 2, è progettato per essere pari a un decimo dell'indice S&P 100, o OEX. Pertanto, in questo esempio, non stiamo considerando un titolo, ma piuttosto un ETF progettato per rispecchiare la performance dell'OEX. Le opzioni per l'iShares S&P 100 Fund vengono negoziate sul Chicago Board Options Exchange con il simbolo OEF.
+
+Supponiamo che il strategist in questo caso si aspetti che l'S&P 100, e quindi l'OEF, faccia un movimento significativo al ribasso tra ora e metà ottobre. All'inizio di marzo 2002 il strategist vuole scommettere su un movimento al ribasso acquistando un'opzione put out-of-the-money (OTM). L'OEF viene scambiato vicino a $60 in questo momento, e il strategist sta considerando le put May 58, 56 e 54. Sebbene la scelta più conservativa dei tre strike, il strategist può comunque fare una scommessa abbastanza aggressiva su un declino dell'S&P 100 acquistando una put OEF May 58. In questo caso, l'opzione è out-of-the-money, e quindi il successo dell'operazione dipende dall'OEF che si muove al ribasso. Inserendo le variabili rilevanti nel modello di pricing delle opzioni Black-Scholes si otterrà una volatilità implicita per l'opzione in questione.
+
+Ecco i dettagli per il nostro esempio di operazione:
+
+-   Prezzo d'esercizio = $58
+
+-   Data di scadenza = 17 maggio 2002 (il terzo venerdì del mese di scadenza)
+
+-   Prezzo dell'attività sottostante (OEF) = $59.43 l'11 marzo
+
+-   Tasso di interesse = 5%
+
+-   Rendimento da dividendo = 1%
+
+-   Volatilità implicita = 20% circa (usando un prezzo di $1.25 per la put OEF October 58 dell'11 marzo)
+
+La Tabella 8.1 mostra le possibili variazioni di prezzo della put May 58 nel caso in cui l'OEF si muova effettivamente al ribasso come previsto. La prima colonna mostra le variazioni ipotetiche del prezzo dell'OEF. La seconda colonna mostra la variazione del prezzo dell'opzione date le varie variazioni di prezzo dell'OEF. Inoltre, la tabella mostra due possibili scenari.
+
+Strategie Direzionali vs. Non Direzionali
+
+I trader di opzioni parlano spesso di strategie "non direzionali". Cosa significa? In sostanza, la strategia realizza profitti purché il titolo o l'indice faccia un movimento significativo al rialzo o al ribasso – come l'esempio dello straddle che abbiamo appena esaminato. Quindi, per le strategie non direzionali, il bias direzionale non ha importanza. Al contrario, la long call, ad esempio, è una strategia direzionale. Realizza profitti solo quando il titolo si muove in una direzione: verso l'alto.
+
+SPREAD A DEBITO PER BASSA VOLATILITÀ
+
+Tabella 8.1 Valori Ipotetici delle Put OEF e del Bear Put Spread Assumendo Diversi Livelli di IV
+
+  Prezzo Ipotetico OEF 1 Maggio 2002   Put May 58   Put May 54   Valore Bear Put Spread   Put May 58   Put May 54   Valore Bear Put Spread
+  ------------------------------------ ------------ ------------ ------------------------ ------------ ------------ ------------------------
+  $62.50                               $0.05        $0.00        $0.04                    $0.10        $0.00        $0.10
+  60.00                                0.30         0.00         0.28                     0.45         0.02         0.43
+  57.50                                1.20         0.05         1.15                     1.42         0.15         1.27
+  55.00                                3.00         0.45         2.55                     3.20         0.70         2.47
+  47.50                                10.55        6.55         4.00                     10.55        6.55         4.00
+
+Entrambi riflettono proiezioni future e il valore della put May 58 al 1 maggio 2002, ovvero poco più di due settimane prima della scadenza. Nel primo scenario, la volatilità implicita rimane la stessa: 20 percento. Nel secondo, invece, il valore dell'opzione put OEF May 58 viene stimato assumendo che la IV aumenti dal 20 percento al 25 percento.
+
+Notare nella Tabella 8.1 che il valore dell'opzione put aumenta man mano che l'OEF si muove al ribasso. Ad esempio, quando sale a $62.50, l'opzione vale solo 5 centesimi; ma se scende a $55, vale $3. Pertanto, quando l'OEF sale di prezzo, l'opzione put perde valore; e quando l'OEF scende, l'opzione put aumenta di valore. Ancora una volta, questa è una caratteristica di base di qualsiasi opzione put. Allo stesso tempo, se l'attività sottostante rimane invariata (in questo caso, OEF uguale a $60 circa due settimane prima della scadenza), l'opzione put perde valore. Perché? Decadimento temporale (time decay). Quando l'attività sottostante rimane invariata, sia i valori delle put che delle call si deprezzano.
+
+Ora, notare la colonna di destra della tabella. La put May 58 aumenta più rapidamente di valore se si assume una volatilità del 25 percento. In altre parole, se la volatilità implicita aumenta, aumenterà anche il valore dell'opzione put. Per questo motivo, quando un titolo o un indice scende rapidamente di valore, l'opzione put può vedere un aumento dovuto al calo del prezzo del titolo o dell'indice e anche a un aumento della volatilità implicita. Ad esempio, se l'OEF rimane invariato ($60 per azione) e la IV aumenta al 25 percento, la put at-the-money perde comunque valore, ma vale 45 centesimi rispetto a 30 centesimi quando la volatilità è rimasta la stessa. Un'opzione put che sperimenta livelli crescenti di volatilità implicita manterrà un valore maggiore, anche nel caso in cui il titolo o l'indice faccia un movimento in una direzione avversa. È importante notare che quando l'opzione è deep-in-the-money, la volatilità implicita non avrà un impatto significativo sui prezzi delle opzioni. Le opzioni deep-in-the-money e deep-out-of-the-money non sono molto sensibili alle variazioni della IV.
+
+Finora, non c'è nulla di nuovo qui. Quando gli investitori si aspettano che la volatilità implicita aumenti, possono anche aspettarsi che il valore dell'opzione aumenti. Come regola generale, quando i titoli o gli indici scendono rapidamente, la volatilità implicita aumenta. Altre volte, la volatilità implicita aumenterà in previsione di un importante evento di cronaca.
+
+BEAR PUT DEBIT SPREADS
+
+Quando si implementano strategie più complesse, il strategist di opzioni deve considerare l'impatto della volatilità implicita su tutte le opzioni coinvolte nell'operazione. Ad esempio, invece di acquistare semplicemente una put, i strategist in questo esempio potrebbero preferire acquistare la put May 58 e vendere la put May 54. Questa strategia è chiamata bear put spread.
+
+Ancora una volta, assumendo che la data di inizio dell'operazione sia l'11 marzo, l'OEF viene scambiato a circa $60 per azione, e la put May 58 è quotata a $1.25, il strategist si propone di fare una scommessa ribassista sull'OEF. In questo caso, invece di acquistare semplicemente la put May 58, il strategist decide di vendere contemporaneamente la put May 54, che è quotata a un prezzo di 40 centesimi. Il costo dell'operazione, quindi, è di 85 centesimi ($1.25 per acquistare una put meno il premio di 40 centesimi ricevuto per la vendita dell'altra). Il rischio associato al bear put spread è il costo dell'operazione, in questo caso 85 centesimi (o $85). Il profitto massimo è pari alla differenza tra i due prezzi d'esercizio meno il costo dell'operazione. Per questo esempio, equivale a $315 [($58 - $54) - $85]. Il profitto massimo si ottiene quando l'OEF scende al di sotto del prezzo d'esercizio inferiore. Il break-even si calcola sottraendo il debito netto pagato dal prezzo d'esercizio della put più alta. In questo esempio, il break-even è $57.15 ($58 - $85).
+
+Per vedere il bear put spread in azione, dare un'occhiata alla Tabella 8.1. Mostra il valore dello spread date le stesse assunzioni discusse in precedenza. Nella quarta e settima colonna, vediamo lo spread aumentare di valore man mano che l'OEF si muove al ribasso. (Questo non è il profitto o la perdita, ma il valore dello spread. Per determinare il profitto o la perdita, sottrarre il costo dell'operazione – 85 centesimi – dal valore dello spread in un dato momento). Notare che, quando l'OEF scende al di sotto di $50, entrambe le opzioni sono deep-in-the-money e lo spread assume il valore massimo di $4 a contratto.
+
+Cos'è un Bear Put Spread?
+
+Il bear put spread coinvolge l'acquisto simultaneo di un'opzione put e la vendita di un'opzione put, con le stesse date di scadenza, ma diversi prezzi d'esercizio. In generale, il strategist acquisterà una put at-the-money o near-the-money e venderà una put OTM. I profitti si manifestano quando il titolo scende. Il rischio massimo è la differenza tra il prezzo pagato per l'opzione put ATM meno il premio ricevuto per la put OTM. Il guadagno massimo è pari alla differenza tra i due prezzi d'esercizio meno il costo dell'operazione. Il break-even si calcola sottraendo il debito netto pagato dal prezzo d'esercizio della put più alta.
+
+BULL CALL DEBIT SPREADS
+
+Bear Put Spread
+
+Strategia = Acquista una put con strike più alto e vendi una put con strike più basso con la stessa data di scadenza.
+
+Opportunità di Mercato = Cerca un mercato ribassista in cui prevedi una modesta diminuzione del prezzo dell'attività sottostante al di sotto del prezzo d'esercizio dell'opzione put venduta.
+
+Rischio Massimo = Limitato al debito netto pagato.
+
+Profitto Massimo = Limitato [(differenza nei prezzi d'esercizio × 100) – debito netto pagato].
+
+Break-even = Prezzo d'esercizio della put più alta – debito netto pagato.
+
+Margine = Richiesto. L'importo è soggetto alla discrezione del tuo broker – dovrebbe essere limitato al debito netto sull'operazione.
+
+Inoltre, la tabella mostra l'impatto di un aumento della volatilità sulla put October 54 e sul bear put spread. Prima di scendere in deep-in-the-money, lo spread manterrà più valore quando la volatilità aumenta. Cioè, lo spread mantiene un valore maggiore quando le opzioni sono at-the-money o near-the-money e la volatilità implicita aumenta. La posizione risulta comunque in una perdita a causa del decadimento temporale, ma non tanto quanto se la IV dovesse effettivamente scendere durante quel periodo. Pertanto, un prezzo delle azioni in aumento, il decadimento temporale e il calo della volatilità implicita possono tutti agire contro il bear put spread.
+
+BULL CALL DEBIT SPREADS
+
+Il bull call spread è simile al bear put spread, ma questa volta il strategist prevede un rialzo del titolo o dell'indice. L'operazione viene generalmente effettuata acquistando una call at-the-money o near-the-money e vendendo simultaneamente una call con un prezzo d'esercizio più alto.
+
+Cos'è un Bull Call Spread?
+
+Il bull call spread coinvolge l'acquisto simultaneo di una call con strike più basso e la vendita di una call con strike più alto con le stesse date di scadenza. In pratica, il strategist acquisterà una call at-the-money o near-the-money e venderà una call OTM. I profitti si manifestano quando il titolo sale. Il rischio massimo è la differenza tra il prezzo pagato per l'opzione ATM (più commissioni) meno il premio ricevuto per la call OTM. Il guadagno massimo è pari alla differenza tra i due prezzi d'esercizio meno il costo dell'operazione. Il break-even si calcola aggiungendo il debito netto pagato al prezzo d'esercizio della call più bassa.
+
+Spread più aggressivi possono essere avviati utilizzando due opzioni OTM. In ogni caso, l'operazione viene effettuata per un debito (debit) perché il costo dell'acquisto dell'opzione at-the-money è maggiore del premio ricevuto per la vendita dell'opzione out-of-the-money.
+
+L'impatto delle variazioni di volatilità sul bull call spread è simile all'impatto sul bear put spread. Vale a dire, se la volatilità scende, ha generalmente un impatto negativo sulla posizione complessiva. Per capire perché il calo della volatilità ha un impatto negativo sullo spread a debito (bull call spread o bear put spread), il strategist deve considerare come le variazioni di volatilità influenzeranno l'opzione at-the-money rispetto all'opzione out-of-the-money. Vega è utile a questo proposito. Consideriamo un altro esempio utilizzando l'OEF.
+
+Ancora una volta, supponiamo che l'OEF venga scambiato a circa $60 per azione l'11 marzo. Il strategist ritiene che l'indice farà un movimento al rialzo e dà un'occhiata alla catena delle opzioni OEF (vedi Figura 8.15). Invece di acquistare semplicemente una call, il trader decide di acquistare la call OEF May 62 e vendere la call OEF May 66. Il costo netto dell'operazione è di $120 ($1.95 per acquistare la call 62 al prezzo ask meno 75 centesimi per il premio ricevuto per la vendita della call 66) più commissioni. Il costo è anche il rischio massimo. Il profitto massimo si ottiene quando l'OEF supera $66 per azione, ed è pari a $280 ($66 – $62 – $1.20 = $2.80). Poiché il break-even si calcola aggiungendo il debito netto dell'operazione al prezzo d'esercizio inferiore della call acquistata, il break-even di questa operazione è $63.20 ($62 + $1.20). Proprio come con il bear put spread, in questa operazione il strategist vuole che lo spread – la differenza tra il valore dell'opzione acquistata e il valore dell'opzione venduta – si allarghi.
+
+In che modo una variazione della volatilità implicita influenzerà questa posizione? Per scoprirlo, il trader può prendere i prezzi delle opzioni, inserire questi valori nel modello di pricing Black-Scholes e calcolare il Vega per ciascuna opzione. Ricorda che il Vega è uno dei cosiddetti greci. Misura l'impatto delle variazioni della volatilità implicita sul valore di un'opzione. Un Vega di .25 suggerisce che l'opzione aumenterà di valore di 25 centesimi per ogni punto percentuale di aumento della volatilità implicita.
+
+La Tabella 8.2 mostra il Vega per le quattro opzioni call OEF incluse nella Figura 8.15.
+
+Calls
+
+  Simbolo   Bid    Ask    Strike
+  --------- ------ ------ --------------
+  OEMET     2.45   2.65   May02-60.000
+  OEMEF     1.65   1.95   May02-62.000
+  OEMED     1.15   1.35   May02-64.000
+  OEMEF     0.75   0.95   May02-66.000
+
+Figura 8.15 Catena delle Opzioni OEF
+
+BULL CALL DEBIT SPREADS
+
+153
+
+Catena delle opzioni: Le catene delle opzioni sono strumenti che i trader utilizzano per visualizzare le quotazioni dei prezzi in una serie di opzioni. Le catene sono visualizzate come una tabella, con le call su un lato e le put sull'altro. Ogni riga rappresenta un contratto diverso. Questi contratti sono prima ordinati per mese di scadenza e poi per prezzo d'esercizio. Altre variabili incluse nella tabella possono variare a seconda di dove viene ottenuta la catena delle opzioni, ma generalmente le catene includono l'ultimo prezzo, il bid, l'ask, il volume e l'open interest. Alcune catene di opzioni includono anche informazioni sulla volatilità implicita e i greci (come delta, theta e gamma). Numerosi siti web e società di intermediazione online forniscono catene di opzioni. Non molto tempo fa, erano disponibili principalmente per le società di intermediazione e altri investitori professionali. Oggi, tuttavia, gli investitori individuali possono andare su diversi siti e trovare catene di opzioni. La maggior parte delle società di intermediazione online le fornisce, così come diversi siti web relativi alle opzioni. Ad esempio, sulla home page di Optionetics.com, richiamare una catena di opzioni per un determinato titolo è semplicemente una questione di inserire il simbolo ticker nella casella delle quotazioni nella parte superiore dello schermo e selezionare "chain".
+
+Le call at-the-money e near-the-money hanno vegas pari a .10 e sono, quindi, le più sensibili alle variazioni di volatilità. La call May 66 è la più out-of-the-money e ha il vega più basso; è la meno sensibile alle variazioni della volatilità implicita.
+
+Nella Tabella 8.2, notare come il prezzo di ciascuna opzione differirà quando cambiamo le assunzioni sulla volatilità. Ad esempio, se la volatilità implicita è solo del 15 percento, la call May 62 vale solo 95 centesimi e la call May 66 vale 15 centesimi. Pertanto, il valore del bull call spread è di 80 centesimi (.95–.95–.15). Se assumiamo che la IV sia pari al 35 percento, la call May 62 vale $2.95, la call May 66 vale $1.65, e il bull call spread vale $1.30. Il fatto che la volatilità implicita abbia un impatto maggiore sull'opzione at-the-money che su quella out-of-the-money spiega perché il bear put spread e il bull call spread danno risultati migliori in uno scenario di bassa volatilità.
+
+Una nota finale sugli spread a debito in bassa volatilità: Il bull call spread è più probabile che subisca un impatto negativo da un calo della IV rispetto al bear put spread. I bull call spread hanno successo quando il titolo o l'indice sottostante si muove al rialzo. Ricordando la nostra discussione sulla volatilità implicita nel Capitolo 6, come regola generale, quando un titolo sale, la IV delle sue opzioni tende a scendere. Pertanto, stabilire un bull call spread in un ambiente di alta volatilità dipende da (1) il titolo che si muove al rialzo nel prezzo e (2) la volatilità implicita che rimane relativamente alta. Quindi, se il bull call spread viene stabilito quando la volatilità implicita è alta, ci sono due rischi principali: che il titolo non riesca a fare un movimento significativo al rialzo e che la volatilità implicita scenda.
+
+Tabella 8.2 Prezzi, Volatilità Implicita e Vega per le Opzioni Call OEF
+
+  Opzione Call OEF   Prezzo Opzione   Volatilità Implicita   Vega    Prezzo Opzione con IV = 15%   Prezzo Opzione con IV = 35%
+  ------------------ ---------------- ---------------------- ------- ----------------------------- ---------------------------------------------------------------------------------------------------------------------------------------------------
+  May02-60           $2.85            25.20%                 0.100   $1.80                         $3.85
+  May02-62           1.95             25.10%                 0.100   0.95                          2.95
+  May02-64           1.35             25.80%                 0.093   0.45                          1.65
+  May02-66           .75              26.00%                 0.075   0.15                          (valore mancante nella tabella, ma deducibile come 1.65? In realtà, il testo dice "the May 66 call is worth $1.65" con IV al 35%, quindi va bene)
+
+I bear put spread, d'altra parte, sono redditizi quando il titolo o l'indice scende, il che generalmente porta a un aumento della IV. Tuttavia, sia che si negozino bull call spread o bear put spread, il strategist è meglio avvantaggiato se comprende quale impatto avranno le variazioni della volatilità implicita sulla posizione complessiva. Vega è utile a questo proposito.
+
+RATIO BACKSPREADS IN UN AMBIENTE DI BASSA VOLATILITÀ
+
+Il call ratio backspread è un altro tipo di operazione che è meglio utilizzare quando la volatilità implicita è bassa. La strategia coinvolge l'acquisto simultaneo di opzioni call OTM.
+
+Cos'è un Call Ratio Backspread?
+
+Un call ratio backspread è costruito acquistando call con un prezzo d'esercizio più alto e vendendo un numero inferiore di call con un prezzo d'esercizio più basso senza alcun costo o a credito. Il rapporto tra le call acquistate e quelle vendute è generalmente inferiore a 0.67. I rapporti più comuni sono da 1 a 2 e da 2 a 3. Ciò significa acquistare due call compensate dalla vendita di una call o acquistare tre call contro la vendita di due. La strategia viene solitamente implementata senza costi, o talvolta per un credito, perché il premio ricevuto dalla vendita delle call è spesso uguale o superiore al prezzo pagato per le opzioni long. Il rischio in questa posizione è limitato e pari al numero di call vendute moltiplicato per la differenza nei prezzi d'esercizio per 100 meno il credito netto (o più il debito netto). Il potenziale rendimento del call ratio backspread è illimitato.
+
+opzioni e la vendita di un numero minore di call che sono at-the-money o near-the-money. Il rapporto è generalmente da 1 a 2 o da 2 a 3. Ad esempio, il trader può vendere una call at-the-money e acquistare simultaneamente due call out-of-the-money. Nel caso del call ratio backspread, il strategist si aspetta che il titolo faccia un movimento deciso al rialzo e che il lato long dell'operazione (perché ci sono più call long che short) produca profitti.
+
+Diamo un'occhiata a un esempio di call ratio backspread e consideriamo perché la bassa volatilità implicita è importante nell'implementazione dell'operazione. Supponiamo che il strategist di opzioni sia rialzista sulle azioni di AOL Time Warner (simbolo: AOL) con il titolo scambiato a circa $21 per azione. Il strategist si aspetta che il titolo faccia un movimento considerevole al rialzo e cerca di vedere quali opzioni call a lungo termine sono disponibili su AOL. È aprile 2002, e guardando la catena delle opzioni, il strategist nota le tre call AOL January 2003 con prezzi d'esercizio tra $22.50 e $27.50 (vedi Figura 8.16).
+
+Piuttosto che acquistare semplicemente una call o impostare un bull call spread, il strategist decide di creare un call ratio backspread utilizzando la call AOL January 2003 22.5 e la call AOL January 2003 27.5. In questo caso, il strategist può acquistare due call con il prezzo d'esercizio di 27.5 per $1.15 ciascuna, o $2.30. Il strategist può compensare il costo di queste due call vendendo una call January 2003 22.5 per $2.30. Il rischio dell'operazione è descritto nella Figura 8.17 ed è limitato. Nello scenario peggiore, l'AOL sale a $27.50 per azione alla scadenza, entrambe le call long scadono senza valore e la call short viene assegnata. Pertanto, in questo caso, la perdita massima è pari alla differenza tra i due prezzi d'esercizio più eventuali commissioni pagate per l'operazione. Il profitto massimo, invece, è illimitato. (Nota: In molti casi, il strategist vuole chiudere il backspread 30 giorni prima della scadenza. Dovresti sempre chiudere il contratto short entro o prima della scadenza se è in-the-money e il tuo spread non ha raggiunto il suo obiettivo muovendosi al di sopra del prezzo d'esercizio del contratto long – a meno che tu non voglia essere assegnato. Ciò significherebbe essere pronti a consegnare il titolo al prezzo d'esercizio del tuo contratto short, anche se viene scambiato a un prezzo più alto sul mercato aperto.)
+
+Un call ratio backspread come quello su AOL appena descritto funzionerà solo quando la volatilità implicita è relativamente bassa. Nell'esempio, la volatilità implicita delle opzioni call January 2003 era nell'intervallo 35-38 percento. Se la volatilità implicita fosse stata del 50 percento, la call AOL January 22.5 sarebbe stata di circa $3.40 e la call January 27.5 sarebbe valsa $1.90. Pertanto, un call ratio backspread uno-a-due non sarebbe stato possibile. In breve, i ratio backspread (che utilizzino put o call) sono disponibili solo quando la volatilità implicita è bassa.
+
+Calls
+
+  Simbolo   Bid    Ask    Op. Int.   Strike
+  --------- ------ ------ ---------- --------------
+  VANAX     2.3    2.55   2244       Jan03-22.500
+  VANAE     1.55   1.75   30693      Jan03-25.000
+  VANAY     0.95   1.15   1816       Jan03-27.500
+
+Figura 8.16 LEAPS AOL January 2003 del 12 Aprile 2002
+
+[PUNTO DI INSERIMENTO PER LA FIGURA 8.17 - Descrive il grafico del rischio per il call ratio backspread AOL. Il grafico mostra il profitto/perdita sull'asse Y e il prezzo del titolo sull'asse X (da 20 a 30). Sono mostrate 4 linee: 1. Today: 280 days left, 2. 186 days left, 3. 93 days left, 4. expiration. Close= 20.10. La forma del grafico mostra una perdita limitata nella zona centrale e profitti potenziali al rialzo, mentre al ribasso la perdita è zero o quasi. Fonte: Optionetics.com.]
+
+Figura 8.17 Call Ratio Backspread su AOL (Per gentile concessione di Optionetics.com)
+
+Il vantaggio del call ratio backspread rispetto a molte altre strategie è che non è sempre necessario che il titolo si muova al rialzo per fare soldi. Come abbiamo visto nell'esempio AOL, il rischio al ribasso per l'operazione era virtualmente zero. In effetti, le azioni di AOL Time Warner sono crollate nel corso del 2001 e del 2002. Pertanto, gli azionisti e gli acquirenti di call hanno subito perdite significative durante quel periodo. Tuttavia, un call ratio backspread non avrebbe comportato perdite significative. Il rischio da un movimento al ribasso brusco in un call ratio backspread ben pianificato è virtualmente zero. In effetti, in alcuni casi, i call ratio backspread possono essere stabiliti per crediti. Pertanto, anche se il strategist è rialzista su un titolo – che poi crolla come ha fatto AOL – le call scadono senza valore e il strategist mantiene il credito. I ratio backspread offrono ai strategist di opzioni un modo per fare soldi indipendentemente dalla direzione del mercato.
+
+PUT RATIO BACKSPREADS
+
+Il put ratio backspread è simile al call ratio backspread. Tuttavia, come avrai intuito, il put ratio backspread non utilizza le call. Invece, l'operazione viene costruita vendendo put con prezzi d'esercizio più alti e acquistando un numero maggiore di put con un prezzo d'esercizio più basso.
+
+Call Ratio Backspread
+
+Strategia = Vendi call con strike più basso e acquista un numero maggiore di call con strike più alto (il rapporto deve essere inferiore a 0.67).
+
+Opportunità di Mercato = Cerca un mercato in cui prevedi un aumento del prezzo con volatilità crescente. L'operazione dovrebbe essere effettuata come operazione a credito o a pari.
+
+Rischio Massimo = Limitato [(# call short × differenza nei prezzi d'esercizio) × 100 – credito netto o + debito netto].
+
+Profitto Massimo = Illimitato al rialzo oltre il break-even; al ribasso, limitato al credito netto (se presente).
+
+Break-even Superiore = Prezzo d'esercizio della call long + [(differenza nei prezzi d'esercizio × # call short) – (debito netto) o + credito netto)/(# call long – # call short)].
+
+Break-even Inferiore = Se debito netto, non c'è break-even inferiore; se credito netto, allora break-even inferiore = prezzo d'esercizio della call short + [(credito netto)/# call short].
+
+Margine = Richiesto. L'importo è soggetto alla discrezione del tuo broker.
+
+Proprio come con il call ratio backspread, il rapporto tra le put vendute e le put acquistate è generalmente da 1 a 2 o da 2 a 3.
+
+Consideriamo un esempio di put ratio backspread utilizzando International Flavors and Fragrances (simbolo: IFF). Il 19 aprile 2002, con IFF scambiata a $36 per azione, il strategist di opzioni richiama una catena di opzioni per il titolo e vede le put November incluse nella Figura 8.18. Credendo che il titolo sia destinato a fare un movimento deciso al ribasso tra aprile e la fine dell'anno, il strategist vuole stabilire un put ratio backspread.
+
+Cos'è un Put Ratio Backspread?
+
+Un put ratio backspread è costruito acquistando put e vendendo un numero inferiore di put con un prezzo d'esercizio più alto senza alcun costo o a credito. Il rapporto tra le put acquistate e quelle vendute è generalmente inferiore a 0.67. I rapporti più comuni sono da 1 a 2 e da 2 a 3. Ciò significa vendere una put compensata dall'acquisto di due put o vendere due contro l'acquisto di tre put. La strategia viene solitamente implementata senza costi, o talvolta per un credito, perché il premio ricevuto dalla vendita delle put è spesso uguale o superiore al prezzo pagato per le opzioni long. Il rischio in questa posizione è limitato e pari al numero di put vendute moltiplicato per la differenza nei prezzi d'esercizio più il credito netto (o meno il debito netto). Il potenziale rendimento del put ratio backspread è limitato al prezzo delle azioni che va a zero.
+
+Di conseguenza, viene creato un put ratio backspread utilizzando la put IFF November 35 e due put IFF November 30. La put con il prezzo d'esercizio più alto viene venduta per $2.30, e le due put con il prezzo d'esercizio più basso vengono acquistate per $1.80 (90 centesimi per due). L'operazione non costa nulla. In effetti, il strategist riceve un credito pari alla differenza tra il premio ricevuto per la vendita dell'opzione put e il costo delle opzioni put long. In questo caso, il credito è pari a 50 centesimi ($2.30 meno $1.80).
+
+Il grafico del rischio per il put ratio backspread è mostrato nella Figura 8.19. Notare che la perdita massima si verifica se IFF viene scambiata a $30 per azione alla scadenza. Pertanto, il rischio massimo è pari al numero di put short moltiplicato per la differenza tra i due prezzi d'esercizio per 100 meno il credito ricevuto (1 × $5 − $50 = $450).
+
+[PUNTO DI INSERIMENTO PER LA FIGURA 8.18 - Descrive la tabella della catena delle opzioni per IFF. Tabella con colonne: Puts, Symbol, Bid, Ask, Op. Int. Righe: IFEWE, Bid 0.65, Ask 0.9, Op.Int. 0, Strike Nov02-30.000; IFEWQ, Bid 2.3, Ask 2.65, Op.Int. 200, Strike Nov02-35.000; IFEWH, Bid 5.1, Ask 5.5, Op.Int. 0, Strike Nov02-40.000. Fonte: dati di esempio.]
+
+  Puts      Bid    Ask    Op. Int.   
+  --------- ------ ------ ---------- --------------
+  Simbolo                            
+  IFEWE     0.65   0.9    0          Nov02-30.000
+  IFEWQ     2.3    2.65   200        Nov02-35.000
+  IFEWH     5.1    5.5    0          Nov02-40.000
+
+Figura 8.18 Catena delle Opzioni per IFF il 19 Aprile 2002
+
+[PUNTO DI INSERIMENTO PER LA FIGURA 8.19 - Descrive il grafico del rischio per il put ratio backspread su IFF. Il grafico mostra il profitto/perdita sull'asse Y e il prezzo del titolo sull'asse X (da 20 a 50). Sono mostrate 4 linee: 1 today: 211 days left, 2 140 days left, 3 70 days left, 4 expiration. Close= 35.62. La forma del grafico mostra una perdita limitata nella zona centrale e profitti potenziali al ribasso (verso zero), mentre al rialzo il profitto è limitato al credito netto. Fonte: Optionetics.com.]
+
+Figura 8.19 Put Ratio Backspread su IFF (Per gentile concessione di Optionetics.com)
+
+Put Ratio Backspread
+
+Strategia = Vendi put con strike più alto e acquista un numero maggiore di put con strike più basso con un rapporto inferiore a 2 a 3.
+
+Opportunità di Mercato = Cerca un mercato in cui prevedi un calo del prezzo con aumento della volatilità. Effettua come credito o a pari.
+
+Rischio Massimo = Limitato (# put short × differenza nei prezzi d'esercizio × 100) – credito netto o + debito netto.
+
+Profitto Massimo = Illimitato al ribasso al di sotto del break-even. Limitato al rialzo al credito netto, se presente.
+
+Break-even Superiore = Se debito netto, allora nessun break-even superiore; se credito netto, allora break-even = prezzo d'esercizio della put short – (credito netto)/# di put short.
+
+Break-even Inferiore = Prezzo d'esercizio della put long – [(# put short × differenza negli strike) – (credito netto) o + (debito netto)]/(# put long – # put short).
+
+Margine = Richiesto. L'importo è soggetto alla discrezione del tuo broker.
+
+CONCLUSIONE
+
+Oltre a comprendere l'impatto della volatilità implicita sulle posizioni in opzioni, la maggior parte dei trader di successo sviluppa un repertorio di diverse strategie di trading. Diverse sono state introdotte qui. La long call e la long put sono scommesse direzionali che beneficiano anche di livelli crescenti di IV. Lo straddle è un esempio di strategia non direzionale che può far guadagnare denaro sia che il titolo si muova al rialzo che al ribasso. È meglio acquistare straddle quando la volatilità implicita è bassa. Il bull call spread e il bear put spread sono esempi di spread a debito e sono scommesse direzionali sul titolo. Il calo della volatilità implicita ha generalmente un impatto negativo sui bull call e bear put spread. L'ultima strategia trattata in questo capitolo è il ratio backspread, che può essere stabilito senza costi o a credito. L'ingresso in un call o put ratio backspread richiede bassi livelli di volatilità implicita.
+
+Questo conclude la nostra discussione sulle strategie di opzioni per bassa volatilità implicita. Incoraggiamo i lettori a rifletterci sopra e a cercare esempi in tempo reale su cui fare trading simulato (paper trading) prima di rischiare denaro reale. Guarda gli attuali prezzi delle opzioni sul mercato e cerca titoli con bassa volatilità implicita utilizzando il software di ranking Optionetics.com Platinum. Assicurati di utilizzare gli strumenti discussi nel Capitolo 3 come le bande di Bollinger, l'ATR e la volatilità statistica per cercare titoli che potrebbero presto fare un movimento esplosivo al rialzo o al ribasso. Fai previsioni su cosa accadrà alla volatilità implicita in futuro e verifica se le tue stime si rivelano accurate. Inoltre, un modello per il trading simulato per ciascuna di queste strategie può essere trovato nell'Appendice G. Con il tempo, alcune strategie sembreranno adattarsi al tuo stile di trading più di altre. Forse nessuna delle strategie per bassa volatilità ha senso per te. Se è così, non preoccuparti. Il prossimo capitolo esplora le strategie per alta volatilità.

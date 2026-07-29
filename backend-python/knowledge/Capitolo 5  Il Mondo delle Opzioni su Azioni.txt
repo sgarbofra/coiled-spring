@@ -1,0 +1,362 @@
+Capitolo 5: Il Mondo delle Opzioni su Azioni
+
+Se sei seriamente intenzionato a imparare a negoziare la volatilità, è assolutamente indispensabile sviluppare una conoscenza approfondita del mercato delle opzioni. La prima parte di questo capitolo, quindi, è un corso di aggiornamento sulle opzioni. Coloro che hanno già una conoscenza delle opzioni su azioni, delle opzioni su indici e di altri derivati potrebbero semplicemente voler scorrere questo capitolo. Ma ricorda: una comprensione di base delle opzioni è essenziale per il tuo successo. Qual è la differenza tra un'opzione put e una call? Come si trova una catena di opzioni? Dove vengono negoziate le opzioni? Cosa comporta l'acquisto e la vendita di un'opzione? Come vengono creati gli spread sulle opzioni e perché? E, cosa più importante, come vengono determinati i prezzi delle opzioni?
+
+Avendo negoziato vari tipi di investimenti nel corso degli anni, ho scoperto che le opzioni su azioni e su indici offrono il massimo grado di versatilità. Ad esempio, è possibile creare strategie per fare praticamente di tutto, dal limitare il rischio all'intraprendere speculazioni audaci. Inoltre, le opzioni possono essere personalizzate per creare scenari con ricompense estremamente elevate ma con un rischio limitato di perdite di capitale. Considera alcune delle situazioni che uno stratega delle opzioni può creare:
+
+-   Generare un flusso di reddito.
+
+-   Proteggere una posizione azionaria esistente.
+
+-   Speculare sul movimento al rialzo o al ribasso di un'azione.
+
+-   Posizionare un'operazione per trarre profitto da un'ampia oscillazione di un'azione, indipendentemente dalla direzione del mercato.
+
+-   Trarre profitto da un movimento laterale di un'azione.
+
+Come le azioni, le opzioni vengono negoziate in borsa e possono essere acquistate e vendute. A differenza delle azioni, tuttavia, i prezzi delle opzioni derivano da una varietà di fattori, e uno dei più importanti è la volatilità implicita (IV). Fino a questo punto, la discussione sulla volatilità si è concentrata su misure storiche. Come abbiamo visto nei capitoli precedenti, la volatilità storica è una misura dei prezzi delle azioni che sono esistiti in passato in un determinato periodo di tempo. L'operatore di opzioni, tuttavia, è interessato non solo ai livelli generali di volatilità che esistevano in passato, ma, cosa più importante, al livello di volatilità che esisterà in futuro. Non c'è, ovviamente, modo di saperlo con certezza, ma gli strateghi delle opzioni più esperti guardano costantemente avanti e tentano di valutare quale sarà la volatilità futura di un'azione o di un indice.
+
+Le opzioni forniscono un flusso costante di informazioni sulla volatilità. In quanto derivati, le opzioni derivano il loro valore dal prezzo di un altro asset. Ad esempio, le opzioni su AOL sono una funzione, o sono derivate, dal prezzo delle azioni di AOL Time Warner. La volatilità di quell'asset, in questo caso le azioni AOL, è un fattore importante nel determinare il prezzo dell'opzione. In breve, il prezzo di un'opzione deriva da un altro asset, non solo dal prezzo di quell'azione o indice, ma anche dalla sua volatilità. I prezzi delle opzioni su un'azione ad alta volatilità saranno più alti di quelli dell'opzione equivalente su un'azione a bassa volatilità (con lo stesso prezzo). In conclusione, il prezzo dell'opzione in un dato momento implica un livello di volatilità per l'asset dal quale deriva il suo valore.
+
+Comprendere le Opzioni su Azioni
+
+Prima di addentrarci nella discussione sulla volatilità implicita, è opportuno parlare delle opzioni. Come già accennato, le opzioni sono tra i veicoli di investimento più versatili ed entusiasmanti disponibili oggi per il trading. Sfortunatamente, a volte sembra che abbiano ricevuto una cattiva reputazione. A causa di alcuni disastri di alto profilo derivanti da operazioni su opzioni con tempistiche sfavorevoli, molti investitori associano le opzioni ad alto rischio e trading speculativo. Eppure nulla potrebbe essere più lontano dalla verità. Sebbene ci siano momenti in cui le opzioni vengono utilizzate puramente per scopi speculativi, i trader sofisticati le usano anche per creare interessanti scenari di rischio e rendimento. In effetti, nei capitoli successivi ti mostrerò come sviluppare strategie con il potenziale per profitti illimitati, ma praticamente senza alcun rischio di perdita di capitale.
+
+Ma prima di tutto, cos'è un'opzione? Al di fuori della finanza, un'opzione è semplicemente una scelta. Ad esempio, quando si acquista un'auto nuova, si può avere l'opzione dell'aria condizionata, dei sedili in pelle, del tetto apribile e di altre caratteristiche. Quando si ha a che fare con strumenti finanziari, le opzioni ti danno anche una scelta. Ad esempio, un'azione che possiedi può essere protetta da un movimento al ribasso o può fornire leva finanziaria in caso di un forte movimento al rialzo. Le opzioni possono anche essere utilizzate per offrire opportunità di profitto indipendentemente dal fatto che l'azione o l'indice si muova in una direzione o nell'altra. Gli investitori esperti utilizzano le opzioni per creare un flusso di reddito costante in un'ampia varietà di mercati e scenari di mercato.
+
+Imparare a trarre profitto nell'entusiasmante mondo del trading di opzioni richiede una conoscenza di base delle opzioni e del mercato delle opzioni, nonché delle varie strategie di opzioni che possono essere impiegate. Sebbene ci sia un numero apparentemente infinito di cose da imparare e capire relative alle opzioni, non è necessario sapere tutto. Ma è importante rimanere sempre aperti a imparare di più man mano che si procede lungo la curva di apprendimento. Negozio opzioni da 15 anni e scopro ancora di imparare nuove tecniche e di integrare informazioni innovative.
+
+Sebbene le opzioni nei mercati finanziari esistano da diversi decenni, il trading formalizzato esiste solo da circa tre decenni. Prima dei primi anni '70, il trading di opzioni era relativamente disorganizzato. Nel 1973, tuttavia, il Chicago Board Options Exchange (CBOE) ha formalizzato il trading dei contratti di opzione. Da allora, oltre al CBOE, altre quattro borse hanno iniziato a quotare opzioni. La proliferazione delle opzioni ha portato a un mercato vivace che offre agli investitori una miriade di scelte quando sviluppano strategie di investimento.
+
+I Contratti di Opzione
+
+Le opzioni sono create da un accordo finanziario tra due parti. È un contratto con termini specifici e precisi. Un'opzione dà al trader il diritto, ma non l'obbligo, di acquistare (call) o vendere (put) un'azione o un indice a un prezzo prestabilito specifico durante un periodo di tempo specificato. L'azione, o l'indice, è noto come titolo sottostante. Ad esempio, le opzioni per acquistare o vendere azioni di International Business Machines (IBM) hanno IBM come attività sottostante. In altre parole, il valore dell'opzione deriva dal prezzo delle azioni IBM.
+
+Le opzioni rientrano in una di due categorie: put e call. L'opzione call dà al proprietario, o acquirente, il diritto, ma non l'obbligo, di acquistare il titolo sottostante a un prezzo specifico durante un periodo di tempo specifico. Il contratto di opzione specifica il prezzo, noto come prezzo d'esercizio (strike price), al quale l'azione può essere acquistata, e una data fissa, chiamata data di scadenza (expiration date), entro la quale la transazione deve aver luogo. Un'opzione put dà all'acquirente il diritto di vendere un'azione specifica (attività sottostante) a un prezzo specifico per un periodo di tempo predeterminato. Quando le put e le call vengono negoziate in una delle borse valori, vengono definite opzioni quotate (listed options), che, come già accennato, esistono solo dai primi anni '70. Questo libro tratta esclusivamente di opzioni quotate.
+
+I contratti di opzione vengono creati solo attraverso l'acquisto e la vendita: per ogni acquirente di un'opzione, c'è un venditore. Un venditore è anche noto come "scrittore" (writer). Lo scrittore dell'opzione riceve un pagamento, o premio (premium), dall'acquirente dell'opzione. In cambio, il venditore concede all'acquirente, o proprietario, determinati diritti. Lo scrittore di un'opzione call dà all'acquirente il diritto, ma non l'obbligo, di acquistare, o chiamare (call), l'azione a un prezzo specificato durante un periodo di tempo specifico. Il venditore di un'opzione put dà al proprietario il diritto, ma non l'obbligo, di vendere l'attività sottostante a un prezzo specifico durante un periodo di tempo specificato. In altre parole, lo scrittore della call si impegna a consegnare le azioni sottostanti al proprietario dell'opzione al prezzo d'esercizio se il proprietario designato esercita la call; lo scrittore della put si impegna ad acquistare le azioni sottostanti dal proprietario dell'opzione al prezzo d'esercizio se il proprietario designato esercita la put.
+
+Pertanto, qualsiasi contratto di opzione può essere discusso in termini di quattro specifiche:
+
+1.  Il tipo: put o call.
+
+2.  L'azione o indice sottostante: ad esempio, IBM o QQQ.
+
+3.  Il prezzo d'esercizio (strike price).
+
+4.  La data di scadenza (expiration date).
+
+Nel gergo delle opzioni, un'opzione è descritta in termini di queste quattro variabili. Ad esempio, la put IBM December 90 dà al proprietario il diritto di vendere le azioni IBM a $90 fino al terzo venerdì di dicembre. La call IBM December 90 dà all'acquirente il diritto di acquistare IBM a $90 fino al terzo venerdì di dicembre. (La data di scadenza è sempre il venerdì prima del terzo sabato del mese di scadenza).
+
+Per decidere quali mesi di scadenza utilizzare, devi sapere quali mesi sono disponibili. Tutte le opzioni su azioni hanno mesi di scadenza disponibili per il mese corrente e il mese successivo. Quando le opzioni del mese frontale scadono, le opzioni del mese successivo diventano il mese frontale e le opzioni del mese successivo diventano disponibili, e così via. Oltre ai mesi frontali e seguenti, a ogni azione viene assegnato uno dei tre cicli trimestrali: ciclo 1, ciclo 2 e ciclo 3.
+
+-   Ciclo 1: Gennaio, Aprile, Luglio, Ottobre.
+
+-   Ciclo 2: Febbraio, Maggio, Agosto, Novembre.
+
+-   Ciclo 3: Marzo, Giugno, Settembre, Dicembre.
+
+I mesi di scadenza generalmente non esistono oltre i nove mesi, ad eccezione di un tipo di opzione nota come long-term equity anticipation security (LEAPS, discussa in seguito). Gli acquirenti di opzioni non sono obbligati a detenere l'opzione fino alla scadenza. In alternativa, l'opzione può essere venduta al prezzo corrente di mercato. In altre parole, una volta acquistata, non c'è alcun obbligo di detenere un'opzione fino alla scadenza.
+
+Scadenza e Time Decay
+
+È fondamentale ricordare che un'opzione ha una durata di vita limitata. Ogni contratto di opzione è valido fino a un determinato mese e anno. Se acquisti un'opzione call su un'azione, puoi esercitare il tuo diritto di acquistare 100 azioni del titolo sottostante in qualsiasi momento fino al venerdì prima del terzo sabato del mese di scadenza dell'opzione. Se non eserciti un'opzione o non la vendi a un altro acquirente prima della sua scadenza, l'opzione scade senza valore e non hai guadagnato nulla per il premio che hai pagato. Fine del gioco. Poiché le opzioni sono contratti con una data di scadenza fissa, il loro valore diminuisce nel tempo. Questo fenomeno è noto come "time decay" (decadimento temporale) e le opzioni sono spesso definite "attività deprezzabili" (wasting assets). Con il passare del tempo, il loro valore diminuirà. In effetti, molte opzioni scadono senza valore. Questa è la differenza principale tra azioni e opzioni: a differenza delle azioni, le opzioni hanno una scadenza. Quando acquisti opzioni, paghi denaro e il time decay non è dalla tua parte. Quando vendi opzioni, ricevi un credito e il time decay è dalla tua parte.
+
+Esercizio e Assegnazione: Il proprietario dell'opzione può esercitare il diritto concesso dai termini del contratto di opzione, acquistando (call) o vendendo (put) il titolo. Lo scrittore, o venditore, dell'opzione può essere assegnato (gli viene "chiamata" o "messa" l'azione) in base ai termini del contratto fino alla scadenza dell'opzione. Per esercitare un'opzione, il proprietario istruirà il proprio broker a farlo. Quando viene assegnato, la società di intermediazione notificherà il cliente, il quale dovrà quindi vendere le azioni (nel caso di una call) o acquistare le azioni (nel caso di una put) al prezzo d'esercizio dell'opzione. Se la società di intermediazione comunica al cliente che è stato assegnato, è troppo tardi per cercare di vendere l'opzione sul mercato. Deve quindi rispettare i termini del contratto di opzione. Le probabilità di assegnazione aumentano con l'avvicinarsi della scadenza. Come regola generale, le opzioni che sono in-the-money (in the money) con poco o nessun tempo rimanente fino alla scadenza hanno le maggiori probabilità di essere assegnate.
+
+Opzioni in Stile Americano vs. Europeo: Negli Stati Uniti, le opzioni su azioni regolano in stile americano, il che significa che l'esercizio può avvenire in qualsiasi momento prima della scadenza. Le opzioni in stile europeo, tuttavia, possono essere esercitate solo alla scadenza (il venerdì prima del terzo sabato del mese di scadenza). La maggior parte delle opzioni su indici regola in stile europeo.
+
+Time Decay: Parte del premio pagato per un'opzione è noto come valore temporale (time value), e questo importo non è altro che un pagamento al venditore dell'opzione per impegnare il titolo per il periodo di tempo richiesto: maggiore è il tempo fino alla scadenza, maggiore è il premio. Questo valore temporale decadrà, o scomparirà, man mano che l'opzione si avvicina alla data di scadenza.
+
+Moneyness (Condizione di Moneyness)
+
+Quando è meglio vendere un'opzione, piuttosto che tenerla fino alla scadenza? Per prendere questa decisione, i trader spesso guardano alla "moneyness" di un'opzione, che fornisce informazioni importanti sul valore di un'opzione e sulle probabilità che quell'opzione mantenga valore alla scadenza. La moneyness è espressa in termini di opzioni in-the-money (ITM), at-the-money (ATM) o out-of-the-money (OTM). Descrive la relazione tra il prezzo di un'attività sottostante e il prezzo d'esercizio di un'opzione su quella stessa attività sottostante.
+
+Determinare la Moneyness
+
+-   Opzioni Call:
+
+    -   In-the-Money (ITM): Un'opzione call è ITM quando il prezzo d'esercizio è inferiore al prezzo dell'azione sottostante. Ad esempio, se l'azione XYZ viene scambiata a $55, la call XYZ December 50 (strike 50) è ITM di $5 (prezzo dell'azione $55 - prezzo d'esercizio 50). È in-the-money perché la call 50 dà all'acquirente il diritto di acquistare XYZ a $50, un risparmio di $5 per azione. La differenza tra il prezzo d'esercizio e il prezzo dell'attività sottostante è nota come valore intrinseco.
+
+        -   Opzione Call: Prezzo Strike < Prezzo Azione = Opzione ITM (Valore Intrinseco + Valore Temporale)
+
+    -   At-the-Money (ATM): Un'opzione call è ATM quando il prezzo d'esercizio è uguale al prezzo dell'azione sottostante. Ad esempio, se l'azione XYZ è scambiata a $50, la call XYZ December 50 è ATM. Un'opzione ATM ha solo valore temporale.
+
+        -   Opzione Call: Prezzo Strike = Prezzo Azione = Opzione ATM (Solo Valore Temporale)
+
+    -   Out-of-the-Money (OTM): Un'opzione call è OTM quando il prezzo d'esercizio è superiore al prezzo dell'azione sottostante. Ad esempio, se XYZ è scambiata a $47, la call XYZ December 50 è OTM. Un'opzione OTM non ha valore intrinseco ed è composta esclusivamente da valore temporale.
+
+        -   Opzione Call: Prezzo Strike > Prezzo Azione = Opzione OTM (Solo Valore Temporale)
+
+-   Opzioni Put: Per le put, la relazione è opposta.
+
+    -   In-the-Money (ITM): Un'opzione put è ITM quando il prezzo d'esercizio è superiore al prezzo dell'azione sottostante. Ad esempio, se XYZ è scambiata a $45, la put XYZ December 50 è ITM di $5 (prezzo d'esercizio 50 - prezzo azione $45).
+
+        -   Opzione Put: Prezzo Strike > Prezzo Azione = Opzione ITM (Valore Intrinseco + Valore Temporale)
+
+    -   At-the-Money (ATM): Un'opzione put è ATM quando il prezzo d'esercizio è uguale al prezzo dell'azione sottostante.
+
+        -   Opzione Put: Prezzo Strike = Prezzo Azione = Opzione ATM (Solo Valore Temporale)
+
+    -   Out-of-the-Money (OTM): Un'opzione put è OTM quando il prezzo d'esercizio è inferiore al prezzo dell'azione sottostante.
+
+        -   Opzione Put: Prezzo Strike < Prezzo Azione = Opzione OTM (Solo Valore Temporale)
+
+Riassunto della Moneyness:
+
+-   Call ITM: Strike < Prezzo Azione. Ha valore intrinseco + valore temporale.
+
+-   Call ATM: Strike = Prezzo Azione. Ha solo valore temporale.
+
+-   Call OTM: Strike > Prezzo Azione. Ha solo valore temporale.
+
+-   Put ITM: Strike > Prezzo Azione. Ha valore intrinseco + valore temporale.
+
+-   Put ATM: Strike = Prezzo Azione. Ha solo valore temporale.
+
+-   Put OTM: Strike < Prezzo Azione. Ha solo valore temporale.
+
+Sapere se un'opzione è ITM, ATM o OTM ti aiuterà a determinare se è probabile che l'opzione sia redditizia alla scadenza. Vicino alla scadenza, un'opzione che è ITM avrà maggiori possibilità di essere redditizia. Ad esempio, supponiamo che tu abbia acquistato azioni XYZ a $50 e venduto una call December 50 (cioè, una covered call su XYZ utilizzando una call ATM). Se alla scadenza (il terzo venerdì di dicembre) l'azione è salita a $55, la call ha un valore intrinseco di $5. È probabile che venga esercitata e le azioni ti verranno "chiamate" a $50. L'esercizio è praticamente certo quando un'opzione è ITM alla scadenza. Infatti, l'Options Clearing Corporation (OCC) esercita automaticamente qualsiasi opzione che ha un valore intrinseco di tre quarti di punto o più alla scadenza, che il titolare dell'opzione lo richieda o meno.
+
+Cosa succede alle opzioni ITM prima della scadenza? Quando c'è un considerevole lasso di tempo prima della scadenza dell'opzione, le probabilità che un'opzione ITM venga esercitata sono minori. Il motivo per cui un'opzione con valore intrinseco probabilmente non verrà esercitata prima della scadenza è dovuto al fatto che l'opzione ha anche un diverso tipo di valore: il valore temporale. Il valore temporale di una call ITM è calcolato come:
+
+Valore temporale della Call = Prezzo dell’opzione Call + Strike − Prezzo dell’azioneValore temporale della Call=Prezzo dell’opzione Call+Strike−Prezzo dell’azione
+
+che è uguale a:
+
+Valore temporale della Call = Prezzo dell’opzione Call − Valore intrinsecoValore temporale della Call=Prezzo dell’opzione Call−Valore intrinseco
+
+Maggiore è l'importo del valore temporale nell'opzione, minore è la probabilità che l'opzione venga esercitata. Ma il valore temporale diminuisce con il passare del tempo. Alla scadenza, il valore temporale sarà pari a zero. In quel momento, se non c'è valore intrinseco (cioè, l'opzione non è ITM), diventa senza valore e non verrà esercitata. Pertanto, le probabilità di esercizio aumentano con (1) l'opzione che diventa ITM e (2) il valore temporale dell'opzione che diminuisce.
+
+Esempio di Calcolo del Valore Intrinseco e Temporale
+
+Calcoliamo il valore intrinseco e il valore temporale di un'opzione call utilizzando il prezzo dell'opzione disponibile nel seguente esempio per l'azione XYZ.
+
+-   Prezzo Azione XYZ = $68
+
+-   Prezzo dell'Opzione Call = $9.75
+
+-   Prezzo d'Esercizio (Strike) = $60
+
+-   Giorni alla Scadenza = 45
+
+1.  Valore Intrinseco = Prezzo dell'azione - Prezzo d'esercizio
+    Valore Intrinseco = $68 - $60 = $8.00
+
+2.  Valore Temporale = Prezzo dell'opzione Call - Valore Intrinseco
+    Valore Temporale = $9.75 - $8.00 = $1.75
+
+Nell'esempio XYZ, l'opzione con strike $60 era ITM con un valore intrinseco di $8. Il valore temporale derivato dall'esempio era di $1.75. Con l'avvicinarsi del giorno di scadenza (solo 45 giorni), il valore temporale evapora.
+
+Un'opzione OTM diventa più economica man mano che ci si allontana dall'essere ITM. Questo perché un'opzione OTM consiste esclusivamente di valore temporale; più un'opzione è OTM, minore è la probabilità che si muova in ITM entro la scadenza. Se l'opzione rimane OTM alla scadenza, l'opzione scade senza valore. Molti trader inesperti vedono le opzioni OTM come grandi opportunità a causa dei loro prezzi economici. Tuttavia, la probabilità che un'opzione estremamente OTM diventi redditizia è piuttosto ridotta. Quanto più una call o una put è profondamente ITM, tanto minore è il valore temporale e maggiore è il valore intrinseco dell'opzione. Poiché si paga meno per il tempo, il premio di un'opzione ITM si muove in modo più simile al prezzo dell'attività sottostante. Questo è anche indicato come il delta di un'opzione. Il delta è l'importo di cui cambia il prezzo di un'opzione per ogni dollaro di movimento nell'attività sottostante. Comprendere il delta è la chiave per creare strategie delta neutral, che sono il fondamento di molte strategie di opzioni che insegniamo e utilizziamo quotidianamente in Optionetics.
+
+Perché Acquistare una Call?
+
+L'acquisto di una call (andare lunghi) è una delle strategie di opzioni più basilari. Una call lunga dà al proprietario il diritto, ma non l'obbligo, di acquistare un'azione per un certo prezzo durante un periodo di tempo specificato. Gli speculatori acquistano opzioni call perché ciò offre un grande effetto leva e fa guadagnare denaro in un mercato rialzista o in crescita. Possono esercitare l'opzione e vendere l'azione con un profitto o chiudere la posizione in opzioni con un profitto.
+
+Esempio: Opzioni Call su Coca-Cola (KO) (assumendo che il prezzo delle azioni salga e che gli altri fattori rimangano gli stessi). A dicembre, con le azioni KO scambiate a $47, uno speculatore acquista una call KO January 50 per 70 centesimi.
+
+  Prezzo Azione (KO)   Prezzo Opzione   Rendimento Azione   Rendimento Opzione
+  -------------------- ---------------- ------------------- --------------------
+  $47.00               $0.70            0.00%               0.00%
+  $50.00               $1.90            6.40%               171.00%
+  $53.00               $3.85            12.80%              222.00%
+  $56.00               $6.35            19.20%              800.00%
+
+Nota: Questo esempio illustra l'effetto leva. Un piccolo movimento percentuale dell'azione si traduce in un movimento percentuale molto maggiore del prezzo dell'opzione.
+
+Cosa Succede alla Scadenza e il Ruolo dell'OCC
+
+Fondata nel 1973, la Options Clearing Corporation (OCC) è l'emittente e la camera di compensazione per tutte le opzioni negoziate in borsa negli Stati Uniti. La società e le sue affiliate sono la più grande camera di compensazione per opzioni negli Stati Uniti. L'OCC è una società senza scopo di lucro, il che significa che non cerca di realizzare un profitto ma fa affidamento sulla vendita di opzioni per generare entrate. L'OCC è regolamentata dalla Securities and Exchange Commission (SEC). L'OCC è responsabile della compensazione e del regolamento delle operazioni di opzioni. L'OCC fornisce anche una varietà di servizi al mercato delle opzioni, inclusa la regolamentazione delle borse opzioni e la fornitura di informazioni ai partecipanti al mercato.
+
+L'OCC è stata istituita per fornire una camera di compensazione centralizzata per le operazioni di opzioni, per affrontare la mancanza di tale struttura. L'OCC esercita automaticamente qualsiasi opzione che ha un valore intrinseco di tre quarti di punto o più alla scadenza. Questo dettaglio è fondamentale per chi detiene opzioni ITM in prossimità della scadenza.
+
+Operazioni di Apertura e Chiusura
+
+Molti trader non prevedono di detenere le opzioni americane fino alla scadenza. Invece, l'opzione viene chiusa prima della scadenza. Ogni volta che un'opzione viene acquistata (una put o una call), può poi essere venduta prima della scadenza. Ad esempio, una call acquistata a $3 e che aumenta di valore a $4, è aumentata di $1 di valore. In questo caso, piuttosto che aspettare la scadenza, il trader può vendere l'opzione e realizzare un profitto di $1. Quando l'opzione viene acquistata, è nota come operazione di apertura; quando viene venduta, è un'operazione di chiusura.
+
+Un'operazione di apertura è la prima operazione di acquisto o vendita di opzioni. Ad esempio, se un trader acquista una call AOL January 40 in previsione di un rialzo del prezzo delle azioni AOL Time Warner, l'operazione è considerata un'apertura. Come vedremo in seguito, anche la vendita di un'opzione può essere un'operazione di apertura. Se AOL sale di prezzo e il trader successivamente vende quella stessa call AOL January 40 con un profitto, questa è considerata un'operazione di chiusura. In breve, la transazione iniziale è un'operazione di apertura e, quando quell'ordine viene successivamente chiuso o annullato, quella è un'operazione di chiusura.
+
+Ulteriori Considerazioni sul Time Decay
+
+Se negozi opzioni da un po', probabilmente hai sentito la statistica che il 75 percento o più di tutti i contratti di opzione scadono senza valore. Poiché le opzioni soffrono del fenomeno noto come time decay, con ogni giorno che passa un'opzione diminuisce di valore. Allo stesso tempo, alcune opzioni vedono un time decay più rapido di altre. Per evitare di detenere opzioni senza valore alla scadenza, gli strateghi devono considerare come il tempo stia influenzando le loro particolari opzioni.
+
+Le opzioni su azioni hanno date di scadenza fisse. Un'opzione call dà al proprietario il diritto di acquistare l'azione, e l'opzione put dà al proprietario il diritto di vendere un'azione, ma solo fino a un certo giorno. Il tempo rimanente fino alla scadenza dell'opzione è noto come vita dell'opzione. Con l'avvicinarsi della scadenza, la vita e il valore dell'opzione diminuiranno. Ricorda che le opzioni hanno un premio per il valore temporale; a parità di altre condizioni, maggiore è il tempo rimanente fino alla scadenza dell'opzione, maggiore è il valore temporale attribuito a quell'opzione.
+
+Allo stesso tempo, il tasso di time decay non è lineare. Man mano che un'opzione si avvicina alla scadenza, il tasso di decadimento aumenterà. Pertanto, un'opzione con solo tre settimane di vita residua vedrà un tasso di time decay molto più rapido rispetto a un'opzione equivalente con 12 mesi di vita residua. È interessante notare che il tasso di time decay è correlato alla radice quadrata della vita dell'opzione. Ad esempio, un'opzione con due mesi di vita residua decadrà due volte più velocemente di un'opzione con quattro mesi residui (perché la radice quadrata di quattro è due). Allo stesso modo, un'opzione con quattro mesi di vita residua decadrà al doppio del tasso di un'opzione con 16 mesi di vita residua.
+
+Determinare i Prezzi delle Opzioni e il Modello Black-Scholes
+
+Data la scadenza, il prezzo d'esercizio, il prezzo dell'attività sottostante, il dividendo e il tasso di interesse, è possibile trovare un valore teorico per qualsiasi opzione. Per fare ciò, gli input vengono inseriti in un modello di pricing delle opzioni. Dall'inizio del trading organizzato di opzioni nei primi anni '70, sono state sviluppate numerose formule per calcolare i prezzi delle opzioni. La maggior parte di questi modelli si basa sul modello di pricing delle opzioni Black-Scholes, che fu introdotto all'incirca nello stesso periodo della fondazione del Chicago Board Options Exchange (1973). Inserendo i vari input, è possibile sviluppare un valore teorico per una data opzione. Per i meno inclini alla matematica, la formula può sembrare complicata. In realtà, è relativamente facile da calcolare e può essere creata nella maggior parte delle calcolatrici programmabili. Il modo più semplice per calcolare la formula è attraverso l'uso del computer, che può gestire il calcolo con facilità. Inoltre, sono stati creati altri modelli di pricing delle opzioni. Quello utilizzato sul sito Optionetics.com Platinum è noto come modello di opzione americano Bjerksund-Stensland. È una variante del modello Black-Scholes originale.
+
+Il valore teorico di un'opzione derivato da qualsiasi modello di pricing non sarà sempre uguale al suo valore sul mercato. In altre parole, le opzioni non saranno sempre scambiate al loro valore teorico. Il motivo principale per cui le opzioni non vengono sempre scambiate al loro valore teorico è che i prezzi teorici sono calcolati utilizzando la volatilità storica, ovvero i prezzi passati delle azioni. Le volatilità, tuttavia, cambiano nel tempo. In effetti, sono sempre in uno stato di flusso. Il valore di un'opzione tende a riflettere le aspettative del mercato riguardo alla volatilità futura.
+
+Per determinare quale volatilità il mercato sta implicando in un contratto di opzione, il modello di pricing delle opzioni può essere utilizzato anche per risolvere la volatilità. La volatilità di un asset può aumentare per una serie di ragioni. Ad esempio, se una società ha appena sorpreso gli investitori annunciando un ottimo utili, ciò farà aumentare anche la volatilità storica. I trader di opzioni, tuttavia, potrebbero vedere l'annuncio degli utili come un evento una tantum. Se è così, i prezzi delle opzioni rifletteranno l'anticipazione di una minore volatilità futura. Quando si utilizza il prezzo corrente di mercato di un'opzione come input in un modello di pricing delle opzioni e si risolve per la volatilità, il risultato è noto come volatilità implicita, che è l'argomento del prossimo capitolo.
+
+Il Modello Black-Scholes
+
+Gli elementi nella formula Black-Scholes rappresentano l'incertezza e la sua soluzione. Fu un problema che Myron Scholes, Fischer Black e Robert Merton impiegarono anni a risolvere. Il loro lavoro valse in seguito a Scholes e Merton il premio Nobel (dopo la morte di Black). Gli economisti calcolarono che scommettendo rischio contro rischio, due incertezze potevano, in effetti, annullarsi a vicenda per produrre un risultato positivo. Nel 1973, il modello Black-Scholes iniziò a essere implementato nel nuovo Chicago Board Options Exchange, e per i trader di opzioni nemmeno il cielo era più il limite. Praticamente tutti i modelli di pricing delle opzioni odierni derivano dal modello Black-Scholes. Per coloro che cercano di utilizzare la formula, questa è la seguente:
+
+Prezzo Call = p₁N(d₁) − p₂e^( − rT)N(d₂)Prezzo Call=p1​N(d1​)−p2​e−rTN(d2​)
+
+Dove:
+
+$d_{1} = \frac{\ln\left( \frac{p_{1}}{p_{2}} \right) + \left( r + \frac{v^{2}}{2} \right)T}{v\sqrt[]{T}}$d1​=vT​ln(p2​p1​​)+(r+2v2​)T​$d_{2} = d_{1} - v\sqrt[]{T}$d2​=d1​−vT​
+
+-   p₁p1​ = prezzo dell'azione
+
+-   p₂p2​ = prezzo d'esercizio (strike)
+
+-   TT = tempo rimanente fino alla scadenza
+
+-   NN = funzione di distribuzione normale cumulativa
+
+-   rr = tasso di interesse privo di rischio
+
+-   ln ln = logaritmo naturale
+
+-   vv = misura di volatilità
+
+-   ee = funzione logaritmica (costante di Eulero)
+
+Se sei interessato alla matematica dietro il modello di opzione, un buon libro sull'argomento è Option Volatility and Pricing, di S. Natenburg (Irwin Professional Publishing, 1994). Un libro sulle opzioni senza la matematica è Trade Options Online, di George Fontanills (John Wiley & Sons, 1999). Il modello di opzione americano Bjerksund-Stensland è discusso in The Complete Guide to Option Pricing Formulas, di E. Haug (McGraw-Hill, 1998).
+
+Le Citazioni delle Opzioni e l'Open Interest
+
+Le quotazioni delle opzioni non sono molto diverse dalle quotazioni azionarie. Proprio come per le quotazioni azionarie, c'è un prezzo ultimo o di chiusura, bid (denaro), ask (lettera), massimo e minimo su quasi qualsiasi schermata di quotazione delle opzioni. C'è anche una variabile che sembra ricevere abbastanza poca attenzione dagli strateghi delle opzioni. È nota come open interest (interesse aperto). In effetti, alcuni trader ignorano del tutto l'open interest. Tuttavia, sebbene sia generalmente considerato meno importante del prezzo effettivo dell'opzione e dei dati di volume, l'open interest fornisce informazioni importanti e dovrebbe essere considerato prima di stabilire qualsiasi posizione in opzioni.
+
+Esempio di Citazione di un'Opzione
+
+Se richiami una quotazione di un'opzione sulla maggior parte dei servizi dati, vedrai una varietà di informazioni relative a quell'opzione. Ad esempio, prendi il simbolo per la call Microsoft (MSFT) October 2002 55 e inseriscilo nella casella delle quotazioni sulla home page di Optionetics.com; ti verrà presentata una schermata di quotazione simile a quella nella Tabella 5.1 (anche se se stai leggendo dopo il 18 ottobre 2002, l'opzione sarà scaduta e nessuna quotazione sarà disponibile).
+
+Tabella 5.1: Citazione Opzione per MSFT October 2002 Call 55
+
+  MSFT Oct 2002 55.00 Call (O:MSQJK)   30 Aprile 2002, 15:47
+  ------------------------------------ -----------------------
+  Last (Ultimo)                        4.30
+  Bid (Denaro)                         4.20
+  Ask (Lettera)                        4.40
+  High (Massimo)                       4.80
+  Low (Minimo)                         4.10
+  Change (Variazione)                  ↑0.30
+  % Change (% Variazione)              ↑7.5%
+  Open (Apertura)                      4.10
+  Volume                               14.88K
+  Open Interest (Interesse Aperto)     2,055
+
+La maggior parte delle variabili all'interno della citazione sono facilmente riconoscibili. "Last" è il prezzo dell'ultima transazione: la call Microsoft October 55 è stata scambiata l'ultima volta a $4.30. Il bid di $4.20 è il prezzo al quale la call può essere venduta. Può essere acquistata al prezzo ask di $4.40, che è lo stesso del prezzo di offerta.
+
+Per possedere la call Microsoft October 55, l'acquirente pagherà $4.40, il prezzo ask. In questo caso, è possibile che un ordine di acquisto possa essere inserito a un prezzo inferiore (ad esempio, $4.25) e l'opzione acquistata al di sotto di $4.40, ma per questo esempio, supponiamo che una call Microsoft October 55 sia stata acquistata al prezzo ask di $4.40. Questo significa che il contratto costa $4.40? No. In realtà, l'operazione costerà $440 (il premio di $4.40 moltiplicato per 100, che è il numero di azioni per contratto di opzione su azioni e indici).
+
+Capire l'Open Interest
+
+Un elemento che appare nella citazione di un'opzione e non in quella di un'azione è l'open interest. In questo caso, l'open interest sulla call Microsoft 55 è 2.055. Cosa significa? Ci dice che sono state aperte 2.055 opzioni sulla call Microsoft October 55. Sono state acquistate? Vendute? Non c'è modo di saperlo con certezza. Ricorda che, quando si acquistano o vendono opzioni, la transazione è considerata un'operazione di apertura o di chiusura. Se acquisti la call MSFT October 55, la acquisti per aprire (buy to open). L'acquisto per aprire aggiunge un punto all'open interest. Se poi vuoi uscire da quella posizione, puoi vendere la stessa opzione. In questo caso, vendi per chiudere (sell to close) e l'open interest diminuirà di uno.
+
+Anche la vendita può aggiungere all'open interest. Ad esempio, se stabilisci una covered call su Microsoft utilizzando 500 azioni e vendendo cinque call MSFT October 55 (una covered call è l'acquisto di azioni insieme alla vendita di call; questa strategia sarà discussa in dettaglio in seguito), le opzioni vengono vendute per aprire (sell to open). È un'operazione di apertura. In tal caso, la vendita aggiunge 5 all'open interest. D'altra parte, se la posizione viene chiusa e le opzioni riacquistate, le call MSFT October 55 vengono acquistate per chiudere (buy to close) e l'open interest diminuisce. Pertanto, guardando l'open interest totale di qualsiasi opzione, non c'è modo di sapere se le opzioni sono state acquistate o vendute. Per questo motivo, molti strateghi delle opzioni scelgono di ignorare del tutto l'open interest.
+
+Perché l'Open Interest è Importante
+
+Ciò significa che l'open interest non fornisce informazioni rilevanti al trader di opzioni? Considera questo passaggio da un articolo del Dow Jones Newswire del 5 novembre 2001 ("Tech Calls Fly as Nasdaq Tests 1,800," di Kopin Tan): "All'International Securities Exchange, le put [Cisco Systems (CSCO)] November 17.50 erano a 90 centesimi, in calo di 20 centesimi, su un volume di 15.566 contratti, rispetto a un open interest di 10.580. Altri 13.158 contratti sono stati scambiati in altre borse."
+
+In questo caso, il giornalista ha notato l'open interest relativo al volume. In quel giorno, il volume superava di gran lunga l'open interest esistente, suggerendo che il trading delle put Cisco Systems November 17.5 era eccezionalmente alto quel giorno. Pertanto, l'open interest può fornire un parametro per aiutare a determinare se c'è un volume insolitamente alto o basso rispetto a una particolare opzione. Inoltre, l'open interest offre informazioni sulla liquidità di una data opzione. Quando non c'è open interest su una particolare opzione, non esiste un mercato secondario per l'opzione. Sulle opzioni con alto open interest, c'è un gran numero di acquirenti e venditori. Un mercato secondario attivo, a sua volta, aumenterà le probabilità di ottenere ordini di opzioni eseguiti a prezzi migliori (o tra il prezzo bid e ask). Pertanto, a parità di altre condizioni, maggiore è l'open interest, più attraente è l'opzione.
+
+Comprendere i Simboli delle Opzioni
+
+Proprio come le azioni hanno simboli ticker, anche le opzioni li hanno. I simboli delle opzioni sono composti da tre elementi diversi:
+
+1.  Il simbolo root: Composto da una a tre lettere, è derivato dall'attività sottostante. Ad esempio, il simbolo root per International Business Machines è semplice: è lo stesso del simbolo azionario: IBM. Le azioni con quattro lettere, tuttavia, hanno sempre simboli root diversi dai loro simboli azionari. Ad esempio, mentre il simbolo azionario per Microsoft è MSFT, il simbolo dell'opzione è MSQ.
+
+2.  La seconda parte: Rappresenta il mese e definisce se si tratta di una put o di una call. Ad esempio, una call di gennaio usa la lettera A dopo il simbolo root; la call IBM January avrà il simbolo root IBM e poi A, o IBM A. La call di febbraio è B, marzo C, e così via fino a dicembre, che è la lettera L. Invece di iniziare con la lettera A, le put iniziano con la lettera M; quindi la put IBM February avrà la lettera N dopo il simbolo root, o IBM N.
+
+3.  L'elemento finale: Riflette il prezzo d'esercizio. Generalmente, il numero 5 è assegnato alla lettera A, 10 alla lettera B, 15 alla lettera C, e così via fino a 100, a cui viene data la lettera T. Pertanto, la call IBM January 95 avrà il simbolo IBM AS.
+
+Tabelle dei codici dei simboli delle opzioni per mesi e strike si trovano nell'Appendice F.
+
+Liquidità
+
+La liquidità può essere definita come la facilità con cui un'attività può essere convertita in contanti sul mercato. La liquidità è domanda e offerta per un'azione o un'opzione. Le opzioni ATM (at-the-money) di solito hanno la più alta domanda e offerta (volume) perché sono meno costose delle opzioni ITM (in-the-money) e hanno una migliore possibilità di diventare redditizie entro la scadenza rispetto alle opzioni OTM (out-of-the-money). Le opzioni ATM hanno anche la maggiore liquidità. Un gran numero di acquirenti e venditori e un alto volume di attività di trading forniscono un'elevata liquidità.
+
+La liquidità offre ai trader l'opportunità di entrare e uscire da un mercato con facilità, acquistando e vendendo posizioni senza difficoltà. Come affermato, le opzioni ATM di solito hanno un'eccellente liquidità perché hanno una migliore possibilità di essere redditizie rispetto alle opzioni OTM. Un'opzione molto OTM non avrà molta liquidità.
+
+Come evitare mercati illiquidi? La liquidità di un'opzione può essere determinata accertando il suo open interest. La liquidità di un'azione può essere monitorata rivedendo il volume del mercato per vedere quante azioni sono state acquistate e vendute in un giorno. Come regola generale, evita i mercati con un volume di scambi inferiore a 300.000 azioni al giorno, anche se un milione di azioni al giorno è ancora meglio. È anche fondamentale accertare se il volume di scambi è in aumento o in diminuzione. Questo tipo di movimento del volume è studiato per indicare punti di svolta nell'azione del prezzo di mercato.
+
+Dove Vengono Negoziate le Opzioni? Le Borse di Opzioni
+
+L'inizio del trading organizzato di opzioni può essere fatto risalire ai primi anni '70. Prima di quel periodo, le quotazioni delle opzioni erano semplicemente elencate nei giornali per put e call. Oggi, le opzioni vengono negoziate in diverse borse valori, le principali sono:
+
+-   Chicago Board Options Exchange (www.cboe.com)
+
+-   American Stock Exchange (www.amex.com)
+
+-   Philadelphia Stock Exchange (www.phlx.com)
+
+-   Pacific Exchange (San Francisco) (www.pacificex.com)
+
+-   International Securities Exchange (www.iseoptions.com) - Questa è una borsa completamente elettronica per il trading di opzioni su azioni. A differenza delle altre borse di opzioni, non ha un trading floor, ma offre ai membri un trading basato su schermo.
+
+Quando le opzioni su un particolare titolo vengono scambiate su più di una borsa opzioni, si dice che hanno un "multiple listing". In definitiva, gli strateghi delle opzioni non hanno alcun contatto con le borse di opzioni. Una volta che un ordine viene inviato al broker, esce dalle mani del trader di opzioni. Invece, il broker seleziona dove inviare l'ordine. Allo stesso tempo, tuttavia, poiché un'opzione può essere scambiata su un massimo di cinque borse separate, un contratto di opzione può avere cinque quotazioni di prezzo diverse. Ad esempio, le offerte e le richieste per le opzioni Dell potrebbero essere diverse all'American Stock Exchange rispetto al PHLX.
+
+Il Ruolo del Broker
+
+Sebbene le opzioni vengano scambiate su cinque diverse borse, il trader di opzioni non ha alcun contatto diretto con nessuna di esse. Invece, tutti gli ordini di opzioni vengono effettuati tramite una società di intermediazione. Pertanto, per fare trading di opzioni, devi prima aprire un conto e ottenere l'approvazione per fare trading di opzioni. L'attività di acquisto e vendita di opzioni per i clienti è sotto la stretta supervisione di agenzie di regolamentazione federali. Per questo motivo, le società di intermediazione devono assicurarsi che il trading di opzioni sia adatto a ciascun cliente valutando la situazione finanziaria complessiva del trader. Pertanto, oltre a un modulo di nuovo conto, gli aspiranti trader di opzioni devono anche completare un modulo di approvazione delle opzioni, che aiuta la società di intermediazione a determinare se le opzioni sono uno strumento finanziario appropriato per quel particolare individuo.
+
+Livelli di Approvazione delle Opzioni
+
+Le società di intermediazione variano in ciò che consentono e non consentono ai clienti di fare nei loro conti di intermediazione. Tuttavia, ci sono sei livelli di base di trading di opzioni più o meno utilizzati in tutto il settore (vedi Tabella 5.2). Come vedremo nei capitoli successivi, ognuno ha un obiettivo e caratteristiche di rischio diversi. La maggior parte delle strategie di trading discusse in questo libro richiedono l'approvazione di trading di Livello III.
+
+Tabella 5.2: Livelli di Approvazione per il Trading di Opzioni
+
+  Livello   Strategia                          Obiettivo                                     Rischio
+  --------- ---------------------------------- --------------------------------------------- ------------
+  I         Covered call writing (scrittura)   Conservatore / generare reddito               Limitato
+  II        Acquisto di put/call               Speculazione                                  Limitato
+  III       Spreads                            Vari (speculazione, reddito, hedging, ecc.)   Limitato
+  IV        Vendita di put (su azioni)         Speculazione / reddito aggressivo             Illimitato
+  V         Vendita di call (su azioni)        Speculazione / reddito aggressivo             Illimitato
+  VI        Vendita di opzioni su indici       Speculazione / reddito aggressivo             Illimitato
+
+Molti trader di opzioni alle prime armi sono frustrati dal fatto che, sebbene abbiano una conoscenza approfondita delle opzioni, le società di intermediazione non consentano loro di fare trading di opzioni o consentano loro di fare trading solo di determinati tipi di strategie. Ho scoperto che il modo migliore per gestire questa situazione è aprire un dialogo verbale con il broker, spiegare esattamente quali strategie intendi negoziare e dichiarare che sei disposto ad assumerti il rischio di eventuali perdite. La società di intermediazione potrebbe richiedere una lettera scritta in tal senso. Ma, se mostri una chiara comprensione delle opzioni, la società di intermediazione, nella maggior parte dei casi, ti permetterà di negoziarle.
+
+Opzioni su Indici
+
+Anche se un investitore non ha mai negoziato opzioni, il concetto di indice gli è probabilmente familiare. Dopotutto, il Dow Jones Industrial Average (INDU)eilNasdaqCompositeIndex(INDU)eilNasdaqCompositeIndex(COMPQ) sono spesso oggetto di commenti nella stampa finanziaria e nei telegiornali della sera. Sia il Dow che il Nasdaq Composite sono medie di mercato utilizzate come barometri per la performance del mercato azionario statunitense. Tuttavia, oltre a fungere da finestra sulla performance del mercato azionario, gli indici possono essere utilizzati anche come strumenti per il trader di opzioni. Cioè, le opzioni sono quotate su una serie di diverse medie di mercato e indici settoriali che consentono al trader di partecipare al rialzo e al ribasso non solo di un'azione, ma di un intero paniere di titoli. In effetti, alcuni trader trovano che le opzioni su indici siano i migliori veicoli per fare scommesse direzionali, neutrali e coperte.
+
+Esiste oggi un gran numero di diverse opzioni su indici tra cui scegliere. Dal 1983, quando il Chicago Board Options Exchange ha quotato le prime opzioni su indici sull'S&P 100 (OEX), le principali borse di opzioni hanno sviluppato ciascuna il trading di opzioni su prodotti indicizzati concorrenti. Ad esempio, oggi il CBOE quota opzioni sull'S&P 500 (SPX), sul Nasdaq 100 (NDX)esulRussell2000SmallCapIndex(NDX)esulRussell2000SmallCapIndex(RUT). Nel frattempo, l'American Stock Exchange quota opzioni sul Major Market Index (XMI) e sull'S&P MidCap 400 Index (MID).
+
+Oltre agli indici di mercato, le principali borse di opzioni forniscono anche trading su indici settoriali. Ad esempio, il Philadelphia Stock Exchange quota opzioni su circa una dozzina di diversi indici settoriali, come opzioni sul PHLX Semiconductor Index (SOX), ilPHLXBankSectorIndex(SOX),ilPHLXBankSectorIndex(BKX) e il PHLX Gold and Silver Mining Index (XAU).IlCBOEquotaancheopzionisunumerosiindicisettoriali, tracuiilCBOEInternetIndex(XAU).IlCBOEquotaancheopzionisunumerosiindicisettoriali,tracuiilCBOEInternetIndex(INX), il Morgan Stanley Retail Index (RLX)eilGSTIComputerSoftwareIndex(RLX)eilGSTIComputerSoftwareIndex(GSO). L'American Stock Exchange quota opzioni sull'AMEX Biotechnology Index (BTK), ilNaturalGasIndex(BTK),ilNaturalGasIndex(XNG), l'Airline Index ($XAL) e una manciata di altri indici specifici del settore.
+
+Che si tratti di negoziare opzioni su una media di mercato o su un settore specifico, l'inserimento di ordini per opzioni su indici è simile al trading di opzioni su azioni. In sostanza, l'investitore apre un conto presso una società di intermediazione, compila il documento di approvazione delle opzioni e inserisce gli ordini online o per telefono tramite un broker. A differenza dei futures e delle opzioni su futures, il trading di opzioni su indici non richiede che venga aperto un conto presso una società di futures. Quasi tutte le società di intermediazione che forniscono trading di azioni e opzioni sulle borse statunitensi offrono anche trading di opzioni su indici.
+
+Sebbene il processo di negoziazione delle opzioni su indici sia simile a quello delle opzioni su azioni, ci sono alcune differenze importanti. In primo luogo, le opzioni su indici regolano in contanti e non in azioni. Quando un contratto di opzione su azioni viene esercitato, il regolamento comporta il trasferimento di azioni. Quando i contratti di opzioni su indici vengono esercitati, c'è un trasferimento di contanti (pari alla differenza tra il prezzo d'esercizio dell'opzione e il valore corrente dell'indice). Inoltre, con poche eccezioni, le opzioni su indici regolano in stile europeo. La maggior parte delle opzioni su azioni regola in stile americano e può essere esercitata in qualsiasi momento prima della scadenza. Le opzioni in stile europeo possono essere esercitate solo alla scadenza.
+
+Le opzioni su indici, quindi, non sono le stesse degli exchange-traded funds come il Nasdaq 100 (QQQ). Il Nasdaq QQQ è uno dei contratti di opzione più attivamente scambiati sul mercato oggi. Il veicolo è un fondo negoziato in borsa progettato per essere pari a un quarantesimo del valore del popolare Nasdaq 100. Tuttavia, poiché le azioni QQQ possono essere acquistate e vendute come un'azione, non è un indice. Non è possibile acquistare e vendere azioni di un indice. Di conseguenza, il QQQ regola in azioni e non in contanti. Inoltre, le opzioni sul Nasdaq 100.
+
+Quando il trading di opzioni su indici iniziò nei primi anni '80, erano in gran parte dominio dei trader professionisti. Nel corso degli anni, tuttavia, le borse di opzioni hanno lanciato una serie di indici unici progettati per attirare l'attenzione degli investitori più piccoli. Ad esempio, il Chicago Board Options Exchange ha lanciato il trading di opzioni sul Mini-Nasdaq 100 ($MNX),che\overset{ˋ}{e}ariaundecimodelvaloredelNasdaq100.Inoltre,ilCBOEquotaancheiltradingdiopzionisulDowJonesIndustrialAverage($MNX),cheeˋpariaundecimodelvaloredelNasdaq100.Inoltre,ilCBOEquotaancheiltradingdiopzionisulDowJonesIndustrialAverage(DJX). Il DJX è pari a un centesimo del valore del più noto Dow Jones Industrial Average. Rendere il MNX una frazione dell'NDX e il DJX un centesimo del Dow abbassa i loro premi delle opzioni e li rende più interessanti per gli investitori più piccoli.
+
+Le principali borse di opzioni lanciano continuamente nuovi indici progettati per attirare l'interesse degli investitori. Pertanto, sebbene gli indici siano spesso utilizzati come barometri per la performance del mercato azionario oggi, offrono anche al trader di opzioni un'ampia gamma di diversi metodi per negoziare sia le medie principali che specifici gruppi industriali. Non tutti gli indici hanno ricevuto un uguale interesse da parte degli investitori. In effetti, alcuni indici vedono raramente qualsiasi attività di trading. Di conseguenza, gli ampi spread sulle quotazioni delle opzioni su indici e la mancanza di liquidità li rendono a volte poco attraenti per il trader di opzioni. Tuttavia, molti indici hanno opzioni attivamente scambiate e, di conseguenza, forniscono allo stratega mezzi affidabili per partecipare al rialzo o al ribasso non solo di un'azione, ma di un intero mercato o gruppo industriale. Sotto questo aspetto, le opzioni su indici possono essere grandi strumenti per fare scommesse direzionali, neutrali o coperte.
+
+Conclusione
+
+Il trading di volatilità richiede una comprensione approfondita delle opzioni. A questo punto, il lettore dovrebbe comprendere i seguenti argomenti:
+
+-   La differenza tra una put e una call.
+
+-   I principali determinanti del prezzo di un'opzione.
+
+-   Come trovare una quotazione di un'opzione.
+
+-   Come utilizzare un modello di pricing delle opzioni per risolvere sia il prezzo di un'opzione che la sua volatilità.
+
+-   I ruoli delle varie borse di opzioni.
+
+-   La funzione dell'OCC.
+
+-   Il ruolo delle società di intermediazione nel trading di opzioni.
+
+-   Le basi delle opzioni su indici.
+
+Il mercato delle opzioni è uno degli arene di trading più entusiasmanti al mondo. Il mercato delle opzioni include cinque diverse borse statunitensi, con oltre 725 milioni di contratti di opzioni quotati scambiati nell'anno 2000. Ogni trader di opzioni ha la sua ragione specifica per decidere di negoziare opzioni. Alcuni trader vogliono usare la leva finanziaria e speculare sul rialzo o ribasso di un determinato titolo o indice. Altri usano le opzioni per creare un flusso di reddito. Molte grandi istituzioni finanziarie usano le opzioni per coprire un ampio portafoglio. In effetti, le opzioni sono tra gli strumenti di trading più versatili disponibili oggi per gli investitori. La flessibilità di questi veicoli aiuta a spiegare la crescente dimensione e popolarità del mercato delle opzioni.
+
+Ci sono quasi un numero illimitato di modi per utilizzare le opzioni e strutturare operazioni per trarre profitto in una varietà di situazioni. Molti trader iniziano a fare trading acquistando in modo aggressivo call su azioni che prevedono saliranno. Ovviamente, la leva finanziaria offerta dalle opzioni è uno dei motivi più convincenti per negoziarle. Ma la leva finanziaria funziona in entrambi i modi. In oltre 10 anni come relatore a seminari di investimento, ho ascoltato innumerevoli storie su come le opzioni hanno distrutto conti di trading individuali. In breve, sebbene ci siano un gran numero di modi per utilizzare le opzioni, non esistono strategie per arricchirsi rapidamente. L'uso delle opzioni al solo scopo di speculazione generalmente si traduce in perdite finanziarie. Il mio approccio è progettato per arricchirsi lentamente, ma in modo sicuro, motivo per cui sono dedicato a utilizzare le opzioni per gestire il rischio e massimizzare i profitti.
+
+Ma prima le cose più importanti: Il trading di volatilità è al centro del mio approccio di investimento. Come abbiamo visto nei capitoli precedenti, un modo per misurare la volatilità è utilizzare i prezzi passati, che include la volatilità statistica e indicatori come le bande di Bollinger e le medie mobili. In questo capitolo, abbiamo accennato a un diverso tipo di volatilità: la volatilità implicita (cioè la misura della volatilità che deriva dai prezzi delle opzioni utilizzando un modello di pricing delle opzioni). La volatilità implicita è uno dei fattori più importanti alla base del prezzo di un'opzione, ed è sempre in uno stato di flusso. Quando cambia, il valore di un'opzione cambierà. Ad esempio, a parità di altre condizioni, il valore di una call diminuirà se la volatilità implicita scende. Quindi, prima di negoziare opzioni, è fondamentale capire come la volatilità implicita influenzerà le tue posizioni. Come puoi sapere in anticipo in che modo la volatilità implicita può influire sulle tue opzioni? La risposta a questa domanda è nel Capitolo 6.

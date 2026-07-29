@@ -1,0 +1,294 @@
+Capitolo 7: VIX e altri indicatori del sentiment
+
+Introduzione al sentiment del mercato
+
+Da quando il primo contratto di opzioni è stato quotato al Chicago Board Options Exchange (CBOE) quasi tre decenni fa, il trading di opzioni è cresciuto enormemente in popolarità. Durante l'anno 2000, sono stati scambiati quasi 800 milioni di contratti, ovvero 2,9 milioni al giorno. Oggi, cinque diversi exchange quotano opzioni. Quello che negli anni '70 era un processo non regolamentato e inefficiente è diventato oggi un mercato vivace e ben organizzato.
+
+Ora che il trading di opzioni è diventato un importante settore di investimento, è diventato anche una finestra sulla psicologia del mercato. Milioni di investitori oggi scambiano opzioni. Quando l'umore verso le azioni e il mercato diventa pessimistico, quegli investitori tenderanno alla cautela e acquisteranno opzioni put per proteggersi dal ribasso. Al contrario, quando gli investitori diventano ottimisti o addirittura euforici riguardo alle azioni e al mercato USA, l'attività speculativa porterà a un aumento degli acquisti di call.
+
+Osservare il mercato delle opzioni per raccogliere informazioni sulla psicologia degli investitori è noto anche come analisi del sentiment. È particolarmente utile nell'approccio contrarian all'investimento. Cioè, quando gli investitori, o la folla, sono prevalentemente ottimisti, è probabile che la maggioranza abbia torto e conviene scommettere contro di loro. Al contrario, quando la folla è prevalentemente pessimista riguardo al mercato, il contrarian diventerà ottimista. In breve, il contrarian scommette generalmente contro la folla e sviluppa una forte convinzione quando le emozioni di avidità e paura raggiungono estremi. Come fanno le emozioni estreme a causare un errato pricing nel mercato azionario? Quando gli investitori diventano euforici, ottimisti e rialzisti, possono spingere i prezzi troppo in alto e creare condizioni di ipercomprato. Al contrario, quando la paura, il panico e il caos si impadroniscono del mercato, i prezzi delle azioni possono scendere troppo in basso e creare condizioni di ipervenduto.
+
+L'importanza degli estremi
+
+Sebbene l'arte dell'analisi del sentiment risalga a secoli fa e abbia dato origine a un'ampia gamma di strumenti disponibili per studiare il sentiment del mercato, la discussione seguente si concentra sul mercato delle opzioni. Per essere più precisi, questo capitolo descrive come utilizzare le informazioni dal mercato delle opzioni (indicatori di volatilità implicita e rapporti put/call) per valutare il sentiment del mercato. La chiave per utilizzare con successo l'analisi del sentiment sta nell'identificare gli estremi. Cioè, quando si osserva il trading nel mercato delle opzioni, è importante notare che la folla non ha sempre torto. Invece, gli investitori sono generalmente dalla parte sbagliata dei mercati agli estremi, o durante periodi di forte emozione. Per questo motivo, c'è un detto a Wall Street che recita: "La folla ha di solito ragione sulle tendenze, ma torto ad entrambe le estremità". In questo capitolo, esploreremo lo studio dell'analisi del sentiment per aiutare il lettore a rimanere dalla parte giusta delle tendenze ed evitare di essere dalla parte sbagliata alle estremità.
+
+L'indice di volatilità CBOE (VIX)
+
+Nessuna discussione sulla volatilità sarebbe completa senza uno sguardo attento al CBOE Volatility Index, o VIX. Creato dal Chicago Board Options Exchange nel 1986, il VIX è diventato il principale indicatore della volatilità del mercato disponibile oggi. È unico in quanto fornisce informazioni in tempo reale (up-to-the-minute) sulla volatilità del mercato perché viene calcolato durante tutta la giornata di negoziazione. Pertanto, le letture attuali del VIX sono disponibili con un clic del mouse senza calcoli complicati. Basta andare sulla home page di Optionetics.com e inserire $VIX nella casella delle quotazioni.
+
+Il VIX fornisce letture aggiornate in tempo reale della volatilità del mercato. Tuttavia, il VIX non è un indicatore della volatilità effettiva, ma una misura della volatilità implicita. Come abbiamo visto nei capitoli precedenti, la volatilità implicita è derivata utilizzando un modello di valutazione delle opzioni. Nel caso del VIX, le opzioni sono sull'S&P 100. Conosciuto principalmente con il suo ticker symbol OEX, l'S&P 100 è un indice che riflette 100 delle più grandi aziende con azioni scambiate sulle borse USA. In passato, le opzioni OEX erano tra le più popolari e attivamente scambiate. In effetti, l'S&P 100 è stato il primo indice ad offrire opzioni quotate nel 1983. Da allora, tuttavia, altri indici hanno attratto un maggiore interesse da parte degli investitori, e l'OEX non è più tra i più attivamente scambiati. Tuttavia, il trading delle opzioni OEX continua e rimangono un veicolo popolare per molti trader professionisti e di grandi dimensioni. Il VIX è una misura della volatilità implicita delle opzioni OEX, e quindi rappresenta la visione di consenso del mercato riguardo alla volatilità futura di 100 delle azioni più grandi e più attivamente scambiate sulle borse USA.
+
+Calcolo del VIX
+
+Prima di cercare di interpretare le fluttuazioni del VIX, diamo un'occhiata più da vicino a come è costruito l'indice. Creato dal Chicago Board Options Exchange, il VIX si basa sulle volatilità implicite di otto contratti di opzione OEX ponderati in modo tale da riflettere la volatilità implicita di un'opzione at-the-money a 30 giorni di calendario (o 20 giorni di trading). (I giorni di calendario e i giorni di trading non sono mai uguali perché non c'è trading nei fine settimana). Il VIX viene calcolato in tempo reale durante il giorno dalle variazioni di prezzo nei contratti di opzione e dal valore dell'OEX.
+
+Il CBOE utilizza il modello di valutazione delle opzioni Black-Scholes per calcolare la volatilità implicita sull'OEX. Inoltre, a differenza della maggior parte delle altre opzioni su indici, l'S&P 100 viene regolato in stile americano, e il modello tiene conto del fatto che le azioni all'interno dell'indice pagano dividendi. I prezzi utilizzati per calcolare le volatilità implicite sono le medie delle offerte e delle domande (bid e ask). Infine, come con qualsiasi modello di pricing delle opzioni, altre variabili (tempo alla scadenza, prezzo d'esercizio, tasso d'interesse privo di rischio e dividendi previsti) vengono inserite nel modello Black-Scholes per risolvere la volatilità implicita dell'OEX. Pertanto, per calcolare il VIX sono necessari tre componenti:
+
+1.  Un modello di valutazione delle opzioni: Black-Scholes.
+
+2.  I parametri o le variabili, eccetto la volatilità implicita (prezzo d'esercizio, tasso privo di rischio, tempo alla scadenza e dividendi attesi).
+
+3.  I prezzi delle opzioni: (bid + ask)/2.
+
+Storia del VIX
+
+La volatilità implicita non è una misura della performance passata dei prezzi di un asset, ma delle aspettative del mercato sulla volatilità futura. Il VIX non fa eccezione. Durante i periodi di incertezza e turbolenza del mercato, il VIX salirà per riflettere le aspettative riguardo alla volatilità futura. Questo è spesso dovuto all'acquisto aggressivo di opzioni put OEX. Ricordiamo che l'S&P 100 rappresenta un paniere di 100 delle più grandi e comuni azioni scambiate sulle borse statunitensi. È stato anche il primo indice ad avere opzioni quotate. Pertanto, è diventato uno strumento popolare per gli investitori professionisti per la copertura dei portafogli. Acquistando opzioni put OEX, gli investitori con grandi portafogli di azioni USA possono proteggersi.
+
+Da quel momento, l'indice si è spostato al di sopra del 40% solo in quattro occasioni: durante il sell-off del settore tecnologico dell'aprile 2000; di nuovo nell'aprile 2001 alla fine di un forte calo di due mesi dell'OEX; nel settembre 2001, quando un altro picco del VIX si è verificato dopo l'attacco terroristico al World Trade Center; e infine nel luglio 2002, dopo che WorldCom ha rivelato irregolarità contabili e le azioni sono crollate alla notizia. L'indice di volatilità ha raggiunto un massimo di 57,31 il 21 settembre 2001 (non mostrato nel grafico).
+
+Venerdì 19 luglio 2002, il mercato azionario - che stava già vacillando a causa di una serie di scandali aziendali e preoccupazioni sugli utili - è crollato di 390 punti. Il calo ha causato una notevole angoscia tra gli investitori durante il fine settimana, e quando il mercato ha riaperto lunedì 22 luglio, il Dow è sceso di altri 235 punti. A questo declino è seguita un'ulteriore perdita di 82 punti martedì. Il forte calo di tre giorni ha portato a un forte aumento dell'indice di volatilità, che martedì 23 luglio 2002 ha chiuso sopra il livello del 50% per la prima volta dal 1987.
+
+Intervallo di negoziazione normale
+
+Al di fuori dei suoi picchi, il VIX trascorre lunghi periodi di tempo all'interno di un intervallo abbastanza ben definito. Il valore medio di chiusura dell'indice di volatilità dalla sua creazione nel 1986 è di circa 20,5, e la mediana è di 19,5. Nel recente passato, la tendenza è stata verso un leggero aumento di questi valori. Nel 1998, ad esempio, il VIX ha mostrato il suo secondo intervallo di negoziazione più ampio di sempre. In quell'anno, l'indice ha trascorso la maggior parte del tempo tra il 18,6% e il 42,7%. In confronto, l'intervallo era del 17,4% al 24,9% nel 1986.
+
+Secondo gli standard storici, la volatilità implicita sulle opzioni OEX rimane relativamente alta. Dal 1999 fino all'aprile 2001, il VIX ha oscillato tra il 16,6% e il 42%. I valori massimi e minimi di chiusura sono stati del 18,2% e del 39,7%. La Figura 7.3 mostra che, in questo periodo di tempo, il VIX è stato scambiato per lo più a metà degli anni '20.
+
+VXN
+
+La creazione del contratto di opzione sull'indice S&P 100, o OEX, è stato un evento rivoluzionario per il mercato delle opzioni. Come abbiamo già visto, la creazione del primo contratto di opzioni standardizzato è coincisa con la fondazione del Chicago Board Options Exchange nel 1973. Nel 1983, l'exchange ha dimostrato ancora una volta la sua lungimiranza quotando le opzioni sul primo indice, l'OEX. L'innovazione si è rivelata enormemente popolare, e verso la fine degli anni '90 le opzioni erano attive non solo sull'OEX, ma anche su una serie di altri indici.
+
+In effetti, entro l'anno 2000 l'OEX non era più l'indice più popolare da scambiare. La Figura 7.4 mostra il volume medio giornaliero delle opzioni OEX per mese dal maggio 1998 al dicembre 2000. Si noti il calo del volume totale delle opzioni OEX nel corso degli anni. L'S&P 100 è diminuito in popolarità con il lancio di altri prodotti. Oggi l'S&P 500 (SPX)eilDowJonesIndustrialAverage(SPX)eilDowJonesIndustrialAverage(DJX) hanno anche opzioni quotate che hanno sviluppato un maggiore appeal. Una ragione della crescente popolarità del SPX e del DJX rispetto all'OEX deriva da come si regolano le opzioni. Le opzioni sull'S&P 500 e sul Dow Jones Industrial Average vengono regolate in stile europeo, il che significa che l'esercizio può avvenire solo alla scadenza dell'opzione. Non c'è rischio di assegnazione anticipata associato alle opzioni in stile europeo, una caratteristica interessante per i venditori di opzioni. Al contrario, l'OEX si regola in stile americano e l'esercizio può avvenire in qualsiasi giorno di negoziazione prima della scadenza.
+
+La proliferazione di altri contratti di opzione su indici è stato il fattore più importante dietro il calo del trading delle opzioni OEX. Nel Capitolo 2, durante la discussione del mercato azionario, i lettori sono stati introdotti a una serie di diversi indici di mercato e settoriali. Tra i più popolari per i trader di opzioni oggi c'è il Nasdaq 100. Ricordiamo che il Nasdaq 100 rappresenta 100 delle più grandi azioni non finanziarie quotate al Nasdaq. Pertanto, è composto da nomi familiari come Cisco Systems (CSCO), Microsoft (MSFT) e Intel (INTC). In effetti, circa il 75% dell'indice è composto da grandi e note azioni tecnologiche.
+
+Dopo la crisi finanziaria globale, iniziata nell'autunno del 1998, la tecnologia era di gran lunga il settore più forte del mercato azionario. Dal suo minimo di 1.063 nell'ottobre 1998, l'indice Nasdaq 100 è aumentato di quattro volte nei successivi 18 mesi. Mentre l'indice si avvicinava a un massimo vicino al livello di 5.000 nel marzo 2000, gli investitori si erano innamorati della tecnologia. In effetti, la tecnologia era di gran lunga il settore preferito dagli americani per gli investimenti.
+
+La popolarità della tecnologia ha portato molti trader di indici a spostarsi dall'S&P 100 alle opzioni sul NDX e su indici simili. Nel 1999, l'American Stock Exchange ha iniziato a quotare opzioni sul Nasdaq 100 Index Trust, o QQQ. Nel frattempo, il Chicago Board Options Exchange, che già quotava opzioni sul NDX, ha creato le opzioni Mini-Nasdaq 100 (MNX), o Minx, nell'agosto 2000. Il MNX è quasi esattamente uguale al NDX, con una differenza importante: il Mini-Nasdaq 100 è pari a un decimo del Nasdaq 100. Pertanto, il prezzo del MNX è sempre inferiore a quello del NDX, e di conseguenza anche i premi delle opzioni sono più bassi. I premi delle opzioni più bassi, a loro volta, consentono agli investitori di implementare strategie di trading sul Mini-Nasdaq 100 con meno capitale di trading. In sostanza, il Mini-Nasdaq 100 è stata la risposta del CBOE alla crescente attività di trading del QQQ sull'AMEX. All'epoca, le opzioni QQQ erano quotate solo sull'AMEX. Oggi, tuttavia, a causa dei cambiamenti nelle regole riguardanti la quotazione delle opzioni, il QQQ è quotato su tutti e cinque gli exchange di opzioni.
+
+Sia il QQQ che il MNX si sono rivelati enormemente popolari. I professionisti si rivolgono alle put su QQQ e MNX per proteggere la loro crescente esposizione alle azioni tecnologiche, mentre gli speculatori scambiano QQQ e MNX sul lato delle call. I volumi sui due prodotti indicizzati hanno finito per superare quelli delle opzioni OEX, e questo continua ad essere il caso oggi. I volumi di trading associati a QQQ, MNX, SPX, DJX e a una manciata di altri prodotti indicizzati hanno superato quelli dell'OEX.
+
+In risposta al crescente interesse per le opzioni sul Nasdaq 100, il Chicago Board Options Exchange ha lanciato un indicatore di volatilità implicita sul NDX nel gennaio 2001. Conosciuto con il suo simbolo ticker, VXN (a volte chiamato Vixen), il nuovo indicatore di volatilità implicita è stato creato per tracciare la volatilità implicita del popolare NDX.
+
+QQV
+
+A volte il trading inizia a sembrare un gioco di spionaggio, quindi portate pazienza su questo punto. In risposta alla crescente popolarità del trading delle opzioni QQQ sull'American Stock Exchange, il Chicago Board Options Exchange ha lanciato il Mini-Nasdaq 100. Contemporaneamente, l'AMEX ha riconosciuto la necessità di un indicatore di volatilità implicita. Infatti, nel giro di pochi giorni dal lancio di VXN, l'AMEX ha annunciato il debutto del suo indicatore proprietario di volatilità implicita: il QQQ volatility index o QQV. Il QQQ Volatility Index, come potete immaginare, è una misura composita della volatilità implicita sulle opzioni QQQ. Come il VIX, viene calcolato in tempo reale e disponibile durante tutto il giorno.
+
+Mentre i calcoli di VXN e QQV sono sostanzialmente gli stessi, ed entrambi sono misure della volatilità implicita delle opzioni sul Nasdaq 100, non sono sempre uguali in valore. Una ragione è che il QQQ è diverso dal MNX. Il Mini-Nasdaq 100 equivale a un decimo del NDX, ma il QQQ è progettato per essere pari a un quarantesimo del Nasdaq 100. Un'altra differenza fondamentale tra i due è che, mentre il CBOE calcola l'indice di volatilità del Nasdaq 100 (e il VIX) utilizzando i giorni di trading, l'American Stock Exchange utilizza i giorni di calendario quando calcola la volatilità implicita sulle opzioni QQQ. Senza entrare nella matematica precisa, utilizzare i giorni di trading invece dei giorni di calendario significa che, a parità di altre condizioni, il VXN sarà più alto del QQV. Infine, mentre le opzioni NDX e Mini-Nasdaq 100 (MNX) vengono regolate in stile europeo, le opzioni QQQ sono in stile americano. Pertanto, l'esercizio e l'assegnazione possono avvenire in qualsiasi momento prima della scadenza con le opzioni QQQ, ma solo alla scadenza per NDX e MNX.
+
+Tuttavia, indipendentemente dal fatto che il trader stia guardando VIX, VXN o QQV, l'analisi è la stessa. Durante i periodi di elevata volatilità del mercato, tutti e tre gli indicatori di volatilità implicita tendono a salire. In pratica, gli operatori di opzioni stanno acquistando aggressivamente opzioni su indici con la convinzione che gli alti livelli di volatilità del mercato siano destinati a rimanere. In altre parole, i trader iniziano a prezzare l'aspettativa di un'elevata volatilità del mercato, e questo fa salire la volatilità implicita sulle opzioni su indici. Tuttavia, VIX, VXN e QQV tendono a scendere quando gli investitori diventano compiacenti riguardo alle prospettive del mercato e si aspettano che la volatilità diminuisca.
+
+Pertanto, VIX, QQV e VXN sono misure di volatilità implicita che valutano il sentiment del mercato e forniscono segnali di acquisto e vendita nel mercato azionario. Così, quando la volatilità implicita viene utilizzata per temporizzare gli acquisti e le vendite nel mercato azionario, viene anche utilizzata come indicatore di sentiment e come misura della psicologia della folla. In definitiva, è un esercizio di pensiero contrario. Nello specifico, quando VIX, QQV o VXN salgono, suggerisce che la volatilità implicita sulle opzioni su indici sta aumentando. Cosa ci dice questo? Ci dice che c'è una crescente domanda di opzioni su indici (put generalmente), che sta spingendo i premi delle opzioni verso l'alto. Storicamente, quando i trader si aspettano che la volatilità del mercato aumenti in futuro o durante periodi di preoccupazione, ansia o panico:
+
+-   Gli investitori copriranno aggressivamente le loro scommesse e i loro portafogli.
+
+-   La domanda e i prezzi per le put OEX, NDX e QQQ saliranno alle stelle.
+
+Al contrario, quando la volatilità implicita diminuisce:
+
+-   La volatilità implicita sulle opzioni OEX è bassa.
+
+-   C'è poca domanda per le opzioni OEX.
+
+-   I trader sono compiacenti verso il mercato.
+
+In questi momenti, il VIX si guadagna il soprannome di "indicatore della paura" (fear gauge), il che lo rende uno strumento estremamente utile che fornisce un'eccellente misura dell'attività di mercato in tempo reale.
+
+Utilizzo degli indicatori di volatilità implicita e della volatilità statistica
+
+A volte si sente dire ai trader di opzioni: "Quando il VIX è alto, è tempo di comprare, ma quando il VIX è basso, è tempo di andarsene". Come abbiamo visto, VIX si riferisce al CBOE Volatility Index, che valuta i prezzi di mercato delle opzioni sull'indice S&P 100. Quando il VIX scende, suggerisce che gli investitori sono compiacenti e, da una prospettiva contrarian, è un segno che potrebbero seguire maggiori livelli di volatilità del mercato. Perché? In poche parole, perché i periodi di elevata volatilità sono spesso preceduti da alti livelli di rialzismo e compiacenza da parte degli investitori. In sostanza, è quando la folla meno si aspetta che le cose vadano male che di solito succede. Pertanto, l'ottimismo relativo spesso prepara il terreno per turbolenze del mercato perché eventi inaspettati colgono gli investitori vulnerabili e impreparati; sono poi costretti a cambiare i loro punti di vista e, nel mercato azionario, questo significa vendere.
+
+Pertanto, "quando il VIX è alto, è tempo di comprare, ma quando il VIX è basso, è tempo di andarsene". La filosofia alla base del detto è che quando il VIX è alto, è tempo di diventare rialzisti sulle azioni e diventare un acquirente. Quando la volatilità implicita è alta, suggerisce che gli investitori sono relativamente pessimistici e si aspettano alti livelli di volatilità in futuro. In quel momento, il contrarian diventa rialzista sul mercato e inizia ad acquistare azioni. Ma quando il VIX è basso, è tempo di andarsene, o di uscire dal mercato. La folla è compiacente e ottimista. Da un approccio contrarian, è un brutto momento per comprare azioni e, in effetti, "è tempo di andarsene". È fondamentale riconoscere che l'analisi del sentiment si occupa della ricerca di estremi. Quando il pubblico degli investitori, o la folla, inizia a mostrare segni estremi di paura o avidità, spingono i prezzi troppo in una direzione o nell'altra. Ad esempio, quando la paura colpisce il mercato, il VIX salirà alle stelle. In tal caso, gli investitori potrebbero aver reagito in modo eccessivo, per paura, e spinto i prezzi delle azioni troppo al ribasso. Al contrario, quando il VIX è basso, suggerisce che gli investitori sono rialzisti o compiacenti. Questo, a sua volta, è il tipo di psicologia che si verifica vicino ai massimi del mercato. In breve, VIX alto significa comprare azioni (non opzioni); ma un VIX basso suggerisce cautela. Questa, naturalmente, è una regola empirica e non uno strumento di temporizzazione preciso.
+
+Lo studio del sentiment del mercato è la ricerca di estremi: letture elevate del VIX suggeriscono che gli investitori stanno reagendo in modo eccessivo e che il pessimismo eccessivo verso il mercato azionario non solo sta spingendo il VIX più in alto, ma sta anche spingendo le azioni troppo in basso. Tuttavia, generalmente non è sufficiente che la folla sia moderatamente rialzista o moderatamente ribassista perché il pensatore contrarian scommetta contro di loro. Ricordate il detto di Wall Street: "La folla ha di solito ragione sulle tendenze, ma torto ad entrambe le estremità". Non è esattamente poesia, ma il più delle volte è vero. Quando la folla inizia a mostrare livelli estremi di paura e pessimismo o avidità e ottimismo, la situazione diventa insostenibile. Il trucco sta nel sapere come identificare gli estremi. Il VIX può aiutarvi, ma dovete sapere esattamente cosa è considerato alto e basso.
+
+All'inizio di questo capitolo, abbiamo visto l'andamento a lungo termine del VIX. È importante considerare l'intervallo dell'indicatore nel passato. Ad esempio, supponiamo che il VIX abbia oscillato principalmente tra il 20% e il 35%. Pertanto, quando il VIX si avvicina all'estremità inferiore del suo intervallo (20%), è considerato indicativo di relativa compiacenza. Al contrario, quando il VIX si avvicina al 35%, suggerisce che la paura sta aumentando.
+
+Confronto tra VIX e volatilità statistica
+
+Come abbiamo visto, esistono altre misure di volatilità oltre alla IV (volatilità implicita). La volatilità storica considera solo i prezzi passati dell'asset sottostante e non il prezzo delle opzioni. La volatilità statistica, o effettiva, è un esempio. Matematicamente, viene calcolata come la deviazione standard annualizzata dei prezzi di chiusura su un periodo di giorni (es. 10, 30, 90 giorni). In questo esempio, la volatilità statistica è per l'OEX, calcolata utilizzando i prezzi di chiusura dell'S&P 100 nel tempo.
+
+Quando si considera il VIX, quindi, è importante tenere presente la sua relazione con la volatilità effettiva dell'OEX. In particolare, piuttosto che considerare il VIX alto e basso in termini assoluti, consideriamolo relativo alla volatilità statistica dell'OEX. Per esempio, al momento in cui scriviamo, il VIX è scambiato al di sotto del 23%. Questo valore, a sua volta, è il livello più basso di volatilità implicita dell'OEX dal luglio 2001 e una lettura storicamente bassa. È tempo di andarsene? Ebbene, allo stesso tempo, la volatilità statistica a 20 giorni dell'OEX è del 23%. In pratica, VIX e volatilità statistica sono uguali. È normale? Assolutamente no! In effetti, è insolito vedere la volatilità statistica o effettiva dell'OEX scendere al di sotto o eguagliare il valore corrente del VIX.
+
+Per illustrare, la Figura 7.8 confronta il VIX con la volatilità statistica a 20 giorni dell'OEX. La linea nera spessa rappresenta la differenza tra VIX e volatilità statistica. Si noti che la linea nera rimane sopra lo zero per la maggior parte del tempo. In pratica, è raro vedere il VIX scendere al di sotto della volatilità effettiva dell'OEX. Lo ha fatto nel gennaio 2001, nell'aprile 2001 e nella primavera del 2002. Tutte e tre le occasioni si sono rivelate essere importanti massimi del mercato.
+
+Rapporti put/call
+
+Sebbene i rapporti put/call abbiano poco a che fare con la volatilità, l'argomento viene discusso qui perché, se utilizzati in combinazione con gli indicatori di volatilità implicita, i rapporti forniscono informazioni significative sul sentiment degli investitori. La maggior parte dei trader di opzioni sono speculatori. Cioè, scommettono sul rialzo e sul ribasso di un'azione o del mercato acquistando put e call. Mentre leggere questo libro vi darà le competenze per implementare strategie più complesse e sofisticate come spread e straddle, la maggior parte degli operatori di opzioni sono semplicemente acquirenti di opzioni. Questo, a sua volta, vi metterà nel top 10% di tutti i trader di opzioni perché la verità è che la maggior parte dei trader di opzioni sono o hedger o speculatori e le loro strategie sono limitate all'acquisto diretto di put e call.
+
+Gran parte dell'attività delle opzioni sul mercato si presenta sotto forma di semplice acquisto di opzioni. Quando le condizioni del mercato cambiano e anche il sentiment degli investitori si altera, il rapporto tra acquisti di put e acquisti di call cambierà. Ad esempio, quando la turbolenza colpisce il mercato azionario statunitense, il panico e la paura regnano e gli investitori si dirigono verso le uscite; un forte acquisto di put spesso accompagna il caos. Questo è vero sia per i singoli titoli che per il mercato nel suo insieme (cioè gli indici). Al contrario, quando i prezzi delle azioni salgono e gli investitori diventano euforici, questa avidità si traduce in alti livelli di acquisto di call. Gli investitori e i trader di opzioni sono attratti dall'attività. Quindi, quando le azioni cadono, gli acquisti di put aumentano; quando le azioni balzano in avanti, l'attività delle call aumenta.
+
+Un modo semplice per monitorare i livelli complessivi di acquisto di put e call è attraverso il rapporto put/call. Il calcolo è semplice. Per qualsiasi azione, indice o mercato, il numero totale di put scambiate viene diviso per il numero totale di call. Questo viene fatto più spesso per ogni singola sessione di negoziazione.
+
+Rapporto put/call = Volume totale giornaliero di put / Volume totale giornaliero di call
+
+In modo alquanto simile alla nostra discussione sugli indicatori di volatilità implicita, interpretare i cambiamenti nei rapporti put/call è anche un esercizio di pensiero contrario. In altre parole, l'analista cerca segni di emozione estrema. Ad esempio, un forte acquisto di call è il segno di un ottimismo eccessivo da parte degli investitori, mentre alti livelli di attività put sono la prova di un eccessivo negativismo.
+
+I contrarian cercano gli estremi concentrandosi su livelli eccessivi di sentiment. I contrarian sono rialzisti sul sentiment e poi scambiano contro la folla. Sebbene la folla non abbia sempre torto, quando le emozioni, paura e avidità, raggiungono gli estremi, di solito conviene scommettere contro di loro. Come gli indicatori di volatilità implicita, i rapporti put-to-call possono aiutare a identificare questi estremi.
+
+Per comprendere meglio come utilizzare i rapporti put-to-call come indicatori di sentiment, consideriamo un esempio. Uno dei rapporti put/call più utilizzati è calcolato come il volume totale di put diviso per il volume totale di call sul Chicago Board Options Exchange. Le statistiche esatte sono disponibili quotidianamente sul sito web dell'exchange (www.cboe.com) e su una serie di altri fornitori di dati. La Figura 7.9 mostra graficamente il rapporto put/call totale del CBOE. Il grafico mostra la media a 10 giorni del rapporto per livellare i dati nel tempo. Poiché c'è quasi sempre più attività di call che di put sul CBOE, il rapporto fluttua principalmente tra 0,50 e 1,00.
+
+Quando il rapporto put/call del CBOE sale verso l'estremità superiore o al di sopra di 1,00, come ha fatto nell'autunno del 1998 prima del minimo del mercato, è un segno di:
+
+-   Pessimismo eccessivo del mercato.
+
+-   Forte acquisto di put.
+
+Il trader dovrebbe essere allertato per opportunità di acquisto. D'altra parte, quando scende all'estremità inferiore dell'intervallo, come ha fatto nel marzo 2000 prima del massimo del mercato, è un segno di:
+
+-   Ottimismo eccessivo.
+
+-   Attività speculativa.
+
+-   Forte acquisto di call.
+
+Questo, a sua volta, renderà il trader cauto e alla ricerca di opportunità di trading al ribasso. Pertanto, letture basse del rapporto put/call del CBOE generalmente coincidono con i massimi del mercato e letture alte con i minimi del mercato. Ancora una volta, il trader vuole comprendere i valori che il rapporto put/call ha mostrato nel tempo e dare maggiore peso ai suoi valori estremi.
+
+I trader utilizzano diversi contratti di opzione per calcolare i rapporti put/call. L'esempio precedente utilizza il volume totale di tutte le opzioni scambiate sul Chicago Board Options Exchange. In alternativa, lo stratega può guardare l'attività di trading sull'American Stock Exchange o sul Philadelphia Stock Exchange. Ad alcuni analisti piace considerare tutto il trading su tutti e cinque i principali exchange di opzioni. Può anche essere utile calcolare il rapporto put/call solo per le opzioni su azioni o, come vedremo tra poco, solo per le opzioni su indici.
+
+Su Optionetics.com, gli investitori possono calcolare i rapporti put/call sui singoli titoli e tracciarli in grafici. Ad esempio, la Figura 7.10 mostra il rapporto put/call a tre mesi per AOL Time Warner (AOL). Si noti che il grafico include sia il valore corrente del rapporto put-to-call che la media nel tempo. Un fattore importante da considerare quando si osserva il grafico sono i massimi e i minimi che segnano letture estreme. Inoltre, lo stratega presta particolare attenzione ai momenti in cui il rapporto put/call si discosta significativamente dalla sua media a lungo termine. Inoltre, è importante capire che ogni azione, indice o mercato avrà un rapporto put/call unico, e le letture di IBM, ad esempio, diranno molto poco sul sentiment degli investitori verso General Electric. È quindi importante considerare i valori estremi di ciascun rapporto put/call individualmente.
+
+Ad esempio, in contrasto con i rapporti put/call delle opzioni su azioni, i rapporti sugli indici sono generalmente superiori a 1,00. Il motivo è semplice: le opzioni su indici sono ampiamente utilizzate da grandi istituzioni che cercano di coprire i portafogli attraverso l'uso di opzioni put. Pertanto, in media, c'è un maggiore acquisto di put che di call associato alle opzioni su indici. La Figura 7.11 offre uno sguardo al rapporto put/call dell'OEX. In questo grafico, viene utilizzata una media a 3 giorni per livellare i dati. Alcuni trader utilizzano medie mobili put/call a 10, 20 e persino 50 giorni.
+
+Utilizzo degli indicatori di volatilità implicita insieme ai rapporti put/call
+
+Sia gli indicatori di volatilità implicita che i rapporti put-to-call forniscono informazioni uniche riguardo al sentiment degli investitori verso un'azione, un indice o un mercato. Utilizzandoli insieme, lo stratega può ottenere una migliore percezione se gli investitori sono prevalentemente rialzisti o ribassisti e se le emozioni hanno raggiunto un estremo. Un ultimo pezzo del puzzle è il volume. Ad esempio, se c'è una lettura estremamente alta del rapporto put/call dell'OEX e il VIX sale alle stelle, questo viene generalmente interpretato come un segnale positivo da un approccio contrarian. Tuttavia, se non c'è alcun notevole aumento dell'attività put o del volume, il contrarian potrebbe trattare le letture con sospetto.
+
+Per comprendere meglio come utilizzare insieme i rapporti put/call, la volatilità implicita e le statistiche di volume, consideriamo un esempio. Il rapporto put/call sugli indici del CBOE è stato menzionato brevemente in precedenza. Questo indicatore contrarian misura il numero di opzioni put su indici scambiate sul Chicago Board Options Exchange rispetto al numero di opzioni call su indici. In due venerdì, 22 febbraio e 1 marzo 2002, il rapporto put/call sugli indici del CBOE è salito a livelli anormalmente alti, e questa tendenza, a sua volta, suggeriva un grande aumento sia dell'attività put su indici che del sentiment ribassista. Da un punto di vista contrarian, letture così alte sono interpretate come pessimismo eccessivo e, quindi, come un motivo per diventare rialzisti sul mercato azionario. In questo caso, tuttavia, c'erano alcune ragioni per trattare le letture elevate con un po' di scetticismo.
+
+Poiché il rapporto put/call sugli indici del CBOE è uguale al numero di put su indici scambiate sul Chicago Board Options Exchange diviso per il numero di call su indici, quando supera 2,00 ci dice che c'è più del doppio dell'attività put rispetto all'attività call sull'exchange. Come notato in precedenza, poiché le opzioni su indici sono spesso utilizzate come strumenti di copertura per gli investitori professionisti, c'è quasi sempre più volume di put su indici che di call. Di conseguenza, poiché il rapporto put/call sugli indici è calcolato come il numero di put su indici scambiate diviso per il numero di call su indici scambiate, il rapporto sarà quasi sempre superiore a 1,00 (suggerendo più attività put che call).
+
+All'inizio del 2002, tuttavia, il rapporto put/call sugli indici si è avvicinato o ha superato 2,00 in due occasioni. Vedere rapporti così elevati di acquisti put rispetto a call a distanza di pochi giorni l'uno dall'altro è insolito. Di conseguenza, le letture elevate dicevano che i trader di opzioni su indici erano diventati negativi o ribassisti sul mercato e avevano iniziato a coprire le loro scommesse. Ancora una volta, da una prospettiva contrarian, gli alti livelli di sentiment ribassista sono considerati positivi per il mercato azionario e un motivo per essere rialzisti. La Figura 7.12 mostra graficamente il rapporto put/call sugli indici (livellato utilizzando una media mobile a 2 giorni). Si noti che il rapporto put/call sugli indici ha subito un impennata tra la fine del 2001 e l'inizio del 2002.
+
+Mentre il rapporto put/call sugli indici si muoveva gradualmente verso l'alto, è interessante notare che non è salito al massimo dell'anno. È interessante notare che il massimo si è verificato il 4 gennaio, che ha anche segnato un importante massimo nel Dow Jones Industrial Average. Pertanto, il rapporto put/call sugli indici ha effettivamente mostrato livelli relativamente elevati di attività put su indici vicino a un massimo del mercato. Questo, naturalmente, è l'opposto di quanto il contrarian si aspetterebbe. Invece, il rapporto put/call sugli indici è generalmente considerato rialzista per il mercato quando registra letture così elevate. In altre parole, all'inizio del 2002, il rapporto put/call sugli indici ha fornito un segnale estremamente fuorviante e falso.
+
+Forse una ragione per cui il rapporto put/call sugli indici ha generato un falso segnale è stato il volume di put insolitamente basso in quel momento. Guardate il volume delle put sugli indici mostrato nella Figura 7.13. Si noti che durante la fine di dicembre e l'inizio di gennaio il volume era estremamente basso. Ad esempio, il volume delle put era una frazione dei livelli di settembre 2001, quando il mercato ha effettivamente formato un minimo. In breve, il volume leggero delle put sugli indici all'inizio di gennaio 2002 ha distorto le letture del rapporto put/call sugli indici, il che aiuta a spiegare perché ha generato un falso segnale. Il volume è rimasto fiacco anche dopo quel momento.
+
+Un altro fattore da considerare quando si studia il rapporto put/call sugli indici è il livello di volatilità implicita assegnato alle opzioni su indici nel momento in cui l'indicatore fornisce un segnale di acquisto o vendita. Questo è relativamente facile da fare utilizzando il CBOE Volatility Index o il Nasdaq 100 Implied Volatility Index. Ricordiamo che VIX e VXN offrono informazioni in tempo reale sulla volatilità implicita delle opzioni su indici (in particolare, le opzioni sull'indice S&P 100 e sull'indice Nasdaq 100). Generalmente, quando si verificano crescenti livelli di pessimismo o sentiment ribassista nel mercato e i trader di opzioni su indici acquistano aggressivamente opzioni put per coprire i portafogli, la volatilità implicita delle opzioni su indici aumenterà. Ad esempio, si noti la Figura 7.14. Nel settembre 2001, quando il rapporto put/call sugli indici ha raggiunto un picco, anche il VIX ha registrato un picco significativo. Questo ha contribuito a confermare il segnale di acquisto. Tuttavia, nel gennaio 2002, quando il rapporto put/call sugli indici è salito, il VIX era relativamente basso (circa 25) e il VXN era intorno a 50. Pertanto, il picco del rapporto put/call non è stato confermato da un picco della volatilità implicita. Inoltre, il volume era basso. Di conseguenza, il rapporto put/call sugli indici ha generato un falso segnale.
+
+Conclusione
+
+L'analisi del sentiment è l'arte di valutare l'umore e le emozioni degli investitori verso un titolo, un indice o il mercato nel suo complesso. Gli investitori e i trader di opzioni che vogliono adottare un approccio contrarian all'investimento sono particolarmente dipendenti dall'analisi del sentiment. Poiché le opzioni sono diventate molto popolari, i dati sulle opzioni forniscono una delle migliori fonti per valutare il sentiment. Il modo più semplice per utilizzare le informazioni sulle opzioni per valutare il sentiment è attraverso il rapporto put/call. Il rapporto put/call aiuta a quantificare i livelli relativi di attività put e call. Il rapporto più osservato è il rapporto put/call del CBOE. L'indicatore è un confronto tra le put scambiate ogni giorno rispetto al volume delle call sul Chicago Board Options Exchange. Nei periodi in cui i trader diventano eccessivamente rialzisti, il numero di call scambiate aumenterà rispetto al numero di put. Generalmente, c'è più acquisto di call che di put quando si tratta di opzioni su azioni. Per questo motivo, il rapporto put/call totale del CBOE è spesso inferiore a 1,00. Quando esistono livelli eccessivi di ottimismo, il rapporto put/call totale del CBOE scenderà al di sotto di 0,5. D'altra parte, quando i trader diventano ribassisti, salirà sopra 1,00.
+
+Un altro importante strumento per valutare il sentiment degli investitori è il CBOE Volatility Index, o VIX, spesso definito l'"indicatore della paura" del mercato. Il VIX è una misura della volatilità implicita sulle opzioni S&P 100. Durante i periodi di turbolenza del mercato, gli investitori professionisti si rivolgono alle opzioni put OEX per protezione o per coprire i portafogli di investimento. L'acquisto aggressivo di put OEX, a sua volta, porta a un'impennata della volatilità implicita e a un aumento del VIX. Pertanto, quando il VIX sale, è un segno di angoscia degli investitori. Al contrario, quando il VIX scende a livelli bassi, suggerisce rialzismo o compiacenza degli investitori. Pertanto, quando l'indice di volatilità scende all'estremità inferiore del suo recente intervallo di negoziazione (18-23%), i trader dovrebbero diventare cauti. D'altra parte, quando il VIX sale all'estremità superiore del suo recente intervallo di negoziazione (35-40%), lo stratega può prenderlo come un segnale che la paura del mercato è diventata esagerata e, di conseguenza, presumere che le vendite siano state eccessive. Il trader può quindi aspettarsi un movimento al rialzo del mercato azionario.
+
+Il Nasdaq 100 Volatility Index, o VXN, è stato sviluppato all'inizio del 2001 dal CBOE. È simile al VIX. Tuttavia, il VXN misura la volatilità implicita sulle opzioni dell'indice Nasdaq 100, invece dell'OEX. Anche in questo caso, quando si studia il VXN, il trader cerca letture relativamente basse (45-50%) del VXN per preannunciare un massimo del mercato. Al contrario, letture elevate (75% e oltre) segnalano una paura estrema del mercato e sono un segno che il mercato è pronto a rimbalzare.
+
+Mentre gli acquisti e le vendite avvengono nei mercati azionari e delle opzioni, a volte le emozioni diventano forti. La folla del trading spesso assume caratteristiche che sono abbastanza simili al comportamento della folla. Quando queste emozioni raggiungono estremi di paura e avidità, si presentano opportunità di profitto per il trader esperto, il contrarian, che è disposto a scommettere contro la folla. Gli indici di volatilità implicita e i rapporti put-to-call sono due degli strumenti principali per valutare il sentiment degli investitori. Entrambi provengono direttamente dal mondo delle opzioni. Come abbiamo visto in questo capitolo, VIX, VXN e QQV forniscono letture in tempo reale e aggiornate della volatilità implicita delle opzioni su indici. Per dare un senso a queste letture, l'analista deve prima comprendere qual è l'intervallo normale di ciascun indicatore e poi identificare quando si è discostato da tale intervallo normale e ha raggiunto un estremo. I rapporti put/call vengono utilizzati in modo simile. Ogni azione, indice o mercato avrà un rapporto put/call unico che deve essere considerato nel tempo. Inoltre, sia che si utilizzino i rapporti put/call o la volatilità implicita, questi strumenti sono meglio utilizzati insieme e in combinazione con le statistiche di volume. In questo modo, lo stratega delle opzioni avrà una migliore comprensione di cosa sta facendo e provando la folla, e questo può aiutare a identificare importanti punti di svolta del mercato.
+
+Prompt per la generazione dei grafici con AI
+
+Ecco i prompt dettagliati per ricreare i grafici menzionati nel capitolo.
+
+Nota: Per i grafici con dati storici specifici (come le Figure 7.2 e 7.3), ho fornito una descrizione del tipo di grafico e dei dati da includere, ma per una ricreazione perfetta sarebbero necessari i dati esatti. I prompt qui sotto sono pensati per generare un'immagine stilizzata e concettualmente accurata.
+
+Figura 7.1: VIX (CBOE Volatility Index)
+
+-   Descrizione: Un semplice schermo di quotazione per il VIX.
+
+-   Prompt per AI:
+
+"Genera un'immagine di uno schermo di trading finanziario. Lo schermo mostra una quotazione per l'indice 'CBOE Volatility Index (VIX)'. La quotazione deve includere i campi 'Last' (valore corrente), 'Change', '% Change', 'Open', 'High', 'Low', '52 Week High', '52 Week Low'. I valori devono essere numerici e professionali. Lo sfondo dovrebbe essere scuro (come Bloomberg o Terminale Reuters) con il testo in bianco/verde/rosso, in uno stile chiaro e moderno. Ad esempio, 'Last: 27.19, Change: 0.63, High: 27.57, Low: 26.71' e '52 Week High: 41.984'."
+
+Figura 7.2: VIX durante gli eventi di crisi
+
+-   Descrizione: Un grafico a linee che mostra i picchi del VIX in corrispondenza di eventi di crisi. Il grafico dovrebbe mostrare i livelli di VIX dal 1986 al 2002.
+
+-   Prompt per AI:
+
+"Crea un grafico a linee che rappresenti l'andamento del CBOE Volatility Index (VIX) dal 1986 al 2002. L'asse X deve rappresentare il tempo (in anni), mentre l'asse Y deve rappresentare il livello del VIX in percentuale (da 0% a 60%). Il grafico deve mostrare una linea che fluttua tra il 10% e il 40% e deve avere picchi significativi in corrispondenza di eventi storici chiave. Etichetta questi picchi come: 'Ottobre 1987 (Crash)', 'Ottobre 1997', 'Agosto/Settembre 1998', 'Aprile 2000 (Bolla Tech)', 'Aprile 2001', 'Settembre 2001 (Attacchi 11/9)', e 'Luglio 2002 (WorldCom)'. Sotto il grafico, aggiungi un'area che spiega brevemente questi eventi. Lo stile deve essere professionale, simile a una pubblicazione finanziaria."
+
+Figura 7.3: Istogramma dei valori di chiusura del VIX
+
+-   Descrizione: Un istogramma (distribuzione di frequenza) dei valori di chiusura del VIX.
+
+-   Prompt per AI:
+
+"Genera un istogramma che mostri la distribuzione dei valori di chiusura del CBOE Volatility Index (VIX) per un periodo di tempo. L'istogramma dovrebbe avere sull'asse X i valori del VIX (da 10 a 50, con incrementi di 5) e sull'asse Y la 'Frequenza' (o 'N = 564'). Le barre dovrebbero essere più alte al centro, indicando che la maggior parte dei valori di chiusura si attesta tra il 20% e il 30%. La forma dovrebbe essere approssimativamente a campana. Sopra il grafico, indica la 'Mean = 26.0' e 'Std. Dev. = 3.69'. Lo stile deve essere pulito, simile a quello di un software statistico come SPSS o Minitab."
+
+Figura 7.4: Volume medio giornaliero delle opzioni OEX
+
+-   Descrizione: Un grafico a linee che mostra il calo del volume medio giornaliero delle opzioni OEX.
+
+-   Prompt per AI:
+
+"Crea un grafico a linee che rappresenti il 'Volume Medio Giornaliero delle Opzioni OEX' dal maggio 1998 al novembre 2000. L'asse X deve mostrare le date (es. '5/98', '8/98', '11/98'... fino a '11/00') e l'asse Y deve rappresentare il volume (da 0 a 200.000). La linea deve iniziare alta (intorno a 150.000-180.000) e mostrare una tendenza al ribasso nel tempo, con alcune oscillazioni, fino a scendere intorno a 50.000 verso la fine del periodo. Lo stile del grafico deve essere nitido e professionale."
+
+Figura 7.5: VXN e Nasdaq-100 (NDX) nel 2000
+
+-   Descrizione: Un grafico a due linee che mostra il VXN e l'NDX, evidenziando la loro correlazione negativa.
+
+-   Prompt per AI:
+
+"Genera un grafico a due linee che mostra l'andamento del VXN (Nasdaq 100 Implied Volatility Index, asse Y di destra) e del Nasdaq 100 Index (NDX, asse Y di sinistra) per l'anno 2000. L'asse X rappresenta il tempo (gennaio 2000 - dicembre 2000). La linea dell'NDX deve essere mostrata con un'etichetta 'NDX (right axis)' e la linea del VXN con 'VXN (left axis)'. Mostra visivamente come l'NDX (linea rossa o blu) e il VXN (linea verde o arancione) tendono a muoversi in direzioni opposte: quando il VXN sale (panico), l'NDX scende, e viceversa. Aggiungi delle frecce o delle note sul grafico per enfatizzare questa relazione, come 'spesso dopo che i prezzi delle azioni scendono, il prezzo per la protezione delle opzioni aumenta'. Lo stile deve essere professionale e informativo."
+
+Figura 7.6: Confronto tra VIX e VXN
+
+-   Descrizione: Un grafico a due linee che confronta l'andamento del VIX e del VXN nel tempo.
+
+-   Prompt per AI:
+
+"Crea un grafico a due linee che confronti il VIX e il VXN. L'asse X deve rappresentare il tempo da 'Jan 3, 1995' a 'Mar 1, 2001'. L'asse Y deve rappresentare la 'Volatilità (%)'. Il grafico deve mostrare due linee: una per VIX (S&P 100) e una per VXN (Nasdaq 100). La linea del VXN dovrebbe essere quasi sempre al di sopra della linea del VIX, con una differenza che può variare ampiamente. Durante i periodi di crisi, come il 1998 o il 2000, entrambe le linee dovrebbero mostrare picchi, ma il picco del VXN dovrebbe essere molto più alto. Lo stile deve essere chiaro, simile a un grafico di ricerca finanziaria."
+
+Figura 7.7: Quotazione QQV
+
+-   Descrizione: Uno schermo di quotazione per l'indice di volatilità QQV.
+
+-   Prompt per AI:
+
+"Genera un'immagine di uno schermo di trading finanziario per l''QQV Volatility Index (SQQV)'. La quotazione deve includere i campi 'Last', 'Change', '% Change', 'Open', 'High', 'Low', '52 Week High', '52 Week Low', 'Volume', 'Exchange'. Mostra 'Last: 55.69', 'Change: -1.04', '% Change: -1.83%', 'Open: 57.930', 'High: 57.930', 'Low: 55.480', '52 Week High: 74.891', '52 Week Low: N/A'. Lo sfondo deve essere scuro con testo in stile Bloomberg, chiaro e professionale. Includi il logo Optionetics.com in alto."
+
+Figura 7.8: Confronto VIX con volatilità statistica a 20 giorni
+
+-   Descrizione: Un grafico complesso che mostra VIX, volatilità statistica a 20 giorni e la differenza tra i due.
+
+-   Prompt per AI:
+
+"Crea un grafico a linee che confronti il VIX con la volatilità statistica a 20 giorni dell'OEX. L'asse X deve mostrare le date da '1/5/01' a '1/5/02'. L'asse Y deve rappresentare la volatilità in percentuale da 0% a 60%. Il grafico deve contenere tre elementi:
+
+1.  Una linea azzurra per '20-day (Statistical Volatility)'.
+
+2.  Una linea rossa per 'VIX'.
+
+3.  Un istogramma a barre per 'VIX minus 20-day', che mostra la differenza.
+    L'istogramma dovrebbe essere per lo più positivo (sopra lo zero), ma con alcuni cali significativi sotto lo zero in corrispondenza di date specifiche (es. gennaio 2001, aprile 2001). Aggiungi etichette per le tre serie. Lo stile deve essere pulito e professionale, simile a un grafico di analisi finanziaria."
+
+Figura 7.9: Rapporto Put/Call del CBOE (media mobile 10 giorni)
+
+-   Descrizione: Un grafico a linee che mostra l'andamento del rapporto put/call del CBOE.
+
+-   Prompt per AI:
+
+"Genera un grafico a linee del 'CBOE Put/Call Ratio - 10-Day MA'. L'asse X deve mostrare le date da '3/19/97' a '9/8/00'. L'asse Y deve rappresentare il rapporto put/call, da 0 a 1.0. Il grafico mostra una linea che fluttua. Deve avere picchi alti (vicino a 1.0) in corrispondenza del minimo del mercato (es. Ottobre 1998) e valle basse (verso 0.5) in corrispondenza dei massimi del mercato (es. Marzo 2000). Identifica visivamente queste aree sul grafico con delle note. Lo stile deve essere come un grafico di analisi finanziaria."
+
+Figura 7.10: Rapporto Put/Call per AOL Time Warner (AOL)
+
+-   Descrizione: Un grafico a linee che mostra il rapporto put/call di un titolo specifico.
+
+-   Prompt per AI:
+
+"Crea un grafico a linee che mostra il rapporto Put/Call per un titolo, etichettato 'AOL Time Warner (AOL) - 3 Month Put/Call Ratio'. L'asse X deve mostrare le date (es. '02/08', '02/23', '03/09', '03/23', '04/06', '04/23'). L'asse Y deve rappresentare il rapporto put/call da 0.2 a 2.0. La linea principale è il 'Put Call Ratio'. Includi anche una linea orizzontale per indicare la 'Ave Put/Call = 0.378'. Aggiungi un'annotazione per il valore corrente (es. 'Put/Call = 0.425'). Lo stile deve essere professionale e chiaro."
+
+Figura 7.11: Rapporto Put/Call dell'OEX (media mobile 3 giorni)
+
+-   Descrizione: Un grafico a linee che mostra il rapporto put/call per le opzioni sull'indice OEX.
+
+-   Prompt per AI:
+
+"Genera un grafico a linee per l''OEX Put/Call Ratio 3-Day MA'. L'asse X deve mostrare le date da '2/25/00' a '4/25/01'. L'asse Y deve rappresentare il rapporto put/call da 0.00 a 1.80. La linea deve oscillare. Il rapporto per le opzioni su indici è generalmente al di sopra di 1.0, a differenza di quello per i singoli titoli. Mostra la linea che fluttua prevalentemente tra 0.80 e 1.40, con picchi occasionali. Lo stile deve essere simile a un grafico di analisi finanziaria."
+
+Figura 7.12: Rapporto Put/Call sugli Indici del CBOE (media mobile 2 giorni)
+
+-   Descrizione: Un grafico a linee che mostra il rapporto put/call per le opzioni su indici del CBOE.
+
+-   Prompt per AI:
+
+"Crea un grafico a linee dell''CBOE Index Put-to-Call Ratio (2-Day MA)'. L'asse X rappresenta il tempo (da 10/01 a 02/02 circa) e l'asse Y rappresenta il 'Ratio'. La linea dovrebbe fluttuare e avere picchi notevoli in determinati periodi (es. fine 2001). Lo stile del grafico deve essere semplice e professionale, mostrando chiaramente il trend del rapporto nel tempo."
+
+Figura 7.13: Volume delle Put sugli Indici
+
+-   Descrizione: Un grafico a barre o a linee che mostra il volume delle put sugli indici.
+
+-   Prompt per AI:
+
+"Crea un grafico (a linee o a barre) che rappresenti il 'Volume delle Put sugli Indici' da '8/20/01' a '2/20/02'. L'asse Y deve rappresentare il volume (da 0 a 400.000). Il grafico deve mostrare un picco enorme intorno a settembre 2001 (in corrispondenza degli attacchi dell'11/9). Dopo questo picco, il volume deve calare drasticamente fino a dicembre 2001 e gennaio 2002, dove i volumi sono molto bassi. Lo scopo del grafico è mostrare la differenza di volume tra un evento di crisi e un periodo normale. Lo stile deve essere professionale e informativo."
+
+Figura 7.14: Conferma del segnale con VIX/VXN
+
+-   Descrizione: Un grafico che mostra VIX e VXN in un periodo specifico per sottolineare la mancanza di un picco di volatilità in corrispondenza di un falso segnale.
+
+-   Prompt per AI:
+
+"Genera un'immagine o un grafico che mostri i livelli di VIX e VXN in un periodo di tempo (ad esempio, i primi mesi del 2002). Un pannello mostra il VIX che si attesta intorno al 25% e un altro pannello mostra il VXN intorno al 50%. Aggiungi delle linee orizzontali per evidenziare questi livelli. Lo scopo è mostrare che i livelli di volatilità implicita sono bassi/medi, non estremi. Il titolo del grafico potrebbe essere 'Daily 5.15.2002' con 'CBOE Nasdaq Mkt Volatility Index' e 'CBOE Volatility Index'. Lo stile deve essere pulito e professionale."
+
+This response is AI-generated, for reference only.

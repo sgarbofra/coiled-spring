@@ -1,0 +1,275 @@
+Volatilità nel Mercato Azionario
+
+Nel corso degli anni, ho negoziato diversi mercati, tra cui materie prime, futures e azioni. Alla fine, ho trovato la mia nicchia nel trading di opzioni su azioni e indici. Poiché il valore di un'opzione deriva da un altro strumento di investimento, le opzioni sono strumenti derivati. Nel caso delle opzioni su azioni, il loro valore deriva dal valore di un'azione. Pertanto, per comprendere le opzioni su azioni, è prima necessario avere una conoscenza approfondita delle azioni. Lo stesso si può dire per le opzioni su indici. Quindi, una comprensione completa delle azioni, degli indici e del mercato azionario nel suo complesso è fondamentale per negoziare con successo la volatilità. In questo capitolo, cerchiamo di identificare i fattori che causano la volatilità nelle singole azioni.
+
+Avete mai sentito un giornalista commentare la volatilità del mercato azionario? Ad esempio, "Il Dow Jones Industrial Average ha recuperato le perdite iniziali per chiudere in rialzo di 50 punti oggi in un'altra sessione volatile". Cosa significa esattamente? Innanzitutto, quando i giornalisti commentano l'andamento del mercato azionario, di solito si riferiscono a una delle tre medie: il Dow Jones Industrial Average (il Dow), il Nasdaq Composite o lo Standard & Poor's 500. Tutti e tre possono essere utilizzati per valutare le tendenze del mercato azionario, se il toro sta spingendo il mercato al rialzo o l'orso sta premendo i titoli al ribasso.
+
+In effetti, il mercato azionario ha una storia ricca e interessante che risale a secoli fa. Come implicano le parole "azione" e "mercato", è essenzialmente un mercato in cui gli investitori si incontrano per comprare e vendere azioni. Sebbene gran parte di ciò avvenga elettronicamente al giorno d'oggi, il concetto è lo stesso di oggi come lo era nel 1792, quando i trader si incontravano sotto l'albero di buttonwood nella bassa Manhattan per scambiare contanti con azioni. Il mercato azionario è un'arena per l'acquisto e la vendita di diverse singole azioni. Simile a un'asta, i prezzi delle singole azioni sono determinati dall'acquisto e dalla vendita di quelle singole azioni. Allo stesso tempo, ogni azione e ogni indice è unico a suo modo.
+
+Volatilità nel Mercato Azionario (Pagina 24)
+
+Cosa causa la volatilità dei prezzi delle azioni? Il Capitolo 1 ha presentato una serie di eventi che hanno causato il crollo dell'intero mercato: l'aumento dei tassi di interesse, lo scoppio di una bolla speculativa, la guerra. Ma ci sono anche fattori che possono causare volatilità nelle azioni di una sola società. In altre parole, perché le azioni di una società mostrano una maggiore volatilità rispetto a quelle di una simile? Al di fuori degli eventi che possono causare il crollo dell'intero mercato, quali fattori possono innescare un calo in un singolo titolo? Questo capitolo identifica alcune delle cause. Ma prima, esploriamo cosa rappresenta un'azione.
+
+Cos'è un'azione?
+
+Torniamo alle basi per un momento. In questo libro, al lettore verranno presentati una varietà di esempi che richiedono una comprensione del mercato azionario. In particolare, per negoziare la volatilità è importante avere una conoscenza approfondita di azioni, indici e opzioni. Le opzioni saranno trattate in dettaglio nei capitoli successivi. In questo capitolo verranno discussi i fondamenti delle azioni e degli indici. Sebbene per alcuni lettori la seguente revisione possa sembrare un po' troppo elementare, una discussione completa sulla volatilità richiede una solida conoscenza delle azioni e dei prezzi azionari.
+
+Cos'è un'azione? Secondo stime recenti, oggi 50 milioni o il 50% di tutte le famiglie americane possiedono azioni in una forma o nell'altra. Alcuni individui sono esposti alle azioni attraverso i loro fondi pensione sul lavoro. Altri investitori sono stati convinti ad acquistare azioni singole da un broker o da un collega. Altri ancora potrebbero aver acquisito azioni tramite un'eredità o un regalo. Tuttavia, mentre viaggio per il paese presentando seminari sul trading di opzioni, rimango costantemente sorpreso nell'ascoltare alcuni dei malintesi che le persone hanno, nonostante la diffusa proprietà di azioni.
+
+Quando un investitore acquista una particolare azione, sta investendo nella proprietà parziale di una società. Una società che ha azioni negoziate sul mercato è nota come società pubblica perché il pubblico ha accesso alle sue azioni. Non tutte le società sono pubbliche e hanno azioni disponibili per l'acquisto. Le società che scelgono di non quotarsi in borsa sono note come società private.
+
+La maggior parte delle grandi e di successo società emette azioni per raccogliere capitali per espandere le operazioni. Ciò può essere realizzato assumendo una banca d'investimento per vendere azioni della società. La banca d'investimento porta le azioni della società sul mercato attraverso qualcosa noto come offerta pubblica iniziale (IPO). In questo caso, la banca rende le quote di proprietà disponibili al pubblico per l'acquisto. Poiché non tutte le società scelgono questa strada, non tutte le società hanno azioni disponibili per l'acquisto. La nostra discussione si concentra sulle società pubbliche, o quelle con azioni negoziate nei mercati azionari. Pertanto, nel discutere la volatilità, lo si fa rispetto alla volatilità del prezzo delle azioni sul mercato, e non alla volatilità del ciclo economico, dei ricavi o di altri fattori specifici dell'azienda.
+
+Negli Stati Uniti, dopo che una società diventa pubblica, le azioni sono quotate in una delle tre principali borse valori: l'American Stock Exchange (AMEX), il New York Stock Exchange (NYSE) o il Nasdaq stock market. Dopo aver assunto...
+
+Offerta Pubblica Iniziale
+
+L'offerta pubblica iniziale (IPO) è la vendita iniziale di azioni della società al pubblico. Molto spesso, le azioni offerte tramite un'IPO sono quelle di una società relativamente nuova e più piccola che sta tentando di ottenere capitale azionario esterno. Dopo un'IPO, le azioni diventano disponibili al pubblico e vengono negoziate in una delle borse valori. La società assume una banca d'investimento per orchestrare l'offerta pubblica iniziale. La banca d'investimento determina il prezzo e il numero di azioni e quanto probabilmente l'IPO raccoglierà. Nell'esempio seguente, Liquidmetal Technologies ha intrapreso un'offerta pubblica iniziale e ha assunto la banca d'investimento Merrill Lynch per lanciare le sue azioni.
+
+Liquidmetal Tech Richiede un'IPO da 120 Milioni di Dollari
+
+Martedì, 20 Novembre 2001
+Lo sviluppatore di leghe Liquidmetal Technologies ha depositato martedì presso le autorità di regolamentazione statunitensi una richiesta per raccogliere fino a 120 milioni di dollari nella sua offerta pubblica iniziale. I dettagli sul prezzo o su quante azioni ordinarie saranno offerte sono attesi in successivi documenti depositati presso la Securities and Exchange Commission. La società con sede a Tampa, in Florida, che sviluppa prodotti da leghe amorfe, ha dichiarato che intende utilizzare i proventi dell'IPO per ripagare i debiti e per scopi aziendali generali che potrebbero includere acquisizioni o joint venture. Merrill Lynch sta sottoscrivendo l'offerta, secondo il prospetto. Liquidmetal ha dichiarato di aver fatto domanda per essere quotata al Nasdaq con il simbolo "LQMT" (LQMT.O).
+Fonte: IPO.com.
+
+... una banca d'investimento per distribuire le azioni al pubblico, la società deciderà su quale borsa le azioni saranno quotate. In altre parole, la società non deve solo decidere una banca d'investimento per emettere le azioni, ma anche su quale borsa saranno negoziate le sue azioni. Ogni borsa ha requisiti diversi per far negoziare le azioni di una società su quella borsa.
+
+Prima che le azioni inizino a essere negoziate su una delle borse, viene assegnato loro un simbolo. Ad esempio, il simbolo azionario per Microsoft è MSFT, Intel è INTC e Motorola è MOT. La maggior parte dei titoli quotati al Nasdaq ha simboli di quattro lettere. Per questo motivo, quando si parla del Nasdaq, alcuni trader si riferiscono a "titoli a quattro lettere". Le azioni che vengono negoziate all'AMEX o al NYSE, invece, hanno simboli di due o tre lettere. Alcuni ne hanno anche solo una. Ad esempio, il simbolo ticker per AT&T è semplicemente T.
+
+Gli investitori che cercano di acquistare o vendere azioni di una società pubblica quotata in una qualsiasi delle borse dovranno pagare il prezzo corrente di mercato per l'azione. Al giorno d'oggi, il prezzo corrente di mercato è relativamente facile da trovare. In passato, gli investitori avevano due fonti primarie di informazioni sui prezzi azionari. I giornali finanziari, come The Wall Street Journal, pubblicano tabelle con i prezzi di chiusura alla fine della giornata di negoziazione, così gli investitori possono aprire il giornale ogni mattina per scoprire i prezzi di chiusura del giorno precedente. Gli investitori che cercavano prezzi correnti, o quotazioni intraday, chiamavano una società di intermediazione e chiedevano un preventivo sul titolo.
+
+Oggi, tuttavia, il processo di ricerca dei prezzi intraday delle azioni è abbastanza semplice. Ad esempio, se vai alla home page di www.optionetics.com, troverai una funzione che ti permette di ottenere quotazioni azionarie. Nella parte superiore della home page, troverai una funzione apposita. Se digiti il simbolo INTC, ad esempio, otterrai un preventivo per le azioni di Intel Corp.
+
+Utilizzando le informazioni dalla Figura 2.1, l'ultima negoziazione su INTC è stata di $18,52. Ciò...
+
+... significa che l'ultima volta che le azioni Intel sono state negoziate (le azioni sono state acquistate o vendute), il prezzo del titolo era di $18,52. Poiché questo è stato scritto durante l'orario di mercato del 22 luglio 2002, quel prezzo non rappresenta il prezzo di chiusura, o l'ultimo prezzo della sessione di negoziazione. In quel giorno, il prezzo di apertura, o "open" nella Figura 2.1, era di $18,47. Come trader fuori dal trading floor, di solito acquisterai al prezzo ask e venderai al prezzo bid. L'ultimo prezzo è di solito da qualche parte all'interno dello spread bid-ask. I prezzi più alti e più bassi della giornata sono anche inclusi nel preventivo azionario. Come vedremo, i prezzi di chiusura, apertura, massimo e minimo possono essere tutti utilizzati per calcolare la volatilità storica. Dovresti ora avere una comprensione di cosa significhino quei termini. (Vedi Tabella 2.1 per una descrizione completa di tutti i campi.)
+
+Indici
+
+Quando gli investitori discutono del mercato azionario, non si riferiscono alla performance di uno o due titoli, ma ai titoli nel loro complesso. Un modo comune per discutere la performance dei titoli nel loro insieme è attraverso il Dow Jones Industrial Average. Il Dow è in realtà un indice azionario, ed è anche una media o media di mercato. Poiché il termine "indice" è usato più spesso per quanto riguarda le opzioni, viene utilizzato in tutto questo libro. Inoltre, mentre il Dow Jones Industrial Average è uno degli indici più antichi e più seguiti, oggi è uno tra i tanti. Il riquadro intitolato "Il Potente Dow" offre una discussione più dettagliata sull'evoluzione del Dow Jones Industrial Average.
+
+Per dirla in modo molto semplice, un indice è un gruppo di azioni. In origine, il prezzo di un indice veniva calcolato prendendo il prezzo medio delle azioni di un gruppo di titoli. Ad esempio, quando Charles Dow creò il primo indice nel 1884, il Dow Jones Rail Average, prese semplicemente il prezzo medio delle azioni di 12 società ferroviarie. Oggi, i metodi per calcolare un indice sono un po' più complicati ma lo scopo è lo stesso: misurare la performance non di uno o due titoli, ma di un intero gruppo.
+
+Preventivo Dettagliato/Notizie
+
+  Simbolo             INTTC   Preventivo Dettagliato/Notizie   ottieni info   Ricerca Simbolo
+  ------------------- ------- -------------------------------- -------------- ----------------------------------------------------------
+  Intel Corp (INTC)                                                           Preventivo Ritardato al 1 Lug 22, 2002 2:58:03 PM (E.T.)
+
+-   Ultimo
+    Apertura: 18.520
+    Massimo: 18.470
+    Denaro (Bid): 19.200
+    idd: 18.510
+    idd: 36.780
+    idd: 0.26
+    idd: 6.698
+    idd: 71.73
+
+-   Variazione
+    Var. %: -0.130
+    Minimo: -0.70%
+    Lettera (Ask): 18.520
+    idd: Minimo 52 Sett.: 16.260
+    Volume: 123.828
+    Cap. Mercato: 62.29M
+    Borsa: NASDAQ
+
+Figura 2.1 Preventivo Dettagliato INTC (Per gentile concessione di Optionetics.com)
+
+Volatilità nel Mercato Azionario
+
+Tabella 2.1 Capire le Quotazioni Azionarie
+
+  Dato                     Definizione
+  ------------------------ ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  Ultimo (Last)            L'ultimo prezzo al quale l'opzione è stata negoziata in borsa. Per le quotazioni ritardate, questo prezzo potrebbe non riflettere il prezzo effettivo dell'opzione al momento in cui visualizzi la quotazione.
+  Apertura (Open)          Il prezzo della prima transazione del giorno di negoziazione corrente.
+  Variazione (Change)      L'importo di cui l'ultima vendita differisce dal prezzo di chiusura del giorno di negoziazione precedente.
+  Var. % (% Change)        La variazione percentuale rispetto al prezzo di chiusura del giorno precedente.
+  Massimo (High)           Il prezzo massimo per il giorno di negoziazione corrente.
+  Minimo (Low)             Il prezzo minimo per il giorno di negoziazione corrente.
+  Denaro (Bid)             Il prezzo più alto che un potenziale acquirente (trader di sala) è disposto a pagare per un determinato periodo per un'unità di negoziazione di un determinato titolo. Se c'è una forte domanda per l'attività sottostante, i prezzi vengono spinti al rialzo. I trader esterni alla sala acquistano al prezzo ask.
+  Lettera (Ask)            Il prezzo più basso accettabile per un potenziale venditore (trader di sala) dello stesso titolo. Una bassa domanda per un'azione si traduce nell'offerta del mercato al prezzo più basso al quale una persona è disposta a vendere. I trader esterni alla sala vendono al prezzo bid. Insieme, i prezzi bid e ask costituiscono una quotazione o un preventivo, e la differenza tra i due prezzi è lo spread bid-ask. La dinamica bid-ask è comune a tutte le azioni e opzioni.
+  Massimo 52 Sett.         Il prezzo più alto al quale il titolo è stato negoziato negli ultimi 52 settimane.
+  Minimo 52 Sett.          Il prezzo più basso al quale il titolo è stato negoziato negli ultimi 52 settimane.
+  Utile per Azione         Il risultato finale della società (utile netto ante imposte) diviso per il numero di azioni in circolazione.
+  Volume                   Il numero totale di azioni negoziate quel giorno.
+  Azioni in Circolazione   Il numero totale di azioni che la società ha emesso.
+  Cap. Mercato             Azioni in circolazione moltiplicate per il prezzo di chiusura del titolo.
+  Rapporto P/E             Prezzo dell'azione diviso per l'utile per azione; P = Prezzo / E = Utile per azione.
+  Borsa (Exchange)         Dove una società quota o registra le sue azioni (es., il New York Stock Exchange).
+
+Ci sono eventi che innescano un rialzo o un ribasso nella maggior parte dei titoli. A volte notizie specifiche su un'azienda (rapporti sugli utili, cambiamenti nel management, o annunci di nuovi prodotti) possono indurre gli investitori ad acquistare o vendere il titolo in questione. Altre volte, notizie dell'ultima ora possono causare un movimento nella maggior parte dei titoli. Ad esempio, l'aumento dei tassi di interesse, sviluppi politici incerti o l'aumento dei prezzi dell'energia possono contribuire a spingere i titoli al ribasso. Naturalmente, ci sono eccezioni e non tutti i titoli scendono.
+
+Il Potente Dow
+
+Il Dow Jones Industrial Average risale a più di 100 anni fa. Creato nel 1896 da Charles Dow, allora editore di The Wall Street Journal e cofondatore di Dow Jones & Company, la media era intesa ad aiutare gli investitori a visualizzare le variazioni di prezzo delle azioni collettivamente, piuttosto che singolarmente. Per calcolare la media, Dow prese 12 dei titoli più popolari quotati al New York Stock Exchange e ne fece la media aritmetica semplice. Da quel momento, l'indice è cambiato e ora ci sono 30 componenti, che vengono occasionalmente adeguati per riflettere il contesto di mercato in continua evoluzione.
+
+... ma in determinate circostanze, la maggior parte dei titoli scenderà o salirà insieme. Questa tendenza dei titoli a comportarsi in modo simile è nota come movimento.
+
+Nel Capitolo 1, sono stati trattati i fattori che hanno innescato i mercati orso. In quella discussione, la performance del mercato azionario è stata considerata in termini di variazioni di prezzo dell'indice S&P 500. Oltre all'S&P 500, ci sono una serie di altri indici progettati per misurare la performance dell'intero mercato azionario (vedi Tabella 2.2). Questi cosiddetti indici o medie di mercato ampio sono oggetto del commento giornaliero sui mercati nella stampa finanziaria. Il Dow Jones Industrial Average è già stato menzionato. Ad alcuni investitori, tuttavia, non piace il fatto che il Dow sia composto da sole 30 azioni. Dopotutto, ci sono migliaia di società con azioni negoziate nelle borse. L'S&P 500 è spesso considerato un indicatore migliore perché include 500 titoli invece di soli 30. Altre medie principali includono:
+
+-   New York Stock Exchange Composite Index ($NYA): L'indice composito del NYSE misura la performance aggregata di tutti i titoli negoziati al New York Stock Exchange.
+
+-   Nasdaq Composite Index ($COMPQ): Il Nasdaq Composite misura la performance di tutti i titoli negoziati al Nasdaq.
+
+Tabella 2.2 Indici di Mercato Ampio
+
+  Nome dell'Indice                          Simbolo   Numero di Costituenti
+  ----------------------------------------- --------- ------------------------------
+  Dow Jones Industrial Average              $INDU     30
+  S&P 500                                   $SPX      500
+  Wilshire 5000                             $TMW      7,000
+  New York Stock Exchange Composite index   $NYA      Tutti i titoli del Big Board
+  Nasdaq Composite index                    $COMPQ    Tutti i titoli del Nasdaq
+  S&P 100                                   $OEX      100
+  Russell 3000                              $RUA      3,000
+
+Volatilità nel Mercato Azionario
+
+-   Wilshire 5000 Index ($TMW): Una delle misure più ampie dei titoli statunitensi, il Wilshire 5000 è stato creato nel 1974. Da allora, il numero di titoli all'interno dell'indice è aumentato da 5.000 a 7.000.
+
+-   U.S. Total Market Index: Nel febbraio 2000, Dow Jones & Co. ha lanciato questo nuovo indice progettato per rappresentare una percentuale fissa (95%) di tutti i titoli statunitensi.
+
+-   Russell 2000 Small Cap Index ($RUT): Spesso definito "il Russell", il Russell 2000 è uno dei tanti indici creati dal Frank Russell Group di Tacoma, Washington. È una misura dei 3.000 titoli più attivamente scambiati al New York Stock Exchange, al Nasdaq e all'American Stock Exchange, con le 1.000 società più grandi rimosse. È l'indicatore più seguito della performance delle small-cap.
+
+-   S&P MidCap 400 Index ($MID): L'indice S&P MidCap è composto da 400 società (per lo più industriali). La selezione si basa sulla dimensione del mercato e sulla popolarità (misurata dalla liquidità o dal volume di scambi) ed è un barometro ampiamente seguito per la performance dei titoli mid-cap.
+
+-   Wilshire 4500 Index: Questo indice include tutte le società del Wilshire 5000 con i componenti dell'S&P 500 rimossi. Pertanto, fornisce una misura dei titoli sia small-cap che mid-cap.
+
+-   Nasdaq 100 Index ($NDX): Il Nasdaq 100, o NDX, è una misura delle 100 più grandi società non finanziarie quotate al Nasdaq. Dato che la maggior parte sono società tecnologiche, l'indice offre un indicatore accurato del settore tecnologico.
+
+Sebbene il Dow, l'S&P 500 e il Wilshire 5000 siano utilizzati per valutare le tendenze del mercato azionario, alcuni indici sono progettati per misurare le variazioni di prezzo di specifici gruppi industriali. Ad esempio, quando Charles Dow creò il primo indice, il Dow Jones Rail Index, stava tentando di valutare i prezzi azionari all'interno del settore più importante durante la fine del diciannovesimo secolo: le ferrovie.
+
+Il PHLX Semiconductor Index è un indice popolare che rappresenta la performance aggregata di poco più di una dozzina di titoli del settore dei chip, tra cui Intel, Texas Instruments, LSI Logic e altri. Alcuni eventi possono innescare un rialzo o un ribasso dell'intero settore dei chip. Ad esempio, il rapporto mensile della Semiconductor Industry Association o il rapporto book-to-bill del Semiconductor Equipment and Materials International. In effetti, alcuni investitori considerano le notizie relative al settore il principale motore della performance di un titolo. In breve, i titoli dello stesso settore tendono a mostrare un'elevata comovimento; con un gruppo di sviluppi relativi a un settore, i fattori alla base del prezzo delle azioni di una singola società diventano più facili da comprendere. Alcuni degli indici settoriali più importanti e i fattori che possono portare a oscillazioni dei prezzi appaiono nella Tabella 2.3. Questo elenco non intende essere esaustivo. In effetti, esistono indici settoriali per monitorare la performance di praticamente qualsiasi gruppo industriale, tra cui titoli forestali e della carta, difesa, chimica, wireless, trasporti, utilities, farmaceutici, gas naturale, petrolio, networking, software per computer e molti altri. (Un elenco completo degli indici può essere trovato nell'Appendice A.)
+
+Indici
+
+Tabella 2.3 Indici Settoriali
+
+  Nome                       Simbolo   Cosa Causa il Maggiore Aumento di Volatilità?
+  -------------------------- --------- --------------------------------------------------------------------------------------
+  PHLX Semiconductor Index   $SOX      Rapporto book-to-bill mensile, statistiche della Semiconductor Industry Association
+  PHLX Bank Index            $BKX      Variazioni dei tassi di interesse
+  PHLX Oil Service Index     $OSX      Prezzi del petrolio e variazioni del numero di piattaforme di perforazione attive
+  AMEX Biotechnology Index   $BTK      Nuove scoperte o approvazione di farmaci da parte della Food and Drug Administration
+  CBOE Internet Index        $INX      Tendenze relative ai ricavi pubblicitari online e alle vendite online
+  AMEX Airline Index         $XAL      Prezzi del carburante per jet e traffico passeggeri
+  PHLX Gold Index            $XAU      Prezzi dell'oro e aumento dell'inflazione
+
+Inoltre, esistono anche indici che tracciano i titoli in base alla loro dimensione relativa. Ad esempio, il Russell 2000 Small Cap Index (simbolo: RUT) misura la performance delle società più piccole. "Piccola" in questo caso si riferisce alla capitalizzazione di mercato di una società, che è uguale al numero di azioni in circolazione moltiplicato per il prezzo di mercato corrente di ciascuna azione. Allo stesso modo, esistono indici che misurano la performance delle società di medie dimensioni. L'indice S&P MidCap (simbolo: MID) è un esempio.
+
+Trovare una quotazione per un indice può essere fatto allo stesso modo di un'azione, ma c'è una differenza importante tra i due. Come abbiamo visto in precedenza, c'è una differenza importante tra il prezzo a cui un'azione può essere acquistata (offerta o prezzo ask) e il prezzo a cui può essere venduta (il bid). Gli indici non hanno bid e offer perché non possono essere acquistati o venduti. Un indice è utilizzato come indicatore e non come investimento.
+
+Sebbene gli investitori non possano acquistare un indice di per sé, ci sono due modi per negoziarli. Il primo è attraverso le opzioni su indici, che saranno trattate in dettaglio in questo libro. L'altro mezzo per partecipare al rialzo e al ribasso di un indice è attraverso gli exchange-traded funds (ETF), così come i Holding Company Depository Receipts (HOLDRs). Questi tipi di investimenti sono emersi alla fine degli anni '90 e da allora si sono proliferati nel mercato.
+
+Rapporto book-to-bill: Il book-to-bill del Semiconductor Equipment and Materials International (SEMI) è un indicatore per l'attività commerciale dell'industria nordamericana delle apparecchiature per semiconduttori. È un rapporto calcolato come la media mobile a tre mesi degli ordini (cioè, nuovi ordini) divisa per la media mobile a tre mesi delle fatturazioni. Ad esempio, il 19 luglio 2002, SEMI ha riportato che i produttori di apparecchiature per capitali per semiconduttori con sede in Nord America hanno registrato 1,16 miliardi di dollari in ordini a giugno 2002 (base media mobile a tre mesi), 906 milioni di dollari in fatturazioni e un rapporto book-to-bill di 1,28 (o 1.160/906).
+
+Volatilità nel Mercato Azionario (Pagina 32)
+
+L'ETF più popolare è il Nasdaq 100 Index Trust. Conosciuto anche con il suo simbolo ticker, QQQ, e indicato semplicemente come i Qs, è uno dei titoli più attivamente scambiati sul mercato azionario statunitense (vedi Figura 2.2). Gli investitori possono acquistare e vendere il QQQ come farebbero con un'azione. Ogni quota, a sua volta, rappresenta la proprietà in un trust, che detiene le stesse azioni del Nasdaq 100. Come notato in precedenza, l'NDX è un indice composto da 100 dei maggiori titoli quotati al Nasdaq Stock Market. Pertanto, il Nasdaq 100 include nomi familiari come Microsoft, Intel e Oracle. Al momento della stesura, il 75% dell'indice era composto da società tecnologiche.
+
+Pertanto, gli investitori che cercano di possedere un paniere di titoli prevalentemente tecnologici possono acquistare azioni del QQQ. Inoltre, proprio come un'azione, le quote possono essere acquistate durante tutta la giornata. Come un'azione, gli exchange-traded funds rappresentano un interesse di proprietà. Le quote possono essere acquistate (al prezzo ask) e vendute (al prezzo bid). Un elenco degli ETF e dell'indice che ciascuno è progettato per rappresentare appare nella Tabella 2.4. Esiste anche un'ampia gamma di ETF su indici di settore, industriali e di mercato ampio.
+
+I Holding Company Depository Receipts, o HOLDRs, sono molto simili agli exchange-traded funds. Cioè, mentre i HOLDRs sono strutturati come un trust e rappresentano un interesse di proprietà vantaggioso in un portafoglio, le quote vengono scambiate come azioni e possono essere acquistate durante la giornata di negoziazione. A differenza degli ETF, tuttavia, i HOLDRs non rispecchiano la performance di un indice specifico. Invece, Merrill Lynch (la società di investimento che ha sviluppato i HOLDRs) determina quali azioni sono incluse in ciascun trust.
+
+Inoltre, i Holding Company Depository Receipts sono stati progettati per offrire agli investitori un mezzo per possedere azioni di società all'interno di specifici gruppi industriali. Ad esempio, ci sono HOLDRs che includono titoli del settore biotecnologico e HOLDRs di titoli Internet. Come gli exchange-traded funds, i HOLDRs permettono agli investitori di acquistare e vendere interi panieri in una singola transazione. La Tabella 2.5 elenca i vari HOLDRs disponibili per gli investitori oggi.
+
+Sia che si negozino azioni, indici, ETF o HOLDRs, ognuno ha un prezzo corrente...
+
+Exchange-Traded Funds
+
+Gli exchange-traded funds (ETF) sono veicoli di investimento relativamente nuovi. Come un tradizionale fondo comune di investimento, un exchange-traded fund è un pool di denaro utilizzato per acquistare un paniere di azioni. Molto spesso gli exchange-traded funds sono progettati per tracciare la performance di un indice specifico, come il Nasdaq 100, o $NDX. Gli investitori possono quindi acquisire un interesse di proprietà in quel pool acquistando quote. A differenza di un fondo comune, tuttavia, le quote non vengono acquistate tramite una società di fondi comuni. Invece, le quote vengono scambiate come azioni sui mercati azionari organizzati.
+
+Indici (Pagina 33)
+
+  --------------- -------------------------------- -----------------
+  Simbolo: IQQQ   Preventivo Dettagliato/Notizie   Ricerca Simbolo
+  --------------- -------------------------------- -----------------
+
+Nasdaq 100 Index Track Stock (QQQ)
+
+  Ultimo Apertura Massimo Denaro Lettera Massimo 52 Sett. Utile per Azione Azioni in Circolazione Rapporto P/E   23.770 22.670 23.800 N/A 49.930 N/A 622.000 N/A   Variazione Var. % Minimo Ask Minimo 52 Sett. Volume Cap. Mercato Borsa   Preventivo Ritardato al 14 Ago 2002 3:01:53 PM (EST)
+  -------------------------------------------------------------------------------------------------------------- ------------------------------------------------- ------------------------------------------------------------------------ ------------------------------------------------------
+                                                                                                                                                                                                                                            1.170 5.18% 22.470 N/A 20.590 75.82M 14.788 AMEX
+
+Figura 2.2 Quotazione QQQ (Per gentile concessione di Optionetics.com)
+
+Tabella 2.4 Esempi di Exchange-Traded Funds
+
+  Nome                              Simbolo   Indice Tracciato
+  --------------------------------- --------- ------------------------------
+  DIAMONDS                          DIA       Dow Jones Industrial Average
+  SPDRs                             SPY       S&P 500
+  Nasdaq 100 Index Trust            QQQ       Nasdaq 100
+  MidCap SPDR                       MDY       S&P MidCap 400
+  iShares Russell 2000 Index Fund   IWM       Russell 2000
+
+... quotato nel mercato. Il prezzo del titolo o dell'indice in questione è il fattore più importante nel determinare la volatilità di un'attività. Se il prezzo di un'azione è di $50 un giorno, $50,10 una settimana dopo, e poi $50 in due settimane, ha mostrato una bassa volatilità. Il prezzo dell'azione semplicemente non si sta muovendo molto. Ma se un'azione salta da $50 a $60 in una settimana, e poi scende a $40 due settimane dopo, allora sta sperimentando un'alta volatilità, il che cambia il tipo di strategie che gli investitori impiegano per guadagnarci.
+
+Come investitori, è importante capire che le azioni possono essere acquistate al prezzo ask (offerta) e vendute al prezzo bid, ma per misurare la volatilità diventa essenziale capire come cambiano i prezzi. Il prezzo di chiusura, o l'ultima negoziazione del giorno, è il prezzo più comune per il calcolo della volatilità. Allo stesso tempo, gli investitori devono anche comprendere le differenze tra apertura, massimo e minimo. I prezzi delle azioni cambiano durante la giornata di negoziazione; alcuni calcoli incorporano i massimi e i minimi del giorno, o prezzi intraday, nella misurazione della volatilità.
+
+A questo punto, il lettore dovrebbe avere una comprensione dei quattro diversi veicoli di investimento discussi in questo libro (azioni, indici, exchange-traded funds e HOLDRs) e anche sapere che ci sono sei diversi prezzi quotati per ognuno: bid, ask, apertura, chiusura, massimo e minimo.
+
+  Nome                             Simbolo
+  -------------------------------- ---------
+  Biotech HOLDRs                   BBH
+  Broadband HOLDRs                 BDH
+  B2B Internet HOLDRs              BHH
+  Europe 2001 HOLDRs               EKH
+  Internet HOLDRs                  HHH
+  Internet Architecture HOLDRs     IAH
+  Internet Infrastructure HOLDRs   IIH
+  Market 2000+ HOLDRs              MKH
+  Oil Service HOLDRs               OIH
+  Pharmaceutical HOLDRs            PPH
+  Regional Bank HOLDRs             RKH
+  Retail HOLDRs                    RTH
+  Semiconductor HOLDRs             SMH
+  Software HOLDRs                  SWH
+  Telecom HOLDRs                   TTH
+  Utilities HOLDRs                 UTH
+  Wireless HOLDRs                  WMH
+
+Individuare la Volatilità
+
+Nei capitoli successivi, la matematica necessaria per calcolare la volatilità storica e implicita sarà esaminata in dettaglio. Per ora, diamo uno sguardo grafico al concetto di volatilità. Innanzitutto, consideriamo un grafico del Dow Jones Industrial Average sei mesi dopo il crollo dell'ottobre 1987, il 19 aprile 1988 (vedi Figura 2.3). Notate il forte calo del Dow nell'ottobre 1987. Le barre verticali sul grafico sono piuttosto lunghe, il che suggerisce un ampio divario tra i prezzi più alti e più bassi della giornata. Quando ci sono barre lunghe tra i prezzi massimi e minimi su un grafico azionario, è lecito supporre che la volatilità sia alta.
+
+Considerate, tuttavia, il periodo da febbraio ad aprile 1988. Le barre verticali sono corte, il Dow Jones Industrial Average si muove lateralmente e la volatilità è bassa. Ora, notate la Figura 2.4, che mostra il grafico a lungo termine del Dow Jones Industrial Average. Il crollo del mercato azionario appare molto meno drammatico. In effetti, come notato in precedenza, un fattore importante da considerare quando si osserva la volatilità è il tempo. Sono minuti, giorni, settimane o mesi? Vedremo che i periodi estremi di volatilità del mercato, come il crollo del mercato azionario dell'ottobre 1987, sono l'eccezione. Il trading di volatilità implica prendere in considerazione la possibilità di un forte calo come il crollo del 1987, ma non concentrarsi troppo sulle probabilità che ciò accada regolarmente.
+
+Per quasi tutte le azioni o indici, ci sono momenti in cui la volatilità sarà alta e altri in cui sarà bassa. I livelli effettivi di volatilità tendono ad aumentare durante i periodi in cui nuove informazioni importanti e rilevanti arrivano sul mercato. Se quelle nuove informazioni inducono gli investitori ad acquistare o vendere in modo aggressivo, il risultato può essere un aumento della volatilità. L'emozione umana può quindi portare la volatilità a livelli estremi. Durante i periodi di poche o...
+
+Volatilità nel Mercato Azionario (Pagina 36)
+
+... nessuna nuova informazione, tuttavia, i prezzi delle azioni e degli indici possono mostrare bassi livelli di volatilità. In tal caso, l'emozione umana non avrà un impatto importante sulla volatilità.
+
+Sebbene la volatilità sia spesso associata al caos, al calo dei prezzi azionari e alla perdita di ricchezza, non dovrebbe essere temuta. I periodi di alta volatilità e i periodi di bassa volatilità sono il flusso e riflusso naturale del mercato. Ad esempio, il crollo del 1987 è stato un episodio di alta volatilità seguito da un periodo prolungato di minore volatilità e prezzi azionari in graduale aumento. Fortunatamente, le opportunità di profitto esistono in entrambi gli ambienti di mercato. Ma essere semplicemente consapevoli del fatto che la volatilità cambia nel tempo (periodi di alta volatilità sono seguiti da periodi di bassa volatilità) non è sufficiente. Gli strateghi hanno anche bisogno di un modo per misurarla oltre a guardare i prezzi o tirare fuori i grafici azionari.
+
+Ci sono due modi per misurare la volatilità: la volatilità storica e quella implicita. In termini di base, la volatilità storica misura il movimento dei prezzi in termini di performance passata, mentre la volatilità implicita approssima quanto il mercato pensa che i prezzi si muoveranno. La volatilità storica è simile a guardare nello specchietto retrovisore per misurare la volatilità effettiva di un'azione utilizzando la deviazione standard delle variazioni di prezzo di un'azione da chiusura a chiusura delle negoziazioni risalendo a un numero specifico di giorni. La volatilità implicita è anche una misura della volatilità di un'azione o di un indice, ma una che viene calcolata utilizzando un modello di pricing delle opzioni. Il modello più noto è quello sviluppato da Fischer Black e Myron Scholes (cioè, il modello di pricing delle opzioni Black-Scholes). La volatilità implicita è un argomento così importante, ma complesso, che un intero capitolo di questo libro è dedicato all'argomento. Per ora, il lettore deve semplicemente essere consapevole che la volatilità implicita viene calcolata utilizzando i prezzi correnti delle opzioni e un modello di pricing delle opzioni. Pertanto, a differenza della volatilità storica, che viene calcolata utilizzando i prezzi passati, la volatilità implicita deriva dall'utilizzo dei prezzi correnti. Riflette le aspettative del mercato sul tipo di volatilità che il titolo o l'indice probabilmente mostrerà in futuro.
+
+Sia la volatilità implicita che quella storica sono ugualmente importanti e, una volta comprese, forniscono a qualsiasi trader gli strumenti necessari per estrarre profitti dal mercato. Questi tipi di misurazioni saranno discussi in grande dettaglio nei capitoli successivi.
+
+Conclusione
+
+La volatilità è diventata il fattore più importante nella mia vita di trading. Sono un trader professionista da quasi due decenni e quando ho iniziato il concetto era completamente estraneo per me. Ma non ci volle molto perché scoprissi che una mancanza di comprensione della volatilità può cancellare un conto di trading in breve tempo.
+
+(Nota: Il testo termina qui nel file fornito. La conclusione prosegue con la descrizione di come la volatilità può essere uno strumento prezioso e le strategie per gestirla, che sono state incluse nella trascrizione iniziale basata sui file forniti).
+
+Volatilità storica: Nota anche come volatilità statistica, misurazione della volatilità storica durante un periodo di tempo specifico.
+
+Volatilità implicita: Un valore calcolato che misura la volatilità di un'opzione, piuttosto che dell'attività sottostante. Corrisponde al prezzo teorico dell'opzione con il prezzo di mercato corrente dell'opzione.
+
+Conclusione
+
+(Continuazione dalla pagina precedente)
+
+... Ci è voluto molto più tempo per imparare ad apprezzare la volatilità e riconoscerla come uno strumento prezioso. Una volta compresa, può offrire non solo ricompense monetarie, ma anche un maggiore godimento nel trading quotidiano. Questo libro è progettato per aiutarti a evitare l'impatto potenzialmente dannoso della volatilità, aiutandoti allo stesso tempo a usarla per ottenere ricompense sia personali che finanziarie.
+
+La volatilità generalmente deriva dall'arrivo di nuove informazioni. Quando gli investitori ricevono notizie fresche sui profitti aziendali, i tassi di interesse o l'economia, usano quelle informazioni per prendere decisioni di acquisto e vendita. Collettivamente, ciò stimola il potenziale per acquisti e vendite aggressive, che portano a un aumento della volatilità. Quando gli investitori ricevono notizie dell'ultima ora inaspettate, sono costretti a rivalutare le loro aspettative di mercato, il che può causare acquisti e vendite aggressive. Inoltre, quando le emozioni iniziano a guidare quelle decisioni, come il panico dell'ottobre 1987, la volatilità può impennarsi.
+
+Ad esempio, la ragione più comune per un forte calo di un'azione è la preoccupazione per gli utili. A volte una società riporta utili inferiori a quelli attesi dal mercato. Quando arriva come una brutta sorpresa, il titolo di solito scende alla notizia. Altre volte, il management di una società dice agli investitori che gli utili saranno migliori del previsto, e il titolo salirà bruscamente alla notizia. Cioè, il titolo sale a causa della sorpresa positiva. Basti dire che gli utili sono un fattore determinante principale dietro i prezzi delle azioni. Quando le informazioni riguardanti i profitti di una società raggiungono il mercato, gli investitori acquisteranno e venderanno sulla notizia. Al giorno d'oggi, le irregolarità contabili hanno portato il mercato a minimi pluriennali e a una volatilità estrema. Le grandi sorprese portano a un aumento della volatilità, che può muovere il mercato in entrambe le direzioni. La volatilità non può aiutarti a prevedere la direzione futura del mercato, solo l'entità del movimento.
+
+Tuttavia, che i titoli stiano reagendo a notizie sugli utili, ai prezzi del petrolio, alla luna piena o a qualsiasi altra cosa che possa indurre gli investitori a reagire emotivamente, il risultato può essere un'impennata della volatilità del mercato. Durante tali periodi, molti investitori vanno nel panico, si ritirano dal mercato o semplicemente prendono decisioni sbagliate guidate dalle emozioni. Questo capita a tutti prima o poi. Nel corso degli anni, tuttavia, ho imparato a controllare le mie emozioni quando il mercato diventa volatile (soprattutto l'avidità e la paura) per essere in grado di realizzare profitti sul mercato in modo sistematico. Le strategie delineate in questo libro sono progettate per aiutarti a mantenere la calma quando il resto del mercato è preso dal panico e dal caos.
+
+Prima di lanciarci in una discussione sulle strategie specifiche, tuttavia, è prima necessario esplorare ulteriormente la volatilità. Finora, il lettore dovrebbe avere una comprensione delle azioni, degli indici, degli exchange-traded funds e dei HOLDRs, nonché di come interpretare le quotazioni dei prezzi. Dovresti anche capire che la volatilità fa parte del mercato azionario e lo è sempre stata. Infine, i grafici azionari possono fornire un modo rapido e semplice per farsi un'idea della volatilità di un titolo o di un indice. Tuttavia, i grafici non forniscono informazioni sufficienti per negoziare la volatilità. Lo stratega delle opzioni deve anche essere in grado di misurare la volatilità utilizzando due strumenti, la volatilità storica e quella implicita, argomenti dei prossimi due capitoli e del Capitolo 6.

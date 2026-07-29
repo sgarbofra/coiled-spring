@@ -1,0 +1,250 @@
+Capitolo 6
+
+Volatilità Implicita
+
+Le opzioni sono uno strumento finanziario eccellente perché forniscono agli investitori una leva finanziaria, ovvero i mezzi per controllare un gran numero di azioni con un capitale relativamente ridotto. Questo attributo spesso incoraggia i trader alle prime armi a rivolgersi al mercato delle opzioni nella ricerca di ricchezze istantanee. Il potenziale di grandi rendimenti in un breve periodo di tempo è solo uno dei motivi per cui le opzioni sono diventate così popolari, specialmente tra gli speculatori. Sfortunatamente, la maggior parte degli speculatori finisce per bruciarsi nel mercato delle opzioni. Questi fallimenti possono spesso essere ricondotti a una mancanza di comprensione di come funzionano esattamente le opzioni.
+
+Come discusso in precedenza, le opzioni sono strumenti derivati. Il loro valore deriva da una varietà di fattori e, sebbene molti trader comprendano che il fattore più importante è il prezzo del titolo sottostante (o dell'attività da cui l'opzione trae il suo valore), potrebbero non prestare sufficiente attenzione agli altri fattori che influenzano il valore di un'opzione. Ad esempio, il time decay (decadimento temporale) è estremamente importante da comprendere. Possono verificarsi perdite finanziarie significative se i trader non capiscono appieno che le opzioni, a differenza delle azioni, si deprezzano gradualmente fino alla scadenza.
+
+La volatilità implicita (IV) è un altro fattore importante. La volatilità implicita indica allo stratega di opzioni se le opzioni sono economiche o costose. Per questo motivo, può determinare se lo stratega è meglio servito dall'acquisto o dalla vendita di un'opzione. Inoltre, le variazioni della volatilità implicita possono essere un motivo per cui un'opzione non riesce ad aumentare di valore, anche se lo speculatore ha previsto correttamente la direzione del titolo. In effetti, l'IV è così importante che l'intero capitolo è dedicato a questo argomento.
+
+CHE COS'È LA VOLATILITÀ IMPLICITA?
+
+Non è un'esagerazione affermare che una solida comprensione della volatilità implicita sia fondamentale per il successo nel trading di opzioni. A loro volta, ci sono una serie di fattori importanti da considerare.
+
+Fattori da Considerare Quando si Studia la Volatilità Implicita
+
+-   La volatilità implicita è un prodotto di un modello di pricing delle opzioni, come il modello Black-Scholes, ed è espressa in percentuale.
+
+-   Ogni opzione ha una volatilità implicita unica. Anche due opzioni sullo stesso titolo con date di scadenza e/o strike price diversi non avranno necessariamente gli stessi livelli di volatilità implicita.
+
+-   La volatilità implicita è sempre in uno stato di cambiamento: solo perché la volatilità implicita di XYZ era del 25% la scorsa settimana non significa che sarà del 25% la prossima settimana.
+
+Il terzo fattore da considerare quando si studia la volatilità implicita è che essa è sempre in uno stato di flusso. Cioè, le volatilità cambiano nel tempo. Perché? Le aspettative del mercato riguardo alla volatilità futura di un titolo si riflettono nel prezzo delle sue opzioni. Quando le aspettative degli investitori sulla volatilità di un titolo cambiano, cambiano anche i prezzi delle opzioni su quel titolo. Ad esempio, quando il mercato si aspetta che un titolo mostri un'elevata volatilità, i prezzi delle opzioni tendono a salire; se gli investitori si aspettano che il titolo mostri bassi livelli di volatilità, i prezzi delle opzioni su quel titolo generalmente scenderanno.
+
+Come notato in precedenza, un modello di pricing delle opzioni può essere utilizzato per determinare quale volatilità il mercato sta implicando in un contratto di opzione (da qui il termine "volatilità implicita"). Nel farlo, sono richiesti i seguenti input:
+
+-   Il prezzo del titolo.
+
+-   Lo strike price dell'opzione.
+
+-   Il prezzo dell'opzione.
+
+-   Il tempo rimanente fino alla scadenza.
+
+-   Il tasso d'interesse prevalente.
+
+-   In determinate circostanze, eventuali dividendi pagati dal titolo.
+
+Tutti questi fattori possono influenzare il prezzo dell'opzione. Quando tutti gli altri fattori rimangono gli stessi e il premio dell'opzione aumenta, la variazione di prezzo può essere attribuita a variazioni della volatilità implicita. Come abbiamo visto nei capitoli precedenti, la volatilità di un'attività può aumentare per una serie di motivi: un annuncio di profitti stellare e inaspettato, notizie di un'acquisizione, un cambio di gestione, e così via.
+
+Eventi insoliti spesso portano a un'ondata di acquisti (o vendite) di opzioni, che può causare un cambiamento delle aspettative del mercato sulla volatilità di un titolo nel tempo. Ad esempio, quando gli speculatori sentono una voce di acquisizione, a volte acquistano aggressivamente call sul candidato all'acquisizione in previsione di un forte rialzo del prezzo delle azioni. Al contrario, quando i grandi investitori professionali temono la volatilità nel mercato azionario, a volte acquistano put sui principali indici per proteggere i loro portafogli. In entrambi i casi, che gli speculatori acquistino call per avidità o gli investitori acquistino put come copertura, il risultato è spesso una fluttuazione della volatilità implicita delle opzioni sul titolo o sull'indice. Inoltre, a parità di altre condizioni, quando la volatilità implicita aumenta, le opzioni diventano più costose; quando la volatilità implicita diminuisce, anche i premi delle opzioni calano. Pertanto, le opzioni che hanno bassi livelli di volatilità implicita sono talvolta definite economiche e quelle con IV alta sono costose.
+
+Tuttavia, se si vuole determinare se le opzioni su un titolo o un indice sono economiche o costose, è necessario fare di più che guardare se la volatilità implicita sta salendo o scendendo. Lo stratega di opzioni deve collocare i livelli attuali di volatilità implicita in un contesto più ampio. Come si fa? Quando lo stratega di opzioni sa se le opzioni sono economiche e pronte per l'acquisto o costose e meritevoli di essere vendute? Per trovare risposte a queste importanti domande, esamineremo in profondità i seguenti due test:
+
+1.  Confrontare la volatilità implicita con la volatilità storica del titolo o dell'indice.
+
+2.  Osservare la volatilità implicita di un'opzione nel tempo.
+
+VALUTARE LA VOLATILITÀ IMPLICITA E I PREMI DELLE OPZIONI
+
+Come per qualsiasi altro prodotto o merce, le forze della domanda e dell'offerta a volte influenzano il prezzo di un'opzione. In periodi di domanda insolitamente elevata, i market maker (coloro che sono responsabili dell'acquisto e della vendita di un contratto di opzione specifico) alzeranno i prezzi. Un forte interesse per un contratto di opzione farà salire i prezzi perché gli investitori sono disposti a pagare di più. Tuttavia, quando c'è poco o nessun interesse per un contratto di opzione, i market maker non possono permettersi di alzare i prezzi perché gli investitori non sono disposti a pagare un premio per un contratto di opzione.
+
+Quando l'acquisto e la vendita fanno salire o scendere i prezzi delle opzioni, matematicamente le variazioni di prezzo sono attribuite a variazioni della volatilità implicita. Poiché la volatilità implicita può fluttuare durante brevi periodi di tempo, persino minuti, i prezzi delle opzioni possono salire e scendere senza variazioni significative nella volatilità effettiva o nel prezzo del titolo. In breve, la volatilità implicita è un fattore chiave che fa sì che il valore di un'opzione fluttui nel tempo.
+
+Per capire perché i prezzi delle opzioni a volte cambiano senza variazioni significative del prezzo del titolo, ricordiamo che esistono fondamentalmente due tipi di volatilità: storica e implicita. Come suggeriscono i loro nomi, la volatilità storica è la volatilità media mostrata dal titolo sottostante in passato. La volatilità implicita, invece, viene calcolata utilizzando un modello di pricing delle opzioni. La volatilità implicita dà un'idea di ciò che i trader e i market maker credono sarà la volatilità del titolo in futuro. Quando le aspettative sulla volatilità futura del titolo cambiano, anche la volatilità implicita cambierà.
+
+In sintesi, la volatilità implicita è sempre in uno stato di flusso. A volte la volatilità implicita su un'opzione su un titolo diventa piuttosto alta, il che fa aumentare il valore dei premi delle opzioni. Altre volte, la volatilità implicita scende e fa diminuire il valore dei premi delle opzioni. Per questo motivo, quando i trader dicono che i premi sono alti o bassi, economici o costosi, per una particolare opzione, stanno parlando di volatilità implicita. Pertanto, il primo passo per determinare se le opzioni sono economiche o costose è confrontare la volatilità implicita nel tempo.
+
+Tracciare la volatilità implicita su un titolo o un indice specifico è relativamente semplice. Nel prossimo capitolo, il lettore verrà introdotto a una misura dei livelli di volatilità dell'intero mercato nota come CBOE Volatility Index, o VIX, che fornisce informazioni in tempo reale sulla volatilità implicita delle opzioni sull'indice S&P 100. Per determinare se la volatilità implicita di un indice o di un'opzione su un titolo specifico è bassa o alta rispetto ai livelli passati di volatilità implicita, è necessario creare un grafico. La Figura 6.1 fornisce un'analisi della volatilità implicita delle opzioni at-the-money di Sprint PCS durante i sei mesi terminati a marzo 2002. Il grafico è stato creato utilizzando il software Optionetics.com Platinum. Si noti che il grafico ha quattro linee. Ogni linea, a sua volta, corrisponde a un diverso insieme di opzioni. Ad esempio, la linea superiore mostra i contratti di opzione che scadono tra 7 e 30 giorni, e la linea inferiore mostra le opzioni a lungo termine che scadono in 90 giorni o più.
+
+Nella Figura 6.1, la volatilità implicita di Sprint PCS fluttua tra il 40% e il 125%. Si noti il forte aumento della volatilità implicita delle opzioni di Sprint PCS all'inizio del 2002, quando sono circolate voci secondo cui la società era un potenziale obiettivo di acquisizione. Il forte aumento è stato insolito perché è raro vedere la volatilità implicita di un'opzione triplicare nel corso di pochi mesi. Tuttavia, ci sono eventi che possono innescare impennate anomale dell'IV di un titolo o di un indice (vedi riquadro). Nel caso di Sprint PCS, è stata una voce di acquisizione.
+
+Figura 6.1 Volatilità Implicita di Sprint PCS (Per gentile concessione di Optionetics.com)
+(Nota: L'immagine descrive un grafico con quattro linee che mostrano l'andamento dell'IV per diverse scadenze, con un picco intorno a gennaio/febbraio 2002)
+
+Eventi che Causano Impennate della Volatilità Implicita
+
+Titoli Individuali
+
+-   Annuncio di un nuovo prodotto, approvazione di un farmaco da parte della FDA, notizie specifiche del settore.
+
+-   Voci che un'azienda potrebbe annunciare utili migliori o peggiori del previsto.
+
+-   Voci di Tabasco: notizie di un cambio di gestione o di un frazionamento azionario.
+
+-   Irregolarità contabili e/o frodi aziendali.
+
+Mercati
+
+-   Panico degli acquirenti.
+
+-   Copertura di eventi insoliti come guerre, incertezza politica, paura di crolli del mercato (es. ottobre 1987) e cambiamenti dei tassi d'interesse.
+
+-   Eventi economici, contagio, commenti di economisti o funzionari della Fed, e "esuberanza irrazionale".
+
+VALORI TEORICI VERSUS PREZZI DI MERCATO
+
+Nel capitolo precedente, abbiamo visto che è possibile arrivare al valore teorico di un'opzione attraverso l'uso di un modello di pricing delle opzioni. Cioè, assumendo un dato livello di volatilità, possiamo stimare quale dovrebbe essere il prezzo dell'opzione. Quando gli analisti stimano quale sia il valore di un'opzione utilizzando la volatilità statistica (o ipotesi sulla volatilità diverse dalla volatilità implicita), stanno calcolando quello che è noto come valore teorico.
+
+Poiché la volatilità implicita di un'opzione è sempre in evoluzione, il prezzo di mercato, o il valore dell'opzione in un dato momento, può discostarsi da questo valore teorico. Il motivo per cui il valore teorico di un'opzione e il prezzo di mercato di quella stessa opzione non coincideranno sempre è dovuto a diverse ipotesi sulla volatilità. Ad esempio, se il valore teorico di un'opzione viene calcolato utilizzando la volatilità statistica del titolo pari al 10%, ma la volatilità implicita dell'opzione è in realtà del 20%, il prezzo di mercato dell'opzione sarà maggiore del valore teorico.
+
+Poiché possiamo calcolare matematicamente la volatilità statistica di un titolo, è pratica comune confrontare il valore teorico di un'opzione con il prezzo di mercato corrente. Ad esempio, supponiamo che la volatilità statistica di XYZ sia del 30%. Quando inseriamo questa cifra in un modello di pricing delle opzioni per determinare il valore teorico di una call XYZ di luglio, essa mostra un prezzo ben al di sotto del prezzo corrente per l'opzione. Ad esempio, forse il nostro valore teorico dell'opzione è di $3 per contratto, ma quando estraiamo un preventivo della call XYZ di luglio, il prezzo di mercato corrente è di $4 per contratto. La differenza è dovuta al fatto che il mercato si aspetta una volatilità più alta in futuro e prezza le opzioni di conseguenza. Pertanto, la volatilità implicita dell'opzione è maggiore della volatilità statistica utilizzata per calcolare il valore teorico dell'opzione.
+
+Poiché la volatilità implicita è una misura delle aspettative, se l'IV è superiore alla volatilità statistica, i trader si aspettano che la volatilità futura di quel titolo sia alta rispetto al livello passato di volatilità del titolo. In questo caso, si dice che le opzioni sono costose. Ma se la volatilità implicita è bassa rispetto alla volatilità storica, gli operatori del mercato si aspettano livelli di volatilità più bassi e si dice che le opzioni sono economiche. Pertanto, la volatilità statistica è un parametro importante per giudicare se gli attuali livelli di volatilità implicita sono appropriati.
+
+Consideriamo ora un esempio specifico progettato per confrontare la volatilità statistica di un titolo con la volatilità implicita dell'opzione su quel titolo. Ancora una volta, lo scopo è valutare se le opzioni sono economiche e adatte all'acquisto, o costose e migliori per la vendita. Più avanti, esamineremo quali strategie specifiche possono essere implementate una volta che è chiaro se le opzioni sono economiche o costose. Per ora, lo scopo è semplicemente confrontare la volatilità statistica e quella implicita e valutare l'attrattiva relativa del premio di un'opzione, che comporta un confronto della volatilità implicita nel tempo e un confronto tra volatilità implicita e statistica.
+
+ESEMPIO: VOLATILITÀ STATISTICA VERSUS VOLATILITÀ IMPLICITA
+
+All'inizio di marzo 2002, è circolata la voce che il fornitore di servizi di telefonia wireless Leap Wireless International (LWIN) fosse un possibile obiettivo di acquisizione. All'epoca, il settore del wireless stava soffrendo per l'intensa concorrenza e il deterioramento dei profitti. Alcuni analisti hanno giustificato le speculazioni sull'acquisizione sostenendo che il consolidamento del settore aveva senso perché molti degli operatori wireless avevano reti telefoniche sovrapposte. Pertanto, la fusione di alcune società avrebbe contribuito a ridurre i costi e a migliorare l'efficienza. Di conseguenza, le azioni di Leap Wireless, che erano negoziate al Nasdaq Stock Market con il simbolo LWIN, erano considerate un obiettivo primario per l'acquisizione.
+
+Le speculazioni sull'acquisizione hanno alimentato un'aggressiva attività di acquisto sia delle azioni LWIN che delle call LWIN. A partire dal 4 marzo, il titolo è balzato di quasi il 100% in tre giorni! Tale attività non è del tutto fuori dall'ordinario a Wall Street. Generalmente, quando una società viene acquisita, gli azionisti vengono ricompensati perché il prezzo di acquisizione è di solito superiore al prezzo delle azioni sul mercato. In effetti, identificare potenziali fusioni può essere una fonte di profitti superiori. Sfortunatamente, la maggior parte delle voci di acquisizione si rivela poi falsa. Tuttavia, quando circolano voci, l'attività di trading sulle azioni e sulle opzioni del candidato all'acquisizione è spesso vivace. LWIN all'inizio del 2002 non faceva eccezione.
+
+Una domanda insolitamente forte di opzioni spesso fa salire la volatilità implicita. Nel caso di una voce di acquisizione, le call generalmente vedono un crescente interesse degli investitori e, di conseguenza, la volatilità implicita aumenterà. Utilizzando il sito Optionetics.com Platinum, è stata creata la Figura 6.2 per illustrare la volatilità implicita di LWIN. Il grafico mostra quattro linee; ogni linea corrisponde a una data di scadenza diversa per le opzioni. Ad esempio, la linea superiore mostra i contratti di opzione che scadono tra 7 e 30 giorni, e la linea inferiore mostra le opzioni a lungo termine che scadono in 90 giorni o più. Si noti il forte aumento della volatilità implicita delle opzioni LWIN all'inizio del 2002, quando sono emerse le voci. All'inizio di gennaio, l'IV era nell'ordine dell'80% (che, per inciso, è un livello alto). Entro la metà di febbraio, la volatilità implicita di LWIN era quasi raddoppiata e si avvicinava al 160%, un livello estremamente alto.
+
+L'aumento della volatilità implicita delle opzioni LWIN all'inizio del 2002 suggerisce che le opzioni stavano diventando costose a causa delle voci di acquisizione che circondavano l'operatore di telecomunicazioni wireless. Per confermare che le opzioni erano costose, lo stratega di opzioni dovrebbe confrontare la volatilità implicita con la volatilità effettiva del titolo. In questo caso, consideriamo la relazione tra l'IV e la volatilità statistica di LWIN.
+
+Figura 6.2 Volatilità Implicita di LWIN (Per gentile concessione di Optionetics.com)
+(Nota: L'immagine descrive un grafico con quattro linee che mostrano l'IV di LWIN in forte aumento da gennaio a febbraio 2002)
+
+ESEMPIO DI VOLATILITÀ
+
+La Figura 6.3 fornisce un confronto tra la volatilità implicita delle opzioni LWIN e la volatilità statistica delle azioni di Leap Wireless. Questo particolare grafico confronta l'IV delle opzioni che scadono entro 30 giorni con la volatilità statistica a 20 giorni. Il grafico è stato creato in Optionetics.com Platinum e può essere duplicato per qualsiasi titolo o indice opzionabile.
+
+Si noti che, quando le voci erano al culmine nel gennaio 2002, il grafico IV/SV si avvicinava a 1,5. Ciò significa che la volatilità implicita era una volta e mezza, o il 50% in più, rispetto alla volatilità statistica. Pertanto, mentre il grafico della volatilità implicita aumentava gradualmente avvicinandosi al 160%, la volatilità implicita stava superando la volatilità statistica del titolo sottostante. Il confronto tra l'IV e la volatilità statistica conferma quindi che le opzioni LWIN erano costose all'inizio di gennaio 2002.
+
+Figura 6.3 Rapporto IV/SV di LWIN (Per gentile concessione di Optionetics.com)
+(Nota: L'immagine descrive un grafico con l'asse Y che va da 0.6 a oltre 5.0, mostrando il rapporto IV/SV che scende da oltre 1.5 a circa 0.6 tra gennaio e marzo 2002)
+
+La Figura 6.3 mostra che l'IV delle opzioni LWIN rispetto alla SV delle azioni Leap Wireless ha iniziato a scendere all'inizio di febbraio 2002. Quando il grafico legge 1,0, indica che la volatilità implicita delle opzioni è uguale alla volatilità statistica del titolo. Quando scende al di sotto di 1,0, suggerisce che la volatilità statistica è maggiore dell'IV. Si noti dalla Figura 6.4 che il titolo è salito bruscamente all'inizio di marzo. In effetti, le azioni LWIN stavano diventando più volatili, proprio come (riferendosi alla Figura 6.2) la volatilità implicita ha iniziato a scendere. Il risultato è stata una pendenza discendente nel grafico IV/SV (Figura 6.3), che è sceso verso 0,6. Pertanto, rispetto alla volatilità statistica, le opzioni LWIN sono state costose fino a metà febbraio.
+
+Figura 6.4 Andamento del Prezzo delle Azioni LWIN (Per gentile concessione di Optionetics.com)
+(Nota: L'immagine descrive un grafico del prezzo di LWIN con un forte picco all'inizio di marzo 2002)
+
+quando il grafico IV/SV si è mosso verso 1,0. Da lì, si è mosso verso 0,6 ed è stato un segno che le opzioni LWIN erano diventate economiche rispetto alla volatilità statistica.
+
+È interessante notare nel caso di LWIN che la volatilità implicita è aumentata bruscamente a metà febbraio e poi la volatilità effettiva del titolo è aumentata bruscamente all'inizio di marzo. In sostanza, poiché l'IV riflette le aspettative di volatilità futura, in questo caso il suo picco a metà febbraio ha previsto accuratamente l'aumento della volatilità statistica a marzo. Il mercato delle opzioni a volte ha una capacità straordinaria di prevedere i cambiamenti ombra nella volatilità sia dei singoli titoli che del mercato nel suo complesso.
+
+ACQUISTARE OPZIONI E LA PUT PROTETTIVA
+
+Ora, per apprezzare come la volatilità implicita aiuti un trader nel trading effettivo, esaminiamo due diverse strategie che si basano su una solida comprensione della volatilità implicita per avere successo: la protective put (put protettiva) e la covered call (call coperta). Entrambe le strategie combinano azioni con opzioni. Per illustrare l'importanza della volatilità implicita, monitoriamo l'impatto che le variazioni della volatilità implicita delle opzioni LWIN hanno sul risultato di queste due strategie. Iniziamo con la put protettiva.
+
+Per lo stratega di opzioni alle prime armi, la put protettiva può essere un ottimo modo per fare esperienza pratica nel trading di opzioni. Questa strategia è progettata per proteggere una partecipazione azionaria e/o bloccare i profitti in caso di calo del prezzo di quel titolo. Inoltre, la put protettiva può essere un modo ideale per gli investitori del mercato azionario per passare al mondo del trading di opzioni e anche per limitare il rischio associato a una semplice strategia buy-and-hold di azioni. Fondamentalmente, la put protettiva ha lo stesso profilo di rischio dell'acquisto di una call. Di conseguenza, la maggior parte dei trader di opzioni avanzati evita questa strategia. Tuttavia, in determinate circostanze, la put protettiva è appropriata.
+
+Put Protettiva
+
+Strategia = Acquistare il titolo sottostante e acquistare un'opzione put ATM o OTM.
+
+Opportunità di Mercato = Cerca di trarre profitto da un aumento del valore dell'attività sottostante, ma utilizza la put come protezione in caso di calo.
+
+Rischio Massimo = Limitato a (prezzo del titolo – strike price + prezzo pagato per il premio dell'opzione put).
+
+Profitto Massimo = Illimitato con il rialzo del titolo.
+
+Punto di Pareggio = Prezzo del titolo + premio dell'opzione put.
+
+Margine = 50% del titolo e nessun margine per la put lunga.
+
+Supponiamo che un trader stia osservando Leap Wireless e creda che le azioni abbiano del potenziale. Tuttavia, è un titolo volatile e l'investitore in questione sa che c'è un rischio serio nel possedere semplicemente le azioni. Piuttosto che acquistare semplicemente le azioni LWIN, il trader decide di stabilire una posizione coperta possedendo azioni di Leap Wireless e acquistando anche un'opzione put. Ad esempio, poiché un contratto di opzione put LWIN rappresenta il diritto di vendere 100 azioni Leap Wireless, l'investitore può acquistare un contratto put per ogni 100 azioni possedute.
+
+Ad esempio, se LWIN viene scambiata a 11perazione, puoicreareunaputprotettivaacquistandounaputconstrikepricedi11perazione,puoicreareunaputprotettivaacquistandounaputconstrikepricedi 10. Questa strategia dà al proprietario della put il diritto di vendere le sue azioni a $10finoallascadenzadell^{\prime}opzione.IlrischiomassimodelpossessodelleazioniLWINdiventaquindiladifferenzatrailprezzopagatoperLWINelostrikeprice,insiemealcostodell^{\prime}opzione(incluselecommissioni).Inquestocaso,perogni100azioni,ilrischiomassimo\overset{ˋ}{e}i$10finoallascadenzadell′opzione.IlrischiomassimodelpossessodelleazioniLWINdiventaquindiladifferenzatrailprezzopagatoperLWINelostrikeprice,insiemealcostodell′opzione(incluselecommissioni).Inquestocaso,perogni100azioni,ilrischiomassimoeˋdi 11 meno $10pi\overset{ˋ}{u}lcostodell^{\prime}opzione.IprofittisiverificanoseleazionidiLeapWirelesssalgonoabbastanzadacompensareilcostodellaput(elecommissioni);mainognicaso,l^{\prime}investitorepu\overset{ˋ}{o}sercitarel^{\prime}opzioneputevendereleazionia$10piuˋilcostodell′opzione.IprofittisiverificanoseleazionidiLeapWirelesssalgonoabbastanzadacompensareilcostodellaput(elecommissioni);mainognicaso,l′investitorepuoˋesercitarel′opzioneputevendereleazionia 10. Si noti, tuttavia, che il diritto di vendere (o put) le azioni è valido solo fino alla scadenza dell'opzione, il terzo venerdì del mese di scadenza dell'opzione. La posizione non è più coperta una volta che si verifica la scadenza.
+
+Questa operazione, nota come put protettiva, è un modo semplice per stabilire una posizione in un titolo ed eliminare parte del rischio. In primo luogo, fino alla scadenza della put, il rischio al ribasso è limitato. In secondo luogo, c'è un potenziale di profitto se LWIN dovesse fare un movimento significativo al rialzo. La put protettiva fornisce un'assicurazione su una posizione azionaria lunga nel caso in cui il titolo subisca un crollo.
+
+La put protettiva è una strategia migliore quando la volatilità implicita è bassa e le opzioni sono relativamente economiche. Ciò si verifica generalmente dopo che un titolo è salito. Cioè, quando i prezzi scendono, la volatilità implicita tende ad aumentare; ma quando i prezzi delle azioni salgono, la volatilità implicita tende a scendere. Nel caso di LWIN, c'è stato un evento insolito che ha causato un aumento della volatilità implicita. Vale a dire, quando le voci di acquisizione sono emerse all'inizio del 2002, la volatilità implicita è aumentata e le opzioni sono diventate costose.
+
+Supponiamo che lo stratega di opzioni stabilisca inconsapevolmente la put protettiva su Leap Wireless quando la volatilità implicita è alta e pronta a scendere. Per essere precisi, il 7 marzo 2002, lo stratega di opzioni acquista 100 azioni di LWIN a 10, 35perazioneeacquistaancheunaputLWINAprile10alprezzomassimodelgiorno:10,35perazioneeacquistaancheunaputLWINAprile10alprezzomassimodelgiorno: 2,15. Il costo dell'operazione è di 1.250(1.250( 1.035 per le azioni e $ 215 per l'opzione) più le commissioni. Inserendo il prezzo dell'opzione (insieme al prezzo del titolo, al tempo rimanente fino alla scadenza, allo strike price dell'opzione e al tasso d'interesse prevalente) in un modello di pricing delle opzioni, si scopre che l'IV della put LWIN Aprile 10 è del 133% al momento dell'acquisto.
+
+Circa un mese dopo, il trader controlla i prezzi di LWIN e della put LWIN Aprile 10. Il 2 aprile 2002, il titolo è invariato! Viene ancora scambiato a $10,35.LaputAprile10,tuttavia,vieneattualmentescambiataasoli60centesimi.Pertanto,ilvaloredellaposizione,che\overset{ˋ}{e}ostata$10,35.LaputAprile10,tuttavia,vieneattualmentescambiataasoli60centesimi.Pertanto,ilvaloredellaposizione,cheeˋcostata 1.250 per essere stabilita, ora vale solo $ 1.095: una perdita di un mese del 12,4%! Cosa è successo?
+
+In questo esempio, due fattori hanno causato la perdita di valore delle opzioni LWIN e la perdita della put protettiva: il time decay e un calo dell'IV. Innanzitutto, ricordiamo che le opzioni sono attività che si deprezzano. Con il passare del tempo, il valore di un contratto di opzione diminuirà. In questo caso, il solo time decay ha causato la perdita di $1,15divaloredell^{\prime}opzione.Pi\overset{ˋ}{u}vantivedremocomemisurarel^{\prime}impattonegativodeltimedecaysulleopzioni.Lasecondaragionedellaperdita\overset{ˋ}{e}ovutaalcalodell^{\prime}IV.RicordiamodallaFigura6.2chelavolatilit\overset{ˋ}{a}mplicitadelleopzioniLWINhainiziatoascenderenelmarzo2002.Diconseguenza,mentrelostrategadiopzionihapagatoun^{\prime}IVdioltreil130$1,15divaloredell′opzione.Piuˋavantivedremocomemisurarel′impattonegativodeltimedecaysulleopzioni.Lasecondaragionedellaperditaeˋdovutaalcalodell′IV.RicordiamodallaFigura6.2chelavolatilitaˋimplicitadelleopzioniLWINhainiziatoascenderenelmarzo2002.Diconseguenza,mentrelostrategadiopzionihapagatoun′IVdioltreil130 1,15 di valore dell'opzione, mentre il calo dell'IV ha comportato un'ulteriore perdita di 40 centesimi di premio.
+
+VENDERE OPZIONI E LA COVERED CALL
+
+La covered call o buy/write è una delle strategie di opzioni più comuni utilizzate oggi. La strategia può essere implementata in contanti, a margine o in conti pensionistici individuali (IRA). Inoltre, è meno rischiosa del semplice possesso di un titolo. Come la put protettiva, la strategia funziona meglio quando il prezzo del titolo sale. Tuttavia, la covered call offre un potenziale di rendimento inferiore rispetto al semplice possesso di azioni o alla put protettiva. Fondamentalmente, la strategia funziona meglio quando il titolo si muove solo modestamente al rialzo. Ciò consente al trader di trattenere il premio ricevuto per la vendita di una call contro un titolo già posseduto.
+
+La strategia covered call impiega sia azioni che opzioni call. Una call viene venduta per ogni 100 azioni detenute. Ci sono due modi per stabilire la posizione:
+
+1.  Acquistare simultaneamente le azioni e vendere una call.
+
+2.  Vendere opzioni call contro un titolo già detenuto in un portafoglio.
+
+Nella strategia covered call, il proprietario delle azioni è anche un venditore, o writer, di call. Lo scrittore, a sua volta, riceve denaro per la vendita delle call. Il denaro ricevuto è pari ai premi dell'opzione call, o al prezzo dell'opzione call sul mercato. In cambio del pagamento in contanti, lo scrittore accetta di vendere le azioni (o farle richiamare da lui) allo strike price dell'opzione fino alla scadenza dell'opzione call, il venerdì prima del terzo sabato del mese di scadenza dell'opzione. Quando un venditore di covered call è costretto a vendere le sue azioni, si parla di assignment (assegnazione).
+
+Questa strategia buy/write viene generalmente stabilita utilizzando call out-of-the-money, in modo che le opzioni call vendute abbiano strike price superiori al prezzo di mercato corrente del titolo. Ad esempio, supponiamo che 100 azioni di XYZ siano attualmente detenute in un conto di intermediazione. Il titolare del conto vuole trovare un modo per generare reddito dal portafoglio, ma non ha molto contante nel conto per investimenti come obbligazioni, certificati di deposito o fondi del mercato monetario. Un'alternativa è vendere una call contro le azioni XYZ. Se il titolo viene attualmente scambiato a 50perazioneelacallXYZLuglio55haunprezzodi50perazioneelacallXYZLuglio55haunprezzodi 2, vendere una call Luglio 55 frutterà 200sulconto(200sulconto( 2 × 100 azioni = $ 200).
+
+Qual è il rischio dell'investitore? In primo luogo, se il titolo scende, c'è un rischio virtualmente illimitato al ribasso fino a zero, lo stesso rischio che era presente sul titolo prima che la call fosse venduta. Tuttavia, la strategia covered call abbassa leggermente il punto di pareggio. Il punto di pareggio per il titolo (escluse le commissioni) è semplicemente il prezzo del titolo all'inizio dell'operazione ($50).Ilpuntodipareggioperunacoveredcall\overset{ˋ}{e}lprezzodell^{\prime}attivit\overset{ˋ}{a}ottostanteall^{\prime}iniziomenoilpremioricevutodallavenditadellacall.Inquestoesempio,ilpuntodipareggio\overset{ˋ}{e}$50).Ilpuntodipareggioperunacoveredcalleˋilprezzodell′attivitaˋsottostanteall′iniziomenoilpremioricevutodallavenditadellacall.Inquestoesempio,ilpuntodipareggioeˋ 48 (50−50− 2).
+
+Ora vediamo cosa succede se il titolo supera i 55perazione.Inquestocaso, leazionipotrebberoessererichiamatedall^(′)investitore.Incasodiassegnazione, l^(′)investitorericeve55perazione.Inquestocaso,leazionipotrebberoessererichiamatedall′investitore.Incasodiassegnazione,l′investitorericeve 5.500 (55 × 100azioni)emantienei55×100azioni)emantienei 200 di premio ricevuto per la vendita della call, ma non possiede più le azioni, per un profitto totale di 700seleazionisonostateoriginariamenteacquistatea700seleazionisonostateoriginariamenteacquistatea 50. Tuttavia, sebbene il risultato del richiamo delle azioni non sia una perdita finanziaria, l'investitore non partecipa più a ulteriori apprezzamenti del prezzo delle azioni. Pertanto, la covered call limita il potenziale di profitto del possesso di un titolo allo strike price della call. Tuttavia, se XYZ rimane tra 50e50e 55 per azione, è probabile che le azioni non vengano richiamate e l'investitore potrà trattenere le azioni e il premio dell'opzione, nonché eventuali dividendi pagati da XYZ.
+
+Pertanto, la covered call è più adatta quando l'investitore è moderatamente rialzista su un titolo, sia che il titolo sia già in un portafoglio esistente o che si tratti di un nuovo acquisto. Se lo stratega è estremamente rialzista, però, la covered call non è una strategia ideale. Perché? L'investitore rischia di essere assegnato se XYZ supera lo strike price dell'opzione. In altre parole, in cambio del premio ricevuto dall'opzione, l'investitore si obbliga a vendere le azioni allo strike price. Se il titolo supera tale strike price, è probabile che il proprietario della call eserciti il diritto di acquistare le azioni allo strike price. Sebbene la call non sia appropriata se si è estremamente rialzisti su un titolo, non è certamente una strategia ideale se l'investitore è ribassista. Le perdite iniziano a verificarsi quando il prezzo del titolo scende al di sotto del prezzo di acquisto del titolo meno il premio ricevuto per la call. Nell'esempio XYZ, qualsiasi valore inferiore a $ 48 si traduce in una perdita. Pertanto, la strategia covered call non è un'operazione a basso rischio. Fondamentalmente, utilizzando la strategia, l'investitore sta compensando con la vendita di call parte del costo di acquisto di un titolo. Di conseguenza, la covered call è solo moderatamente meno rischiosa del semplice possesso del titolo e offre un potenziale di rendimento inferiore.
+
+Il momento migliore per stabilire la covered call è quando la volatilità implicita delle opzioni è alta. In questo caso, lo stratega di opzioni sta ricevendo il massimo premio possibile. Torniamo al nostro esempio LWIN e allo stratega che cerca di partecipare a un potenziale rally delle azioni di Leap Wireless International. Come per l'acquirente della put protettiva, lo stratega acquista 100 azioni di LWIN il 7 marzo con il titolo scambiato a $10,35perazione.Questavolta,per\overset{ˋ}{o}invecediacquistareunaput,lostrategavendeuncontrattocallAprile12.5.Il7marzo,lostratega\overset{ˋ}{e}tatoingradodivenderelacalla$10,35perazione.Questavolta,peroˋ,invecediacquistareunaput,lostrategavendeuncontrattocallAprile12.5.Il7marzo,lostrategaeˋstatoingradodivenderelacalla 1,50 per contratto con un'IV del 120%. Il costo dell'operazione, quindi, è di 885(885( 1.035 per le azioni meno $ 150 per la vendita dell'opzione call) più le commissioni. Nota: il premio di un'opzione è sempre elencato in valore punti. Per calcolare il costo effettivo, moltiplica semplicemente il valore punti per 100.
+
+Il 2 aprile 2002, lo stratega controlla il prezzo delle azioni LWIN e delle opzioni. Ancora una volta, il titolo è invariato a 10, 35.LeopzionicallLWINAprile12.5, tuttavia, sonodiminuitedivaloreevalgonosolo25centesimi.Laposizioneoravale10,35.LeopzionicallLWINAprile12.5,tuttavia,sonodiminuitedivaloreevalgonosolo25centesimi.Laposizioneoravale 1.010, che rappresenta, approssimativamente, un guadagno di circa il 14% in un mese. Ogni contratto di opzione ha perso $ 1,10 di valore a causa del time decay. In questo caso, le opzioni hanno perso altri 15 centesimi a causa delle variazioni della volatilità implicita.
+
+Covered Call
+
+Strategia = Acquistare il titolo sottostante e vendere un'opzione call out-of-the-money.
+
+Opportunità di Mercato = Cercare un mercato rialzista o neutrale in cui si prevede un lento rialzo del prezzo del sottostante con poco rischio di calo.
+
+Rischio Massimo = Virtualmente illimitato al ribasso al di sotto del punto di pareggio fino a zero.
+
+Profitto Massimo = Limitato al credito ricevuto dall'opzione call corta + (strike price della call corta – prezzo dell'attività sottostante lunga) moltiplicato per il valore per punto.
+
+Punto di Pareggio = Prezzo dell'attività sottostante all'inizio – premio ricevuto dalla call corta.
+
+Margine = L'importo è soggetto alla discrezione del tuo broker.
+
+In conclusione, le strategie che comportano l'acquisto di opzioni saranno influenzate negativamente dal calo della volatilità implicita, e le strategie che comportano la vendita di opzioni beneficeranno del calo dell'IV. È vero anche il contrario. L'aumento dell'IV è un vantaggio per l'acquirente di opzioni, ma il nemico del venditore di opzioni. Il time decay funziona allo stesso modo, e in misura maggiore. Pertanto, per comprendere e negoziare opzioni con successo, è imperativo sapere come misurare e monitorare le variazioni della volatilità implicita.
+
+I GREEKS
+
+Parlando di strumenti di misurazione, i "greeks" meritano un commento in questo momento. Come sappiamo, la volatilità implicita deriva dal prezzo dell'opzione sul mercato aperto e da un modello di pricing delle opzioni, ma non è l'unica informazione utile derivata dal modello. Ricordiamo che, dato un livello di volatilità, i modelli di pricing delle opzioni possono essere utilizzati per risolvere il prezzo teorico dell'opzione. Inoltre, sia che si risolva per il prezzo o per la volatilità implicita, il modello di pricing delle opzioni Black-Scholes fornirà anche i cosiddetti greeks: delta, theta, vega e gamma. Ogni strumento di misurazione del rischio fornisce allo stratega di opzioni informazioni importanti sul contratto di opzione.
+
+Delta
+
+Il delta, forse il più importante dei greeks, misura quanto si muove il prezzo di un'opzione per ogni variazione di un punto del titolo o dell'indice sottostante. Il delta varierà da 0,00 a 1,00 per le opzioni call e da –1,00 a 0,00 per le opzioni put (le put hanno deltas negativi perché il prezzo dell'opzione si muove inversamente rispetto ai movimenti di prezzo dell'attività sottostante). In un tentativo di semplificare il processo, tuttavia, i delta sono solitamente espressi senza il punto decimale. Pertanto, un delta di +0,50 è solitamente indicato con un valore di +50. Questo è anche il modo in cui li esprimeremo d'ora in poi. Ad esempio, un delta di +50 significa che se il titolo si muove verso l'alto di $1,ilvaloredell^{\prime}opzioneaumenter\overset{ˋ}{a}icirca$1,ilvaloredell′opzioneaumenteraˋdicirca 0,50. Se il titolo diminuisce di $1,l^{\prime}opzionediminuir\overset{ˋ}{a}icirca$1,l′opzionediminuiraˋdicirca 0,50. Allo stesso modo, se il delta dell'opzione è –25, un aumento di $1delprezzodeltitolocomporter\overset{ˋ}{a}ncalodi$1delprezzodeltitolocomporteraˋuncalodi 0,25 del prezzo dell'opzione, e una diminuzione di $1delvaloredelsottostantecomporter\overset{ˋ}{a}naumentodi$1delvaloredelsottostantecomporteraˋunaumentodi 0,25 del valore dell'opzione. Il delta di un'opzione cambia a seconda di quanto sia in-the-money (ITM) o out-of-the-money (OTM) lo strike dell'opzione. Le opzioni deep ITM (call o put) avranno delta che si avvicinano a 100, mentre le opzioni deep OTM (call o put) avranno delta che si avvicinano a zero. Un'opzione con un delta vicino allo zero non è estremamente sensibile alle variazioni di prezzo dell'attività sottostante. D'altra parte, una call con un delta di 1,00 si muoverà punto per punto con le variazioni di prezzo del titolo o dell'indice. Il delta di un'opzione trasmette anche la propensione di un'opzione a finire in-the-money alla scadenza. Pertanto, un'opzione con un delta di 25 ha una probabilità del 25% di finire in-the-money alla scadenza.
+
+Per calcolare il delta di un'opzione, dividi semplicemente la variazione del premio dell'opzione per la variazione del prezzo di mercato del titolo sottostante. Ad esempio, se il prezzo di un'opzione scende da 3a3a 2,50 e il titolo sottostante scende da 50a50a 49, il delta dell'opzione è 0,50 (3–3– 2,50 / 50–50– 49 = 0,50). Ciò significa che l'opzione ha una probabilità del 50% di finire in-the-money alla scadenza. Tuttavia, il modo più comune per calcolare il delta utilizza un modello di pricing delle opzioni. I trader raramente calcolano il delta a mano.
+
+Tabella 6.1 fornisce i greeks per l'esempio LWIN discusso nella sezione precedente. Ancora una volta, i prezzi delle opzioni sono stati rilevati il 7 marzo 2002, ma le opzioni scadono ad aprile (il terzo venerdì). Si noti che l'opzione call ha un delta di quasi 0,50, il che significa che ogni movimento di prezzo di $1nelleazioniLWINsitraduceinunaumentodi50centesimidellacallAprile12.5.L^{\prime}opzioneput,invece,haundeltanegativo.Guadagner\overset{ˋ}{a}centesimidivaloreperognicalodi$1nelleazioniLWINsitraduceinunaumentodi50centesimidellacallAprile12.5.L′opzioneput,invece,haundeltanegativo.Guadagneraˋ35centesimidivaloreperognicalodi 1 delle azioni Leap Wireless.
+
+Gamma
+
+Il gamma misura le variazioni del delta per ogni variazione di un punto del prezzo del titolo o dell'indice sottostante. Un gamma alto significa che il delta della tua posizione cambierà molto rapidamente per un movimento relativamente piccolo dell'attività sottostante. È una misura della dimensione della tua posizione: più opzioni hai in un'operazione, maggiore sarà il gamma. Un gamma alto aiuta a rendere un'operazione delta-neutral più redditizia più rapidamente, poiché gli aggiustamenti alla tua posizione possono essere effettuati con movimenti più piccoli (quindi più probabili) del titolo rispetto a un gamma più basso.
+
+La Tabella 6.1 mostra il gamma per la call LWIN Aprile 12.5 e la put LWIN Aprile 10. Ad esempio, mentre il titolo si muove di $ 1 verso l'alto, il delta aumenterà di 0,073. Ovviamente, il delta non può continuare a salire a questo ritmo indefinitamente man mano che il prezzo del titolo sale, perché il delta non supera mai 1,00. Pertanto, più il titolo si sposta in-the-money, maggiore è il delta e minore è il gamma. In effetti, il gamma è al suo valore massimo quando le opzioni sono at-the-money e diminuisce man mano che il prezzo del titolo si allontana dallo strike price. Alla fine, il gamma si avvicina allo zero quando l'opzione si spinge deep in o out-of-the-money. A differenza del delta, il gamma è sempre un numero positivo sia per le put che per le call.
+
+Tabella 6.1 Esempi di Greeks (LWIN)
+
+  Greeks sulle Opzioni LWIN Aprile il 7 marzo 2002   Call Aprile 12.5   Put Aprile 10
+  -------------------------------------------------- ------------------ ---------------
+  Delta                                              0.473              -0.350
+  Gamma                                              0.073              0.060
+  Theta                                              -0.016             -0.015
+  Vega                                               0.019              0.017
+
+Theta
+
+Il theta misura il tasso di time decay per un'opzione. Il theta è sempre espresso come numero negativo perché sia le put che le call soffrono del decadimento temporale. Il tasso di time decay non è lineare, tuttavia. Quando un'opzione si avvicina alla scadenza, il tasso di time decay aumenta. Pertanto, le opzioni con un mese alla scadenza avranno un theta maggiore rispetto a un'opzione equivalente con sei mesi alla scadenza. Si noti dalla Tabella 6.1 che sia la put che la call perdono circa 1,5 centesimi di valore ogni giorno che passa.
+
+Vega
+
+Per il trader di volatilità, il vega è forse il greek più importante. Alcuni trader preferiscono usare il termine "tau" per descrivere questa misura di rischio perché Vega non è in realtà una lettera greca. Tuttavia, il vega riflette quanto cambia il prezzo di un'opzione per ogni variazione percentuale della volatilità. È sempre espresso come numero positivo, sia che si tratti di una put o di una call.
+
+A parità di altre condizioni, i titoli con maggiore volatilità avranno opzioni con prezzi più alti rispetto ai titoli a bassa volatilità. Di conseguenza, quando la volatilità di un titolo aumenta, aumenterà anche il valore delle opzioni su quel titolo, sia put che call. Ma quando la volatilità di un titolo scende, anche i premi delle opzioni diminuiranno. Il vega è semplicemente il termine matematico utilizzato per quantificare le variazioni del valore di un'opzione per ogni variazione della volatilità di un'attività.
+
+A quale misura di volatilità ci riferiamo quando parliamo di vega: statistica o implicita? Ricordiamo che, quando inseriamo i prezzi delle opzioni nel modello Black-Scholes, stiamo risolvendo per la volatilità implicita. Quando la volatilità implicita di un'opzione cambia, cambierà anche il prezzo di quell'opzione. In generale, quando il prezzo di un'opzione sale, è dovuto a un aumento della volatilità implicita. Questo può verificarsi anche quando la volatilità statistica del titolo rimane invariata. Pertanto, il vega misura di quanto cambia il prezzo dell'opzione al variare della volatilità implicita.
+
+Nel caso dell'esempio LWIN, il vega è pari a 0,019 per la call e 0,017 per la put. Quando la volatilità implicita dell'opzione aumenta dell'1%, la call aumenterà di valore di 1,9 centesimi e la put di 1,7 centesimi. Pertanto, le posizioni in opzioni che comportano l'acquisto di put e call aumenteranno di valore, mentre le operazioni che comportano la vendita di opzioni diminuiranno di valore all'aumentare della volatilità implicita. In sintesi, il vega è semplicemente il mezzo per quantificare il fenomeno della volatilità discusso in relazione a LWIN, alla put protettiva e alla covered call.
+
+CONCLUSIONE
+
+I concetti delineati in questo capitolo sono una parte essenziale del puzzle. Operare con le opzioni senza una chiara comprensione della volatilità implicita, basandosi solo su grafici e altri indicatori, può essere un grosso errore. Ad esempio, molti nuovi trader di opzioni notano come i titoli tendano a mostrare aumenti di volatilità immediatamente dopo i loro annunci sugli utili. Pertanto, molti trader ritengono che l'implementazione di alcune strategie come uno straddle (l'acquisto simultaneo di una call e una put) sarebbe redditizia più spesso di quanto non lo sia. Tuttavia, la volatilità implicita tende a crollare bruscamente dopo che la notizia sugli utili è stata diffusa, quindi anche un movimento abbastanza ampio del titolo può comportare una perdita di trading a causa di un crollo della volatilità implicita. Prima dell'annuncio degli utili, la volatilità implicita sale in previsione che il titolo mostri una maggiore volatilità a causa dell'annuncio. Una volta che la notizia è stata diffusa, la volatilità implicita scende a meno che non sia all'orizzonte un altro evento volatile per il titolo.
+
+Il fattore importante da considerare prima di diventare acquirente o venditore di opzioni è il livello attuale di volatilità implicita riflesso nel prezzo dell'opzione. Come abbiamo visto, non esistono due opzioni con gli stessi livelli di volatilità implicita in un dato momento. Anche due opzioni con strike price o mesi di scadenza diversi sullo stesso titolo possono avere diversi livelli di volatilità implicita. Inoltre, la volatilità implicita è sempre in uno stato di flusso. Pertanto, per ogni opzione specifica, lo stratega deve considerare il livello di volatilità implicita in quel momento specifico.
+
+Armato della capacità di misurare la volatilità implicita di un'opzione, lo stratega è meglio equipaggiato per determinare se è economica o costosa. Naturalmente, questo non può essere fatto nel vuoto. Il fattore importante da considerare è la relazione tra il livello attuale di volatilità implicita rispetto alla volatilità storica del titolo e alla volatilità implicita di quell'opzione nel tempo. In questo modo, lo stratega sarà in grado di valutare se le opzioni sono economiche o costose e anche sapere quali delle strategie specifiche trattate nel resto di questo libro sono più promettenti.

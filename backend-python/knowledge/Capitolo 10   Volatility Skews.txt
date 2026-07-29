@@ -1,0 +1,555 @@
+10
+
+Distorsioni della Volatilità (Volatility Skews)
+
+Sei pronto per roba veramente seria? Nelle parti precedenti di questo libro, abbiamo imparato come la volatilità possa influenzare una varietà di asset come azioni e indici. Abbiamo imparato che esistono diversi indicatori che possono aiutare a rappresentare graficamente la volatilità. Abbiamo appreso cos'è la volatilità storica e come usarla nel trading reale, e la volatilità implicita, incluso un modo semplice per calcolarla, e come le opzioni vengono prezzate utilizzando queste informazioni. Abbiamo imparato che esistono strumenti reali basati sulla volatilità implicita, come il CBOE Volatility Index (VIX) e il Nasdaq 100 Volatility Index (VXN). Ora mettiamo tutto insieme e impariamo qualcosa che alcuni dei trader professionisti più sofisticati usano nelle loro negoziazioni: la distorsione della volatilità (volatility skewing).
+
+Una distorsione della volatilità si crea quando due o più opzioni sullo stesso titolo sottostante o indice hanno una differenza notevole in termini di volatilità implicita. Ciò significa che quando si confrontano varie quotazioni di opzioni e si osserva la volatilità implicita di ciascun contratto d'opzione, lo stratega rileva una grande differenza tra un'opzione e l'altra. Se un'opzione ha una volatilità implicita molto più alta di un'altra sullo stesso titolo, potrebbe esserci un'opportunità di trading che consiste nell'acquistare l'opzione con la volatilità più bassa e contemporaneamente vendere l'opzione con la volatilità più alta. A questo proposito, ci sono due tipi di distorsioni della volatilità da cercare:
+
+1.  Distorsioni di prezzo della volatilità tra strike diversi con la stessa scadenza.
+
+2.  Distorsioni temporali della volatilità tra diversi mesi per lo stesso strike.
+
+In questo capitolo, il lettore imparerà a valutare ciascuna di queste distorsioni della volatilità, come identificarle e, naturalmente, come implementare strategie di trading che sfruttano queste distorsioni.
+
+[Nome File Originale: deepseek-1784904241958_7884597627527265340.webp]
+
+Volatility (Volatilità)
+
+Logicamente, quando un trader osserva un gruppo di prezzi strike in una certa catena di opzioni, si aspetta che il mercato mantenga i prezzi delle opzioni allineati. Cioè, ogni prezzo manterrà la stessa relazione e la volatilità implicita di un contratto d'opzione giorno per giorno rimarrà entro un certo intervallo. Questo ha senso data la nostra precedente discussione sulla volatilità. Per essere precisi, la volatilità implicita di un contratto d'opzione non esiste in un vuoto. È anche una funzione della volatilità storica, così come delle aspettative del mercato riguardo alla volatilità futura dell'attività sottostante. Pertanto, la volatilità implicita dell'opzione XYZ giugno non dovrebbe essere materialmente diversa da quella dell'opzione XYZ gennaio. E la volatilità della call XYZ 50 non dovrebbe discostarsi molto dalla VI della put XYZ 40.
+
+Ora, mentre la volatilità implicita sarà la stessa per diversi prezzi strike e diversi mesi di scadenza delle opzioni per alcuni titoli, certamente non è scolpita nella pietra. Ad esempio, la domanda per certe opzioni, a certi prezzi strike, può far sì che i premi delle opzioni e le volatilità implicite di quei premi salgano e scendano più velocemente rispetto agli strike vicini. In un mondo perfetto, se la volatilità del titolo XYZ fosse al 50%, sarebbe facile presumere che tutte le opzioni su XYZ sarebbero scambiate anche a una volatilità implicita del 50%; ma come abbiamo già visto nei capitoli precedenti, questo semplicemente non accade.
+
+Pertanto, i prezzi strike per un insieme di opzioni possono avere diversi livelli di volatilità implicita. Ad esempio, se un grande trader entrasse e acquistasse 1.500 opzioni call con un determinato strike, il denaro (o prezzo di mercato) su quell'opzione salirebbe più velocemente degli strike intorno. Dopo il picco, potrebbero volerci alcune ore prima che quella particolare opzione tornasse a un premio che riflettesse un prezzo normale rispetto alle opzioni circostanti.
+
+La Tabella 10.1 mostra un esempio di un ipotetico insieme di opzioni su XYZ con tre livelli di volatilità implicita diversi, ma simili. Ora immagina per un momento che un grosso trader entri per acquistare 1.500 opzioni call gennaio 50, e man mano che questi contratti vengono scambiati, il prezzo delle call gennaio 50 aumenta di valore. La Tabella 10.2 mostra il balzo nei prezzi delle opzioni che si verifica mentre il grosso ordine viene eseguito e la volatilità implicita sulle call XYZ 50 salta più in alto.
+
+Nota il cambiamento sia nel premio della call gennaio 50 che nella volatilità implicita di quella stessa opzione call. In questo caso, semplicemente osservando la differenza nella volatilità implicita tra le opzioni, possiamo vedere che c'è una domanda d'acquisto molto più forte per queste opzioni call. Questa disparità tra i prezzi è nota come
+
+Tabella 10.1 Insieme Ipotetico di Call XYZ
+
+  Strike   Denaro (Bid)   Lettera (Offer)   IV
+  -------- -------------- ----------------- ------
+  50       6.50           6.75              6.5%
+  55       3.25           3.50              6.3%
+  60       1.50           1.60              60%
+
+[Nome File Originale: deepseek-1784904276591_6090520303596946603.webp]
+
+Tabella 10.2 Insieme Ipotetico di Call XYZ Assumendo un Balzo della Volatilità
+
+  Strike   Denaro (Bid)   Lettera (Offer)   IV
+  -------- -------------- ----------------- -----
+  50       7.00           7.25              86%
+  55       3.25           3.50              63%
+  60       1.50           1.60              60%
+
+Distorsione della volatilità. Distorsioni della volatilità come questa esistono sempre, ma non in tutti i titoli; alcuni titoli hanno una distorsione maggiore tra gli strike rispetto ad altri. Le distorsioni che esistono in un insieme di opzioni non rimarranno nello stesso titolo indefinitamente. Vanno e vengono, proprio come i massimi e minimi del mercato. Diamo un'occhiata ad alcune distorsioni della volatilità su dati reali.
+
+DELL COMPUTER
+
+Dell Computer (DELL) era un titolo caldo alla fine degli anni '90 e fino all'anno 2000. Molti investitori pensavano che Dell, dopo una grande corsa al rialzo dal 1996 al 1999, stesse semplicemente facendo un ritracciamento, o cedendo una piccola percentuale dei suoi grandi guadagni, e presto avrebbe iniziato a segnare nuovi massimi. Nel gennaio 2000, quindi, gli investitori erano ancora rialzisti sul titolo e le opzioni call DELL erano pesantemente scambiate. Diamo un'occhiata alle call di febbraio all'inizio di gennaio. All'epoca, il titolo veniva scambiato a metà degli anni '40.
+
+La Tabella 10.3 mostra un elenco delle opzioni call DELL di febbraio 2000 all'inizio di gennaio 2000. Per prima cosa, osserva le offerte e le richieste delle opzioni. Nota quanto velocemente i premi scendono man mano che si scende lungo la catena degli strike. Questo è tipico dei prezzi. Tuttavia, osserva la
+
+Tabella 10.3 Opzioni Call DELL Febbraio 2000 all'inizio di Gennaio 2000
+
+  Simbolo Opzione   Strike   Tipo   Denaro (Bid)   Lettera (Ask)   IV
+  ----------------- -------- ------ -------------- --------------- ----------
+  DLQBE             25.00    Call   21.625         23.125          130.155%
+  DLQBF             30.00    Call   17.000         17.125          79.653
+  DLQEZ             32.50    Call   14.854         14.875          82.237
+  DLQBG             35.00    Call   12.375         12.375          68.522
+  DLQBU             37.50    Call   10.125         10.250          65.023
+  DLQBH             40.00    Call   8.125          8.250           62.885
+  DLQBY             42.50    Call   6.375          6.375           60.775
+  DLQBI             45.00    Call   4.750          4.875           59.123
+  DLQBW             47.50    Call   3.375          3.625           57.549
+  DLQBI             50.00    Call   2.500          2.562           57.424
+  DLQBK             55.00    Call   1.250          1.312           58.057
+  DLQBL             60.00    Call   0.625          0.688           59.782
+
+[Nome File Originale: deepseek-1784904306543_325597950206771518.webp]
+
+colonna IV, che riflette la volatilità implicita per ogni prezzo strike. In un mondo perfetto, questi valori sarebbero tutti vicini tra loro. Non in questo caso. Chiaramente, le opzioni con i prezzi strike più bassi avevano livelli di volatilità implicita molto più elevati. Pertanto, la tabella mostra che le opzioni in-the-money erano chiaramente più richieste di quelle out-of-the-money. In effetti, le call DELL da 45 a 60 avevano IV inferiori al 60%—meno della metà del livello della call 25. La disparità tra la volatilità implicita delle opzioni DELL con diversi prezzi strike è ciò che viene definita distorsione della volatilità.
+
+Andiamo avanti di due anni e osserviamo un altro insieme di call su Dell Computer. I dati sono più o meno gli stessi, ma invece di guardare le call di febbraio 2000, la Tabella 10.4 considera le call di febbraio 2002 nel mese di gennaio 2002. Le call hanno più o meno lo stesso tempo alla scadenza delle opzioni call di febbraio del 2000 dell'esempio precedente.
+
+È importante rendersi conto che nel 2002 Dell Computer non veniva più scambiato a metà degli anni '40; il titolo veniva scambiato negli anni '20, ovvero quasi la metà del prezzo di due anni prima. Le volatilità implicite per le opzioni DELL erano più basse nel 2002, come mostrato nella Tabella 10.4. L'altra cosa da notare è che la volatilità implicita per ogni prezzo strike era più o meno la stessa. Si noti che c'è una distorsione; la volatilità implicita diminuisce all'aumentare degli strike (ma non al ritmo di gennaio 2000), e la IV aumenta di nuovo al di sopra dello strike 35. Questo dovrebbe aiutare a illustrare che la distorsione può andare e venire con ogni titolo. La situazione nella Tabella 10.4 è molto più comune e ciò che lo stratega delle opzioni può aspettarsi in termini di distorsioni della volatilità tra diversi prezzi strike. In altre parole, l'estrema distorsione sulle opzioni call DELL all'inizio del 2000 era davvero insolita.
+
+Come possiamo vedere, la domanda può far sì che le volatilità delle opzioni aumentino in diversi incrementi tra strike diversi. Nel caso delle opzioni DELL, era una forte domanda in previsione della continuazione del rialzo del titolo verso nuovi massimi. Cos'altro può causare la distorsione della volatilità? Che dire delle catastrofi come gli attacchi a New York e Washington D.C. dell'11 settembre? Ebbene, proprio il giorno prima, UAL Corporation (simbolo: UAL), la società madre di United Airlines, aveva opzioni scambiate con volatilità implicite tra il 35% e il 40% con pochissima differenza nella volatilità implicita tra i prezzi strike. Diamo un'occhiata al mercato subito dopo la catastrofe dell'11 settembre e vediamo se c'era una distorsione della volatilità nei titoli delle compagnie aeree quando i mercati hanno ripreso le contrattazioni.
+
+Tabella 10.4 Call DELL Febbraio 2002 a Gennaio 2002
+
+  Simbolo Opzione   Strike   Tipo   Denaro (Bid)   Lettera (Ask)   IV
+  ----------------- -------- ------ -------------- --------------- ---------
+  DLQBE             25.00    Call   5.00           5.20            49.654%
+  DLQBY             27.50    Call   3.10           3.30            48.193
+  DLQBF             30.00    Call   1.70           1.85            46.904
+  DLQBZ             32.50    Call   .75            .90             44.872
+  DLQBG             35.00    Call   .20            .35             41.239
+  DLQBU             37.50    Call   .05            .20             43.597
+  DLQBH             40.00    Call   0              .10             44.622
+
+[Nome File Originale: deepseek-1784904344070_8241050026178855149.webp]
+
+DELL COMPUTER
+
+La Tabella 10.5 mostra varie opzioni put su UAL il 17 settembre 2001—il primo giorno ufficiale di negoziazione dopo gli attacchi terroristici che hanno praticamente fermato l'attività di trading a Wall Street. Innanzitutto, nota come l'aumento della volatilità implicita si sia verificato su tutta la linea. I numeri erano da due a tre volte più grandi dei valori registrati prima dell'attacco terroristico. In secondo luogo, c'è una distorsione della volatilità nelle put, poiché la volatilità implicita varia dall'80% al 106%.
+
+Anche le aziende possono causare distorsioni della volatilità. Tyco (simbolo: TYC), per esempio, aveva volatilità in aumento subito dopo l'annuncio dei suoi piani di scindersi in quattro società separate e voci di problemi contabili. Il 21 settembre 2001, Tyco chiuse a $ 40 per azione—in calo del 30% in sole due settimane. La Tabella 10.6 mostra le opzioni call TYC di ottobre e le loro volatilità. Guarda quanto più alte sono le volatilità per le call in-the-money rispetto alle call out-of-the-money. Le call 25, per esempio, hanno quasi il doppio della volatilità delle call 50.
+
+Quindi, ora che abbiamo esaminato alcune tabelle di prezzi delle opzioni, vediamo come appaiono questi dati su un grafico. La Figura 10.1 mostra che le call e le put 50, così come le altre put e call di ottobre (dalla Tabella 10.6), avevano volatilità implicite nell'intervallo basso del 50%. Sul lato sinistro, il grafico della distorsione della volatilità riflette la volatilità implicita delle opzioni call TYC. Con il titolo scambiato a $40 per azione, le
+
+Tabella 10.5 Volatilità Implicita su UAL il 17 Settembre 2001
+
+  Simbolo Opzione   Strike   Tipo   Denaro (Bid)   Lettera (Ask)   IV
+  ----------------- -------- ------ -------------- --------------- ---------
+  UALVC             15.00    Put    35             1.05            88.275%
+  UALVW             17.50    Put    1.25           2.00            80.908
+  UALVD             20.00    Put    2.75           3.90            85.309
+  UALVX             22.50    Put    5.10           6.00            99.517
+  UALVE             25.00    Put    7.30           8.30            106.368
+
+Tabella 10.6 Opzioni Call e Distorsione della Volatilità su Tyco il 21 Settembre 2001
+
+  Simbolo Opzione   Strike   Tipo   Denaro (Bid)   Lettera (Ask)   IV
+  ----------------- -------- ------ -------------- --------------- ----------
+  TYCJE             25.00    Call   15.80          16.30           102.015%
+  TYCJY             27.50    Call   13.30          13.90           89.189
+  TYCJF             30.00    Call   10.90          11.50           79.712
+  TYCJZ             32.50    Call   8.70           9.20            75.612
+  TYCJG             35.00    Call   6.60           7.00            69.878
+  TYCJU             37.50    Call   4.70           5.10            66.005
+  TYCJH             40.00    Call   3.00           3.40            60.438
+  TYCJV             42.50    Call   1.85           2.10            58.162
+  TYCJI             45.00    Call   .95            1.20            55.159
+  TYCJW             47.50    Call   .50            .60             53.727
+  TYCJJ             50.00    Call   .15            .35             52.182
+
+[Nome File Originale: deepseek-1784904372682_5389722274868188630.webp]
+
+Tyco International Ltd.
+
+Grafico della Distorsione della Volatilità Implicita Ottobre 01
+
+CALL PUT
+
+Volatilità
+90
+80
+70
+60
+50
+40
+30
+20
+10
+
+15 25 35 45 55 65 75 85
+
+Figura 10.1
+Grafico della Distorsione della Volatilità TYC per le Opzioni di Ottobre 2001 (Per gentile concessione di Optionetics.com)
+
+[Prompt per Generare la Figura 10.1]
+Crea un grafico a linee doppio che rappresenti una "Distorsione della Volatilità (Volatility Skew)" per le opzioni Call e Put di Tyco (TYC) con scadenza Ottobre 2001. L'asse X deve essere etichettato con i prezzi strike (da circa 15 a 85). L'asse Y deve essere etichettato "Volatilità" e andare da 10 a 90. Per le CALL (lato sinistro del grafico), la linea deve iniziare alta (circa 80) allo strike 15, scendere gradualmente fino a un minimo (circa 50-55) intorno allo strike 45-50, per poi risalire leggermente verso gli strike più alti (fino a circa 60-65). Per le PUT (lato destro del grafico), la linea deve iniziare alta (circa 80-85) allo strike 15, scendere a un minimo (circa 50-55) intorno allo strike 45-50, per poi risalire in modo più marcato verso gli strike più alti (fino a circa 75-80). Aggiungi un titolo: "Tyco International Ltd. Oct 01 Implied Volatility Skew Chart" e una didascalia: "(Courtesy of Optionetics.com)".
+
+opzioni vicino al denaro (near-the-money) avevano la minor quantità di volatilità implicita. Le opzioni deep-in-the-money e deep-out-of-the-money avevano i livelli più alti di volatilità. Il lato destro della Figura 10.1 mostra la volatilità implicita delle opzioni put TYC. Anche in questo caso, le put vicino al denaro avevano i livelli di volatilità più bassi. Le opzioni in-the-money avevano livelli leggermente più alti. Le opzioni deep-out-of-the-money avevano una volatilità implicita estremamente alta.
+
+Cosa causa questa distorsione della volatilità? La domanda! Durante l'era esplosiva di Internet alla fine degli anni '90, la maggior parte delle persone si concentrava sui cambiamenti straordinari dei prezzi delle azioni. Ma come trader di opzioni, ho osservato i cambiamenti dei prezzi delle call e delle put; i prezzi strike sembravano salire all'infinito, per non parlare dei premi di quegli strike. Una cosa che ho notato è stato il numero di siti web che spuntavano come funghi, suggerendo acquisti e vendite ai loro abbonati su queste opzioni. Un'altra era che chiaramente i titoli tecnologici ricevevano una copertura stampa molto migliore in TV rispetto ai normali blue chip, ai rivenditori, ai titoli energetici, ecc. Questo mi ha convinto che molte persone stavano acquistando azioni in base alla quantità di "pubblicità" che veniva fatta nell'arena finanziaria.
+
+[Nome File Originale: deepseek-1784904396391_8175751299628165470.webp]
+
+SORRISI, RUGHE (FROWNS) E PENDENZE (SLOPES)
+
+Sebbene essere un trader di opzioni fosse la moda del momento, quei trader facevano solo le poche strategie che i loro broker potevano effettivamente permettere. Ad esempio, la maggior parte delle società di brokeraggio permetteva di negoziare covered call, anche nei conti pensionistici individuali. Era considerato un approccio al trading di opzioni a basso rischio. Sebbene quella particolare strategia fosse responsabile di una parte dell'aumento del trading di opzioni, la maggior parte dei nuovi trader di opzioni si limitava ad acquistare opzioni call secche. Acquistare un'opzione call secca era un modo per assumere una posizione rialzista sul mercato utilizzando la leva finanziaria. Quando Dell Computer stava esplodendo al rialzo prima dell'anno 2000, il numero di opzioni call scambiate su questo titolo è salito quasi velocemente quanto il prezzo del titolo stesso. Sembrava che tutti volessero fare più soldi possibile sfruttando il capitale in opzioni call.
+
+Qualcosa che ho notato durante il periodo di domanda apparentemente insaziabile per le opzioni DELL è stato il numero di call e put out-of-the-money che erano attive. Questo ha effettivamente spinto le richieste (offer) più in alto del normale. Ora, cosa stava causando tutta quella domanda per le opzioni DELL? Molti trader del pubblico probabilmente hanno acquistato opzioni DELL a causa dell'hype che i media stavano dando loro, specialmente da Internet.
+
+Il risultato netto dell'aumento dei prezzi delle opzioni DELL è stato lo sviluppo di diverse opportunità di distorsione (skewing). Queste distorsioni non erano molto evidenti per il principiante; ma per il professionista, le distorsioni fornivano un vantaggio sulla volatilità. Identificando la distorsione, un trader non solo sapeva quali opzioni erano molto richieste, ma anche come creare strategie di trading che sfruttassero la distorsione. Il pubblico di John Q. Public ha contribuito a creare una grande distorsione su DELL speculando attivamente su DELL con call out-of-the-money. Nel frattempo, i trader istituzionali stavano acquistando le opzioni put out-of-the-money come modo per coprire le loro posizioni azionarie, il che ha fatto salire queste opzioni. I prezzi riflettevano le volatilità implicite di ogni prezzo strike. Di conseguenza, alcuni di questi strike sono effettivamente usciti dalla linea.
+
+SORRISI, RUGHE (FROWNS) E PENDENZE (SLOPES)
+
+Poiché la volatilità tende a tornare alla media, tende a tornare a una media nel tempo. Alla scadenza, tutte le volatilità nello stesso mese si incontrano, poiché il valore temporale decade. Quindi sapere come usare le distorsioni della volatilità può darti un vantaggio nel decidere quale strategia usare e quando. Come puoi sfruttare queste informazioni? Semplicemente sapendo come interpretare quali opzioni sono sopravvalutate o sottovalutate rispetto ad altre, puoi mettere insieme strategie coperte dalla volatilità che ti danno un vantaggio extra sia nel rischio che nel rendimento. Diamo un'occhiata ad alcuni grafici e vediamo come applicarli al tuo approccio di trading.
+
+Un sorriso della volatilità (volatility smile) rappresenta opzioni con alta volatilità sopra e sotto lo strike ATM (al denaro) e vicino all'ATM, dimostrando che ci sono discrepanze sia nelle opzioni in-the-money che out-of-the-money. La Figura 10.2 fornisce un esempio del sorriso della volatilità. In questo esempio, l'opzione con la volatilità implicita più bassa ha un prezzo strike di 50. Gli strike con le volatilità implicite più alte sono i 25 e inferiori e i 75 e superiori. Pertanto, se lo stratega delle opzioni è rialzista su questo titolo, creare uno spread rialzista call (bull call spread) (discusso nel Capitolo 8) acquistando le call 50 e vendendo le call 75
+
+[Nome File Originale: deepseek-1784904442015_2346097305560968846.webp]
+
+DISTORSIONI DELLA VOLATILITÀ
+
+Figura 10.2 Sorriso della Volatilità (Volatility Smile) (Per gentile concessione di Optionetics.com)
+
+[Prompt per Generare la Figura 10.2]
+Crea un grafico a linee che rappresenti un "Sorriso della Volatilità (Volatility Smile)". L'asse X deve essere etichettato con i prezzi strike (da circa 20 a 80). L'asse Y deve essere etichettato "Volatilità" e avere un range da 0 a 100. La linea deve iniziare alta (circa 80-90) allo strike 20, scendere progressivamente fino a un minimo netto (circa 20-30) intorno allo strike 50, per poi risalire simmetricamente verso l'alto fino a circa 80-90 allo strike 80, formando una curva a forma di "U" o sorriso. Aggiungi il titolo "Figura 10.2 Volatility Smile" e la didascalia "(Courtesy of Optionetics.com)".
+
+può essere una strategia valida. Al contrario, se lo stratega delle opzioni è ribassista, uno spread a credito (credit spread) (discusso nel Capitolo 9) usando le call 50 da vendere e coprendole con le call 25 sarebbe una strategia possibile. La cosa importante da ricordare qui è comprare a basso (bassa volatilità implicita) e vendere alto (alta volatilità implicita). Nella Figura 10.2, l'acquisto ottimale sarebbe lo strike 50, e tutto il resto (cioè, tutte le altre opzioni con livelli di volatilità più alti) potrebbe essere usato come possibile copertura.
+
+Il sorriso della volatilità è il grafico di distorsione più popolare perché appare più spesso e può tipicamente essere trovato durante periodi di alta volatilità; più alta è la volatilità, più ripida sarà probabile la distorsione. Ai tempi della bolla dot-com, queste cose erano così ripide che nemmeno un Hummer sarebbe stato in grado di scalarle! Trovo le pendenze più ripide generalmente sul lato delle call per le opzioni su azioni. Questo significa che sono più adatte per operazioni rialziste, come gli spread rialzisti call (bull call spreads).
+
+Come avrai intuito, la ruga della volatilità (volatility frown) è il contrario del sorriso. Esso
+
+[Nome File Originale: deepseek-1784904473457_326090910017361720.webp]
+
+SORRISI, RUGHE (FROWNS) E PENDENZE (SLOPES)
+
+rappresenta opzioni con bassa volatilità sopra e sotto lo strike ATM e vicino all'ATM, dimostrando che ci sono discrepanze sia nelle opzioni in-the-money che out-of-the-money. Nella Figura 10.3, l'opzione con un prezzo strike di 40 ha la volatilità implicita più alta. Gli strike con la volatilità implicita più bassa sono i 55. Pertanto, se lo stratega è rialzista su questo titolo, semplicemente acquistare opzioni call out-of-the-money potrebbe essere un'ottima strategia. Al contrario, se il trader è ribassista, uno spread a credito usando le call 40 da vendere e coprendole con le call 55 sarebbe una strategia possibile. Ancora una volta, proprio come per il sorriso della volatilità, il fattore importante da considerare è comprare a basso (volatilità) e vendere alto (volatilità). L'opzione con lo strike 50 è la più adatta per la vendita e tutto il resto sarebbe un possibile acquisto per la copertura.
+
+La ruga della volatilità non è un grafico che i trader incontrano spesso. La Figura 10.3 è stata
+
+Figura 10.3 Ruga della Volatilità (Volatility Frown) (Per gentile concessione di Optionetics.com)
+
+[Prompt per Generare la Figura 10.3]
+Crea un grafico a linee che rappresenti una "Ruga della Volatilità (Volatility Frown)". L'asse X deve essere etichettato con i prezzi strike (da circa 20 a 80). L'asse Y deve essere etichettato "Volatilità" e avere un range da 0 a 100. La linea deve iniziare bassa (circa 20-30) allo strike 20, salire progressivamente fino a un massimo netto (circa 80-90) intorno allo strike 40-45, per poi scendere simmetricamente verso il basso fino a circa 20-30 allo strike 80, formando una curva a forma di "U" rovesciata o ruga (frown). Aggiungi il titolo "Figura 10.3 Volatility Frown" e la didascalia "(Courtesy of Optionetics.com)".
+
+[Nome File Originale: deepseek-1784904517418_4229204578785097052.webp]
+
+DISTORSIONI DELLA VOLATILITÀ
+
+196
+
+Sorriso della volatilità: Opzioni con volatilità più alta si verificano sopra e sotto le opzioni ATM e near-ATM con volatilità più bassa.
+
+Ruga della volatilità: Opzioni con volatilità più bassa si verificano sopra e sotto le opzioni ATM e near-ATM con volatilità più alta.
+
+Pendenza della volatilità: Opzioni con volatilità più alta scendono verso una volatilità più bassa all'aumentare dei prezzi strike, o salgono da una volatilità più bassa a una più alta all'aumentare dei prezzi strike.
+
+creata utilizzando le opzioni su Philip Morris, che è spesso considerato un titolo difensivo (cioè, generalmente performa bene quando la maggior parte dei titoli scende). Le rughe si trovano in titoli come questo perché la domanda è solitamente at-the-money poiché quelle sono le uniche opzioni che tipicamente hanno un volume di scambi significativo. Se lo stratega delle opzioni intende negoziare la distorsione su titoli come questo, è importante che le opzioni abbiano un'attività di trading sufficiente, o liquidità.
+
+Le distorsioni della volatilità che assomigliano a quella nella Figura 10.4 sono ciò che definisco una pendenza della volatilità (volatility slope). Questo particolare grafico è tratto dalle opzioni OEX o S&P 100. C'è sicuramente una distorsione qui, ma va in una direzione. Questo è quasi sempre indicativo di un mercato indicizzato. Poiché le opzioni su indici sono utilizzate abbastanza dai
+
+Nota che all'aumentare dello strike delle put, la volatilità implicita diminuisce effettivamente.
+
+Market Implied Volatility Levels
+
+Figura 10.4 Pendenza della Volatilità (Volatility Slope) (Per gentile concessione di Optionetics.com)
+
+[Prompt per Generare la Figura 10.4]
+Crea un grafico a linee che rappresenti una "Pendenza della Volatilità (Volatility Slope)" per le opzioni su un indice (es. OEX). L'asse X deve essere etichettato "Strike" con valori numerici crescenti (da circa 400 a 650). L'asse Y deve essere etichettato "Volatilità Implicita" e andare da circa 15% a 45%. La linea deve mostrare una chiara pendenza negativa: iniziare alta (circa 38-40%) agli strike bassi (es. 420) e scendere in modo costante e lineare fino a un minimo (circa 20-22%) agli strike alti (es. 600). Aggiungi un'annotazione sul grafico che dice: "Nota che all'aumentare dello strike delle put, la volatilità implicita diminuisce effettivamente." Aggiungi il titolo "Market Implied Volatility Levels" e "Figura 10.4 Volatility Slope" e la didascalia "(Courtesy of Optionetics.com)".
+
+professionisti come strumento di copertura per i portafogli, questo crea pressione sulle opzioni put, specialmente quelle out-of-the-money. Le put 600 mostrate nella Figura 10.4 sono le più economiche in termini di volatilità implicita, appena sopra il 20%. Scendendo fino alle put 420, tuttavia, vediamo volatilità oltre il 35%.
+
+La distorsione della volatilità sulle put OEX nella Figura 10.4 sembra simile alle call OEX, il che mi dice una cosa. Le opzioni su indici, ai fini della volatilità, sono usate al meglio con spread che sono ribassisti; se rialzisti, è meglio acquistare call secche. Guarda di nuovo il grafico per un momento. Se gli strateghi sono rialzisti, sicuramente non vogliono comprare qualcosa a una volatilità più alta di quella che viene venduta. È meglio andare leggermente out-of-the-money e acquistare l'opzione secca. Se lo stratega è ribassista, tuttavia, è meglio cercare di acquistare la put con strike più alto e vendere la put con strike più basso—uno spread ribassista put (bear put spread). In questo esempio, l'operazione ottimale comporta l'acquisto di una volatilità più bassa e la vendita di una volatilità più alta.
+
+Le distorsioni della volatilità tra diversi prezzi strike possono assumere altre forme. Abbiamo coperto le tre più comuni: sorrisi, rughe e pendenze. Forse la cosa più importante da fissare qui è come individuarle. Una volta identificate, e hai un'ipotesi o aspettativa riguardo alla direzione futura dell'attività sottostante, sarai in una posizione migliore per negoziarle con successo. Fondamentalmente, avrai scelte aggiuntive su come mettere insieme una strategia basata su ciò che il grafico della distorsione potrebbe dirti. Ricorda, il modo migliore per sfruttare la distorsione è ricordare la semplice regola: compra basso (volatilità implicita) e vendi alto (volatilità implicita).
+
+DISTORSIONE PER MESE DI SCADENZA (SERIE)
+
+Nelle ultime pagine, hai imparato come sfruttare le distorsioni della volatilità all'interno dello stesso mese di una catena osservando la volatilità implicita tra diversi prezzi strike. Ora guardiamo orizzontalmente e vediamo se esistono distorsioni tra diversi mesi di opzioni. L'idea di base è la stessa: identificare disparità tra diversi contratti di opzione sullo stesso titolo o indice sottostante. In questo caso, piuttosto che guardare a diversi prezzi strike, lo stratega vuole considerare la volatilità implicita delle opzioni in diversi cicli di scadenza.
+
+Prima di esaminare esempi specifici di distorsioni tra mesi di scadenza, consideriamo perché esistono in primo luogo. Ricordo di aver lavorato nel trading floor di una borsa opzioni e quando arrivava un grande annuncio stampa riguardante una società, il prezzo delle azioni della società in questione a volte iniziava a cambiare violentemente. Il mio istinto naturale era di guardare i cambiamenti di prezzo delle opzioni. Era divertente come i trader fossero preoccupati per le opzioni che stavano per scadere (andare fuori corso) per prime e non prestassero praticamente attenzione ai mesi successivi.
+
+Quando c'è un interesse sproporzionato per le opzioni del mese anteriore (front month), spesso ne risultano distorsioni della volatilità. Mi riferisco a questo fenomeno come procrastinazione. Il risultato è che le opzioni del mese anteriore salgono più in alto e più velocemente di quelle dei mesi successivi. Quando vedevo questo accadere in borsa, sapevo che doveva influenzare la volatilità implicita delle opzioni in diversi cicli di scadenza.
+
+[Nome File Originale: deepseek-1784904574551_337084176763475595.webp]
+
+volatilità delle opzioni. I mesi anteriori aumentavano di volatilità più velocemente dei mesi successivi. Poi, col passare del tempo, le opzioni sembravano quasi sempre tornare insieme in termini di volatilità, come se non fosse successo nulla.
+
+Le stesse cose che facevano apparire le distorsioni della volatilità in diversi prezzi strike stavano causando la differenza tra i mesi. Voci, comunicati stampa, irregolarità contabili e frodi, avvisi e rapporti sugli utili, promozioni e declassamenti da parte degli analisti, e varie altre grida causano questo effetto di gonfiamento quasi ogni giorno per alcuni titoli. Ho visto questo accadere in borsa e ho imparato a negoziarlo. Ora mi riferisco al fenomeno come distorsione della volatilità tra mesi.
+
+Le distorsioni della volatilità tra mesi si verificano quando le opzioni con lo stesso prezzo strike ma diversi mesi di scadenza hanno diversi livelli di volatilità implicita. Può capitare alla più noiosa delle società con la stessa rapidità con cui può capitare alla più volatile. Ricordo un giorno in cui le opzioni del mese anteriore di Dial Corporation (simbolo: DL) sono salite al punto da essere quasi costose quanto le opzioni che scadevano cinque mesi dopo. Qual era il problema importante riguardo a Dial? Si scopre che la società di sapone aveva un annuncio importante che avrebbe rilasciato più tardi quel giorno. Wow, avrebbe annunciato un grande aumento o diminuzione degli utili? Il CEO veniva estromesso? Questa società era colpevole di irregolarità contabili?
+
+Beh, nonostante tutte le voci che circolavano sul floor degli scambi, si scoprì che Dial, che già aveva un sapone che uccideva il 98% dei batteri al contatto, annunciò che il suo sapone avrebbe ora ucciso il 99% dei batteri al contatto. Parliamo di un comunicato stampa deludente! La notizia alquanto deludente ha fatto uscire il gas dalle opzioni, e la volatilità implicita è scesa immediatamente ai suoi livelli normali. Fu davvero divertente, ma sono sicuro che quel giorno ci fossero molti trader di opzioni che non ridevano.
+
+Ora diamo un'occhiata ad alcune tabelle e grafici delle distorsioni della volatilità per mesi per vedere cosa cercare quando le opzioni sembrano essere prezzate erroneamente da un mese all'altro.
+
+La Tabella 10.7 mostra varie opzioni call per UAL a metà settembre 2001. Dai un'occhiata all'opzione in alto; ha il minor tempo alla scadenza (un mese) e una volatilità implicita di quasi il 98%. Le opzioni a lungo termine, o LEAPS, in fondo hanno una volatilità intorno al 40%. Pertanto, le opzioni a lungo termine hanno una volatilità implicita pari a meno della metà rispetto alle opzioni del mese anteriore. Noi
+
+Tabella 10.7 Opzioni Call UAL e Volatilità Implicita il 17 Settembre 2001
+
+  Simbolo Opzione   Strike   Tipo   Denaro (Bid)   Lettera (Ask)   IV
+  ----------------- -------- ------ -------------- --------------- ---------
+  UALJW             17.50    Call   2.00           2.10            97.896%
+  UALKW             17.50    Call   2.05           2.05            69.517
+  UALAW             17.50    Call   2.50           3.30            68.939
+  UALBW             17.50    Call   2.35           2.60            51.816
+  VUAAC             15.00    Call   4.50           5.70            42.712
+  AUAAD             20.00    Call   2.95           4.10            49.870
+
+[Nome File Originale: deepseek-1784904602810_6491649429670120042.webp]
+
+DISTORSIONE PER MESE DI SCADENZA (SERIE)
+
+199
+
+sappiamo che alla scadenza il valore temporale sarà scomparso dalle opzioni del mese anteriore. Sappiamo anche che le opzioni a lungo termine non decadranno così rapidamente perché hanno molto tempo fino alla scadenza. In effetti, le prime due opzioni sono prezzate praticamente allo stesso modo. Tuttavia, la seconda opzione non scade per 60 giorni. Non è sorprendente che i trader del floor fossero così impegnati a far salire i prezzi (e la volatilità implicita) delle opzioni a breve termine che non guardavano nemmeno il contratto del mese successivo? Qualsiasi trader abbastanza intelligente da identificare le distorsioni nel mercato avrebbe approfittato di ciò e creato un'operazione potenzialmente priva di rischio.
+
+La Figura 10.5 mostra il forte picco nella volatilità implicita delle opzioni UAL a metà settembre 2001. Guardando all'estrema destra si vede quanto sia salita la volatilità dopo l'11 settembre. Ora guarda più da vicino le singole linee; non tutte sono salite allo stesso grado. Le opzioni da 30 a 60 giorni sono salite a una volatilità implicita molto più alta (89,26%) rispetto alle opzioni che avevano più di 90 giorni alla scadenza, che avevano una volatilità implicita del 63,49%. Questa è una distorsione della volatilità notevole e può essere trovata più spesso di quanto la maggior parte dei trader possa pensare.
+
+La Figura 10.6 mostra un altro esempio di distorsione della volatilità tra mesi di scadenza. Il grafico in alto mostra il grafico dei prezzi di Ciena Corporation (simbolo: CIEN) il 4 gennaio 2000. Il grafico in basso è un grafico della volatilità implicita per le opzioni CIEN. Mostra come le distorsioni della volatilità tra mesi possono allargarsi man mano che il titolo sale
+
+UAL Corporation
+
+Grafico della Volatilità Implicita ATM
+
+-   Asse Y: Volatilità Implicita RTH
+
+    -   30
+
+    -   40
+
+    -   50
+
+    -   60
+
+    -   70
+
+    -   80
+
+-   Asse X: Tempo
+
+    -   11/00
+
+    -   01/01
+
+    -   02/01
+
+    -   04/01
+
+    -   06/01
+
+-   Legenda:
+
+    -   1
+
+    -   4
+
+    -   Attualmente: 09-17-01
+
+[Prompt per Generare la Figura 10.5]
+Crea un grafico a linee che rappresenti un picco di volatilità implicita per le opzioni UAL. L'asse X deve essere una linea temporale che va da circa Novembre 2000 a Giugno 2001. L'asse Y deve essere etichettato "Volatilità Implicita" e andare da 30 a 90. Il grafico deve mostrare due linee principali: una che rappresenta le opzioni a breve termine (30-60 giorni) e una per le opzioni a lungo termine (90+ giorni). Entrambe le linee dovrebbero essere relativamente piatte intorno al 40-50% per la maggior parte del periodo, per poi impennarsi drammaticamente verso la fine del grafico (intorno a Settembre 2001). La linea a breve termine deve salire più in alto, raggiungendo circa l'88-90%, mentre la linea a lungo termine deve salire fino a circa il 62-64%. Aggiungi un'annotazione al punto di picco: "Attualmente: 09-17-01". Aggiungi titolo: "UAL Corporation ATM Implied Volatility Chart" e legenda per le due linee.
+
+e può essere utilizzata per individuare opportunità di trading con spread diagonali o calendario.
+
+[Nota: Il testo si interrompe qui per la Figura 10.6, che non è stata fornita nei file, ma il contesto è chiaro.]
+
+[Nome File Originale: deepseek-1784904657474_4349892009571207829.webp]
+
+SPREAD DIAGONALI
+
+Come fa lo stratega a negoziare le distorsioni per mesi di scadenza? Benvenuti nel mondo degli spread diagonali e orizzontali, che funzionano cercando di estrarre il premio temporale dal mese anteriore. Uno spread orizzontale (horizontal spread) comporta l'acquisto di una call a lungo termine e la vendita di una call a breve termine con lo stesso prezzo strike. Questo tipo di strategia è noto anche come spread calendario (calendar spread). Gli spread diagonali (diagonal spreads), al contrario, coinvolgono prezzi strike diversi. Anche in questo caso, l'idea è acquistare l'opzione a lungo termine e vendere l'opzione a breve termine che ha assistito a un picco di volatilità implicita.
+
+Come decide lo stratega tra spread calendario e diagonali? Dipende molto dall'assunzione riguardo alla direzione del titolo nei prossimi 30 giorni circa. Se lo stratega ha un orientamento direzionale sul titolo, allora forse uno spread diagonale è più appropriato. Ad esempio, acquistare un'opzione a lungo termine e vendere un'opzione a breve termine out-of-the-money farà al caso suo. L'opzione a lungo termine dovrebbe avere un certo valore intrinseco o reale per aiutare a compensare l'aumento complessivo della volatilità, mentre l'opzione venduta dovrebbe avere solo circa 30 giorni o meno alla scadenza e consistere solo di valore temporale. L'obiettivo è, ovviamente, avere ragione sul prezzo; ma se ti sbagli, l'opzione corta (short) decadrà di valore più velocemente dell'opzione lunga (long), offrendo quindi una certa protezione.
+
+Cos'è uno Spread Calendario?
+
+Uno spread calendario è una strategia avanzata che sfrutta le distorsioni della volatilità e il decadimento theta (temporale). Il profilo di basso rischio rende questa strategia invitante. Consiste sia nella vendita che nell'acquisto di un numero uguale di opzioni call (o put) con lo stesso titolo sottostante, lo stesso prezzo strike e diverse date di scadenza. Uno spread calendario è creato vendendo l'opzione del mese anteriore (short) e coprendola acquistando un'opzione che scade in un mese successivo (long). Queste posizioni combinate offrono ai trader una posizione a rischio limitato che trae profitto dal decadimento più rapido delle opzioni corte del mese anteriore rispetto alle opzioni lunghe dei mesi successivi. Il rischio massimo di uno spread calendario è pari al debito netto (net debit) delle opzioni. È necessario un software (come il sito Optionetics Platinum) per determinare i punti di riferimento necessari come il rendimento massimo e i punti di pareggio (breakevens).
+
+[Nome File Originale: deepseek-1784904684229_4797913040003810501.webp]
+
+Cos'è uno Spread Diagonale?
+
+Uno spread diagonale è una strategia a basso rischio che consiste sia nella vendita che nell'acquisto di un numero uguale di opzioni call (o put) con lo stesso titolo sottostante, diversi prezzi strike e diverse date di scadenza. Uno spread diagonale è creato vendendo l'opzione del mese anteriore e coprendola acquistando l'opzione che scade in un mese successivo. L'orientamento direzionale anticipato del mercato è un fattore determinante nella scelta dei prezzi strike da utilizzare. Il rischio massimo di uno spread diagonale è pari al debito netto delle opzioni. È necessario un software (come il sito Optionetics Platinum) per determinare i punti di riferimento necessari come il rendimento massimo e i punti di pareggio.
+
+Inserire Spread Calendario e Diagonali
+
+Per inserire uno spread calendario, cerca di acquistare opzioni a buon mercato e vendere opzioni costose—una distorsione della volatilità in cui i premi sulle opzioni del mese corrente sono gonfiati, ma i mesi successivi sono ancora economici. Una volta identificate le opportunità di spread calendario o diagonali, è meglio inserirle usando ordini limite. In questo modo si garantisce che ogni operazione sfrutti la rispettiva distorsione della volatilità. Nello scenario migliore, l'opzione venduta (short) scadrà senza valore in modo che tu possa tenere il credito e il titolo salga o scenda abbastanza perché l'opzione acquistata (long) sia redditizia. L'unico ostacolo a questo piano viene dalla volatilità. Un movimento drammatico del titolo sottostante in entrambe le direzioni potrebbe sbilanciare lo spread, facendolo allargare.
+
+La Tabella 10.8 mostra una distorsione della volatilità che potrebbe essere interessante per lo stratega di spread diagonali con una visione rialzista sul titolo. Le opzioni sono sulle azioni di Dynegy (simbolo: DYN) alla fine di aprile 2002. Il titolo ha sperimentato un'alta volatilità nei pochi giorni precedenti al 26 aprile dopo che la società ha emesso una cupa previsione sugli utili. Di conseguenza, la volatilità implicita delle opzioni del mese anteriore (maggio 2002) è salita a quasi il 150%. Rispetto alla volatilità implicita delle LEAPS di gennaio 2004 (60,80%), le opzioni a breve termine sono diventate piuttosto costose.
+
+Data la disparità tra le opzioni DYN del mese anteriore e le LEAPS, una possibile strategia di trading rialzista è uno spread diagonale che utilizza opzioni call a breve termine out-of-the-money e opzioni call a lungo termine in-the-money. Con il titolo scambiato a $14,50 per azione, lo stratega acquisterebbe le LEAPS di gennaio 2004 con uno strike di 10 e venderebbe la call maggio 2002 con strike 15. La call venduta (short) è out-of-the-money e consiste solo di valore temporale. Al contrario, la call acquistata (long) è deep-in-the-money e ha valore intrinseco.
+
+La Figura 10.7 mostra il grafico del rischio (risk graph) dello spread diagonale rialzista su DYN. L'operazione viene eseguita per un debito perché l'opzione lunga costa $7,50, che è più del premio ricevuto per la vendita della call a breve termine ($1,90). Il debito di $560
+
+[Nome File Originale: deepseek-1784904715415_7643483613895526269.webp]
+
+Tabella 10.8 Quotazioni di Opzioni Dynegy e Volatilità Implicita (26 Aprile 2002)
+
+  Posizione   Numero   Simbolo   Scadenza   Strike   Tipo   Entrata   Denaro/Lettera   Modello   IV
+  ----------- -------- --------- ---------- -------- ------ --------- ---------------- --------- ---------
+  Acquisto    1        KYKAB     Gen 04     10       Call   7.5       7/7.5            7.1       60.80%
+  Vendita     1        DYNEC     Mag 02     15       Call   1.9       1.9/2.2          2         146.10%
+
+rappresenta il rischio massimo per questa operazione. Nell'eventualità che il titolo salga prima della scadenza e la call corta (short) venga assegnata a $15 per azione, la call lunga (long) può essere esercitata a soli $10 per azione. Il punto di pareggio, che richiede un qualche tipo di software di trading per essere calcolato, è pari a $13,10. Ciò è dovuto al fatto che l'opzione corta offre una certa protezione al ribasso pari all'importo del premio ricevuto. Il guadagno massimo è di $150 per contratto e si verifica se il titolo viene scambiato al più alto dei due prezzi strike—$15 per azione—alla scadenza. Pertanto, l'operazione è moderatamente rialzista. In
+
+text
+
+1 oggi: 21 giorni rimasti2 14 giorni rimasti3 7 giorni rimasti4 scadenzaClose= 14.90Profitto-300-400-500-60010 20 30
+
+Figura 10.7 Grafico del Rischio per Spread Diagonale Rialzista su DYN (26 Aprile 2002) (Per gentile concessione di Optionetics.com)
+
+[Prompt per Generare la Figura 10.7]
+Crea un grafico di profitto/perdita (risk graph) per uno spread diagonale rialzista utilizzando opzioni call. L'asse X deve essere il prezzo del sottostante (da 0 a 30). L'asse Y deve essere il "Profitto" (da -$600 a $300). Il grafico deve mostrare quattro linee che rappresentano il profitto/perdita a diversi intervalli di tempo prima della scadenza (Linea 1: oggi, 21 giorni rimasti; Linea 2: 14 giorni rimasti; Linea 3: 7 giorni rimasti; Linea 4: scadenza). La forma generale deve essere quella di un "sorriso" asimmetrico. La linea di scadenza (Linea 4) deve iniziare con una perdita piatta di circa -$560 da un prezzo di 0 fino a circa 10, poi salire diagonalmente fino a un picco di profitto di circa $150 intorno a un prezzo di 15, per poi scendere diagonalmente e stabilizzarsi intorno a -$150 per prezzi superiori a 25. Le linee intermedie devono essere meno pronunciate ma seguire una tendenza simile. Aggiungi un'etichetta "Close= 14.90" sul grafico. Aggiungi titolo "Figura 10.7 Risk Graph for Bullish Diagonal Spread on DYN (April 26, 2002)" e la didascalia "(Courtesy of Optionetics.com)".
+
+[Nome File Originale: deepseek-1784904739943_2110306970671968726.webp]
+
+204
+
+quel caso, l'opzione lunga conserva la maggior parte del suo valore, ma l'opzione a breve termine scade senza valore. A quel punto, la posizione dovrebbe essere chiusa.
+
+Una volta che lo stratega identifica una distorsione della volatilità tra mesi di scadenza per un insieme di opzioni, esiste un'ampia gamma di possibilità per l'uso di spread diagonali. Ad esempio, lo stratega può vendere un'opzione ancora più out-of-the-money per rendere la strategia più aggressiva. Nell'esempio precedente, invece di vendere la call DYN 15, lo stratega può andare più deep out-of-the-money e vendere la call DYN 17,5 (vedi Tabella 10.9). Anche la volatilità implicita del 17,5 era alta (quasi il 128%) in quel momento.
+
+L'acquisto delle LEAPS gennaio 2004 con strike 10 e la vendita della call maggio 2002 con strike 17,5 è rappresentato sul grafico del rischio nella Figura 10.8. Nota che la forma del grafico del rischio è simile a quella nella Figura 10.7. Tuttavia, le perdite potenziali sono maggiori. Inoltre, il punto di pareggio è pari a $14,50, rispetto a $13,10. Fondamentalmente, la call 17,50 ha meno premio temporale rispetto alla call 15 e la protezione al ribasso dalla vendita dell'opzione è anche minore. Sebbene le perdite potenziali siano maggiori e il punto di pareggio sia a un prezzo più alto, lo spread diagonale più aggressivo ha maggiori ricompense potenziali all'aumentare del prezzo del titolo. In questo caso, la ricompensa massima è di $260 per contratto, rispetto a $150 per il nostro primo esempio di spread diagonale. Ancora una volta, il profitto massimo si verifica se il titolo si muove al rialzo alla scadenza: in questo caso, a $17,50—lo strike al quale l'opzione a breve termine scade senza valore.
+
+Gli spread diagonali che utilizzano call possono anche essere creati se c'è una distorsione della volatilità tra le opzioni a breve e lungo termine e lo stratega è ribassista sul titolo. La Tabella 10.10 fornisce i dati e la Figura 10.9 mostra il grafico del rischio associato alla vendita della call DYN giugno 2002 con strike 12,5 e all'acquisto della call gennaio 2004 con strike 20. Nota che in questo caso il grafico del rischio assume una pendenza completamente diversa. Inoltre, l'operazione viene eseguita per un credito perché l'opzione a breve termine vale più dell'opzione a lungo termine. I profitti aumentano quando il prezzo del titolo scende perché l'opzione a breve termine è in-the-money. Il successo dell'operazione richiede che il titolo scenda e che l'opzione a breve termine perda valore più velocemente dell'opzione lunga. Se il prezzo del titolo scende al di sotto del prezzo strike più basso alla scadenza, il trader può tenersi il credito. Per questo motivo, il profitto massimo si verifica allo strike dell'opzione corta ($12,50) alla scadenza—il punto in cui l'opzione corta scade senza valore e l'opzione lunga conserva la maggior parte del suo valore. Il rischio associato a questo spread si manifesta se il prezzo del titolo si muove al rialzo.
+
+Ovviamente, ci sono molti modi per strutturare spread diagonali per trarre profitto.
+
+Tabella 10.9 Tabella Dati per Spread Diagonale Aggressivo
+
+  Posizione   Numero   Simbolo   Scadenza   Strike   Tipo   Entrata   Denaro/Lettera   Modello   IV
+  ----------- -------- --------- ---------- -------- ------ --------- ---------------- --------- ---------
+  Acquisto    1        KYKAB     Gen 04     10       Call   7.5       7/7.5            7.1       60.50%
+  Vendita     1        DYNEW     Mag 02     17.50    Call   .85       .85              1.0       127.80%
+                                                            1.05                                 
+
+[Nome File Originale: deepseek-1784904771644_4394234546612453433.webp]
+
+SPREAD DIAGONALI
+
+Figura 10.8 Grafico del Rischio per Spread Diagonale Aggressivo su DYN (Per gentile concessione di Optionetics.com)
+
+[Prompt per Generare la Figura 10.8]
+Crea un grafico di profitto/perdita (risk graph) per uno spread diagonale rialzista aggressivo utilizzando opzioni call. L'asse X deve essere il prezzo del sottostante (da 0 a 30). L'asse Y deve essere il "Profitto" (da -$600 a $400). Il grafico deve mostrare quattro linee (come nella Figura 10.7) che rappresentano il profitto/perdita a diversi intervalli di tempo. La forma deve essere simile a un "sorriso" ma con un picco di profitto più alto e una perdita iniziale più profonda. La linea di scadenza (Linea 4) deve iniziare con una perdita piatta di circa -$650 da un prezzo di 0 fino a circa 10, poi salire diagonalmente fino a un picco di profitto di circa $260 intorno a un prezzo di 17.5, per poi scendere diagonalmente fino a un profitto di circa -$100 per prezzi superiori a 25. Aggiungi un'etichetta "Close=14.90" sul grafico. Aggiungi titolo "Figura 10.8 Risk Graph for Aggressive Bullish Diagonal Spread on DYN" e la didascalia "(Courtesy of Optionetics.com)".
+
+[Nome File Originale: deepseek-1784904804053_9107324760479740855.webp]
+
+text
+
+1 oggi: 56 giorni2 37 giorni rimasti3 18 giorni rimasti4 scadenzaProfitto-200-100010020010 20 30
+
+Figura 10.9 Spread Diagonale Ribassista che Utilizza Call DYN (Per gentile concessione di Optionetics.com)
+
+[Prompt per Generare la Figura 10.9]
+Crea un grafico di profitto/perdita (risk graph) per uno spread diagonale ribassista utilizzando opzioni call. L'asse X deve essere il prezzo del sottostante (da 0 a 30). L'asse Y deve essere il "Profitto" (da -$200 a $200). Il grafico deve mostrare quattro linee che rappresentano il profitto/perdita a diversi intervalli di tempo (Linea 1: oggi, 56 giorni rimasti; Linea 2: 37 giorni rimasti; Linea 3: 18 giorni rimasti; Linea 4: scadenza). La forma della linea di scadenza (Linea 4) deve essere una "ruga" (frown) asimmetrica. Deve iniziare con un profitto piatto di circa $100 da un prezzo di 0 fino a circa 10, poi scendere gradualmente fino a toccare lo 0 intorno a 12,5, per poi scendere in territorio negativo fino a circa -$150 per prezzi superiori a 20. Le linee intermedie devono mostrare una transizione graduale verso la forma della linea di scadenza. Aggiungi un'etichetta "Close=14.90" sul grafico. Aggiungi titolo "Figura 10.9 Bearish Diagonal Spread Using DYN Calls" e la didascalia "(Courtesy of Optionetics.com)".
+
+Ci sono due chiavi per il successo quando si strutturano spread diagonali. In primo luogo, il trader di diagonali dovrebbe esaminare attentamente il grafico del rischio e sentirsi a proprio agio con il compromesso rischio/rendimento. Nota che molte delle operazioni offrono ricompense limitate che sono molto inferiori ai rischi potenziali. Nella maggior parte dei casi, lo stratega vorrà uscire dalla posizione quando la prima opzione è scaduta e gli alti livelli di volatilità implicita sull'opzione corta si sono dissipati. Inoltre, quando le opzioni sono in-the-money, c'è sempre la possibilità di assegnazione, e lo stratega deve essere consapevole di questo fatto. In secondo luogo, la chiave del successo è identificare e comprendere la distorsione della volatilità. Ovviamente, la strategia avrà scarse possibilità di successo se lo stratega sta acquistando un'opzione con alta volatilità e vendendone un'altra con bassa volatilità. In tal caso, il ritorno alla media gioca contro l'operazione.
+
+[Nome File Originale: deepseek-1784904834580_3752213113062006579.webp]
+
+SPREAD ORIZZONTALI O CALENDARIO
+
+  Data   Posizione   Opzione   Call   Entrata   Denaro/Lettera Modello IV
+  ------ ----------- --------- ------ --------- ---------------------------
+  1                                             
+  2                                             
+  3                                             
+  4                                             
+  5                                             
+  6                                             
+  7                                             
+  8                                             
+  9                                             
+  10                                            
+  11                                            
+  12                                            
+  13                                            
+  14                                            
+  15                                            
+  16                                            
+  17                                            
+  18                                            
+  19                                            
+  20                                            
+  21                                            
+  22                                            
+  23                                            
+  24                                            
+  25                                            
+  26                                            
+  27                                            
+  28                                            
+  29                                            
+  30                                            
+  31                                            
+  32                                            
+
+[Nome File Originale: deepseek-1784904871206_7986222997845027510.webp]
+
+208
+
+DISTORSIONI DELLA VOLATILITÀ
+
+text
+
+1 oggi: 21 giorni rimasti2 14 giorni rimasti3 7 giorni rimasti4 scadenzaClose29.04Profitto/Perdita-200-100010020030 40
+
+Figura 10.10 Grafico del Rischio per uno Spread Calendario Rialzista su GILD (Per gentile concessione di Optionetics.com)
+
+[Prompt per Generare la Figura 10.10]
+Crea un grafico di profitto/perdita (risk graph) per uno spread calendario rialzista utilizzando opzioni call. L'asse X deve essere il prezzo del sottostante (da 20 a 45). L'asse Y deve essere il "Profitto/Perdita" (da -$200 a $200). Il grafico deve mostrare quattro linee (Linea 1: oggi, 21 giorni rimasti; Linea 2: 14 giorni rimasti; Linea 3: 7 giorni rimasti; Linea 4: scadenza). La linea di scadenza (Linea 4) deve avere una forma a "campana" o "cupola". Deve iniziare con una leggera perdita (circa -$50) intorno a 25, salire fino a un picco di profitto di circa $150 intorno a 30 (lo strike ATM), per poi scendere e tornare in perdita (circa -$50) intorno a 35-37. Le linee intermedie devono mostrare cupole più basse e meno pronunciate, convergendo verso la forma della linea di scadenza. Aggiungi un'annotazione "Close=29.04" sul grafico. Aggiungi titolo "Figura 10.10 Risk Graph for Bullish Calendar Spread on GILD" e la didascalia "(Courtesy of Optionetics.com)".
+
+Inoltre, la Figura 10.10 mostra che lo spread calendario su GILD inizierà anche a perdere denaro se il prezzo del titolo si muove troppo al rialzo prima della scadenza della call corta. Idealmente, lo stratega vuole che il titolo venga scambiato tra $28 e $37 prima della scadenza perché questi sono i punti di pareggio. Pertanto, mentre lo spread calendario ha un orientamento rialzista, è anche redditizio se il titolo rimane all'interno di un intervallo. Per questo motivo, è adatto sia che il trader sia rialzista o neutrale sull'attività sottostante. Stabilire spread calendario con opzioni out-of-the-money darà all'operazione un'inclinazione più rialzista; ma avrà anche minori probabilità di successo. Ancora una volta, la preoccupazione principale per il trader di volatilità è che la distorsione tra le opzioni del mese anteriore e quelle a lungo termine sia sufficiente a giustificare il posizionamento di uno spread calendario.
+
+Mentre lo spread calendario rialzista è adatto se lo stratega pensa che il titolo rimarrà in un intervallo o salirà leggermente, lo spread calendario put è più attraente se le aspettative sono che il titolo scenda. La considerazione principale è che ci sia una distorsione ragionevole tra la put del mese anteriore e la put a lungo termine. Nella Tabella 10.12, due put GILD con diversi livelli di volatilità implicita forniscono un esempio. La
+
+[Nome File Originale: deepseek-1784904901942_3828163396895778514.webp]
+
+SPREAD ORIZZONTALI O CALENDARIO
+
+Tabella 10.12 Opzioni Put GILD (26 Aprile 2002)
+
+  Posizione   Numero   Simbolo   Scadenza   Strike   Tipo   Entrata   Denaro/Lettera   Modello   IV
+  ----------- -------- --------- ---------- -------- ------ --------- ---------------- --------- --------
+  Acquisto    1        GDQWE     Nov 02     25       Put    3.4       3.1/3.4          3.3       67.40%
+  Vendita     1        GDQQE     Mag 02     25       Put    .65       .65/.85          0.7       86.70%
+
+prima è una put a lungo termine (novembre 2002) con il titolo scambiato a $29 per azione. La seconda è una put a breve termine (maggio 2002). Nota la differenza di volatilità implicita tra le due opzioni.
+
+Se lo stratega crede che GILD sia probabile che scenda, una possibile operazione è lo spread calendario ribassista utilizzando le due opzioni put della Tabella 10.12. In questo caso, lo stratega vende la put a breve termine e acquista la put a lungo termine. L'operazione viene eseguita per un debito e, in questo caso, costa allo stratega $275. Il debito è il rischio massimo dell'operazione. Come mostra la Figura 10.11, l'operazione realizza un profitto quando il prezzo del titolo si muove
+
+Grafico:
+
+-   Asse X: Prezzo
+
+-   Asse Y: Profitto
+
+Annotazioni:
+1 oggi: 21 giorni
+rimasti
+2 14 giorni rimasti
+3 7 giorni rimasti
+4 scadenza
+
+Figura 10.11 Grafico del Rischio dello Spread Calendario che Utilizza Opzioni Put GILD (Per gentile concessione di Optionetics.com)
+
+[Prompt per Generare la Figura 10.11]
+Crea un grafico di profitto/perdita (risk graph) per uno spread calendario ribassista utilizzando opzioni put. L'asse X deve essere il prezzo del sottostante (da 15 a 35). L'asse Y deve essere il "Profitto" (da -$300 a $100). Il grafico deve mostrare quattro linee (Linea 1: oggi, 21 giorni rimasti; Linea 2: 14 giorni rimasti; Linea 3: 7 giorni rimasti; Linea 4: scadenza). La linea di scadenza (Linea 4) deve avere una forma a "campana" o "cupola" con un picco di profitto di circa $50-75 intorno a 25 (lo strike della put), e deve essere in perdita (circa -$275) a prezzi più alti (30+) e in leggera perdita o pari a prezzi più bassi (20-). Aggiungi un'annotazione "Close=29.04". Aggiungi titolo "Figura 10.11 Risk Graph of Calendar Spread Using GILD Put Options" e la didascalia "(Courtesy of Optionetics.com)".
+
+[Nome File Originale: deepseek-1784904926531_711840444135418395.webp]
+
+210
+
+DISTORSIONI DELLA VOLATILITÀ
+
+gradualmente al ribasso o rimane in un intervallo. Il profitto massimo si verifica se il prezzo del titolo è uguale al prezzo strike ($25 per azione) alla scadenza.
+
+Gli spread calendario sono una strategia ideale per sfruttare le distorsioni della volatilità tra mesi di scadenza. Gli esempi appena forniti toccano solo la superficie delle possibilità. Inoltre, a volte le opzioni del mese anteriore diventano così costose che queste operazioni possono essere eseguite per un credito! Le due chiavi sono ancora:
+
+1.  Mappa ogni operazione in termini di potenziale rischio/rendimento e tracciale su un grafico del rischio. Gli spread calendario possono essere rialzisti, ribassisti o neutrali. È essenziale comprendere l'orientamento della posizione prima di stabilire lo spread calendario. Se non ti sembra giusto, non farlo!
+
+2.  Identifica distorsioni della volatilità attraenti che sono essenziali per il successo dell'operazione. Maggiore è la disparità tra le opzioni del mese anteriore e quelle dei mesi successivi, migliori sono le probabilità che lo spread calendario raggiunga il successo.
+
+CONCLUSIONE
+
+Questo capitolo copre alcuni degli argomenti più sofisticati che i trader di volatilità affronteranno mai. In effetti, una comprensione dei principi delineati nei primi 10 capitoli di questo libro ti collocherà nel top 10% di tutti i trader di opzioni. In tutto il libro, il lettore è stato introdotto a una serie di concetti e risorse importanti come indicatori che possono aiutare a tracciare la volatilità, le due misure chiave della volatilità (storica e implicita), azioni, indici, opzioni, analisi del sentiment, ritorno alla media e strategie specifiche da utilizzare in diversi ambienti di mercato. Tutti lavorano insieme per dare al lettore le basi per diventare un trader strategico della volatilità.
+
+In questo capitolo, l'attenzione si è rivolta a un concetto noto come distorsioni della volatilità. Utilizzate principalmente dai trader professionisti per identificare opportunità di trading, le distorsioni della volatilità si verificano quando due o più opzioni sullo stesso titolo o indice sottostante hanno una differenza notevole nella volatilità implicita. Per identificare le distorsioni, lo stratega osserva varie quotazioni attraverso una serie di opzioni per identificare la volatilità implicita di ciascun contratto d'opzione. Alcune società di brokeraggio e servizi di dati offrono catene di opzioni con informazioni sulla volatilità implicita. Questo fornisce un modo semplice per vedere la volatilità implicita attraverso un gruppo di opzioni. Quando c'è una differenza significativa nella VI tra un'opzione e un'altra, esiste una distorsione. Se è così, spesso sono possibili opportunità di trading acquistando l'opzione con la volatilità più bassa e vendendo contemporaneamente l'opzione con la volatilità più alta.
+
+Esistono due tipi di distorsioni della volatilità: distorsioni di prezzo e distorsioni temporali. Le distorsioni di prezzo esistono quando la volatilità implicita differisce tra i prezzi strike delle opzioni, sullo stesso titolo e negli stessi mesi di scadenza. Le distorsioni temporali sono identificate da diversi livelli di volatilità implicita sulle opzioni su azioni con gli stessi prezzi strike, ma diversi mesi di scadenza. In questo capitolo, il lettore impara a identificare ciascuno di questi
+
+[Nome File Originale: deepseek-1784904954337_3905078363619828433.webp]
+
+CONCLUSIONE
+
+distorsioni della volatilità, come valutarle e, naturalmente, come implementare strategie di trading che utilizzano le distorsioni della volatilità.
+
+Come fa lo stratega a sfruttare le distorsioni temporali? Sebbene esistano diversi modi, in questo capitolo sono state discusse due strategie: spread calendario e diagonali. Uno spread calendario comporta l'acquisto di una call a lungo termine e la vendita di una call a breve termine con lo stesso prezzo strike. Gli spread diagonali, d'altra parte, coinvolgono diversi prezzi strike. Ancora una volta, l'idea è acquistare l'opzione a lungo termine e vendere l'opzione a breve termine che ha assistito a un picco di volatilità implicita.
+
+Decidere quale spread usare—diagonale o calendario—dipende dalle aspettative del trader riguardo alla direzione del titolo. Se lo stratega crede che il titolo sia probabile che faccia un movimento significativo al rialzo o al ribasso nei prossimi 30 giorni, lo spread diagonale è probabilmente più appropriato. Acquistare un'opzione a lungo termine mentre si vende un'opzione a breve termine out-of-the-money è un esempio di spread diagonale. L'obiettivo è, ovviamente, avere ragione sulla direzione futura del titolo e beneficiare di un aumento del valore dell'opzione a lungo termine; ma se ci si sbaglia, l'opzione corta (short) decadrà di valore più velocemente dell'opzione lunga (long) e offrirà una certa protezione.
+
+Se lo stratega è moderatamente rialzista, leggermente ribassista o neutrale su un titolo, lo spread calendario è una strategia interessante. Nel creare questo tipo di spread, lo stratega utilizza opzioni con lo stesso prezzo strike ma diverse date di scadenza. Come per lo spread diagonale, l'opzione a lungo termine viene acquistata e l'opzione a breve termine viene venduta simultaneamente. Gli spread calendario possono essere creati con un orientamento rialzista (call), ribassista (put) o neutrale (put o call). Come gli spread diagonali, l'obiettivo primario dello spread calendario è che il tempo eroda l'opzione corta mentre l'opzione lunga mantiene il suo valore. Lo stratega sta cercando di sfruttare la differenza nella volatilità implicita tra i mesi di scadenza, la cosiddetta distorsione temporale. Ulteriori opzioni a breve termine possono essere vendute ogni mese; questa operazione è chiamata roll forward.
+
+In conclusione, sia le distorsioni temporali che quelle di prezzo possono offrire interessanti opportunità di trading allo stratega esperto. Il primo passo è identificare la distorsione osservando le catene di opzioni o utilizzando le capacità di creazione di grafici disponibili su alcuni programmi software per opzioni come Optionetics Platinum. Successivamente, lo stratega vorrà sviluppare una strategia di trading per catturare i profitti dalla distorsione. Questo generalmente comporterà spread diagonali e calendario, che a loro volta dipenderanno dal fatto che lo stratega sia rialzista, ribassista o neutrale sull'attività sottostante.
+
+Nel corso degli ultimi 10 capitoli, abbiamo cercato di spiegare vari modi di utilizzare la volatilità per trovare operazioni redditizie e perché il nostro approccio può fornire risultati più coerenti rispetto al tradizionale approccio buy-and-hold all'investimento. Se sei arrivato fin qui, è probabile che tu sia sulla buona strada per comprendere e sviluppare strategie di investimento che possono funzionare sia che la volatilità sia alta o bassa.
+
+Allo stesso tempo, mentre la maggior parte degli elementi critici che sono alla base del nostro successo nel trading sono stati coperti, non c'è stato abbastanza spazio in queste pagine per tutto ciò che volevamo dire. Ad esempio, ci sono alcune regole e avvertenze per strategie come gli straddle che sono importanti da implementare e comprendere.
+
+[Nome File Originale: deepseek-1784904979783_3714038553985839762.webp]
+
+212 DISTORSIONI DELLA VOLATILITÀ
+
+Inoltre, molti broker non permetteranno agli investitori di implementare tutte le strategie di investimento descritte qui senza sufficienti requisiti di garanzia (collateral)—una parte importante del trading di opzioni non completamente coperta in questo testo. Diverse altre strategie avanzate sono state del tutto omesse.
+
+Nonostante i suoi limiti, questo libro dovrebbe comunque fornirti tutte le informazioni necessarie per iniziare a fare trading sulla volatilità, fornendoti un arsenale di strumenti innovativi da utilizzare in qualsiasi condizione di mercato. Inoltre, siamo sempre disponibili per rispondere alle domande sui nostri forum di discussione su Optionetics.com. Su quel sito, troverai anche una serie di diverse risorse di trading, articoli e idee di trading da parte di altri strateghi delle opzioni per integrare le discussioni di questo testo. Per favore, vieni a trovarci. Nel frattempo, in bocca al lupo per i mercati e ricorda che fare trading sulla volatilità implicita è molto simile a fare trading su azioni: comprala bassa e vendila alta.
