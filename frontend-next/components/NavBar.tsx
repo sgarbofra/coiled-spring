@@ -50,12 +50,13 @@ export default function NavBar() {
   }
 
   const links = [
-    { href: '/scanner',     label: 'SCANNER' },
-    { href: '/hv-screener', label: isMobile ? 'HV' : 'HV SCREENER' },
-    { href: '/watchlists',  label: 'WATCHLIST' },
-    { href: '/portfolio',   label: 'PORTFOLIO' },
-    { href: '/academy',     label: 'ACADEMY' },
-    { href: '/settings',    label: 'SETTINGS' },
+    { href: '/scanner',      label: 'SCANNER' },
+    { href: '/hv-screener',  label: isMobile ? 'HV' : 'HV SCREENER' },
+    { href: '/watchlists',   label: 'WATCHLIST' },
+    { href: '/portfolio',    label: 'PORTFOLIO' },
+    { href: '/etf-calendar', label: isMobile ? 'CAL' : 'CALENDAR' },
+    { href: '/academy',      label: 'ACADEMY' },
+    { href: '/settings',     label: 'SETTINGS' },
   ]
 
   const handleLogout = async () => {

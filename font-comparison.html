@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coiled Spring — Font Selection Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Sora:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Figtree:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0D1117;
+    color: #E8E8E8;
+    font-family: 'Inter', sans-serif;
+    padding: 40px 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .page-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: #666;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .page-heading {
+    font-family: 'Inter', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #E8630A;
+    margin-bottom: 8px;
+  }
+
+  .page-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 48px;
+    line-height: 1.6;
+  }
+
+  .current-badge {
+    display: inline-block;
+    background: rgba(232,99,10,0.15);
+    border: 1px solid rgba(232,99,10,0.4);
+    color: #E8630A;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-left: 10px;
+  }
+
+  .rec-badge {
+    display: inline-block;
+    background: rgba(0,200,100,0.15);
+    border: 1px solid rgba(0,200,100,0.4);
+    color: #00C864;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-left: 10px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: #444;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #1E1E2E;
+  }
+
+  .font-card {
+    background: #0F0F1A;
+    border: 1px solid #1E1E2E;
+    border-radius: 8px;
+    padding: 32px;
+    margin-bottom: 32px;
+    transition: border-color 0.2s;
+  }
+
+  .font-card:hover { border-color: #2E2E4E; }
+  .font-card.recommended { border-color: rgba(0,200,100,0.3); background: #0B0F12; }
+  .font-card.current { border-color: rgba(232,99,10,0.2); }
+
+  .font-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+
+  .font-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #E8E8E8;
+  }
+
+  .font-meta {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: #555;
+    margin-bottom: 20px;
+  }
+
+  .font-meta a { color: #4488FF; text-decoration: none; }
+  .font-meta a:hover { text-decoration: underline; }
+
+  .demo-nav {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #888;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .demo-nav span { color: #E8630A; }
+
+  .demo-heading {
+    font-size: 26px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+
+  .demo-body {
+    font-size: 13px;
+    color: #AAAAAA;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    max-width: 620px;
+  }
+
+  .demo-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+    font-size: 12px;
+  }
+
+  .demo-table th {
+    color: #666;
+    text-align: left;
+    padding: 6px 10px;
+    border-bottom: 1px solid #1E1E2E;
+    font-weight: 600;
+    letter-spacing: 1px;
+    font-size: 10px;
+  }
+
+  .demo-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #14141E;
+    color: #CCCCCC;
+  }
+
+  .demo-table td.accent { color: #E8630A; }
+  .demo-table td.pos { color: #00DD88; }
+  .demo-table td.neg { color: #FF4444; }
+
+  .demo-score {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,180,0,0.1);
+    border: 1px solid rgba(0,180,0,0.3);
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #00DD00;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #1A1A2A;
+    margin: 48px 0 32px;
+  }
+
+  .pros-cons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+  }
+
+  .pros { color: #00C864; }
+  .cons { color: #FF6655; }
+  .pros-cons div { line-height: 1.8; }
+  .pros-cons strong { display: block; margin-bottom: 4px; font-size: 10px; letter-spacing: 1px; }
+
+  .score-row {
+    display: flex;
+    gap: 24px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: #555;
+  }
+
+  .score-item strong { color: #888; margin-right: 4px; }
+  .score-item span { color: #E8630A; font-weight: 600; }
+
+  .pairing-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px;
+    color: #444;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    margin-top: 20px;
+  }
+
+  .impl-box {
+    background: #0A0A14;
+    border: 1px solid #1A1A28;
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin-top: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #6A8A6A;
+    line-height: 1.8;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    margin-top: 24px;
+  }
+
+  .summary-table th {
+    background: #0F0F1A;
+    color: #555;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid #1E1E2E;
+  }
+
+  .summary-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #14141E;
+    color: #BBBBBB;
+    vertical-align: top;
+  }
+
+  .summary-table tr.winner { background: rgba(0,200,100,0.04); }
+  .summary-table tr.winner td:first-child { color: #00C864; font-weight: 600; }
+
+  .tag {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    margin: 1px;
+  }
+  .tag-green { background: rgba(0,200,100,0.12); color: #00C864; }
+  .tag-orange { background: rgba(232,99,10,0.12); color: #E8630A; }
+  .tag-red { background: rgba(255,60,60,0.12); color: #FF6655; }
+  .tag-gray { background: rgba(100,100,100,0.12); color: #888; }
+
+  .footer-note {
+    margin-top: 48px;
+    padding: 20px;
+    background: #0A0A12;
+    border: 1px solid #1A1A28;
+    border-radius: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+
+<p class="page-title">Coiled Spring Terminal</p>
+<h1 class="page-heading">Font Selection Guide</h1>
+<p class="page-subtitle">
+  Il font attuale (Inter) è usato dall'80% dei tool finanziari costruiti con Next.js negli ultimi 2 anni.<br>
+  Questo documento mostra 5 alternative con preview contestuale — come appaiono su navbar, tabelle dati e landing page.
+</p>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- OPZIONE 0 — CURRENT -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<p class="section-label">Font attuale (riferimento)</p>
+
+<div class="font-card current">
+  <div class="font-header">
+    <span class="font-name" style="font-family:'Inter',sans-serif;">Inter</span>
+    <span class="current-badge">ATTUALE</span>
+  </div>
+  <div class="font-meta">
+    Google Fonts · Sans-serif · Rasmus Andersson (2017) ·
+    <a href="https://fonts.google.com/specimen/Inter" target="_blank">Google Fonts ↗</a>
+  </div>
+
+  <div class="demo-nav" style="font-family:'Inter',sans-serif;">
+    SCANNER &nbsp; HV SCREENER &nbsp; <span>WATCHLIST</span> &nbsp; PORTFOLIO &nbsp; ACADEMY &nbsp; SETTINGS
+  </div>
+  <div class="demo-heading" style="font-family:'Inter',sans-serif;">NVDA — Opportunity Analysis</div>
+  <div class="demo-body" style="font-family:'Inter',sans-serif;">
+    Coiled Spring è il primo terminale LEAPS progettato per trader retail che vogliono operare con la precisione di un desk istituzionale, senza la complessità di Bloomberg.
+  </div>
+  <table class="demo-table">
+    <tr>
+      <th style="font-family:'Inter',sans-serif;">SYMBOL</th>
+      <th style="font-family:'Inter',sans-serif;">STRIKE</th>
+      <th style="font-family:'Inter',sans-serif;">DTE</th>
+      <th style="font-family:'Inter',sans-serif;">DELTA</th>
+      <th style="font-family:'Inter',sans-serif;">IV %</th>
+      <th style="font-family:'Inter',sans-serif;">CS SCORE</th>
+    </tr>
+    <tr>
+      <td class="accent" style="font-family:'Inter',sans-serif;">NVDA-20270117C800</td>
+      <td style="font-family:'Inter',sans-serif;">800</td>
+      <td style="font-family:'Inter',sans-serif;">543</td>
+      <td style="font-family:'Inter',sans-serif;">0.31</td>
+      <td style="font-family:'Inter',sans-serif;">48.2%</td>
+      <td class="pos" style="font-family:'Inter',sans-serif;">82</td>
+    </tr>
+  </table>
+  <div class="pros-cons">
+    <div class="cons"><strong>⚠ Problemi</strong>Usato da quasi tutti i tool AI/fintech<br>Privo di identità visiva<br>Riconoscibile come "prodotto Next.js default"<br>Numerals non eccezionali in tabelle piccole</div>
+    <div class="pros"><strong>✓ Punti forza</strong>Leggibilissimo<br>Molto testato<br>Supporto lingue eccellente</div>
+  </div>
+</div>
+
+<hr class="divider">
+<p class="section-label">Opzioni raccomandate</p>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- OPZIONE 1 — IBM PLEX SANS + IBM PLEX MONO -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="font-card recommended">
+  <div class="font-header">
+    <span class="font-name" style="font-family:'IBM Plex Sans',sans-serif;">IBM Plex Sans</span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:14px; color:#666;">+ IBM Plex Mono</span>
+    <span class="rec-badge">★ CONSIGLIATO #1</span>
+  </div>
+  <div class="font-meta">
+    Google Fonts · IBM Open Source · Mike Abbink (2018) ·
+    <a href="https://fonts.google.com/specimen/IBM+Plex+Sans" target="_blank">IBM Plex Sans ↗</a> ·
+    <a href="https://fonts.google.com/specimen/IBM+Plex+Mono" target="_blank">IBM Plex Mono ↗</a>
+  </div>
+
+  <div class="demo-nav" style="font-family:'IBM Plex Sans',sans-serif; letter-spacing:1.5px;">
+    SCANNER &nbsp; HV SCREENER &nbsp; <span>WATCHLIST</span> &nbsp; PORTFOLIO &nbsp; ACADEMY &nbsp; SETTINGS
+  </div>
+  <div class="demo-heading" style="font-family:'IBM Plex Sans',sans-serif;">NVDA — Opportunity Analysis</div>
+  <div class="demo-body" style="font-family:'IBM Plex Sans',sans-serif;">
+    Coiled Spring è il primo terminale LEAPS progettato per trader retail che vogliono operare con la precisione di un desk istituzionale, senza la complessità di Bloomberg.
+  </div>
+  <table class="demo-table">
+    <tr>
+      <th style="font-family:'IBM Plex Mono',monospace;">SYMBOL</th>
+      <th style="font-family:'IBM Plex Mono',monospace;">STRIKE</th>
+      <th style="font-family:'IBM Plex Mono',monospace;">DTE</th>
+      <th style="font-family:'IBM Plex Mono',monospace;">DELTA</th>
+      <th style="font-family:'IBM Plex Mono',monospace;">IV %</th>
+      <th style="font-family:'IBM Plex Mono',monospace;">CS SCORE</th>
+    </tr>
+    <tr>
+      <td class="accent" style="font-family:'IBM Plex Mono',monospace;">NVDA-20270117C800</td>
+      <td style="font-family:'IBM Plex Mono',monospace;">800</td>
+      <td style="font-family:'IBM Plex Mono',monospace;">543</td>
+      <td style="font-family:'IBM Plex Mono',monospace;">0.31</td>
+      <td style="font-family:'IBM Plex Mono',monospace;">48.2%</td>
+      <td class="pos" style="font-family:'IBM Plex Mono',monospace; font-weight:600;">82</td>
+    </tr>
+  </table>
+  <div class="demo-score" style="font-family:'IBM Plex Mono',monospace;">CS 82 / 100</div>
+
+  <div class="pros-cons">
+    <div class="pros"><strong>✓ Punti forza</strong>Font professionale "da terminale serio" — usato in software enterprise, non in tool AI consumer<br>Monospace IBM Plex Mono perfetto per tabelle dati e numeri<br>Tabular figures nativo (numeri allineati in colonna)<br>Coppia sans+mono dello stesso designer: coerenza visiva totale<br>Usato da IBM, Red Hat, molti tool finanziari enterprise<br>Completamente gratuito (Google Fonts)</div>
+    <div class="cons"><strong>– Limiti</strong>Leggermente più "corporate" rispetto a font più moderni<br>Meno "elegante" rispetto a Plus Jakarta Sans o Sora</div>
+  </div>
+  <div class="score-row">
+    <div class="score-item"><strong>Leggibilità dati:</strong><span>★★★★★</span></div>
+    <div class="score-item"><strong>Unicità:</strong><span>★★★★☆</span></div>
+    <div class="score-item"><strong>Fit terminale:</strong><span>★★★★★</span></div>
+    <div class="score-item"><strong>Distanza da Inter:</strong><span>★★★★☆</span></div>
+  </div>
+
+  <div class="pairing-label">Implementazione Next.js</div>
+  <div class="impl-box">// app/layout.tsx
+import { IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google'
+
+const plexSans = IBM_Plex_Sans({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-sans',
+})
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-mono',
+})</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- OPZIONE 2 — SPACE GROTESK + SPACE MONO -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="font-card recommended">
+  <div class="font-header">
+    <span class="font-name" style="font-family:'Space Grotesk',sans-serif;">Space Grotesk</span>
+    <span style="font-family:'Space Mono',monospace; font-size:14px; color:#666;">+ Space Mono</span>
+    <span class="rec-badge">★ CONSIGLIATO #2</span>
+  </div>
+  <div class="font-meta">
+    Google Fonts · Florian Karsten (2021) ·
+    <a href="https://fonts.google.com/specimen/Space+Grotesk" target="_blank">Space Grotesk ↗</a> ·
+    <a href="https://fonts.google.com/specimen/Space+Mono" target="_blank">Space Mono ↗</a>
+  </div>
+
+  <div class="demo-nav" style="font-family:'Space Grotesk',sans-serif; letter-spacing:1.5px; font-weight:500;">
+    SCANNER &nbsp; HV SCREENER &nbsp; <span>WATCHLIST</span> &nbsp; PORTFOLIO &nbsp; ACADEMY &nbsp; SETTINGS
+  </div>
+  <div class="demo-heading" style="font-family:'Space Grotesk',sans-serif; letter-spacing:-0.5px;">NVDA — Opportunity Analysis</div>
+  <div class="demo-body" style="font-family:'Space Grotesk',sans-serif;">
+    Coiled Spring è il primo terminale LEAPS progettato per trader retail che vogliono operare con la precisione di un desk istituzionale, senza la complessità di Bloomberg.
+  </div>
+  <table class="demo-table">
+    <tr>
+      <th style="font-family:'Space Mono',monospace;">SYMBOL</th>
+      <th style="font-family:'Space Mono',monospace;">STRIKE</th>
+      <th style="font-family:'Space Mono',monospace;">DTE</th>
+      <th style="font-family:'Space Mono',monospace;">DELTA</th>
+      <th style="font-family:'Space Mono',monospace;">IV %</th>
+      <th style="font-family:'Space Mono',monospace;">CS SCORE</th>
+    </tr>
+    <tr>
+      <td class="accent" style="font-family:'Space Mono',monospace; font-size:11px;">NVDA-20270117C800</td>
+      <td style="font-family:'Space Mono',monospace;">800</td>
+      <td style="font-family:'Space Mono',monospace;">543</td>
+      <td style="font-family:'Space Mono',monospace;">0.31</td>
+      <td style="font-family:'Space Mono',monospace;">48.2%</td>
+      <td class="pos" style="font-family:'Space Mono',monospace; font-weight:700;">82</td>
+    </tr>
+  </table>
+  <div class="demo-score" style="font-family:'Space Mono',monospace;">CS 82 / 100</div>
+
+  <div class="pros-cons">
+    <div class="pros"><strong>✓ Punti forza</strong>Carattere visivo fortissimo — si distingue immediatamente da Inter<br>Grotesk con dettagli unici (le "g" e le "a" a doppio piano)<br>Aspetto "futuristico" che si abbina bene al tema dark + arancio<br>Space Mono dà carattere anche alle tabelle<br>Molto diverso da qualsiasi competitor fintech attuale<br>Gratuito Google Fonts</div>
+    <div class="cons"><strong>– Limiti</strong>Space Mono ha spaziatura larga — le tabelle occupano più spazio<br>Leggibilità a 10px inferiore rispetto a IBM Plex Mono<br>Leggermente "edgy" — potrebbe sembrare meno serio a un pubblico enterprise</div>
+  </div>
+  <div class="score-row">
+    <div class="score-item"><strong>Leggibilità dati:</strong><span>★★★☆☆</span></div>
+    <div class="score-item"><strong>Unicità:</strong><span>★★★★★</span></div>
+    <div class="score-item"><strong>Fit terminale:</strong><span>★★★★☆</span></div>
+    <div class="score-item"><strong>Distanza da Inter:</strong><span>★★★★★</span></div>
+  </div>
+
+  <div class="pairing-label">Implementazione Next.js</div>
+  <div class="impl-box">import { Space_Grotesk, Space_Mono } from 'next/font/google'
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-sans',
+})
+
+const spaceMono = Space_Mono({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-mono',
+})</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- OPZIONE 3 — PLUS JAKARTA SANS + JETBRAINS MONO -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="font-card">
+  <div class="font-header">
+    <span class="font-name" style="font-family:'Plus Jakarta Sans',sans-serif;">Plus Jakarta Sans</span>
+    <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#666;">+ JetBrains Mono</span>
+  </div>
+  <div class="font-meta">
+    Google Fonts · Tokotype (2021) ·
+    <a href="https://fonts.google.com/specimen/Plus+Jakarta+Sans" target="_blank">Plus Jakarta Sans ↗</a> ·
+    <a href="https://fonts.google.com/specimen/JetBrains+Mono" target="_blank">JetBrains Mono ↗</a>
+  </div>
+
+  <div class="demo-nav" style="font-family:'Plus Jakarta Sans',sans-serif; letter-spacing:2px; font-weight:600;">
+    SCANNER &nbsp; HV SCREENER &nbsp; <span>WATCHLIST</span> &nbsp; PORTFOLIO &nbsp; ACADEMY &nbsp; SETTINGS
+  </div>
+  <div class="demo-heading" style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;">NVDA — Opportunity Analysis</div>
+  <div class="demo-body" style="font-family:'Plus Jakarta Sans',sans-serif;">
+    Coiled Spring è il primo terminale LEAPS progettato per trader retail che vogliono operare con la precisione di un desk istituzionale, senza la complessità di Bloomberg.
+  </div>
+  <table class="demo-table">
+    <tr>
+      <th style="font-family:'JetBrains Mono',monospace;">SYMBOL</th>
+      <th style="font-family:'JetBrains Mono',monospace;">STRIKE</th>
+      <th style="font-family:'JetBrains Mono',monospace;">DTE</th>
+      <th style="font-family:'JetBrains Mono',monospace;">DELTA</th>
+      <th style="font-family:'JetBrains Mono',monospace;">IV %</th>
+      <th style="font-family:'JetBrains Mono',monospace;">CS SCORE</th>
+    </tr>
+    <tr>
+      <td class="accent" style="font-family:'JetBrains Mono',monospace;">NVDA-20270117C800</td>
+      <td style="font-family:'JetBrains Mono',monospace;">800</td>
+      <td style="font-family:'JetBrains Mono',monospace;">543</td>
+      <td style="font-family:'JetBrains Mono',monospace;">0.31</td>
+      <td style="font-family:'JetBrains Mono',monospace;">48.2%</td>
+      <td class="pos" style="font-family:'JetBrains Mono',monospace; font-weight:600;">82</td>
+    </tr>
+  </table>
+
+  <div class="pros-cons">
+    <div class="pros"><strong>✓ Punti forza</strong>Plus Jakarta Sans: più caldo e con personalità rispetto a Inter<br>JetBrains Mono: il monospace più leggibile esistente per i developer, eccellente per dati<br>Combinazione molto bilanciata — professionale ma non fredda<br>Font weight 800 eccellente per headings landing page</div>
+    <div class="cons"><strong>– Limiti</strong>Plus Jakarta Sans sta diventando popolare nei SaaS/fintech dal 2023<br>Non così distante da Inter in contesti di testo normale</div>
+  </div>
+  <div class="score-row">
+    <div class="score-item"><strong>Leggibilità dati:</strong><span>★★★★★</span></div>
+    <div class="score-item"><strong>Unicità:</strong><span>★★★☆☆</span></div>
+    <div class="score-item"><strong>Fit terminale:</strong><span>★★★★☆</span></div>
+    <div class="score-item"><strong>Distanza da Inter:</strong><span>★★★☆☆</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- OPZIONE 4 — SORA + DM MONO -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="font-card">
+  <div class="font-header">
+    <span class="font-name" style="font-family:'Sora',sans-serif;">Sora</span>
+    <span style="font-family:'DM Mono',monospace; font-size:14px; color:#666;">+ DM Mono</span>
+  </div>
+  <div class="font-meta">
+    Google Fonts · Emi Kakizawa (2019) ·
+    <a href="https://fonts.google.com/specimen/Sora" target="_blank">Sora ↗</a> ·
+    <a href="https://fonts.google.com/specimen/DM+Mono" target="_blank">DM Mono ↗</a>
+  </div>
+
+  <div class="demo-nav" style="font-family:'Sora',sans-serif; letter-spacing:1.5px; font-weight:600; font-size:11px;">
+    SCANNER &nbsp; HV SCREENER &nbsp; <span>WATCHLIST</span> &nbsp; PORTFOLIO &nbsp; ACADEMY &nbsp; SETTINGS
+  </div>
+  <div class="demo-heading" style="font-family:'Sora',sans-serif; font-weight:700; letter-spacing:-0.3px;">NVDA — Opportunity Analysis</div>
+  <div class="demo-body" style="font-family:'Sora',sans-serif; font-size:13px;">
+    Coiled Spring è il primo terminale LEAPS progettato per trader retail che vogliono operare con la precisione di un desk istituzionale, senza la complessità di Bloomberg.
+  </div>
+  <table class="demo-table">
+    <tr>
+      <th style="font-family:'DM Mono',monospace;">SYMBOL</th>
+      <th style="font-family:'DM Mono',monospace;">STRIKE</th>
+      <th style="font-family:'DM Mono',monospace;">DTE</th>
+      <th style="font-family:'DM Mono',monospace;">DELTA</th>
+      <th style="font-family:'DM Mono',monospace;">IV %</th>
+      <th style="font-family:'DM Mono',monospace;">CS SCORE</th>
+    </tr>
+    <tr>
+      <td class="accent" style="font-family:'DM Mono',monospace;">NVDA-20270117C800</td>
+      <td style="font-family:'DM Mono',monospace;">800</td>
+      <td style="font-family:'DM Mono',monospace;">543</td>
+      <td style="font-family:'DM Mono',monospace;">0.31</td>
+      <td style="font-family:'DM Mono',monospace;">48.2%</td>
+      <td class="pos" style="font-family:'DM Mono',monospace; font-weight:500;">82</td>
+    </tr>
+  </table>
+
+  <div class="pros-cons">
+    <div class="pros"><strong>✓ Punti forza</strong>Sora è rarissimo in strumenti finanziari occidentali<br>Design giapponese — righe pulitissime, molto ordinato<br>Eccellente su schermi ad alta densità (Retina)<br>Completamente diverso da qualsiasi competitor</div>
+    <div class="cons"><strong>– Limiti</strong>Sora a 12-13px leggermente meno leggibile di IBM Plex<br>Può sembrare "troppo minimalista" — riduce la personalità del terminale dark<br>Kerning peculiare su alcune combinazioni lettere</div>
+  </div>
+  <div class="score-row">
+    <div class="score-item"><strong>Leggibilità dati:</strong><span>★★★☆☆</span></div>
+    <div class="score-item"><strong>Unicità:</strong><span>★★★★★</span></div>
+    <div class="score-item"><strong>Fit terminale:</strong><span>★★★☆☆</span></div>
+    <div class="score-item"><strong>Distanza da Inter:</strong><span>★★★★★</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- OPZIONE 5 — FIGTREE + JETBRAINS MONO -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="font-card">
+  <div class="font-header">
+    <span class="font-name" style="font-family:'Figtree',sans-serif;">Figtree</span>
+    <span style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#666;">+ JetBrains Mono</span>
+  </div>
+  <div class="font-meta">
+    Google Fonts · Erik Kennedy (2022) ·
+    <a href="https://fonts.google.com/specimen/Figtree" target="_blank">Figtree ↗</a>
+  </div>
+
+  <div class="demo-nav" style="font-family:'Figtree',sans-serif; letter-spacing:2px; font-weight:600;">
+    SCANNER &nbsp; HV SCREENER &nbsp; <span>WATCHLIST</span> &nbsp; PORTFOLIO &nbsp; ACADEMY &nbsp; SETTINGS
+  </div>
+  <div class="demo-heading" style="font-family:'Figtree',sans-serif; font-weight:800; letter-spacing:-0.5px;">NVDA — Opportunity Analysis</div>
+  <div class="demo-body" style="font-family:'Figtree',sans-serif;">
+    Coiled Spring è il primo terminale LEAPS progettato per trader retail che vogliono operare con la precisione di un desk istituzionale, senza la complessità di Bloomberg.
+  </div>
+  <table class="demo-table">
+    <tr>
+      <th style="font-family:'JetBrains Mono',monospace;">SYMBOL</th>
+      <th style="font-family:'JetBrains Mono',monospace;">STRIKE</th>
+      <th style="font-family:'JetBrains Mono',monospace;">DTE</th>
+      <th style="font-family:'JetBrains Mono',monospace;">DELTA</th>
+      <th style="font-family:'JetBrains Mono',monospace;">IV %</th>
+      <th style="font-family:'JetBrains Mono',monospace;">CS SCORE</th>
+    </tr>
+    <tr>
+      <td class="accent" style="font-family:'JetBrains Mono',monospace;">NVDA-20270117C800</td>
+      <td style="font-family:'JetBrains Mono',monospace;">800</td>
+      <td style="font-family:'JetBrains Mono',monospace;">543</td>
+      <td style="font-family:'JetBrains Mono',monospace;">0.31</td>
+      <td style="font-family:'JetBrains Mono',monospace;">48.2%</td>
+      <td class="pos" style="font-family:'JetBrains Mono',monospace; font-weight:600;">82</td>
+    </tr>
+  </table>
+
+  <div class="pros-cons">
+    <div class="pros"><strong>✓ Punti forza</strong>Molto pulito e moderno, rilasciato nel 2022 — non ancora saturo<br>Font weight 800 per gli heading della landing page è ottimo<br>Meno freddo di Inter, più caldo<br>Figtree + JetBrains Mono è una combinazione non vista nei competitor fintech</div>
+    <div class="cons"><strong>– Limiti</strong>Inizia a diffondersi nel 2024-2025 in area SaaS<br>Senza il monospace companion (usa JetBrains che è di un altro designer)</div>
+  </div>
+  <div class="score-row">
+    <div class="score-item"><strong>Leggibilità dati:</strong><span>★★★★☆</span></div>
+    <div class="score-item"><strong>Unicità:</strong><span>★★★★☆</span></div>
+    <div class="score-item"><strong>Fit terminale:</strong><span>★★★★☆</span></div>
+    <div class="score-item"><strong>Distanza da Inter:</strong><span>★★★★☆</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SUMMARY TABLE -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<hr class="divider">
+<p class="section-label">Confronto riassuntivo</p>
+
+<table class="summary-table">
+  <tr>
+    <th>Opzione</th>
+    <th>Sans</th>
+    <th>Mono</th>
+    <th>Leggibilità dati</th>
+    <th>Unicità</th>
+    <th>Fit terminale</th>
+    <th>Note</th>
+  </tr>
+  <tr>
+    <td style="color:#555;">Attuale</td>
+    <td style="color:#555;">Inter</td>
+    <td style="color:#555;">Geist Mono</td>
+    <td><span class="tag tag-green">★★★★★</span></td>
+    <td><span class="tag tag-red">★☆☆☆☆</span></td>
+    <td><span class="tag tag-green">★★★★☆</span></td>
+    <td style="color:#555;">Da cambiare</td>
+  </tr>
+  <tr class="winner">
+    <td>★ #1</td>
+    <td style="font-family:'IBM Plex Sans',sans-serif;">IBM Plex Sans</td>
+    <td style="font-family:'IBM Plex Mono',monospace;">IBM Plex Mono</td>
+    <td><span class="tag tag-green">★★★★★</span></td>
+    <td><span class="tag tag-orange">★★★★☆</span></td>
+    <td><span class="tag tag-green">★★★★★</span></td>
+    <td>Famiglia completa, tabular figures, look enterprise</td>
+  </tr>
+  <tr class="winner">
+    <td>★ #2</td>
+    <td style="font-family:'Space Grotesk',sans-serif;">Space Grotesk</td>
+    <td style="font-family:'Space Mono',monospace;">Space Mono</td>
+    <td><span class="tag tag-orange">★★★☆☆</span></td>
+    <td><span class="tag tag-green">★★★★★</span></td>
+    <td><span class="tag tag-orange">★★★★☆</span></td>
+    <td>Massima identità visiva, look futuristico</td>
+  </tr>
+  <tr>
+    <td>#3</td>
+    <td style="font-family:'Plus Jakarta Sans',sans-serif;">Plus Jakarta Sans</td>
+    <td style="font-family:'JetBrains Mono',monospace;">JetBrains Mono</td>
+    <td><span class="tag tag-green">★★★★★</span></td>
+    <td><span class="tag tag-orange">★★★☆☆</span></td>
+    <td><span class="tag tag-orange">★★★★☆</span></td>
+    <td>Bilanciato, font weight 800 ottimo per landing</td>
+  </tr>
+  <tr>
+    <td>#4</td>
+    <td style="font-family:'Sora',sans-serif;">Sora</td>
+    <td style="font-family:'DM Mono',monospace;">DM Mono</td>
+    <td><span class="tag tag-orange">★★★☆☆</span></td>
+    <td><span class="tag tag-green">★★★★★</span></td>
+    <td><span class="tag tag-orange">★★★☆☆</span></td>
+    <td>Originalissimo, meglio su landing che nel terminale</td>
+  </tr>
+  <tr>
+    <td>#5</td>
+    <td style="font-family:'Figtree',sans-serif;">Figtree</td>
+    <td style="font-family:'JetBrains Mono',monospace;">JetBrains Mono</td>
+    <td><span class="tag tag-green">★★★★☆</span></td>
+    <td><span class="tag tag-orange">★★★★☆</span></td>
+    <td><span class="tag tag-orange">★★★★☆</span></td>
+    <td>Caldo, moderno, non ancora saturo</td>
+  </tr>
+</table>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- FOOTER NOTE -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="footer-note">
+  <strong style="color:#888; display:block; margin-bottom:8px;">Nota implementazione</strong>
+  Tutti i font in questo documento sono caricati live da Google Fonts — quello che vedi è esattamente come apparirà sul browser dell'utente.
+  Il cambio font in Next.js richiede modifica di <code style="color:#E8630A;">app/layout.tsx</code> (next/font/google)
+  e aggiornamento delle CSS variables <code style="color:#E8630A;">--font-sans</code> e <code style="color:#E8630A;">--font-mono</code> in <code style="color:#E8630A;">globals.css</code>.
+  Nessun intervento sui singoli componenti — il cambio è globale automaticamente se le variabili CSS sono già usate ovunque.
+  <br><br>
+  <strong style="color:#888;">Raccomandazione operativa:</strong>
+  IBM Plex Sans + IBM Plex Mono per il terminale (massima leggibilità dei dati).
+  Se vuoi un look più audace sulla landing page rispetto al terminale:
+  considera Space Grotesk per i titoli landing + IBM Plex Sans per il body e il terminale.
+</div>
+
+</body>
+</html>

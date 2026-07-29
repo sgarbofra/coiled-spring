@@ -46,6 +46,20 @@ const TAG_LABELS: Record<string, string> = {
 
 const ENTRIES: Entry[] = [
   {
+    date: 'July 29, 2026',
+    version: 'v2.9',
+    headline: 'I start measuring time. How much does it cost to borrow tomorrow\'s volatility?',
+    tag: 'feature',
+    body: [
+      "Here's a question that kept nagging at me: if IV on SPY is at 18%, is the 30-day option expensive relative to the 60-day? You can eyeball the term structure, but eyeballing is not analysis. I wanted a number. Something I could compare across ETFs, across time, and actually act on.",
+      "The answer is the call calendar credit percentage. Take the ATM call at 60 days out, take the ATM call at 30 days out, subtract, divide by spot. That's how much the market charges you for an extra 30 days of optionality, normalized so you can compare SPY to GLD to TLT without the dollar difference muddying the picture. I call it credit_30v60_pct.",
+      "I built the ETF Calendar Monitor around this metric. Fifteen ETFs — four equity broad (SPY, QQQ, IWM, DIA), five sector (XLF, XLE, XLK, XLV, XLU), six macro (GLD, TLT, SLV, EEM, EFA, HYG). Every day at 17:30 CET, a cron job fetches ATM call prices for each ticker, interpolates them at synthetic constant maturities of 30, 60, and 90 days using a VIX-style linear weighting, and stores the credit percentages in the database. The interpolation minimizes yfinance API calls by selecting only the 3-4 real expirations that straddle each target DTE — about 15 calls per ETF instead of fetching all available strikes.",
+      "The real signal comes after history accumulates. Once I have at least 20 observations I can compute a z-score: how many standard deviations today's calendar credit sits above or below its 52-week mean. Above +1.5σ is RICH — the time spread is expensive, historically speaking. Below -1.5σ is CHEAP. Between ±0.5σ is FAIR. The thresholds are the same logic as the VIX's relationship to realized vol, just applied to the term structure instead of the level.",
+      "The new CALENDAR page in the terminal shows all 15 ETFs in a sortable table. It launches today with a prominent disclaimer: data collection started now, z-score signals need 20 days minimum, the full 52-week baseline takes about a year of daily snapshots. I'm being honest about what I have. The credit% columns are useful from day one — they tell you which ETF has the richest time spread today in absolute terms, cross-asset. The badges (RICH / WATCH / FAIR / CHEAP) will earn their credibility over time.",
+      "I'm planting another tree.",
+    ],
+  },
+  {
     date: 'July 28, 2026',
     version: 'v2.8',
     headline: 'One delisted stock breaks everything. I fix it properly. Then at 2 AM an idea wakes me up.',
