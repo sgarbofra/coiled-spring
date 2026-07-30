@@ -762,7 +762,7 @@ function OpportunityContent() {
                   byDate[r.date][r.dte_bucket] = r.iv_pct
                 }
                 const dates = Object.keys(byDate).sort((a, b) => b.localeCompare(a))
-                const buckets = [30, 60, 90, 180]
+                const buckets = [30, 60, 90, 180, 365, 730]
                 return (
                   <div style={{ overflowX: 'auto' }}>
                     <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11, fontFamily: 'var(--font-mono)' }}>
