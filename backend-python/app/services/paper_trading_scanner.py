@@ -208,7 +208,9 @@ def _fetch_best_put_leaps(ticker: str) -> Optional[dict]:
                 if cs < CS_GREEN:
                     continue
 
-                if cs > best_cs:
+                # Selezione: massimo CS Score; a parità di CS, massimo vega
+                is_better = cs > best_cs or (cs == best_cs and best is not None and vega > best["vega"])
+                if is_better:
                     best_cs = cs
                     symbol_key = str(row.get("contractSymbol", f"{ticker}_{exp_str}_{strike}P"))
                     best = {

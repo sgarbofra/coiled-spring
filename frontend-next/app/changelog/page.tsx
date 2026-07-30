@@ -46,6 +46,19 @@ const TAG_LABELS: Record<string, string> = {
 
 const ENTRIES: Entry[] = [
   {
+    date: 'July 30, 2026',
+    version: 'v3.0',
+    headline: 'The scanner now explains itself. And stops lying about why it found nothing.',
+    tag: 'feature',
+    body: [
+      "The HV LONG PUT LEAPS portfolio had a problem: every day it showed zero open positions, and nowhere explained why. Was there a bug? Were conditions genuinely not met? Was the filter too strict? You had to know where to look in the code to understand what was happening. That's not a terminal — that's a black box.",
+      "So I built the REPORT tab. Click it inside any portfolio and you get a full diagnostic: the exact sniper conditions the scanner runs daily (HV Rank below 20%, triple compression HV20 < HV60 < HV252, depth ratio HV20 ≤ HV252 × 0.65, compression streak active for at least 5 consecutive days), how many tickers are passing all four today, and — if the count is zero — the ten nearest misses ranked by how many conditions they fail, with a checkmark or cross next to each condition so you can see exactly what's blocking them.",
+      "This required a second fix: the HV Screener API was only returning HV30 and HV Rank. Triple compression needs HV20, HV60, and HV252. Depth needs HV20 and HV252. Streak needs the compression_streak counter. All four were already being calculated and stored in the database every day at 16:30 UTC — they just weren't being sent to the frontend. A two-line schema change fixes that. No migration needed. The data was always there.",
+      "While I was in the paper trading scanner, I found a third bug: the option selection logic picked the highest CS Score correctly, but on ties it kept the first option encountered (ascending by expiration date, then by strike) rather than the one with the highest vega. The rule was clear — CS Score first, vega as tiebreaker — but the code was just `if cs > best_cs`, no second condition. Fixed with one line. The scanner now correctly prefers maximum sensitivity to volatility expansion when two contracts score identically.",
+      "Three changes, one release. The terminal is more honest now.",
+    ],
+  },
+  {
     date: 'July 29, 2026',
     version: 'v2.9',
     headline: 'I start measuring time. How much does it cost to borrow tomorrow\'s volatility?',

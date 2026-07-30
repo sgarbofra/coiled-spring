@@ -839,12 +839,295 @@ function HistoryTab({ portfolioId }: { portfolioId: number }) {
   )
 }
 
+// ── Report Tab ─────────────────────────────────────────────────────────────────
+
+type HVRow = {
+  ticker: string
+  company_name: string | null
+  hv20: number | null
+  hv30: number | null
+  hv60: number | null
+  hv252: number | null
+  hv30_parkinson: number | null
+  hv_rank: number | null
+  hv_percentile: number | null
+  hv_52w_high: number | null
+  hv_52w_low: number | null
+  compression_streak: number | null
+  computed_at: string | null
+}
+
+// Costanti sniper L0 — identiche a paper_trading_scanner.py TIGHTENING_LEVELS[0]
+const SNIPER_HV_RANK_MAX  = 20   // hv_rank < 20
+const SNIPER_DEPTH_FACTOR = 0.65 // hv20 ≤ hv252 × 0.65
+const SNIPER_STREAK_MIN   = 5    // compression_streak ≥ 5 giorni
+
+type SniperResult = {
+  eligible: boolean
+  rankOk:   boolean
+  tripleOk: boolean
+  depthOk:  boolean
+  streakOk: boolean
+  failed:   string[]
+  failedCount: number
+}
+
+function checkSniper(r: HVRow): SniperResult {
+  const rankOk   = r.hv_rank != null && r.hv_rank < SNIPER_HV_RANK_MAX
+  const tripleOk = r.hv20 != null && r.hv60 != null && r.hv252 != null
+    && r.hv20 < r.hv60 && r.hv60 < r.hv252
+  const depthOk  = r.hv20 != null && r.hv252 != null
+    && r.hv20 <= r.hv252 * SNIPER_DEPTH_FACTOR
+  const streakOk = (r.compression_streak ?? 0) >= SNIPER_STREAK_MIN
+
+  const failed: string[] = [
+    !rankOk   && `HV Rank ${r.hv_rank?.toFixed(1) ?? '?'} ≥ ${SNIPER_HV_RANK_MAX}`,
+    !tripleOk && `Triple compression HV20<HV60<HV252 non attiva`,
+    !depthOk  && `Depth: HV20 > HV252×${SNIPER_DEPTH_FACTOR}`,
+    !streakOk && `Streak ${r.compression_streak ?? 0}d < ${SNIPER_STREAK_MIN}d`,
+  ].filter(Boolean) as string[]
+
+  return { eligible: failed.length === 0, rankOk, tripleOk, depthOk, streakOk, failed, failedCount: failed.length }
+}
+
+type ReportState = {
+  timestamp: Date
+  universeSize: number
+  eligible: HVRow[]
+  nearMisses: Array<HVRow & { sniper: SniperResult }>
+  computedAt: string | null
+}
+
+function ReportTab({ portfolioId, portfolioName }: { portfolioId: number; portfolioName: string }) {
+  const [loading, setLoading] = useState(false)
+  const [error, setError]     = useState('')
+  const [report, setReport]   = useState<ReportState | null>(null)
+
+  const runScan = async () => {
+    setLoading(true)
+    setError('')
+    try {
+      // Fetch tutti i ticker HV ordinati per hv_rank asc
+      const res = await fetch(`/api/hv-screener?sort_by=hv_rank&sort_dir=asc`, { credentials: 'include' })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'HV Screener error')
+
+      const rows: HVRow[] = data.data ?? []
+
+      // Eligible: supera TUTTE le condizioni sniper L0
+      const eligible = rows.filter(r => checkSniper(r).eligible)
+
+      // Near-misses: non eligible, ordinati per numero di condizioni fallite (asc),
+      // poi per hv_rank asc (chi manca meno)
+      const nearMisses = rows
+        .filter(r => !checkSniper(r).eligible)
+        .map(r => ({ ...r, sniper: checkSniper(r) }))
+        .sort((a, b) => {
+          if (a.sniper.failedCount !== b.sniper.failedCount)
+            return a.sniper.failedCount - b.sniper.failedCount
+          return (a.hv_rank ?? 999) - (b.hv_rank ?? 999)
+        })
+        .slice(0, 10)
+
+      const computedAt = data.computed_at ?? null
+
+      setReport({ timestamp: new Date(), universeSize: rows.length, eligible, nearMisses, computedAt })
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Scan error')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const fmtHV  = (v: number | null) => v != null ? `${v.toFixed(1)}%` : '—'
+  const rankColor = (v: number | null) => {
+    if (v == null) return bb.gray
+    if (v < 20) return bb.green
+    if (v < 35) return bb.amber
+    return bb.white
+  }
+  const tick  = (ok: boolean) => ok
+    ? <span style={{ color: bb.green }}>✓</span>
+    : <span style={{ color: bb.red }}>✗</span>
+
+  return (
+    <div style={{ fontFamily: 'var(--font-mono)', color: bb.white }}>
+
+      {/* ── Toolbar ── */}
+      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap' }}>
+        <button onClick={runScan} disabled={loading} style={{
+          border: `1px solid ${bb.orange}`,
+          backgroundColor: loading ? 'transparent' : 'rgba(255,102,0,0.15)',
+          color: bb.orange, padding: '4px 20px', fontSize: '13px', fontWeight: 'bold',
+          fontFamily: 'inherit', cursor: loading ? 'not-allowed' : 'pointer',
+          letterSpacing: '1px', opacity: loading ? 0.55 : 1,
+        }}>
+          {loading ? '⟳  LOADING...' : '▶  RUN SCAN'}
+        </button>
+        {report && !loading && (
+          <span style={{ marginLeft: 'auto', fontSize: '11px', color: bb.gray }}>
+            Last run: {report.timestamp.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}
+          </span>
+        )}
+      </div>
+
+      {error && (
+        <div style={{ color: bb.red, fontSize: '13px', marginBottom: '12px', padding: '8px 12px', border: `1px solid ${bb.red}` }}>
+          {error}
+        </div>
+      )}
+
+      {/* ── Empty state ── */}
+      {!report && !loading && !error && (
+        <div style={{
+          border: `1px dashed ${bb.border2}`, color: bb.gray,
+          padding: '48px', textAlign: 'center', fontSize: '13px', letterSpacing: '1px',
+        }}>
+          CLICK ▶ RUN SCAN TO GENERATE THE REPORT
+        </div>
+      )}
+
+      {/* ── Report output ── */}
+      {report && (
+        <div>
+          {/* Metadata box */}
+          <div style={{
+            border: `1px solid ${bb.border2}`, backgroundColor: bb.surface,
+            padding: '14px 18px', marginBottom: '20px',
+          }}>
+            <div style={{ fontSize: '11px', color: bb.amber, letterSpacing: '2px', fontWeight: 'bold', marginBottom: '10px' }}>
+              HV SNIPER REPORT — {portfolioName.toUpperCase()}
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', gap: '6px', fontSize: '12px', marginBottom: '12px' }}>
+              {[
+                { label: 'SCAN DATE',        value: report.timestamp.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }) },
+                { label: 'SCAN TIME',        value: report.timestamp.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) },
+                { label: 'DATI HV AL',       value: report.computedAt ? new Date(report.computedAt).toLocaleString('it-IT', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '—' },
+                { label: 'STRATEGIA',        value: 'LONG PUT LEAPS — BASSA VOLATILITÀ' },
+                { label: 'FILTRO SNIPER L0', value: `HV Rank <${SNIPER_HV_RANK_MAX}% + Triple compr. + Depth ≤${SNIPER_DEPTH_FACTOR} + Streak ≥${SNIPER_STREAK_MIN}d` },
+                { label: 'UNIVERSO',         value: `${report.universeSize} ticker` },
+              ].map(({ label, value }) => (
+                <div key={label} style={{ display: 'flex', gap: '8px' }}>
+                  <span style={{ color: bb.gray, minWidth: '130px', flexShrink: 0 }}>{label}:</span>
+                  <span style={{ color: bb.white, fontWeight: 'bold', fontSize: '11px' }}>{value}</span>
+                </div>
+              ))}
+            </div>
+            {/* Eligible count */}
+            <div style={{ paddingTop: '10px', borderTop: `1px solid ${bb.border2}`, display: 'flex', alignItems: 'baseline', gap: '10px' }}>
+              <span style={{ fontSize: '30px', fontWeight: 'bold', color: report.eligible.length > 0 ? bb.green : bb.red }}>
+                {report.eligible.length}
+              </span>
+              <span style={{ fontSize: '13px', color: bb.gray, letterSpacing: '1px' }}>
+                TITOL{report.eligible.length !== 1 ? 'I' : 'O'} ELEGGIBIL{report.eligible.length !== 1 ? 'I' : 'E'} — FILTRO SNIPER L0
+              </span>
+            </div>
+          </div>
+
+          {/* Eligible table */}
+          {report.eligible.length > 0 && (
+            <div style={{ marginBottom: '24px' }}>
+              <div style={{ fontSize: '11px', color: bb.green, letterSpacing: '2px', fontWeight: 'bold', marginBottom: '8px' }}>
+                ✓ CANDIDATI ELEGGIBILI — TUTTI I CRITERI SNIPER SODDISFATTI
+              </div>
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
+                  <thead>
+                    <tr>
+                      {['TICKER', 'NOME', 'HV20', 'HV60', 'HV252', 'HV RANK', 'STREAK', 'HV30 %', '52w HIGH', '52w LOW'].map(h => (
+                        <th key={h} style={{ padding: '6px 10px', textAlign: h === 'TICKER' || h === 'NOME' ? 'left' : 'right', fontSize: '10px', letterSpacing: '1px', color: bb.amber, borderBottom: `1px solid ${bb.orange}`, whiteSpace: 'nowrap' }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {report.eligible.map((r, i) => (
+                      <tr key={i}
+                        onMouseEnter={e => (e.currentTarget.style.backgroundColor = bb.surface)}
+                        onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}>
+                        <td style={{ padding: '5px 10px', color: bb.orange, fontWeight: 'bold' }}>{r.ticker}</td>
+                        <td style={{ padding: '5px 10px', color: bb.gray, fontSize: '11px' }}>{r.company_name ?? '—'}</td>
+                        <td style={{ padding: '5px 10px', textAlign: 'right', color: bb.green }}>{fmtHV(r.hv20)}</td>
+                        <td style={{ padding: '5px 10px', textAlign: 'right', color: bb.green }}>{fmtHV(r.hv60)}</td>
+                        <td style={{ padding: '5px 10px', textAlign: 'right', color: bb.green }}>{fmtHV(r.hv252)}</td>
+                        <td style={{ padding: '5px 10px', textAlign: 'right', fontWeight: 'bold', color: rankColor(r.hv_rank) }}>{r.hv_rank != null ? r.hv_rank.toFixed(1) : '—'}</td>
+                        <td style={{ padding: '5px 10px', textAlign: 'right', color: bb.green }}>{r.compression_streak ?? 0}d</td>
+                        <td style={{ padding: '5px 10px', textAlign: 'right', color: bb.gray }}>{fmtHV(r.hv30)}</td>
+                        <td style={{ padding: '5px 10px', textAlign: 'right', color: bb.gray }}>{fmtHV(r.hv_52w_high)}</td>
+                        <td style={{ padding: '5px 10px', textAlign: 'right', color: bb.gray }}>{fmtHV(r.hv_52w_low)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Near-misses — mostrati sempre, ma con header diverso se eligible=0 */}
+          {report.nearMisses.length > 0 && (
+            <div>
+              <div style={{ fontSize: '11px', color: bb.amber, letterSpacing: '2px', fontWeight: 'bold', marginBottom: '6px' }}>
+                {report.eligible.length === 0
+                  ? 'TOP 10 NEAR-MISS — CANDIDATI PIÙ VICINI ALL\'ELIGIBILITÀ'
+                  : 'TOP 10 NEAR-MISS — TITOLI CHE MANCANO POCHI CRITERI'}
+              </div>
+              {report.eligible.length === 0 && (
+                <div style={{ fontSize: '12px', color: bb.gray, marginBottom: '12px', lineHeight: '1.5' }}>
+                  Nessun titolo supera il filtro sniper oggi. I 10 candidati più vicini (meno condizioni fallite):
+                </div>
+              )}
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
+                  <thead>
+                    <tr>
+                      {['#', 'TICKER', 'NOME', 'HV RANK', 'TRIPLE', 'DEPTH', 'STREAK', 'CONDIZIONI FALLITE'].map(h => (
+                        <th key={h} style={{ padding: '6px 10px', textAlign: h === '#' || h === 'TICKER' || h === 'NOME' || h === 'CONDIZIONI FALLITE' ? 'left' : 'center', fontSize: '10px', letterSpacing: '1px', color: bb.amber, borderBottom: `1px solid ${bb.orange}`, whiteSpace: 'nowrap' }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {report.nearMisses.map((r, i) => (
+                      <tr key={i}
+                        onMouseEnter={e => (e.currentTarget.style.backgroundColor = bb.surface)}
+                        onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}>
+                        <td style={{ padding: '5px 10px', color: bb.gray }}>{i + 1}</td>
+                        <td style={{ padding: '5px 10px', color: bb.orange, fontWeight: 'bold' }}>{r.ticker}</td>
+                        <td style={{ padding: '5px 10px', color: bb.gray, fontSize: '11px' }}>{r.company_name ?? '—'}</td>
+                        <td style={{ padding: '5px 10px', textAlign: 'center', color: rankColor(r.hv_rank) }}>
+                          {tick(r.sniper.rankOk)} {r.hv_rank != null ? r.hv_rank.toFixed(1) : '—'}
+                        </td>
+                        <td style={{ padding: '5px 10px', textAlign: 'center' }}>{tick(r.sniper.tripleOk)}</td>
+                        <td style={{ padding: '5px 10px', textAlign: 'center' }}>{tick(r.sniper.depthOk)}</td>
+                        <td style={{ padding: '5px 10px', textAlign: 'center' }}>
+                          {tick(r.sniper.streakOk)} {r.compression_streak ?? 0}d
+                        </td>
+                        <td style={{ padding: '5px 10px', color: bb.red, fontSize: '11px' }}>
+                          {r.sniper.failed.join(' · ')}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {report.nearMisses.length === 0 && report.eligible.length === 0 && (
+            <div style={{ color: bb.gray, padding: '24px', textAlign: 'center', fontSize: '13px', border: `1px dashed ${bb.border2}` }}>
+              Nessun dato disponibile. Attendere il prossimo aggiornamento HV (giornaliero ore 16:30 UTC).
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ── Main page ──────────────────────────────────────────────────────────────────
 
 export default function PortfolioPage() {
   const [portfolios, setPortfolios] = useState<Portfolio[]>([])
   const [selectedId, setSelectedId] = useState<number | null>(null)
-  const [tab, setTab] = useState<'positions' | 'greeks' | 'history' | 'whatif'>('positions')
+  const [tab, setTab] = useState<'positions' | 'greeks' | 'history' | 'whatif' | 'report'>('positions')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [newName, setNewName] = useState('')
@@ -1081,6 +1364,7 @@ export default function PortfolioPage() {
                 {tabBtn('greeks', 'GREEKS')}
                 {tabBtn('history', 'HISTORY')}
                 {tabBtn('whatif', 'WHAT-IF')}
+                {tabBtn('report', 'REPORT')}
               </div>
 
               {/* Tab content */}
@@ -1089,6 +1373,7 @@ export default function PortfolioPage() {
                 {tab === 'greeks'    && <GreeksTab         key={selected.id} portfolioId={selected.id} />}
                 {tab === 'history'   && <HistoryTab        key={selected.id} portfolioId={selected.id} />}
                 {tab === 'whatif'    && <WhatIfSimulator   key={selected.id} portfolioId={selected.id} />}
+                {tab === 'report'    && <ReportTab         key={selected.id} portfolioId={selected.id} portfolioName={selected.name} />}
               </div>
             </>
           )}

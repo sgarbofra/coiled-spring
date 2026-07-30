@@ -33,12 +33,16 @@ router = APIRouter()
 class HVRow(BaseModel):
     ticker: str
     company_name: Optional[str] = None
+    hv20: Optional[float] = None             # HV a 20 giorni (sniper: hv20 < hv60 < hv252)
     hv30: Optional[float] = None
+    hv60: Optional[float] = None             # HV a 60 giorni
+    hv252: Optional[float] = None            # HV a 252 giorni (annuale)
     hv30_parkinson: Optional[float] = None   # Parkinson estimator (High/Low range)
     hv_rank: Optional[float] = None
     hv_percentile: Optional[float] = None
     hv_52w_high: Optional[float] = None
     hv_52w_low: Optional[float] = None
+    compression_streak: Optional[int] = None # giorni consecutivi con condizioni sniper attive
     computed_at: Optional[datetime] = None
 
 
@@ -206,12 +210,16 @@ def get_hv_screener(
             HVRow(
                 ticker=r.ticker,
                 company_name=r.company_name,
+                hv20=r.hv20,
                 hv30=r.hv30,
+                hv60=r.hv60,
+                hv252=r.hv252,
                 hv30_parkinson=r.hv30_parkinson,
                 hv_rank=r.hv_rank,
                 hv_percentile=r.hv_percentile,
                 hv_52w_high=r.hv_52w_high,
                 hv_52w_low=r.hv_52w_low,
+                compression_streak=r.compression_streak,
                 computed_at=r.computed_at,
             )
             for r in rows
