@@ -59,6 +59,9 @@ def register(
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db)
 ):
+    if not body.privacy_accepted:
+        raise HTTPException(status_code=422, detail="Devi accettare la Privacy Policy per registrarti")
+
     if db.query(models.User).filter(models.User.email == body.email).first():
         raise HTTPException(status_code=409, detail="Email already registered")
 
@@ -79,6 +82,8 @@ def register(
         ai_api_key=encrypted_key,
         email_verified=False,
         verification_token=verification_token,
+        privacy_accepted=True,
+        privacy_accepted_at=datetime.now(timezone.utc),
     )
     db.add(user)
     db.commit()

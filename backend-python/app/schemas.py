@@ -12,6 +12,7 @@ class UserRegister(BaseModel):
     password: str
     plan: str = "pro"    # beta gratuita: tutti partono con Pro
     ai_api_key: Optional[str] = None
+    privacy_accepted: bool = False   # GDPR: l'utente deve flaggare la privacy policy
 
 class UserLogin(BaseModel):
     email: EmailStr

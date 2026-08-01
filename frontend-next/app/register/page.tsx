@@ -63,6 +63,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [password2, setPassword2] = useState('')
+  const [privacyAccepted, setPrivacyAccepted] = useState(false)
   const [step1Error, setStep1Error] = useState<string | null>(null)
   const [registering, setRegistering] = useState(false)
 
@@ -71,13 +72,14 @@ export default function RegisterPage() {
 
   const submitStep1 = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!privacyAccepted) { setStep1Error('You must accept the Privacy Policy to register'); return }
     if (password !== password2) { setStep1Error('Passwords do not match'); return }
     if (password.length < 6) { setStep1Error('Password must be at least 6 characters'); return }
     setRegistering(true); setStep1Error(null)
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, plan: 'free' }),
+        body: JSON.stringify({ email, password, plan: 'free', privacy_accepted: true }),
       })
       const data = await res.json()
       if (!res.ok || !data.ok) throw new Error(data.error || 'Registration failed')
@@ -183,18 +185,52 @@ export default function RegisterPage() {
                   </a>
                 </div>
 
+                {/* Privacy consent checkbox — obbligatorio per entrambi i metodi di registrazione */}
+                <div style={{
+                  display: 'flex', alignItems: 'flex-start', gap: '10px',
+                  marginBottom: '1.25rem', padding: '0.875rem',
+                  border: `1px solid ${privacyAccepted ? c.green : c.border}`,
+                  borderRadius: '2px',
+                  background: privacyAccepted ? 'rgba(0,204,68,0.04)' : 'rgba(255,255,255,0.01)',
+                  transition: 'border-color 0.2s ease, background 0.2s ease',
+                  cursor: 'pointer',
+                }} onClick={() => setPrivacyAccepted(v => !v)}>
+                  <div style={{
+                    width: '16px', height: '16px', flexShrink: 0, marginTop: '1px',
+                    border: `1px solid ${privacyAccepted ? c.green : c.border2}`,
+                    borderRadius: '2px', background: privacyAccepted ? c.green : 'transparent',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    transition: 'all 0.15s ease',
+                  }}>
+                    {privacyAccepted && <span style={{ color: '#000', fontSize: '10px', fontWeight: '700', lineHeight: 1 }}>✓</span>}
+                  </div>
+                  <span style={{ fontFamily: mono, fontSize: '0.72rem', color: c.textSecondary, lineHeight: '1.5', userSelect: 'none' }}>
+                    I accept the{' '}
+                    <a href="/privacy" target="_blank" rel="noopener noreferrer"
+                      style={{ color: c.orange, textDecoration: 'none' }}
+                      onClick={e => e.stopPropagation()}>Privacy Policy</a>
+                    {' '}and consent to the processing of my personal data in accordance with GDPR.
+                  </span>
+                </div>
+
                 {/* Google OAuth */}
-                <a href="/api/auth/google"
+                <a
+                  href={privacyAccepted ? '/api/auth/google' : '#'}
+                  onClick={e => { if (!privacyAccepted) { e.preventDefault(); setStep1Error('You must accept the Privacy Policy before continuing with Google') } }}
                   style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem',
                     width: '100%', padding: '0.72rem', marginBottom: '0.25rem',
-                    background: 'transparent', border: `1px solid ${c.border2}`,
-                    color: c.textSecondary, fontFamily: mono, fontSize: '0.8rem',
+                    background: 'transparent',
+                    border: `1px solid ${privacyAccepted ? c.border2 : '#111'}`,
+                    color: privacyAccepted ? c.textSecondary : '#333',
+                    fontFamily: mono, fontSize: '0.8rem',
                     letterSpacing: '0.5px', textDecoration: 'none', borderRadius: '2px',
                     transition: 'border-color 0.2s ease, color 0.2s ease',
+                    cursor: privacyAccepted ? 'pointer' : 'not-allowed',
+                    opacity: privacyAccepted ? 1 : 0.45,
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = c.orange; e.currentTarget.style.color = c.textPrimary }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = c.border2; e.currentTarget.style.color = c.textSecondary }}>
+                  onMouseEnter={e => { if (privacyAccepted) { e.currentTarget.style.borderColor = c.orange; e.currentTarget.style.color = c.textPrimary } }}
+                  onMouseLeave={e => { if (privacyAccepted) { e.currentTarget.style.borderColor = c.border2; e.currentTarget.style.color = c.textSecondary } }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>

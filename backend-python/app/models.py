@@ -29,6 +29,8 @@ class User(Base):
     email_verified: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     verification_token: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     google_id: Mapped[Optional[str]] = mapped_column(Text, nullable=True, unique=True)
+    privacy_accepted: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    privacy_accepted_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 

@@ -201,6 +201,21 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         print(f"[MIGRATION] google_id skip: {e}")
 
+    # Migration: aggiungi privacy_accepted a users se non esiste
+    try:
+        from sqlalchemy import text
+        with engine.connect() as conn:
+            conn.execute(text(
+                "ALTER TABLE users ADD COLUMN IF NOT EXISTS privacy_accepted BOOLEAN NOT NULL DEFAULT FALSE"
+            ))
+            conn.execute(text(
+                "ALTER TABLE users ADD COLUMN IF NOT EXISTS privacy_accepted_at TIMESTAMPTZ"
+            ))
+            conn.commit()
+            print("[MIGRATION] users.privacy_accepted OK")
+    except Exception as e:
+        print(f"[MIGRATION] privacy_accepted skip: {e}")
+
     # Migration: crea newsletter_log se non esiste
     try:
         from sqlalchemy import text

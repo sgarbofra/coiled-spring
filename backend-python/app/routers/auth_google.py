@@ -12,14 +12,16 @@ Flow:
 import os
 import secrets
 import string
+from datetime import datetime, timezone
 
 import httpx
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from app import models, schemas
 from app.config import settings
+from app.core.notification_service import send_admin_notification, send_welcome_email
 from app.dependencies import get_db
 from app.routers.auth import _create_token, _user_out
 
@@ -41,7 +43,11 @@ def _random_password() -> str:
 
 
 @router.post("/exchange", response_model=schemas.Token)
-async def google_exchange(payload: GoogleExchangeRequest, db: Session = Depends(get_db)):
+async def google_exchange(
+    payload: GoogleExchangeRequest,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+):
     """
     Exchange Google authorization code for a Coiled Spring JWT.
     Called by the Next.js callback route — never by the browser directly.
@@ -109,10 +115,15 @@ async def google_exchange(payload: GoogleExchangeRequest, db: Session = Depends(
                 plan="free",
                 email_verified=email_verified,
                 google_id=google_id,
+                privacy_accepted=True,              # accettazione implicita: l'utente ha visto il checkbox prima di cliccare "Continue with Google"
+                privacy_accepted_at=datetime.now(timezone.utc),
             )
             db.add(user)
             db.commit()
             db.refresh(user)
+            # Notifiche asincrona: welcome email + admin alert
+            background_tasks.add_task(send_welcome_email, user.email, user.plan)
+            background_tasks.add_task(send_admin_notification, user.email, user.plan, user.created_at)
 
     # 4. Return JWT (same schema as regular login)
     return schemas.Token(

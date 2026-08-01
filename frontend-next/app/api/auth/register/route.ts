@@ -8,7 +8,11 @@ export async function POST(req: Request) {
     const res = await fetch(`${PYTHON_BASE}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: body.email, password: body.password }),
+      body: JSON.stringify({
+        email: body.email,
+        password: body.password,
+        privacy_accepted: body.privacy_accepted ?? false,
+      }),
     })
 
     if (!res.ok) {

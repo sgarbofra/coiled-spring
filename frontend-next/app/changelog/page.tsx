@@ -46,6 +46,19 @@ const TAG_LABELS: Record<string, string> = {
 
 const ENTRIES: Entry[] = [
   {
+    date: 'August 1, 2026',
+    version: 'v3.1',
+    headline: 'Google registration now sends a welcome email. And we ask before we collect your data.',
+    tag: 'fix',
+    body: [
+      "Two things were missing from registration and neither was obvious unless you looked for them.",
+      "The first: if you signed up with Google, you never received a welcome email. Email/password users got one after verifying their address. Google users got nothing — not because the email logic was wrong, but because the Google OAuth endpoint was simply missing a BackgroundTasks parameter. One import and two lines of code later, new Google registrants now receive the same welcome email as everyone else.",
+      "The second: the registration form had no privacy consent checkbox. Most apps ask before they collect your personal data — we weren't. There is now a mandatory checkbox above the Google button and the email form. Unchecking it disables the Google button (with a visual dimming) and blocks the email form submission with an inline error. The consent timestamp is stored in the database for audit purposes. The backend also validates the field independently — a direct API call without consent accepted is rejected with HTTP 422.",
+      "The checkbox links to a Privacy Policy. So we wrote one. The /privacy page is a full GDPR-compliant document (Regulation 2016/679): data controller, legal basis per Article 6, data retention schedule, list of processors with their jurisdictions and transfer safeguards, all eight rights of the data subject with contact instructions, security measures, breach notification procedure, and cookie disclosure. The short version: we collect only what is necessary, we don't sell or track anything, and you can ask us to delete your account and all associated data at any time.",
+      "Three fixes, one release. The terminal now treats your data as seriously as it treats your options positions.",
+    ],
+  },
+  {
     date: 'July 30, 2026',
     version: 'v3.0',
     headline: 'The scanner now explains itself. And stops lying about why it found nothing.',
