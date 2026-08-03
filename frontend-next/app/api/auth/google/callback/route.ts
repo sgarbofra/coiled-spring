@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
     const data: { access_token: string } = await res.json()
 
     // Set cookie — identical to regular login route
-    const response = NextResponse.redirect(new URL('/watchlists', req.url))
+    const response = NextResponse.redirect(new URL('/dashboard', req.url))
     response.cookies.set('cs_token', data.access_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

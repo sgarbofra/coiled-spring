@@ -45,7 +45,7 @@ function LoginContent() {
 
   useEffect(() => {
     if (!userLoading && user) {
-      router.push('/scanner')
+      router.push('/dashboard')
     }
   }, [user, userLoading, router])
 
@@ -61,7 +61,7 @@ function LoginContent() {
       if (!res.ok || !data.ok) throw new Error(data.error || 'Login failed')
       const urlParams = new URLSearchParams(window.location.search)
       const redirect = urlParams.get('redirect')
-      window.location.href = redirect || '/watchlists'
+      window.location.href = redirect || '/dashboard'
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Login failed')
     } finally { setLoading(false) }

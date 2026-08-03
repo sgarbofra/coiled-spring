@@ -50,6 +50,7 @@ export default function NavBar() {
   }
 
   const links = [
+    { href: '/dashboard',    label: isMobile ? '⌂' : 'DASHBOARD' },
     { href: '/scanner',      label: 'SCANNER' },
     { href: '/hv-screener',  label: isMobile ? 'HV' : 'HV SCREENER' },
     { href: '/watchlists',   label: 'WATCHLIST' },

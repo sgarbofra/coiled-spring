@@ -46,6 +46,20 @@ const TAG_LABELS: Record<string, string> = {
 
 const ENTRIES: Entry[] = [
   {
+    date: 'August 3, 2026',
+    version: 'v3.2',
+    headline: 'Every morning you open the terminal, it now tells you where you stand.',
+    tag: 'feature',
+    body: [
+      "Until today, logging in landed you on the Scanner. Useful if you already knew what to look for. Less useful if you hadn't checked markets in three days and needed orientation first.",
+      "The Command Center (DASHBOARD) is a new page that loads every time you log in. At the top: VIX, live — with a volatility regime label (Compressed / Normal / Elevated / Spike) and a plain-language description of what the current reading means for LEAPS buyers. A grade from A+ to F. If VIX is below 15, you see it immediately.",
+      "Below that: a radar of the seven most compressed tickers in the HV Screener, sorted by HV Rank ascending. Click any ticker and you land directly in the Scanner filtered for that underlying. Compression streak of five or more days is marked with a flag — that's the sniper signal.",
+      "To the right: a live snapshot of your portfolio. Total P&L (unrealized + realized), open positions, winners, losers, win rate bar. If you have no portfolio, a single button takes you to create one.",
+      "At the bottom: five navigation cards — Scanner, Watchlist, Portfolio, HV Screener, AI — because a good command center tells you where everything is.",
+      "Both login paths (email and Google OAuth) now redirect to /dashboard after authentication. The DASHBOARD tab is the first item in the navigation bar.",
+    ],
+  },
+  {
     date: 'August 1, 2026',
     version: 'v3.1',
     headline: 'Google registration now sends a welcome email. And we ask before we collect your data.',
