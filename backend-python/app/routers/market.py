@@ -379,3 +379,53 @@ def get_ticker_info_endpoint(symbol: str):
     if info is None:
         raise HTTPException(status_code=404, detail=f"Ticker info not found for {symbol}")
     return TickerInfoResponse(symbol=symbol, **info)
+
+class PriceStatsResponse(BaseModel):
+    symbol: str
+    current_price: float | None = None
+    year_high: float | None = None
+    year_low: float | None = None
+    ma20: float | None = None
+
+
+@router.get("/price-stats/{symbol}", response_model=PriceStatsResponse)
+def get_price_stats(symbol: str):
+    """
+    Returns current price, 52-week high/low, and 20-day moving average.
+    Uses yfinance fast_info + last 25 days of history. Cached 15 min.
+    """
+    symbol = symbol.upper().strip()
+    cache_key = f"price_stats:{symbol}"
+    cached = _cache.get(cache_key, 900)  # 15 min TTL
+    if cached is not None:
+        return PriceStatsResponse(symbol=symbol, **cached)
+
+    try:
+        import yfinance as yf
+        import numpy as np
+        t = yf.Ticker(symbol)
+        fi = t.fast_info
+
+        current = getattr(fi, "last_price", None) or getattr(fi, "regular_market_price", None)
+        year_high = getattr(fi, "year_high", None)
+        year_low  = getattr(fi, "year_low", None)
+
+        # MA20 from last 25 days of history
+        ma20 = None
+        try:
+            hist = t.history(period="1mo")
+            if len(hist) >= 20:
+                ma20 = round(float(hist["Close"].iloc[-20:].mean()), 2)
+        except Exception:
+            pass
+
+        result = {
+            "current_price": round(float(current), 2) if current else None,
+            "year_high":     round(float(year_high), 2) if year_high else None,
+            "year_low":      round(float(year_low), 2) if year_low else None,
+            "ma20":          ma20,
+        }
+        _cache.set(cache_key, result)
+        return PriceStatsResponse(symbol=symbol, **result)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

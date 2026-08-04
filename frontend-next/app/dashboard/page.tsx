@@ -46,6 +46,8 @@ type HVRow = {
   compression_streak?: number
 }
 
+type PriceStats = { current_price?: number; year_high?: number; year_low?: number; ma20?: number }
+
 type PortfolioItem = { id: number; name: string; open_positions: number }
 
 type PortfolioSummary = {
@@ -94,6 +96,9 @@ export default function DashboardPage() {
   const [portfolioLoading, setPortfolioL] = useState(true)
   const [hasPortfolios, setHasPortfolios] = useState<boolean | null>(null)
 
+  // Price stats for HV Radar tickers
+  const [priceStats, setPriceStats] = useState<Record<string, PriceStats>>({})
+
   // Today's date
   useEffect(() => {
     setToday(new Date().toLocaleDateString('en-US', {
@@ -133,6 +138,24 @@ export default function DashboardPage() {
       .catch(() => {})
       .finally(() => setHvL(false))
   }, [])
+
+  // ── Fetch price stats for HV Radar tickers ───────────────────────────────
+  useEffect(() => {
+    if (hvData.length === 0) return
+    const tickers = hvData.map(r => r.ticker)
+    Promise.all(
+      tickers.map(t =>
+        fetch(`/api/market/price-stats/${t}`)
+          .then(r => r.ok ? r.json() : null)
+          .then(data => data ? ({ ticker: t, data }) : null)
+          .catch(() => null)
+      )
+    ).then(results => {
+      const map: Record<string, PriceStats> = {}
+      results.forEach(r => { if (r) map[r.ticker] = r.data })
+      setPriceStats(map)
+    })
+  }, [hvData])
 
   // ── Fetch portfolio list → then first portfolio summary ───────────────────
   useEffect(() => {
@@ -374,9 +397,30 @@ export default function DashboardPage() {
                           borderBottom: i < hvData.length - 1 ? `1px solid rgba(30,35,48,0.6)` : 'none',
                         }}
                       >
-                        <span style={{ fontFamily: MONO, fontSize: '0.82rem', color: C.orange, fontWeight: '700' }}>
-                          {row.ticker}
-                        </span>
+                        <div>
+                          <span style={{ fontFamily: MONO, fontSize: '0.82rem', color: C.orange, fontWeight: '700' }}>
+                            {row.ticker}
+                          </span>
+                          {priceStats[row.ticker] && (
+                            <div style={{ display: 'flex', gap: '0.4rem', marginTop: '2px', flexWrap: 'wrap' }}>
+                              {priceStats[row.ticker].year_high != null && (
+                                <span style={{ fontFamily: MONO, fontSize: '0.5rem', color: C.green }}>
+                                  H {priceStats[row.ticker].year_high?.toFixed(0)}
+                                </span>
+                              )}
+                              {priceStats[row.ticker].year_low != null && (
+                                <span style={{ fontFamily: MONO, fontSize: '0.5rem', color: C.red }}>
+                                  L {priceStats[row.ticker].year_low?.toFixed(0)}
+                                </span>
+                              )}
+                              {priceStats[row.ticker].ma20 != null && (
+                                <span style={{ fontFamily: MONO, fontSize: '0.5rem', color: C.blue }}>
+                                  MA20 {priceStats[row.ticker].ma20?.toFixed(0)}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        </div>
                         <span style={{ fontFamily: MONO, fontSize: '0.78rem', color: C.white }}>
                           {row.hv20 != null ? row.hv20.toFixed(1) + '%' : '—'}
                         </span>
