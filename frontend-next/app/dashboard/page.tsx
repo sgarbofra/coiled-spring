@@ -85,6 +85,11 @@ export default function DashboardPage() {
   const [vix, setVix]           = useState<number | null>(null)
   const [vixLoading, setVixL]   = useState(true)
 
+  // VIX derived stats (52W H/L, MA20) — calcolati dai dati già scaricati
+  const [vixYear52High, setVixYear52High] = useState<number | null>(null)
+  const [vixYear52Low,  setVixYear52Low]  = useState<number | null>(null)
+  const [vixMa20,       setVixMa20]       = useState<number | null>(null)
+
   // HV Radar state
   const [hvData, setHvData]     = useState<HVRow[]>([])
   const [hvLoading, setHvL]     = useState(true)
@@ -112,7 +117,14 @@ export default function DashboardPage() {
       .then(r => r.json())
       .then((data: Array<{ date: string; close: number }>) => {
         if (Array.isArray(data) && data.length > 0) {
-          setVix(data[data.length - 1].close)
+          const closes = data.map(d => d.close)
+          setVix(closes[closes.length - 1])
+          setVixYear52High(Math.max(...closes))
+          setVixYear52Low(Math.min(...closes))
+          if (closes.length >= 20) {
+            const ma20 = closes.slice(-20).reduce((a, b) => a + b, 0) / 20
+            setVixMa20(Math.round(ma20 * 100) / 100)
+          }
         }
       })
       .catch(() => {})
@@ -295,6 +307,33 @@ export default function DashboardPage() {
               </div>
             ) : !vixLoading && (
               <span style={{ fontFamily: MONO, fontSize: '0.75rem', color: C.dim }}>Dati regime non disponibili</span>
+            )}
+
+            {/* 52W H/L + MA20 */}
+            {!vixLoading && (vixYear52High !== null || vixMa20 !== null) && (
+              <>
+                <div style={{ width: '1px', height: '3.2rem', background: C.border, flexShrink: 0 }} />
+                <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', flexShrink: 0 }}>
+                  {vixYear52High !== null && (
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontFamily: MONO, fontSize: '0.55rem', color: C.dim, letterSpacing: '2px', marginBottom: '0.2rem' }}>52W HIGH</div>
+                      <div style={{ fontFamily: MONO, fontSize: '1.1rem', fontWeight: '700', color: C.red }}>{vixYear52High.toFixed(2)}</div>
+                    </div>
+                  )}
+                  {vixYear52Low !== null && (
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontFamily: MONO, fontSize: '0.55rem', color: C.dim, letterSpacing: '2px', marginBottom: '0.2rem' }}>52W LOW</div>
+                      <div style={{ fontFamily: MONO, fontSize: '1.1rem', fontWeight: '700', color: C.green }}>{vixYear52Low.toFixed(2)}</div>
+                    </div>
+                  )}
+                  {vixMa20 !== null && (
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontFamily: MONO, fontSize: '0.55rem', color: C.dim, letterSpacing: '2px', marginBottom: '0.2rem' }}>MA20</div>
+                      <div style={{ fontFamily: MONO, fontSize: '1.1rem', fontWeight: '700', color: C.blue }}>{vixMa20.toFixed(2)}</div>
+                    </div>
+                  )}
+                </div>
+              </>
             )}
 
             <div style={{ flex: 1 }} />
