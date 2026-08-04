@@ -462,6 +462,18 @@ function OpportunityContent() {
     } finally { setIvHistoryLoading(false) }
   }
 
+  // ── Ticker Info state ────────────────────────────────────────────────────────
+  type TickerInfo = { name?: string; sector?: string; industry?: string; market_cap?: string; quote_type?: string }
+  const [tickerInfo, setTickerInfo] = useState<TickerInfo | null>(null)
+
+  useEffect(() => {
+    if (!ticker) return
+    fetch(`/api/market/ticker-info/${ticker}`)
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => { if (data) setTickerInfo(data) })
+      .catch(() => {})
+  }, [ticker])
+
   // ── AI Summary state ──────────────────────────────────────────────────────
   const [aiSummary, setAiSummary] = useState<string | null>(null)
   const [aiLoading, setAiLoading] = useState(false)
@@ -866,6 +878,39 @@ function OpportunityContent() {
           ) : (
             /* ── SCANNER MODE: contract details + CS Score + Risk ──────────── */
             <>
+              {tickerInfo && (
+                <div style={{ background: bb.panel, border: `1px solid ${bb.border2}`, padding: '10px 14px', marginBottom: 14 }}>
+                  <div style={{ fontSize: 10, color: bb.amber, letterSpacing: 1, marginBottom: 8 }}>COMPANY INFO</div>
+                  {tickerInfo.name && (
+                    <div style={{ fontSize: 13, fontWeight: 700, color: bb.white, marginBottom: 6, lineHeight: 1.3 }}>
+                      {tickerInfo.name}
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 16px' }}>
+                    {tickerInfo.quote_type && (
+                      <span style={{ fontSize: 10, color: bb.gray }}>
+                        <span style={{ color: bb.orange }}>{tickerInfo.quote_type}</span>
+                      </span>
+                    )}
+                    {tickerInfo.sector && (
+                      <span style={{ fontSize: 10, color: bb.gray }}>
+                        Sector <span style={{ color: bb.white }}>{tickerInfo.sector}</span>
+                      </span>
+                    )}
+                    {tickerInfo.industry && (
+                      <span style={{ fontSize: 10, color: bb.gray }}>
+                        Industry <span style={{ color: bb.white }}>{tickerInfo.industry}</span>
+                      </span>
+                    )}
+                    {tickerInfo.market_cap && (
+                      <span style={{ fontSize: 10, color: bb.gray }}>
+                        Mkt Cap <span style={{ color: bb.green }}>{tickerInfo.market_cap}</span>
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+
               <div style={{ background: bb.panel, border: `1px solid ${bb.border2}`, padding: '14px 16px', marginBottom: 14 }}>
                 <div style={{ fontSize: 11, color: bb.amber, letterSpacing: 1, marginBottom: 10 }}>
                   CONTRACT DETAILS
