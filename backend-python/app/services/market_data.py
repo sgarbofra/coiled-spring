@@ -532,7 +532,7 @@ def scan_yfinance(
 
 
 def get_ticker_info(symbol: str) -> Optional[dict]:
-    """Get ticker information from yfinance (name and ISIN if available)."""
+    """Get ticker information from yfinance (name, sector, industry, market cap, etc.)."""
     cache_key = f"ticker_info:{symbol}"
     cached = _cache.get(cache_key, HISTORY_TTL)
     if cached is not None:
@@ -543,9 +543,28 @@ def get_ticker_info(symbol: str) -> Optional[dict]:
         ticker = yf.Ticker(symbol)
         info = ticker.info
 
+        def fmt_market_cap(v):
+            if v is None:
+                return None
+            if v >= 1_000_000_000_000:
+                return f"${v/1_000_000_000_000:.2f}T"
+            if v >= 1_000_000_000:
+                return f"${v/1_000_000_000:.2f}B"
+            if v >= 1_000_000:
+                return f"${v/1_000_000:.2f}M"
+            return f"${v:,.0f}"
+
         result = {
-            "name": info.get("longName") or info.get("shortName") or symbol,
-            "isin": info.get("isin")
+            "name":       info.get("longName") or info.get("shortName") or symbol,
+            "isin":       info.get("isin"),
+            "sector":     info.get("sector"),
+            "industry":   info.get("industry"),
+            "market_cap": fmt_market_cap(info.get("marketCap")),
+            "exchange":   info.get("exchange"),
+            "quote_type": info.get("quoteType"),
+            "country":    info.get("country"),
+            "currency":   info.get("currency"),
+            "website":    info.get("website"),
         }
         _cache.set(cache_key, result)
         return result

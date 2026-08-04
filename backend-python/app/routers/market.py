@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from app import models
 from app.dependencies import get_current_user, get_db
-from app.services.market_data import _cache
+from app.services.market_data import _cache, get_ticker_info
 
 router = APIRouter()
 
@@ -352,3 +352,30 @@ def get_quotes(
             ))
 
     return MultiQuoteResponse(quotes=quotes)
+
+class TickerInfoResponse(BaseModel):
+    symbol: str
+    name: str | None
+    isin: str | None = None
+    sector: str | None = None
+    industry: str | None = None
+    market_cap: str | None = None
+    exchange: str | None = None
+    quote_type: str | None = None
+    country: str | None = None
+    currency: str | None = None
+    website: str | None = None
+
+
+@router.get("/ticker-info/{symbol}", response_model=TickerInfoResponse)
+def get_ticker_info_endpoint(symbol: str):
+    """
+    Returns company/ETF info for a given ticker symbol:
+    name, sector, industry, market cap, exchange, country, currency, website.
+    Cached for 1 hour. Public endpoint.
+    """
+    symbol = symbol.upper().strip()
+    info = get_ticker_info(symbol)
+    if info is None:
+        raise HTTPException(status_code=404, detail=f"Ticker info not found for {symbol}")
+    return TickerInfoResponse(symbol=symbol, **info)
