@@ -570,6 +570,113 @@ function PositionsTab({ portfolioId }: { portfolioId: number }) {
                 const csInput = { delta: p.current_delta, vega: p.current_vega, dte: p.dte, spread_pct: spreadPct, open_interest: p.current_open_interest }
                 const csScore = computeCandidateScore(csInput)
 
+                // Rileva Bull Put Credit Spread: mostra SHORT + LONG leg separatamente
+                let posNotes: Record<string, any> | null = null
+                try { if (p.notes) posNotes = JSON.parse(p.notes) } catch { /* ignore parse errors */ }
+                const isCS = posNotes?.strategy === 'bull_put_cs'
+
+                if (isCS && posNotes) {
+                  const shortMid = posNotes.short_mid != null ? (posNotes.short_mid as number) : null
+                  const longMid  = posNotes.long_mid  != null ? (posNotes.long_mid  as number) : null
+                  const expLabel = new Date(posNotes.expiration ?? p.expiration).toLocaleDateString('en-US')
+                  const bdr      = `1px solid ${bb.border}`
+                  const legCell: React.CSSProperties = { padding: '6px 10px', fontSize: '13px', whiteSpace: 'nowrap', borderBottom: bdr }
+
+                  return (
+                    <React.Fragment key={p.trade_id}>
+                      {/* ── SHORT leg: dati di mercato + PNL riferiti allo spread ── */}
+                      <tr
+                        style={{ backgroundColor: 'transparent', cursor: 'pointer', borderLeft: `3px solid ${bb.red}` }}
+                        onClick={() => setSelectedPosition(p)}
+                        onMouseEnter={e => (e.currentTarget.style.backgroundColor = bb.surface)}
+                        onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}>
+                        <Td color={bb.orange}>{p.underlying}</Td>
+                        <Td color={bb.amber}>PUT</Td>
+                        <Td right>{fmt(posNotes.short_strike, 0)}</Td>
+                        <Td>{expLabel}</Td>
+                        <Td right color={p.dte < 90 ? bb.red : bb.white}>{p.dte}</Td>
+                        <Td color={bb.red}>SHORT</Td>
+                        <Td right>{p.quantity}</Td>
+                        <Td right>
+                          {shortMid != null
+                            ? `$${fmt(shortMid)}`
+                            : <span>${fmt(posNotes.net_credit)}<sup title="Prezzi individuali delle gambe non disponibili (trade precedente all'upgrade). Mostrato il credito netto dello spread." style={{ fontSize: '9px', color: bb.amber, marginLeft: '2px' }}>nc</sup></span>
+                          }
+                        </Td>
+                        <Td right>{p.current_bid != null ? `$${fmt(p.current_bid)}` : '-'}</Td>
+                        <Td right>{p.current_ask != null ? `$${fmt(p.current_ask)}` : '-'}</Td>
+                        <Td right>{p.current_mid != null ? `$${fmt(p.current_mid)}` : '-'}</Td>
+                        <Td right color={usingLast ? bb.amber : bb.gray}>{p.current_last != null ? `$${fmt(p.current_last)}` : '-'}</Td>
+                        <Td right>{p.current_iv != null ? `${fmt(p.current_iv, 1)}%` : '-'}</Td>
+                        <Td right color={pnlColor(p.unrealized_pnl)}>
+                          {fmtPnl(p.unrealized_pnl)}
+                          {usingLast && <span title="PNL calcolato su Last price (bid/ask non disponibili)" style={{ fontSize: '9px', color: bb.amber, marginLeft: '3px', verticalAlign: 'super' }}>L</span>}
+                          {usingBS   && <span title="PNL calcolato su prezzo Black-Scholes teorico (nessun dato di mercato)" style={{ fontSize: '9px', color: bb.gray, marginLeft: '3px', verticalAlign: 'super' }}>BS</span>}
+                        </Td>
+                        <Td right color={pnlColor(p.unrealized_pnl_pct)}>{fmtPct(p.unrealized_pnl_pct)}</Td>
+                        <td style={{ padding: '4px 8px', borderBottom: bdr, textAlign: 'right', fontFamily: 'var(--font-mono)' }}>
+                          {csScore != null ? (
+                            <span style={{ fontWeight: 'bold', fontSize: '13px', color: scoreColor(csScore) }}>{csScore}</span>
+                          ) : (
+                            <span style={{ color: bb.gray, fontSize: '11px' }}>—</span>
+                          )}
+                        </td>
+                        <td
+                          style={{ padding: '4px 6px', textAlign: 'center', borderBottom: bdr }}
+                          onClick={e => {
+                            e.stopPropagation()
+                            const sp = (p.current_bid != null && p.current_ask != null && p.current_mid != null && p.current_mid > 0)
+                              ? (p.current_ask - p.current_bid) / p.current_mid : 0
+                            const params = new URLSearchParams({
+                              strike: String(p.strike), expiration: p.expiration.split('T')[0],
+                              type: p.option_type, delta: p.current_delta != null ? String(p.current_delta) : '',
+                              mid: p.current_mid != null ? String(p.current_mid) : '',
+                              spread_pct: String(sp), oi: p.current_open_interest != null ? String(p.current_open_interest) : '',
+                              dte: String(p.dte), vega: p.current_vega != null ? String(p.current_vega) : '', theta: '',
+                            })
+                            router.push(`/scanner/opportunity/${p.underlying}?${params.toString()}`)
+                          }}
+                        >
+                          <span style={{ cursor: 'pointer', fontSize: '15px' }} title="Opportunity Analysis">📊</span>
+                        </td>
+                        <td style={{ padding: '4px 8px', borderBottom: bdr }}>
+                          <button onClick={e => { e.stopPropagation(); setCloseTarget(p) }} style={{
+                            border: `1px solid ${bb.red}`, backgroundColor: 'rgba(255,51,51,0.1)',
+                            color: bb.red, padding: '2px 8px', fontSize: '11px', fontWeight: 'bold',
+                            fontFamily: 'var(--font-mono)', cursor: 'pointer', letterSpacing: '1px',
+                            whiteSpace: 'nowrap',
+                          }}>CLOSE</button>
+                        </td>
+                      </tr>
+                      {/* ── LONG leg: protezione, solo strike e prezzo ingresso ── */}
+                      <tr style={{ backgroundColor: 'rgba(0,100,0,0.06)', borderLeft: `3px solid ${bb.green}` }}>
+                        <td style={{ ...legCell, color: bb.gray }}>↳</td>
+                        <td style={{ ...legCell, color: bb.amber }}>PUT</td>
+                        <td style={{ ...legCell, color: bb.white, textAlign: 'right' }}>{fmt(posNotes.long_strike, 0)}</td>
+                        <td style={{ ...legCell, color: bb.white }}>{expLabel}</td>
+                        <td style={{ ...legCell, color: bb.white, textAlign: 'right' }}>{p.dte}</td>
+                        <td style={{ ...legCell, color: bb.green }}>LONG</td>
+                        <td style={{ ...legCell, color: bb.white, textAlign: 'right' }}>{p.quantity}</td>
+                        <td style={{ ...legCell, color: bb.white, textAlign: 'right' }}>
+                          {longMid != null ? `$${fmt(longMid)}` : <span style={{ color: bb.gray }}>-</span>}
+                        </td>
+                        {/* dati di mercato non tracciati per la long leg */}
+                        <td style={{ ...legCell, color: bb.gray, textAlign: 'right' }}>-</td>
+                        <td style={{ ...legCell, color: bb.gray, textAlign: 'right' }}>-</td>
+                        <td style={{ ...legCell, color: bb.gray, textAlign: 'right' }}>-</td>
+                        <td style={{ ...legCell, color: bb.gray, textAlign: 'right' }}>-</td>
+                        <td style={{ ...legCell, color: bb.gray, textAlign: 'right' }}>-</td>
+                        <td style={{ ...legCell, color: bb.gray, textAlign: 'right' }}>-</td>
+                        <td style={{ ...legCell, color: bb.gray, textAlign: 'right' }}>-</td>
+                        <td style={{ ...legCell }}></td>
+                        <td style={{ ...legCell }}></td>
+                        <td style={{ ...legCell }}></td>
+                      </tr>
+                    </React.Fragment>
+                  )
+                }
+
+                // ── Posizione singola (non credit spread) ──
                 return (
                 <tr key={p.trade_id}
                   style={{ backgroundColor: 'transparent', cursor: 'pointer' }}

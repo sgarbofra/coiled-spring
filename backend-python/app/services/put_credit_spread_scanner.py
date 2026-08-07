@@ -391,6 +391,8 @@ def _encode_spread_notes(spread: dict, qty: int, reason: str = "OPEN") -> str:
         "expiration":   spread["expiration"],
         "dte_entry":    spread["dte"],
         "net_credit":   spread["net_credit"],
+        "short_mid":    spread.get("short_mid"),   # prezzo mid della short put (gamba venduta)
+        "long_mid":     spread.get("long_mid"),    # prezzo mid della long put (gamba comprata)
         "max_loss":     spread["max_loss"],
         "credit_pct":   spread["credit_pct"],
         "short_delta":  spread["short_delta"],
