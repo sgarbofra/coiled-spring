@@ -109,6 +109,28 @@ def _run_paper_trading_scan():
         print(f"[CRON] Failed to trigger paper trading scan: {e}")
 
 
+def _run_credit_spread_scan():
+    """Job APScheduler — ogni giorno alle 15:30 Europe/Rome (09:30 ET, apertura mercato US).
+
+    Esegue lo scanner Bull Put Credit Spread:
+    - manutenzione posizioni aperte (TP/SL/scadenza)
+    - scan nuovi spread da aprire sull'universo ETF (14 ticker)
+    - scrittura diary giornaliero
+    """
+    import os, requests as _requests
+    port = os.environ.get("PORT", "8080")
+    try:
+        key = settings.cron_internal_key
+        resp = _requests.post(
+            f"http://localhost:{port}/api/paper-trading/cs/run",
+            headers={"x-internal-key": key},
+            timeout=180,  # 14 ETF × ~5s = ~70s + margine
+        )
+        print(f"[CRON] Credit spread scan triggered: {resp.status_code} {resp.text[:200]}")
+    except Exception as e:
+        print(f"[CRON] Failed to trigger credit spread scan: {e}")
+
+
 def _run_etf_calendar_scan():
     """Job APScheduler — ogni giorno alle 17:30 Europe/Rome (dopo HV refresh delle 17:00 UTC).
 
@@ -479,6 +501,17 @@ async def lifespan(app: FastAPI):
         id="daily_sp500_calendar_scan",
         replace_existing=True,
     )
+    # Bull Put Credit Spread scan — ogni giorno alle 15:30 Europe/Rome (09:30 ET)
+    # Gira all'apertura del mercato US per avere bid/ask liquidi sulle opzioni
+    scheduler.add_job(
+        _run_credit_spread_scan,
+        trigger="cron",
+        hour=15,
+        minute=30,
+        timezone="Europe/Rome",
+        id="daily_cs_scan",
+        replace_existing=True,
+    )
     # Validazione settimanale ticker universe — domenica alle 02:00 UTC
     scheduler.add_job(
         _run_weekly_ticker_validate,
@@ -504,6 +537,7 @@ async def lifespan(app: FastAPI):
     print("[SCHEDULER] Daily HV snapshot scheduled at 17:00 UTC")
     print("[SCHEDULER] ETF calendar scan scheduled at 17:30 Europe/Rome")
     print("[SCHEDULER] Paper trading scan scheduled at 16:30 Europe/Rome")
+    print("[SCHEDULER] Bull Put Credit Spread scan scheduled at 15:30 Europe/Rome")
     print("[SCHEDULER] Weekly ticker universe validate scheduled Sunday 02:00 UTC")
     print("[SCHEDULER] Monthly ticker universe refresh scheduled 1st-of-month 01:00 UTC")
 

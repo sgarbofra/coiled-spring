@@ -46,6 +46,20 @@ const TAG_LABELS: Record<string, string> = {
 
 const ENTRIES: Entry[] = [
   {
+    date: 'August 7, 2026',
+    version: 'v3.3',
+    headline: 'Il terminale ora vende premi di volatilità da solo. Bull Put Credit Spread in paper trading automatico.',
+    tag: 'feature',
+    body: [
+      "Da oggi il terminale gestisce un secondo portafoglio di paper trading — completamente automatico, zero intervento manuale: Bull Put Credit Spread su ETF americani.",
+      "Ogni giorno alle 15:30 CET (apertura mercato USA) il sistema scansiona 14 ETF ad alta liquidità opzionistica (SPY, QQQ, IWM, DIA, GLD, TLT, SMH, XBI, XLU, IYR, VNQ, USO, IBIT, GDX). Per ciascuno cerca la put OTM a circa 15 delta con 28–35 giorni alla scadenza, abbina la put $5 più bassa come protezione, verifica che il credito netto sia nel range 5–45% della larghezza. Se tutti i criteri sono soddisfatti, apre la posizione.",
+      "La logica di gestione è rigorosa: Take Profit al 50% del credito incassato (chiude quando hai già guadagnato metà del massimo possibile), Stop Loss quando il valore dello spread supera 3 volte il credito ricevuto (perdita = 2× il credito). A scadenza naturale, se lo spread scade OTM, incassa il premio pieno. Sizing: massimo 10% del capitale simulato per posizione, un solo spread aperto per ticker alla volta.",
+      "Il razionale statistico: la Variance Risk Premium (VRP) è strutturale sugli ETF americani — la volatilità implicita eccede sistematicamente la volatilità realizzata del 3–5% annuo. Vendere put a 15 delta significa operare in una zona dove la probabilità storica di profitto è 82–90%, con il decadimento del theta che lavora a favore ogni giorno.",
+      "Il capitale iniziale simulato è €25.000. Il rendimento viene tracciato operazione per operazione. La nuova pagina PUT SPREAD nel menu mostra stato del portfolio, posizioni aperte e chiuse con tutti i dettagli (strike, credito, max profit, max loss, PNL non realizzato, delta e IV all'ingresso), e un diary giornaliero degli scan.",
+      "Backend: nuovo servizio put_credit_spread_scanner.py con calcolo Black-Scholes del delta standalone, selezione automatica delle gambe dalla catena Yahoo Finance, encoding completo dello spread in notes JSON sul trade. Nuovi endpoint /api/paper-trading/cs/* (status, positions, diary, run). Cron APScheduler alle 15:30 Europe/Rome.",
+    ],
+  },
+  {
     date: 'August 3, 2026',
     version: 'v3.2',
     headline: 'Every morning you open the terminal, it now tells you where you stand.',
